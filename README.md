@@ -41,3 +41,7 @@ An account-level Pages site serves this root URL. Existing project Pages sites r
 - JSON and JUnit reporting and agreed intermediate-node assertions are proposed pilot deliverables. The linked executed sample contains its existing JSON observations and a local synthetic-contract scope.
 - The Swiftia evidence card links to `main/examples/runtime-checks` and its machine-readable observations. Existing measured results remain separate from the customer-specific work offered.
 - The $149 FlowDelta documentation service remains linked as an alternative scope.
+
+## Technical guide
+
+`guides/testing-n8n-http-requests/` explains the existing Swiftia request-body and failed-render recovery results. It links the exact public source, observed JSON, MIT runner, official n8n documentation, and the $650 service. The guide is linked from the homepage and service evidence card. `sitemap.xml` lists the three canonical pages.
