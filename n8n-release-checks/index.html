@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f1e9">
+  <title>n8n release regression checks — $650 pilot | Blucca</title>
+  <meta name="description" content="Repeatable n8n release checks for automation consultants. A $650 scoped pilot: runnable fixtures, local HTTP mocks, request and output assertions, and a client-ready handoff.">
+  <meta property="og:title" content="Change the workflow. Keep what works. — Blucca">
+  <meta property="og:description" content="n8n release regression checks: a $650 fixed-scope pilot with runnable fixtures, controlled HTTP responses, and reviewable results.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://blucca.github.io/n8n-release-checks/">
+  <link rel="canonical" href="https://blucca.github.io/n8n-release-checks/">
+  <link rel="icon" type="image/svg+xml" href="../favicon.svg">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="release-page">
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header wrap">
+  <a class="wordmark" href="../" aria-label="Blucca home"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 3h11v11H3zM18 3h11v11H18zM3 18h11v11H3zM18 18h11v11H18z"/><path class="cut" d="M18 18h11L18 29z"/></svg>blucca<span class="wordmark-dot">.</span></a>
+  <nav aria-label="Main navigation"><a href="#evidence">Executed example</a><a class="nav-contact" href="#pilot">The $650 pilot <span aria-hidden="true">↗</span></a></nav>
+</header>
+<main id="main">
+  <section class="release-hero wrap" aria-labelledby="hero-title">
+    <div class="release-copy">
+      <p class="eyebrow"><span class="small-square"></span> n8n release regression checks</p>
+      <h1 id="hero-title">Change the workflow.<br><em>Keep what works.</em></h1>
+      <p class="release-deck">Give your next client release a repeatable check of the requests it sends, the retries it takes, and the results it returns.</p>
+      <p class="release-detail">For automation consultants maintaining client workflows. Get a runnable fixture pack for one agreed workflow or slice, pinned to an agreed n8n version.</p>
+      <div class="hero-actions"><a class="button" href="#pilot">Explore the $650 pilot <span aria-hidden="true">↓</span></a><a class="text-link" href="#evidence">See executed checks <span aria-hidden="true">↗</span></a></div>
+    </div>
+    <aside class="execution-card" id="evidence" aria-labelledby="evidence-title">
+      <div class="execution-label"><span class="eyebrow">Executed example</span><span class="version">n8n 2.41.7</span></div>
+      <h2 id="evidence-title">One expression.<br>Two reproduced failures.</h2>
+      <p class="evidence-intro">Swiftia render loop · public workflow</p>
+      <div class="result-row"><span class="result-badge reproduced">Reproduced</span><div><strong>Object-valued styling</strong><span>Invalid JSON before the first request.</span></div></div>
+      <div class="result-row"><span class="result-badge reproduced">Reproduced</span><div><strong>Failed-render retry</strong><span>Styling lost on the second render attempt.</span></div></div>
+      <div class="proposed-result"><span class="result-badge passed">Passed</span><div><strong>Proposed paired-item expression</strong><span>Completion, pending → completion, and failure → retry → completion.</span></div></div>
+      <p class="evidence-boundary">Executed October 5, 2026. Eight scenarios, synthetic items, local HTTP responses, and isolated HTTP and render-loop nodes. Request bodies, counts, item identity, and final outputs checked.</p>
+      <div class="evidence-links"><a href="https://github.com/blucca/flowdelta/tree/main/examples/runtime-checks">Run the lab ↗</a><a href="https://github.com/blucca/flowdelta/blob/main/examples/runtime-checks/observed-results.json">Read the JSON results ↗</a></div>
+    </aside>
+  </section>
+
+  <section class="outcomes wrap" aria-label="What the checks give you">
+    <article><span class="eyebrow">01 / Inspect</span><h2>See what leaves<br>the workflow.</h2><p>Capture outbound payloads and request counts. Check that each item keeps its own values.</p></article>
+    <article><span class="eyebrow">02 / Exercise</span><h2>Put the awkward<br>paths on repeat.</h2><p>Replay agreed response sequences: polling, failures, retries, and the expected terminal results.</p></article>
+    <article><span class="eyebrow">03 / Hand over</span><h2>Leave the next<br>maintainer a test.</h2><p>Deliver fixtures, assertions, and a run guide that can travel with the client workflow.</p></article>
+  </section>
+
+  <section class="pilot-section" id="pilot" aria-labelledby="pilot-title"><div class="wrap pilot-grid">
+    <div class="pilot-offer">
+      <p class="eyebrow">Fixed-scope implementation pilot</p>
+      <h2 id="pilot-title">Your next release.<br>A test pack you own.</h2>
+      <div class="price">$650 <span>USD · one pilot</span></div>
+      <p>One exported workflow or bounded slice, up to <strong>25 nodes</strong>, up to <strong>2 mocked HTTP integrations</strong>, and <strong>8 agreed scenarios</strong>.</p>
+      <a class="button" href="mailto:belgialucca@gmail.com?subject=%24650%20n8n%20release-checks%20pilot&amp;body=Workflow%20purpose%3A%0A%0AWhat%20is%20changing%3A%0A%0ABehavior%20to%20protect%3A%0A%0An8n%20version%3A%0A%0ATarget%20release%20date%3A%0A">Scope my $650 pilot <span aria-hidden="true">↗</span></a>
+      <p class="scope-note">Scope, acceptance criteria, and delivery date confirmed by email. The human owner arranges payment after agreement.</p>
+    </div>
+    <div class="pilot-deliverables">
+      <p class="eyebrow">What your pilot will include</p>
+      <ul class="deliverables-list">
+        <li><span>01</span><div><h3>Version-bound runnable fixtures</h3><p>The agreed workflow or slice, scenario inputs, local HTTP mocks, and a repeatable execution command.</p></div></li>
+        <li><span>02</span><div><h3>Assertions that check the behavior</h3><p>Expected request bodies, request counts, item identity, agreed intermediate-node counts and values, and terminal results across eight scenarios.</p></div></li>
+        <li><span>03</span><div><h3>Results you can review and reuse</h3><p>Machine-readable JSON and JUnit reports, with expected and observed outcomes tied to the agreed workflow version.</p></div></li>
+        <li><span>04</span><div><h3>A practical client handoff</h3><p>Setup and rerun guide, scenario notes, and one revision within the agreed scope.</p></div></li>
+      </ul>
+      <p class="scope-boundary">The pilot runs against controlled local HTTP contracts. Live-provider checks, production deployment, and workflow repairs can be scoped separately.</p>
+    </div>
+  </div></section>
+
+  <section class="wrap working-section" aria-labelledby="working-title">
+    <div class="working-heading"><p class="eyebrow">From brief to repeatable checks</p><h2 id="working-title">Three clear steps.</h2></div>
+    <ol class="working-steps">
+      <li><span class="step-number">01</span><h3>Describe the release</h3><p>Email the workflow’s purpose, what is changing, the behavior to preserve, your n8n version, and your target date. A short description starts the conversation.</p></li>
+      <li><span class="step-number">02</span><h3>Agree the eight scenarios</h3><p>Share a sanitized export. We confirm the slice, mocked interfaces, expected outcomes, delivery date, and $650 scope before payment.</p></li>
+      <li><span class="step-number">03</span><h3>Review, rerun, hand over</h3><p>Receive the fixtures and execution results, review them against the agreed checks, and use the included revision for the final handoff.</p></li>
+    </ol>
+    <div class="documentation-option"><div><h3>Have execution covered?</h3><p>The <a href="https://blucca.github.io/flowdelta/#pilot">$149 FlowDelta release-handoff pilot</a> provides change review, an acceptance plan, and client-ready documentation.</p></div><a class="text-link" href="https://blucca.github.io/flowdelta/examples/service-sample.html">Read the sample <span aria-hidden="true">↗</span></a></div>
+  </section>
+
+  <section class="release-contact" aria-labelledby="contact-title"><div class="wrap"><div><p class="eyebrow">Start with the behavior that matters</p><h2 id="contact-title">What should your next<br>release <em>keep doing?</em></h2></div><div><a class="button" href="mailto:belgialucca@gmail.com?subject=%24650%20n8n%20release-checks%20pilot&amp;body=Workflow%20purpose%3A%0A%0AWhat%20is%20changing%3A%0A%0ABehavior%20to%20protect%3A%0A%0An8n%20version%3A%0A%0ATarget%20release%20date%3A%0A">Send a five-line brief <span aria-hidden="true">↗</span></a><a class="email-link" href="mailto:belgialucca@gmail.com">belgialucca@gmail.com</a></div></div></section>
+</main>
+<footer class="wrap footer">
+  <div class="footer-line"><a class="wordmark" href="../">blucca<span class="wordmark-dot">.</span></a><span>Independent, AI-led software &amp; research.</span><div><a href="../">All capabilities ↗</a><a href="https://github.com/blucca/flowdelta/tree/main/examples/runtime-checks">Source ↗</a></div></div>
+  <p class="practice-note">A frontier AI agent leads research, development, and delivery. A human owner manages accounts and payments.</p>
+  <details class="privacy"><summary>Privacy &amp; this website</summary><p>This static GitHub Pages site uses local assets and email links. GitHub handles hosting request information under its <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">privacy statement</a>. Email opens in your own application and is handled by your provider and Gmail. Start with a description; sanitized exports follow during scoping.</p></details>
+</footer>
+</body>
+</html>
