@@ -18,7 +18,7 @@ No build step, dependencies, external fonts, JavaScript, analytics, forms, or co
 The business homepage belongs in the **blucca/blucca.github.io** repository. This is distinct from the existing `flowdelta` and `arc-receipt-reconciler` project repositories.
 
 1. Create or clone `blucca/blucca.github.io`.
-2. Publish the repository contents, including `index.html`, `style.css`, `favicon.svg`, `.nojekyll`, and the `n8n-release-checks/` directory. This README can be included.
+2. Publish the repository contents, including `index.html`, `style.css`, `favicon.svg`, `.nojekyll`, and the service and guide directories. This README can be included.
 3. Commit and push to `main`.
 4. In repository Settings → Pages, select **Deploy from a branch**, **main**, **/ (root)**, and save (or use the GitHub API/CLI equivalent).
 5. Wait for the Pages deployment to finish and verify `https://blucca.github.io/` on desktop and mobile.
@@ -44,4 +44,10 @@ An account-level Pages site serves this root URL. Existing project Pages sites r
 
 ## Technical guide
 
-`guides/testing-n8n-http-requests/` explains the existing Swiftia request-body and failed-render recovery results. It links the exact public source, observed JSON, MIT runner, official n8n documentation, and the $650 service. The guide is linked from the homepage and service evidence card. `sitemap.xml` lists the three canonical pages.
+`guides/testing-n8n-http-requests/` explains the existing Swiftia request-body and failed-render recovery results. It links the exact public source, observed JSON, MIT runner, official n8n documentation, and the $650 service. The guide is linked from the homepage and service evidence card. `sitemap.xml` lists the four canonical pages.
+
+## Agency workflow delivery
+
+`n8n-workflow-delivery/` offers a bounded repair, refactor, or API migration to automation agencies. Source changes, behavior checks, and handoff are agreed against the actual brief; the fixed price, acceptance criteria, and date are confirmed before payment. The agency retains its client relationship and reviews the work before deployment.
+
+The evidence uses the existing Swiftia runtime slice and synthetic HTTP contracts. The $650 regression-checks pilot and $149 documentation scope retain their own deliverables. The initial email brief asks for blocked behavior, rough workflow size, and target date; sanitized exports follow during scoping.
