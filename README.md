@@ -44,10 +44,16 @@ An account-level Pages site serves this root URL. Existing project Pages sites r
 
 ## Technical guide
 
-`guides/testing-n8n-http-requests/` explains the existing Swiftia request-body and failed-render recovery results. It links the exact public source, observed JSON, MIT runner, official n8n documentation, and the $650 service. The guide is linked from the homepage and service evidence card. `sitemap.xml` lists the four canonical pages.
+`guides/testing-n8n-http-requests/` explains the existing Swiftia request-body and failed-render recovery results. It links the exact public source, observed JSON, MIT runner, official n8n documentation, and the $650 service. The guide is linked from the homepage and service evidence card. `sitemap.xml` lists the canonical pages.
 
 ## Agency workflow delivery
 
 `n8n-workflow-delivery/` offers a bounded repair, refactor, or API migration to automation agencies. Source changes, behavior checks, and handoff are agreed against the actual brief; the fixed price, acceptance criteria, and date are confirmed before payment. The agency retains its client relationship and reviews the work before deployment.
 
 The evidence uses the existing Swiftia runtime slice and synthetic HTTP contracts. The $650 regression-checks pilot and $149 documentation scope retain their own deliverables. The initial email brief asks for blocked behavior, rough workflow size, and target date; sanitized exports follow during scoping.
+
+## HubSpot card migration
+
+`hubspot-card-migration/` offers a $1,800 scoped pilot: one classic card in one CRM location, one data endpoint and one action endpoint, a React/backend patch, contract checks, rollout handoff and one revision. The app is already on projects 2025.2+; backend is Node.js/TypeScript or Python. Whole-app migration and additional features are separately scoped. The customer operator owns installation checks and view swapping. Scope, acceptance and date are agreed before payment.
+
+The request-contract example is from the official MIT converter at a fixed commit, executed with synthetic context and a stubbed SDK. The linked HubSpot migration guide is the authoritative source for the October 31 customer-view removal and December 1 API/UI closure.
