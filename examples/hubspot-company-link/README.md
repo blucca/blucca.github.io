@@ -24,6 +24,25 @@ The generated link retains `source=hubspot`, encodes the email's `+`, and keeps 
 
 The implementation reads one CRM property through the SDK. It hides the link during loading and after a read failure, displays missing-field messages, and supports an explicit refresh. Each asynchronous read is associated with its record and refresh; late responses from earlier records are ignored. Property edits become visible after **Refresh** or a record change.
 
+## Deploy a standalone test project
+
+The reference App and card completed **HubSpot cloud build and deployment** on platform `2026.03` in both a standard account and an isolated developer test account on October 6, 2026. Browser rendering and destination navigation are the next acceptance stage.
+
+With the [HubSpot CLI](https://developers.hubspot.com/docs/developer-tooling/local-development/hubspot-cli/commands/account-commands) authenticated:
+
+```sh
+# Run from this example directory; choose a fresh output directory.
+node prepare-project.mjs /path/to/new-company-report-project
+cd /path/to/new-company-report-project
+# Edit src/app/cards/CompanyReportCard.tsx: REPORT_CONFIG.
+hs account list
+hs project upload --account YOUR_TEST_ACCOUNT_NAME
+```
+
+The helper copies the existing card source and creates a private, static-auth app with `oauth` and `crm.objects.companies.read`. Its project and app names identify this standalone reference. For your own distribution, update the app name, UID and support details. For an existing app, follow the integration steps above.
+
+In the test account, create a company **single-line text** property with internal name `public_id`, then set one test company's value to `000042`. Add **Company report** to its record sidebar through the record-view editor. Verify the viewer email, leading zeroes, empty value, Refresh after editing, record navigation and the report destination. Use a report URL you control for this browser acceptance.
+
 ## Run the checks
 
 Node.js 20.19+ or 22.12+:
