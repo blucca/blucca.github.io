@@ -63,6 +63,7 @@
 <div class="observation"><span class="eyebrow">Observed / string-failed</span><p><strong>1 POST · 1 GET · 2 render-node executions</strong><br>The second render attempt fails while building its body.</p></div>
 <p>The distinction matters when reading logs: the request node executed twice; the mock received one POST. Capturing both node execution data and outbound requests shows where the second attempt stopped.</p>
 <p>Here, “retry” means the workflow’s failed-render replacement branch. HTTP-level connection retries, authentication errors, and the node’s <code>Retry On Fail</code> setting each need their own scenarios when they fall within a release’s scope.</p>
+<p><strong>Transport-level follow-up:</strong> <a href="../n8n-retry-duplicates/">compare Retry On Fail, HTTP batching, and a one-item loop</a> with three recorded runs. One 503 produces four requests in the direct and HTTP-batched cases; the one-item loop produces three.</p>
 </section>
 
 <section id="expression"><h2>4. Build one object from the paired source item</h2>

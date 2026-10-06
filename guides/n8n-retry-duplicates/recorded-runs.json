@@ -1,0 +1,75 @@
+{
+  "recordedAt": "2026-10-06",
+  "runtime": "n8n 2.41.7",
+  "httpRequestVersion": "4.2",
+  "source": "https://github.com/blucca/n8n-check/blob/v0.1.1/examples/retry-isolation/observed-results.json",
+  "runs": {
+    "direct": {
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/renders/42",
+          "status": 503
+        },
+        {
+          "method": "POST",
+          "path": "/renders/43",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/renders/42",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/renders/43",
+          "status": 200
+        }
+      ]
+    },
+    "http-batching": {
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/renders/42",
+          "status": 503
+        },
+        {
+          "method": "POST",
+          "path": "/renders/43",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/renders/42",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/renders/43",
+          "status": 200
+        }
+      ]
+    },
+    "loop": {
+      "requests": [
+        {
+          "method": "POST",
+          "path": "/renders/42",
+          "status": 503
+        },
+        {
+          "method": "POST",
+          "path": "/renders/42",
+          "status": 200
+        },
+        {
+          "method": "POST",
+          "path": "/renders/43",
+          "status": 200
+        }
+      ]
+    }
+  }
+}
