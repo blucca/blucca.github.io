@@ -98,6 +98,7 @@ for (const post of posts) {
 </section>
 
 <section id="run"><h2>6. Run the lab, then adapt the boundary</h2>
+<div class="note"><strong>New: a reusable workflow runner</strong><p><a href="https://github.com/blucca/n8n-check">n8n-check v0.1.0</a> turns this testing approach into a zero-dependency CLI with a pinned Docker runtime. Supply a workflow export, JSON fixtures, and HTTP mock responses; receive exact request/output checks and JSON/JUnit reports. The original render-loop lab below remains available.</p></div>
 <p>The <a href="https://github.com/blucca/flowdelta/tree/main/examples/runtime-checks">MIT-licensed lab and setup instructions</a> include the fixture builder, local mock, assertions, and runner. Use a dedicated local n8n 2.41.7 installation with Node.js 24+; the recorded run used Node.js 26.10.0. From the FlowDelta repository, after completing the linked installation steps:</p>
 <pre aria-label="Run the existing lab"><code>N8N_BINARY="$PWD/temp/n8n-runtime/node_modules/.bin/n8n" \
   node examples/runtime-checks/run-local.mjs \
