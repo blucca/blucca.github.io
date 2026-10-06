@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f3f1e9">
+<title>Check your n8n workflow before upgrading | Blucca</title>
+<meta name="description" content="Same export, same expectation, two n8n engines. See a real missing-body regression, then compare your own workflow across versions with a ready-to-copy GitHub Actions file.">
+<meta property="og:title" content="Change the engine. Keep the contract.">
+<meta property="og:description" content="Both n8n runs succeeded. One lost all 698 characters of the request body. Check your client workflow before upgrading.">
+<meta property="og:type" content="article"><meta property="og:url" content="https://blucca.github.io/guides/check-n8n-before-upgrade/">
+<link rel="canonical" href="https://blucca.github.io/guides/check-n8n-before-upgrade/">
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+<link rel="stylesheet" href="../../style.css"><link rel="stylesheet" href="../testing-n8n-http-requests/style.css"><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header wrap"><a class="wordmark" href="../../">blucca<span class="wordmark-dot">.</span></a><nav aria-label="Main navigation"><a href="#your-workflow">Your workflow</a><a class="nav-contact" href="../../n8n-release-checks/">The $650 pilot ↗</a></nav></header>
+<main id="main" class="guide wrap">
+<header class="guide-header">
+  <p class="eyebrow">For teams maintaining client workflows / upgrade checks</p>
+  <h1>Change the engine.<br><em>Keep the contract.</em></h1>
+  <p class="deck">Before upgrading n8n, run your exported workflow on both releases. Keep the inputs and expected behavior fixed. See exactly what changes.</p>
+  <div class="hero-actions"><a class="button" href="https://blucca.github.io/n8n-check/">Start with your export ↗</a><a class="text-link" href="#comparison">See the measured difference ↓</a></div>
+  <p class="byline">Blucca · October 7, 2026 · Real n8n engines, controlled HTTP responses</p>
+</header>
+
+<section class="comparison" id="comparison" aria-labelledby="comparison-title">
+  <div class="comparison-heading"><div><p class="eyebrow">A real Nextcloud report / PROPFIND</p><h2 id="comparison-title">Both runs succeeded.<br>One lost the request body.</h2></div><p>Same export.<br>Same expectation.<br><strong>Two engines.</strong></p></div>
+  <div class="version-grid">
+    <article class="version-card legacy" aria-labelledby="legacy-title"><p class="eyebrow">Reported release</p><h3 id="legacy-title">n8n 2.38.4</h3><p class="body-count"><strong>0</strong><span>of 698 XML characters sent</span></p><dl><div><dt>Engine execution</dt><dd>success</dd></div><div><dt>PROPFIND requests</dt><dd>1</dd></div><div><dt>Captured body</dt><dd><code>null</code></dd></div></dl><p class="contract-result"><strong>Contract failed</strong><span>5 / 6 checks · exit 1</span></p></article>
+    <article class="version-card candidate" aria-labelledby="candidate-title"><p class="eyebrow">Compared release</p><h3 id="candidate-title">n8n 2.41.7</h3><p class="body-count"><strong>698</strong><span>of 698 XML characters sent</span></p><dl><div><dt>Engine execution</dt><dd>success</dd></div><div><dt>PROPFIND requests</dt><dd>1</dd></div><div><dt>Captured body</dt><dd>Complete XML</dd></div></dl><p class="contract-result"><strong>Contract passed</strong><span>6 / 6 checks · exit 0</span></p></article>
+  </div>
+  <p class="comparison-caption">The same HTTP Request v4.5 parameters and 698-character diagnostic XML, run against a local capture server. The exact-body assertion exposes the engine difference. <a href="https://github.com/blucca/n8n-check/tree/v0.1.4/examples/version-matrix">Workflow, case &amp; recorded results ↗</a></p>
+</section>
+
+<div class="guide-layout"><aside class="contents" aria-label="Guide contents"><p class="eyebrow">Make it yours</p><ol><li><a href="#your-workflow">Bring your workflow</a></li><li><a href="#matrix">Compare two versions</a></li><li><a href="#handoff">Ship a client handoff</a></li></ol></aside>
+<article class="prose">
+<section id="your-workflow"><h2>Your workflow. Three steps.</h2><ol class="upgrade-steps">
+  <li><strong>Export and define the contract.</strong> <a href="https://blucca.github.io/n8n-check/">Open the local case builder</a>. Choose the input boundary, add synthetic items and HTTP responses, and set the outputs or request bodies the workflow should preserve. Download <code>workflow.json</code> and the completed <code>case.json</code>.</li>
+  <li><strong>Choose the deployed and candidate releases.</strong> Add the files to your repository. <a href="https://raw.githubusercontent.com/blucca/n8n-check/v0.1.4/examples/version-matrix/upgrade-check.yml">Get the complete upgrade YAML</a>, save it as <code>.github/workflows/n8n-upgrade.yml</code>, and set its two versions and file paths.</li>
+  <li><strong>Read both results before rollout.</strong> Commit, then open GitHub Actions. Each engine gets its own job, summary, and JSON/JUnit artifacts. A failed expectation makes that job fail while the other version continues.</li>
+</ol><p>A failing deployed baseline identifies behavior to address today. A candidate mismatch shows what needs review before the upgrade. Keep the expectation tied to the result your client needs.</p></section>
+
+<section id="matrix"><h2>One case. Two pinned runtimes.</h2><p>The key configuration inside the job:</p>
+<pre aria-label="GitHub Actions version-matrix excerpt"><code>strategy:
+  fail-fast: false
+  matrix:
+    n8n: ['2.38.4', '2.41.7']
+steps:
+  - uses: actions/checkout@v4
+  - uses: blucca/n8n-check@v0.1.4
+    with:
+      n8n-version: ${{ matrix.n8n }}
+      workflow: workflow.json
+      case: case.json
+      out: results/contract</code></pre>
+<p><a href="https://raw.githubusercontent.com/blucca/n8n-check/v0.1.4/examples/version-matrix/upgrade-check.yml">Download the full YAML, including artifact upload ↗</a></p>
+<p>Use exact releases available in n8n’s official image registry, with node types supported by both versions. The Action runs in loopback-only Docker on Linux. Real account credentials, Nextcloud properties, and provider behavior belong in the accompanying integration check.</p></section>
+
+<aside class="guide-cta" id="handoff" aria-labelledby="cta-title"><p class="eyebrow">Have a client upgrade to ship?</p><h2 id="cta-title">Get the checks.<br>Leave a handoff.</h2><p>The <strong>$650 implementation pilot</strong> covers one workflow or slice, up to 25 nodes, two mocked HTTP integrations, eight agreed scenarios, and one revision. Receive runnable fixtures, JSON/JUnit results, and a handoff guide.</p><a class="button" href="../../n8n-release-checks/">See scope and send a brief ↗</a><p class="small">Include the deployed version, target version, workflow purpose, and release date. Scope and acceptance criteria are agreed before payment.</p></aside>
+
+<p class="source-note">Source: <a href="https://github.com/n8n-io/n8n/issues/39395">KroetschVialutions’ Nextcloud report #39395</a>; body-handling fix by the upstream contributors in <a href="https://github.com/n8n-io/n8n/pull/24151">n8n PR #24151</a>. The diagnostic XML is retained verbatim for comparison. Blucca’s autonomous AI engineer prepared and ran this independent regression check with synthetic connection values and local HTTP responses.</p>
+</article></div>
+</main>
+<footer class="wrap footer"><div class="footer-line"><a class="wordmark" href="../../">blucca<span class="wordmark-dot">.</span></a><span>Software, automation &amp; research.</span><div><a href="https://github.com/blucca/n8n-check">n8n-check ↗</a><a href="../../">All capabilities ↗</a></div></div></footer>
+</body></html>
