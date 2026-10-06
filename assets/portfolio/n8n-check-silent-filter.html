@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>n8n-check — successful execution, missing business data</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;width:1400px;height:1050px;overflow:hidden}
+body{background:#f1f0e8;color:#243a2d;font-family:Arial,Helvetica,sans-serif}
+main{position:relative;width:1400px;height:1050px;padding:54px 66px}
+header{display:flex;justify-content:space-between;align-items:center;font:14px monospace;letter-spacing:1.5px}
+.brand{font:700 31px Arial;letter-spacing:-1px}.brand span{color:#6a8057}
+.tag{border:1px solid #aeb8a5;padding:10px 14px;font-size:12px}
+.eyebrow{margin:54px 0 18px;font:700 15px monospace;letter-spacing:2px;color:#57724a}
+h1{margin:0;font-size:83px;line-height:1.02;letter-spacing:-4px;font-weight:750}
+h1 span{color:#a14639}.deck{font-size:24px;line-height:1.5;margin:22px 0 31px;color:#586352}
+.board{border:1px solid #a6b39e;background:#fbfbf6;border-radius:9px;overflow:hidden}
+.board-head{background:#243a2d;color:#eef2e8;display:flex;justify-content:space-between;padding:20px 27px;font:13px monospace;letter-spacing:1px}
+.table{display:grid;grid-template-columns:1.45fr 1fr 1fr;margin:0 27px}
+.cell{padding:19px 20px;border-bottom:1px solid #d6dccf;font-size:23px;display:flex;align-items:center;gap:14px;line-height:1.25}
+.cell:nth-child(3n+1){padding-left:0}.heading{color:#67725e;font:12px monospace;letter-spacing:1.5px;padding-top:22px;padding-bottom:15px}
+.cell:nth-last-child(-n+3){border:0;padding-bottom:25px}
+.dot{width:10px;height:10px;border-radius:50%;background:#557d46;flex-shrink:0}
+.bad{color:#a14639;font-weight:700}.good{color:#426e34;font-weight:700}.bad .dot{background:#a14639}
+.detail{font:14px monospace;font-weight:400;color:#67725e}.metric{font-size:36px;font-weight:700;letter-spacing:-1px}
+.bottom{display:flex;justify-content:space-between;align-items:center;margin-top:27px;gap:20px}
+.lesson{font-size:22px;font-weight:700;letter-spacing:-.3px}.source{font:13px monospace;color:#62705a;line-height:1.6;text-align:right}
+footer{position:absolute;bottom:43px;left:66px;right:66px;border-top:1px solid #b9c2b0;padding-top:23px;display:flex;justify-content:space-between;align-items:center;font:14px monospace;color:#59674f}
+footer strong{font-size:18px;color:#243a2d}.stripe{position:absolute;bottom:0;left:0;right:0;height:10px;background:#557344}
+</style>
+<main>
+<header><div class="brand">blucca<span>.</span></div><div class="tag">n8n-check / OPEN-SOURCE REGRESSION TESTS</div></header>
+<p class="eyebrow">THE WORKFLOW FINISHED. CHECK THE OUTCOME.</p>
+<h1>Successful execution.<br><span>Eight missing rows.</span></h1>
+<p class="deck">A leftover filter silently drops every relevant match.<br>The same fixture catches the regression and verifies the one-line fix.</p>
+<section class="board" aria-label="Recorded broken and fixed workflow results">
+<div class="board-head"><span>SAME 9 INPUT ROWS · 8 EXPECTED MATCHES</span><span>REAL n8n 2.41.7 RUNS</span></div>
+<div class="table">
+<div class="cell heading">OBSERVATION</div><div class="cell heading">OLD FILTER</div><div class="cell heading">FIXED FILTER</div>
+<div class="cell">n8n execution</div><div class="cell good"><span class="dot"></span>Success</div><div class="cell good"><span class="dot"></span>Success</div>
+<div class="cell">Relevant rows returned</div><div class="cell bad"><span class="metric">0</span><span class="detail">expected 8</span></div><div class="cell good"><span class="metric">8</span><span class="detail">exact match</span></div>
+<div class="cell">n8n-check result</div><div class="cell bad"><span class="dot"></span>Fail <span class="detail">exit 1</span></div><div class="cell good"><span class="dot"></span>Pass <span class="detail">exit 0</span></div>
+</div>
+</section>
+<div class="bottom"><div class="lesson">Assert the business result at the node where it matters.</div><div class="source">Synthetic retrieval fixture<br>Original illustration of recorded results</div></div>
+<footer><strong>Fork → Actions → Run workflow ↗</strong><span>github.com/blucca/n8n-check</span></footer>
+<div class="stripe"></div>
+</main>
+</html>
