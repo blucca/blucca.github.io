@@ -1,0 +1,10 @@
+{
+  "uid": "company-report-link",
+  "type": "card",
+  "config": {
+    "name": "Company report",
+    "location": "crm.record.sidebar",
+    "entrypoint": "/app/cards/CompanyReportCard.tsx",
+    "objectTypes": ["companies"]
+  }
+}
