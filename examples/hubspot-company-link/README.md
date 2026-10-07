@@ -26,7 +26,7 @@ The implementation reads one CRM property through the SDK. It hides the link dur
 
 ## Deploy a standalone test project
 
-The reference App and card completed **HubSpot cloud build and deployment** on platform `2026.03` in both a standard account and an isolated developer test account on October 6, 2026. Browser rendering and destination navigation are the next acceptance stage.
+The reference App and card completed **HubSpot cloud build and deployment** on platform `2026.03` in both a standard account and an isolated developer test account on October 6, 2026. On October 7, the app was installed in the developer test account and the card passed live browser acceptance on two synthetic company records. See [live results and screenshots](#live-browser-acceptance).
 
 With the [HubSpot CLI](https://developers.hubspot.com/docs/developer-tooling/local-development/hubspot-cli/commands/account-commands) authenticated:
 
@@ -41,7 +41,35 @@ hs project upload --account YOUR_TEST_ACCOUNT_NAME
 
 The helper copies the existing card source and creates a private, static-auth app with `oauth` and `crm.objects.companies.read`. Its project and app names identify this standalone reference. For your own distribution, update the app name, UID and support details. For an existing app, follow the integration steps above.
 
-In the test account, create a company **single-line text** property with internal name `public_id`, then set one test company's value to `000042`. Add **Company report** to its record sidebar through the record-view editor. Verify the viewer email, leading zeroes, empty value, Refresh after editing, record navigation and the report destination. Use a report URL you control for this browser acceptance.
+### Install and place the card
+
+1. In the deployed project, select the **app component → Distribution → Install now** for your test account, then connect the app. A deployed component becomes available to record views after app installation.
+2. Create a company **single-line text** property labelled **Public ID**, with internal name `public_id`. Create two synthetic companies; set the first Public ID to `000042`.
+3. Open a company record, choose **Customize → Default view**, then **Add cards** in the **right sidebar → Card library → Company report → Add card**. Save and exit the layout editor. Labels follow the account's UI language.
+4. For a controlled test destination, set `REPORT_CONFIG.baseUrl` to `https://blucca.github.io/examples/hubspot-company-link/demo-report.html?source=hubspot`, upload the project again, and reload the record. The static page displays the received query values.
+5. Open the card's report link, edit the property and choose **Refresh**, clear the value and refresh, then switch between the two companies. Record the actual destination's authentication and authorization behavior separately when integrating your production report service.
+
+## Live browser acceptance
+
+**Passed October 7, 2026:** platform `2026.03`, isolated developer test account, build/deploy 2, installed private static-auth app, `crm.record.sidebar`, Chromium browser, one real HubSpot viewer and two synthetic companies.
+
+| Check | Observed result |
+|---|---|
+| Viewer context | Generated `user` parameter matched the signed-in HubSpot viewer's email. |
+| Text ID | `000042` arrived at the controlled report page with all leading zeroes. |
+| Edit and Refresh | Editing to `000043` retained the earlier link until Refresh; Refresh produced `id=000043`. |
+| Empty and recovery | Clearing the property and refreshing showed the missing-ID message; setting `000042` and refreshing restored the link. |
+| Second company | `00127&west` produced `id=00127%26west` on the second record. Returning to the first record used its own ID. |
+| External navigation | Clicking the card opened the controlled report page in a new tab. The page displayed the expected `user`, `id` and `source=hubspot`. |
+
+![Live HubSpot sidebar: report link ready](images/card-ready.png)
+![Live HubSpot sidebar: missing Public ID](images/card-empty.png)
+
+*Cropped screenshots of the live card in the test portal. Synthetic company data; the report screenshot shows Blucca's public business email.*
+
+[View the actual report-navigation screenshot](images/report-navigation.png) · [Try the synthetic report destination](demo-report.html?source=hubspot&user=analyst%40example.com&id=000042)
+
+The automated suite covers loading, read-error recovery and late asynchronous responses. The live checks above cover installed-card rendering, actual CRM reads, current-user wiring and browser navigation. Production report permissions and a second viewer are part of the receiving app's acceptance plan.
 
 ## Run the checks
 
