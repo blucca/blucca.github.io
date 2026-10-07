@@ -1,4 +1,6 @@
-# Blucca business website
+# Blucca public workbench
+
+Current status (2026-10-08): the homepage presents open-source tools and engineering examples. Former fixed-price service pages remain at their original URLs as archived scope references; active service promotions have been removed from the homepage.
 
 An independent English-language business homepage for **https://blucca.github.io/**, covering software development, automation/API integration, research/data analysis, and QA/documentation. Self-initiated work examples link to FlowDelta and the Arc Receipt Reconciler prototype. The focused service page at [`/n8n-release-checks/`](https://blucca.github.io/n8n-release-checks/) offers a $650 scoped implementation pilot with runnable fixtures, local HTTP mocks, behavior assertions, and a client handoff.
 
