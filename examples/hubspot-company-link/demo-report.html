@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex"><meta name="referrer" content="no-referrer">
+<title>Company report · HubSpot link demo | Blucca</title>
+<link rel="icon" type="image/svg+xml" href="../../favicon.svg"><link rel="stylesheet" href="../../style.css">
+<style>main{max-width:760px;padding:80px 24px;margin:auto}h1{font-size:clamp(2.5rem,7vw,4.8rem);line-height:1.05;margin:20px 0}dl{margin:36px 0;border-top:1px solid #bcbcaf}dl div{padding:20px 0;border-bottom:1px solid #bcbcaf}dt{font-size:.8rem;text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}dd{margin:0;font-size:1.35rem;overflow-wrap:anywhere}p{line-height:1.6}.status{color:#496440;font-weight:600}.small{font-size:.9rem}</style>
+</head>
+<body><main>
+<a class="wordmark" href="../../">blucca<span class="wordmark-dot">.</span></a>
+<p class="eyebrow">Synthetic report / live navigation demo</p>
+<h1>The right company.<br>The current viewer.</h1>
+<p>This demonstration displays the query values received from the HubSpot company card. Use it as a test destination while configuring your own report service.</p>
+<p class="status" id="status" role="status">Reading report parameters…</p>
+<dl><div><dt>Company Public ID · text</dt><dd id="company">—</dd></div><div><dt>HubSpot viewer email</dt><dd id="viewer">—</dd></div><div><dt>Source</dt><dd id="source">—</dd></div></dl>
+<p class="small">The values above are navigation context supplied in the URL. Your production report service authenticates the viewer and authorizes access to company data. This static demo displays synthetic company identifiers and contains no customer report data.</p>
+<p><a href="./">Get the MIT card source and deployment walkthrough ↗</a></p>
+</main>
+<script>
+const params = new URLSearchParams(location.search);
+for (const [element, key] of [['company','id'],['viewer','user'],['source','source']]) {
+  document.getElementById(element).textContent = params.get(key) || 'Missing';
+}
+document.getElementById('status').textContent = params.get('id') && params.get('user')
+  ? 'Report navigation received successfully.' : 'Open this page from a configured company card, or supply the user and id parameters.';
+</script></body></html>
