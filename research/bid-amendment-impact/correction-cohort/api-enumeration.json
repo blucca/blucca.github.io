@@ -1,0 +1,265 @@
+{
+  "start_inclusive_utc": "2024-11-04T00:00:00Z",
+  "end_exclusive_utc": "2024-11-11T00:00:00Z",
+  "api_parameters": {
+    "updatedFrom": "2024-11-04T00:00:00",
+    "updatedTo": "2024-11-10T23:59:59",
+    "limit": 100
+  },
+  "date_parameter_meaning": "Earliest/latest date and time record was last updated (official API documentation)",
+  "pages": [
+    {
+      "page": 1,
+      "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2024-11-04T00%3A00%3A00&updatedTo=2024-11-10T23%3A59%3A59&limit=100",
+      "count": 100,
+      "next": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2024-11-04T00:00:00&updatedTo=2024-11-10T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNC0xMS0wNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNC0xMS0xMFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTczMTI1OQ==",
+      "first_id": "036344-2024",
+      "last_id": "036245-2024"
+    },
+    {
+      "page": 2,
+      "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2024-11-04T00:00:00&updatedTo=2024-11-10T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNC0xMS0wNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNC0xMS0xMFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTczMTI1OQ==",
+      "count": 100,
+      "next": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2024-11-04T00:00:00&updatedTo=2024-11-10T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNC0xMS0wNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNC0xMS0xMFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTM5NTUxOA==",
+      "first_id": "036341-2024",
+      "last_id": "036183-2024"
+    },
+    {
+      "page": 3,
+      "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2024-11-04T00:00:00&updatedTo=2024-11-10T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNC0xMS0wNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNC0xMS0xMFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTM5NTUxOA==",
+      "count": 100,
+      "next": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2024-11-04T00:00:00&updatedTo=2024-11-10T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNC0xMS0wNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNC0xMS0xMFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTM5NTEzMg==",
+      "first_id": "036182-2024",
+      "last_id": "035810-2024"
+    },
+    {
+      "page": 4,
+      "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2024-11-04T00:00:00&updatedTo=2024-11-10T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNC0xMS0wNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNC0xMS0xMFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTM5NTEzMg==",
+      "count": 47,
+      "next": null,
+      "first_id": "035796-2024",
+      "last_id": "035576-2024"
+    }
+  ],
+  "terminal_next_absent": true,
+  "raw_record_count": 347,
+  "unique_ocid_release_id_count": 309,
+  "duplicates": [
+    {
+      "ocid": "ocds-h6vhtk-035ea9",
+      "id": "036341-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-04b54a",
+      "id": "036335-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-044ca6",
+      "id": "036333-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-047d61",
+      "id": "036332-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-037df3",
+      "id": "036331-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-04b546",
+      "id": "036328-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-04b544",
+      "id": "036325-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-04216d",
+      "id": "036324-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-049631",
+      "id": "036322-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-029efe",
+      "id": "036321-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-04b53c",
+      "id": "036313-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-0470d3",
+      "id": "036312-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-04b538",
+      "id": "036308-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-0471eb",
+      "id": "036306-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-049631",
+      "id": "036305-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-04b51e",
+      "id": "036300-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-042da0",
+      "id": "036298-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-03f86c",
+      "id": "036291-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-04b529",
+      "id": "036288-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-047ce5",
+      "id": "036285-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-04b526",
+      "id": "036284-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-0450ef",
+      "id": "036281-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-0445bb",
+      "id": "036280-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-040b07",
+      "id": "036279-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-047324",
+      "id": "036274-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-028fbf",
+      "id": "036272-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-043a79",
+      "id": "036271-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-047b43",
+      "id": "036269-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-04b51e",
+      "id": "036268-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-04553e",
+      "id": "036267-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-046c0d",
+      "id": "036265-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-04b51a",
+      "id": "036262-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-04ada7",
+      "id": "036258-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-04357d",
+      "id": "036256-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-04110a",
+      "id": "036255-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-04b513",
+      "id": "036251-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-04b50e",
+      "id": "036246-2024",
+      "identical": true
+    },
+    {
+      "ocid": "ocds-h6vhtk-044c13",
+      "id": "036245-2024",
+      "identical": true
+    }
+  ],
+  "tag_counts": {
+    "award,contract": 107,
+    "planning": 23,
+    "tender": 140,
+    "tenderUpdate": 32,
+    "planning,tender": 3,
+    "awardUpdate,contractUpdate": 4
+  },
+  "release_date_outside_week": [
+    {
+      "ocid": "ocds-h6vhtk-04b54d",
+      "id": "036338-2024",
+      "date": "2024-12-23T11:54:07Z"
+    },
+    {
+      "ocid": "ocds-h6vhtk-04b522",
+      "id": "036276-2024",
+      "date": "2024-11-28T10:56:36Z"
+    },
+    {
+      "ocid": "ocds-h6vhtk-04b4f0",
+      "id": "036208-2024",
+      "date": "2024-12-13T11:53:09Z"
+    }
+  ],
+  "correction_candidate_count": 36
+}

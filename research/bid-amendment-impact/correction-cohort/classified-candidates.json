@@ -1,0 +1,2118 @@
+[
+  {
+    "ocid": "ocds-h6vhtk-049812",
+    "notice_id": "035611-2024",
+    "release_date": "2024-11-04T10:52:26Z",
+    "title": "HFEA Transformation Project - Dynamics 365 & SharePoint",
+    "buyer": "Department of Health and Social Care",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/035611-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/035611-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "text": "Department of Health and Social Care"
+          },
+          "newValue": {
+            "text": "Human Fertilisation & Embryology Authority (HFEA)"
+          },
+          "where": {
+            "section": "I.1.1"
+          }
+        },
+        "normalized_section": "I.1.1",
+        "has_old_and_new": true,
+        "old_new_different": true
+      },
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/1",
+        "change": {
+          "oldValue": {
+            "text": "DHSC, London"
+          },
+          "newValue": {
+            "text": "HFEA, London"
+          },
+          "where": {
+            "section": "I.1"
+          }
+        },
+        "normalized_section": "I.1",
+        "has_old_and_new": true,
+        "old_new_different": true
+      },
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/2",
+        "change": {
+          "oldValue": {
+            "text": "39 Victoria Street"
+          },
+          "newValue": {
+            "text": "2 Redman Place"
+          },
+          "where": {
+            "section": "I.1.3"
+          }
+        },
+        "normalized_section": "I.1.3",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 4 November 2024, 10:52am",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-04T10:52:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "I.1",
+      "I.1.1",
+      "I.1.3"
+    ],
+    "effective_sections": [
+      "I.1",
+      "I.1.1",
+      "I.1.3"
+    ],
+    "reported_change_count": 3,
+    "effective_change_count": 3,
+    "multi_section": true,
+    "multi_effective_section": true,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04b13b",
+    "notice_id": "035671-2024",
+    "release_date": "2024-11-04T15:16:15Z",
+    "title": "Tools and Spare Parts",
+    "buyer": "THAMES WATER UTILITIES LIMITED",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/035671-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/035671-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "date": "2024-11-11T12:00:00Z"
+          },
+          "newValue": {
+            "date": "2024-11-18T12:00:00Z"
+          },
+          "where": {
+            "section": "IV.2.2"
+          }
+        },
+        "normalized_section": "IV.2.2",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 4 November 2024,  3:16pm",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-04T15:16:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "IV.2.2"
+    ],
+    "effective_sections": [
+      "IV.2.2"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": true,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [
+      "/tender/amendments/0/unstructuredChanges/0"
+    ],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04b2a4",
+    "notice_id": "035747-2024",
+    "release_date": "2024-11-05T10:26:21Z",
+    "title": "Enforcement Agent Services",
+    "buyer": "LIVERPOOL CITY COUNCIL",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/035747-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/035747-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "text": "The procurement documents are available for unrestricted and full direct access, free of charge, at\nhttps://procontract.due-north.com/Procurer/Advert/View?advertId=0abaaefa-ec92-ef11-8130-005056b64545\nAdditional information can be obtained from the above-mentioned address\nApplications or, where applicable, tenders must be submitted electronically via\nhttps://procontract.due-north.com/Procurer/Advert/View?advertId=0abaaefa-ec92-ef11-8130-005056b64545"
+          },
+          "newValue": {
+            "text": "The procurement documents are available for unrestricted and full direct access, free of charge, at\nhttps://procontract.due-north.com/Advert?advertId=0abaaefa-ec92-ef11-8130-005056b64545 \nAdditional information can be obtained from the above-mentioned address\nApplications or, where applicable, tenders must be submitted electronically via\nhttps://procontract.due-north.com/Advert?advertId=0abaaefa-ec92-ef11-8130-005056b64545"
+          },
+          "where": {
+            "section": "I.3",
+            "label": "Communication"
+          }
+        },
+        "normalized_section": "I.3",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "notice_fetch_status": "error",
+    "notice_fetch_error": "HTTP Error 429: Too Many Requests",
+    "is_f14": null,
+    "explicit_sections": [
+      "I.3"
+    ],
+    "effective_sections": [
+      "I.3"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-0369c4",
+    "notice_id": "035792-2024",
+    "release_date": "2024-11-05T13:09:59Z",
+    "title": "Specialist Stop Smoking Service for Smoking for Sunderland",
+    "buyer": "Sunderland City Council",
+    "tags": [
+      "awardUpdate",
+      "contractUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/035792-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/035792-2024?origin=SearchResults",
+    "changes": [],
+    "notice_fetch_status": "error",
+    "notice_fetch_error": "HTTP Error 429: Too Many Requests",
+    "is_f14": null,
+    "explicit_sections": [],
+    "effective_sections": [],
+    "reported_change_count": 0,
+    "effective_change_count": 0,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04b2f0",
+    "notice_id": "035810-2024",
+    "release_date": "2024-11-05T14:28:50Z",
+    "title": "Provision of Biomass Fuel and Boiler Maintenance",
+    "buyer": "UHI North,West and Hebrides",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/035810-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/035810-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "date": "2024-12-03T09:00:00Z"
+          },
+          "newValue": {
+            "date": "2024-12-09T09:00:00Z"
+          },
+          "where": {
+            "section": "IV.2.2",
+            "label": "Time limit"
+          }
+        },
+        "normalized_section": "IV.2.2",
+        "has_old_and_new": true,
+        "old_new_different": true
+      },
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/1",
+        "change": {
+          "oldValue": {
+            "date": "2024-12-03T09:00:00Z"
+          },
+          "newValue": {
+            "date": "2024-12-09T09:00:00Z"
+          },
+          "where": {
+            "section": "IV.2.7",
+            "label": "Conditions for opening of tenders"
+          }
+        },
+        "normalized_section": "IV.2.7",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "notice_fetch_status": "error",
+    "notice_fetch_error": "HTTP Error 429: Too Many Requests",
+    "is_f14": null,
+    "explicit_sections": [
+      "IV.2.2",
+      "IV.2.7"
+    ],
+    "effective_sections": [
+      "IV.2.2",
+      "IV.2.7"
+    ],
+    "reported_change_count": 2,
+    "effective_change_count": 2,
+    "multi_section": true,
+    "multi_effective_section": true,
+    "receipt_deadline_date_change": true,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [
+      "/tender/amendments/0/unstructuredChanges/0"
+    ],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04b34e",
+    "notice_id": "035828-2024",
+    "release_date": "2024-11-05T15:32:30Z",
+    "title": "Provision of Non-Recyclable Household Waste Acceptance and Recovery Services (5 Lots)",
+    "buyer": "Lancashire County Council",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/035828-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/035828-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "date": "2024-12-10T11:00:00Z"
+          },
+          "newValue": {
+            "date": "2025-01-07T11:00:00Z"
+          },
+          "where": {
+            "section": "IV.2.2."
+          }
+        },
+        "normalized_section": "IV.2.2",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 5 November 2024,  3:32pm",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-05T15:32:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "IV.2.2"
+    ],
+    "effective_sections": [
+      "IV.2.2"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": true,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [
+      "/tender/amendments/0/unstructuredChanges/0"
+    ],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04ac71",
+    "notice_id": "035858-2024",
+    "release_date": "2024-11-05T19:05:05Z",
+    "title": "Control Tower Building Systems",
+    "buyer": "Epping Forest District Council",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/035858-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/035858-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "date": "2024-11-18T12:00:00Z"
+          },
+          "newValue": {
+            "date": "2024-12-16T12:00:00Z"
+          },
+          "where": {
+            "section": "IV.2.2",
+            "label": "Deadline for return of tenders"
+          }
+        },
+        "normalized_section": "IV.2.2",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 5 November 2024,  7:05pm",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-05T19:05:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "IV.2.2"
+    ],
+    "effective_sections": [
+      "IV.2.2"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": true,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [
+      "/tender/amendments/0/unstructuredChanges/0"
+    ],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-03cfd4",
+    "notice_id": "035887-2024",
+    "release_date": "2024-11-06T11:01:35Z",
+    "title": "CCS028 Therapeutic Assessment to Support Education and Health Care Plan Delivery",
+    "buyer": "Derbyshire County Council",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/035887-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/035887-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "text": ""
+          },
+          "newValue": {
+            "text": "Title: CCS028 Therapeutic Assessment to Support Education and Health Care Plan Delivery Lot 1: Educational Psychology\nA contract/lot is awarded: Yes\nV.2) Award of contract\nV.2.1) Date of conclusion of the contract: 20 September 2024\nV.2.2) Information about tenders\nNumber of tenders received: 14\nNumber of tenders received from SMEs: 7\nNumber of tenders received from tenderers from other EU Member States: 0\nNumber of tenders received from tenderers from non-EU Member States: 0\nNumber of tenders received by electronic means: 14\nThe contract has been awarded to a group of economic operators: No\nV.2.3) Name and address of the contractor\nDerbyshire Child and Educational Psychology Ltd\nDerwent House\n141-145 Dale Road\nMatlock\nDerbyshire\nDE4 3LU\nCountry: United Kingdom\nNUTS code: UK - United Kingdom\nThe contractor is an SME: No\nV.2.4) Information on value of contract/lot (excluding VAT)\nTotal value of the contract/lot: £0.01"
+          },
+          "where": {
+            "section": "V"
+          },
+          "relatedLot": "1"
+        },
+        "normalized_section": "V",
+        "has_old_and_new": true,
+        "old_new_different": true
+      },
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/1",
+        "change": {
+          "oldValue": {
+            "text": ""
+          },
+          "newValue": {
+            "text": "Title: CCS028 Therapeutic Assessment to Support Education and Health Care Plan Delivery Lot 1: Educational Psychology\nA contract/lot is awarded: Yes\nV.2) Award of contract\nV.2.1) Date of conclusion of the contract: 20 September 2024\nV.2.2) Information about tenders\nNumber of tenders received: 14\nNumber of tenders received from SMEs: 7\nNumber of tenders received from tenderers from other EU Member States: 0\nNumber of tenders received from tenderers from non-EU Member States: 0\nNumber of tenders received by electronic means: 14\nThe contract has been awarded to a group of economic operators: No\nV.2.3) Name and address of the contractor\nSanctuary Personnel Ltd (trading as Skylakes Psychology)\n15 Friars Street\nIpswich\nIP1 1TD\nCountry: United Kingdom\nNUTS code: UK - United Kingdom\nThe contractor is an SME: No\nV.2.4) Information on value of contract/lot (excluding VAT)\nTotal value of the contract/lot: £0.01"
+          },
+          "where": {
+            "section": "V"
+          },
+          "relatedLot": "1"
+        },
+        "normalized_section": "V",
+        "has_old_and_new": true,
+        "old_new_different": true
+      },
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/2",
+        "change": {
+          "oldValue": {
+            "text": ""
+          },
+          "newValue": {
+            "text": "Title: CCS028 Therapeutic Assessment to Support Education and Health Care Plan Delivery Lot 2: Speech and Languarge Therapy\nA contract/lot is awarded: Yes\nV.2) Award of contract\nV.2.1) Date of conclusion of the contract: 20 September 2024\nV.2.2) Information about tenders\nNumber of tenders received: 14\nNumber of tenders received from SMEs: 7\nNumber of tenders received from tenderers from other EU Member States: 0\nNumber of tenders received from tenderers from non-EU Member States: 0\nNumber of tenders received by electronic means: 14\nThe contract has been awarded to a group of economic operators: No\nV.2.3) Name and address of the contractor\nKidsKinetic\n71- 75 Shelton Street\nCovent Garden\nLondon\nWC2H 9JQ\nCountry: United Kingdom\nNUTS code: UK - United Kingdom\nThe contractor is an SME: Yes\nV.2.4) Information on value of contract/lot (excluding VAT)\nTotal value of the contract/lot: £0.01"
+          },
+          "where": {
+            "section": "V"
+          },
+          "relatedLot": "2"
+        },
+        "normalized_section": "V",
+        "has_old_and_new": true,
+        "old_new_different": true
+      },
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/3",
+        "change": {
+          "oldValue": {
+            "text": ""
+          },
+          "newValue": {
+            "text": "Title: CCS028 Therapeutic Assessment to Support Education and Health Care Plan Delivery Lot 3: Occupational and Sensory Therapy\nA contract/lot is awarded: Yes\nV.2) Award of contract\nV.2.1) Date of conclusion of the contract: 20 September 2024\nV.2.2) Information about tenders\nNumber of tenders received: 14\nNumber of tenders received from SMEs: 7\nNumber of tenders received from tenderers from other EU Member States: 0\nNumber of tenders received from tenderers from non-EU Member States: 0\nNumber of tenders received by electronic means: 14\nThe contract has been awarded to a group of economic operators: No\nV.2.3) Name and address of the contractor\nKidsKinetic\n71- 75 Shelton Street\nCovent Garden\nLondon\nWC2H 9JQ\nCountry: United Kingdom\nNUTS code: UK - United Kingdom\nThe contractor is an SME: Yes\nV.2.4) Information on value of contract/lot (excluding VAT)\nTotal value of the contract/lot: £0.01"
+          },
+          "where": {
+            "section": "V"
+          },
+          "relatedLot": "3"
+        },
+        "normalized_section": "V",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 6 November 2024, 11:01am",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-06T11:01:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "V"
+    ],
+    "effective_sections": [
+      "V"
+    ],
+    "reported_change_count": 4,
+    "effective_change_count": 4,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04b42f",
+    "notice_id": "035899-2024",
+    "release_date": "2024-11-06T11:49:22Z",
+    "title": "Provision of Tier 2 Community Family Support Service",
+    "buyer": "Staffordshire County Council",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/035899-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/035899-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "text": "Value including VAT  £7,680,000"
+          },
+          "newValue": {
+            "text": "Value excluding VAT  £6,400,000"
+          },
+          "where": {
+            "section": "II.1.5",
+            "label": "Estimated total value"
+          }
+        },
+        "normalized_section": "II.1.5",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 6 November 2024, 11:49am",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-06T11:49:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "II.1.5"
+    ],
+    "effective_sections": [
+      "II.1.5"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-0469be",
+    "notice_id": "035905-2024",
+    "release_date": "2024-11-06T12:18:11Z",
+    "title": "NRW Respacing, cleaning and weeding framework",
+    "buyer": "Natural Resources Wales",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/035905-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/035905-2024?origin=SearchResults",
+    "changes": [],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 6 November 2024, 12:18pm",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-06T12:18:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [],
+    "effective_sections": [],
+    "reported_change_count": 0,
+    "effective_change_count": 0,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04b44b",
+    "notice_id": "035918-2024",
+    "release_date": "2024-11-06T13:04:24Z",
+    "title": "PROVISION OF TREE SURGERY SERVICES",
+    "buyer": "Antrim and Newtownabbey Borough Council",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/035918-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/035918-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "text": "36"
+          },
+          "newValue": {
+            "text": "39"
+          },
+          "where": {
+            "section": "II.2.7",
+            "label": "Duration in Months"
+          }
+        },
+        "normalized_section": "II.2.7",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 6 November 2024,  1:04pm",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-06T13:04:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "II.2.7"
+    ],
+    "effective_sections": [
+      "II.2.7"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04a3f2",
+    "notice_id": "035951-2024",
+    "release_date": "2024-11-06T15:01:47Z",
+    "title": "The Walking and Cycling Index Residents’ Survey 2025",
+    "buyer": "Sustrans",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/035951-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/035951-2024?origin=SearchResults",
+    "changes": [],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 6 November 2024,  3:01pm",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-06T15:01:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [],
+    "effective_sections": [],
+    "reported_change_count": 0,
+    "effective_change_count": 0,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04a562",
+    "notice_id": "035965-2024",
+    "release_date": "2024-11-06T15:58:16Z",
+    "title": "Family Hubs Services Lot 1 Family Hubs Core & Family Support provision & Lot 2 Family Hubs Day Care provision",
+    "buyer": "The Borough Council of Calderdale",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/035965-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/035965-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "date": "2024-11-18T12:00:00Z"
+          },
+          "newValue": {
+            "date": "2024-12-02T12:00:00Z"
+          },
+          "where": {
+            "section": "iv.2.2",
+            "label": "Closing date"
+          },
+          "relatedLot": "1 & 2"
+        },
+        "normalized_section": "iv.2.2",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 6 November 2024,  3:58pm",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-06T15:58:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "iv.2.2"
+    ],
+    "effective_sections": [
+      "iv.2.2"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04b19e",
+    "notice_id": "036024-2024",
+    "release_date": "2024-11-07T10:13:16Z",
+    "title": "Main Contractor Framework",
+    "buyer": "Hyde Housing Association Ltd",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036024-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036024-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "text": ""
+          },
+          "newValue": {
+            "date": "2024-12-06T12:00:00Z"
+          },
+          "where": {
+            "section": "IV.2.2",
+            "label": "25 November 2024"
+          }
+        },
+        "normalized_section": "IV.2.2",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 7 November 2024, 10:13am",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-07T10:13:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "IV.2.2"
+    ],
+    "effective_sections": [
+      "IV.2.2"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04b354",
+    "notice_id": "036034-2024",
+    "release_date": "2024-11-07T10:52:20Z",
+    "title": "Construction of a new two-storey sports pavilion, ground works for new Hook Shed building, car parking and associated external works.",
+    "buyer": "Hook Parish Council",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036034-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036034-2024?origin=SearchResults",
+    "changes": [],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 7 November 2024, 10:52am",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-07T10:52:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [],
+    "effective_sections": [],
+    "reported_change_count": 0,
+    "effective_change_count": 0,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-0497dd",
+    "notice_id": "036037-2024",
+    "release_date": "2024-11-07T11:07:02Z",
+    "title": "Axial Control Valves",
+    "buyer": "NORTHERN GAS NETWORKS LIMITED",
+    "tags": [
+      "awardUpdate",
+      "contractUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036037-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036037-2024?origin=SearchResults",
+    "changes": [],
+    "form_label": "F20: Modification notice",
+    "published_label": "Published 7 November 2024, 11:07am",
+    "notice_fetch_status": "success",
+    "is_f14": false,
+    "published_utc_minute": "2024-11-07T11:07:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [],
+    "effective_sections": [],
+    "reported_change_count": 0,
+    "effective_change_count": 0,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04b399",
+    "notice_id": "036058-2024",
+    "release_date": "2024-11-07T12:05:16Z",
+    "title": "UKRI-4082 Design Supply Deliver and Commission of Split Pair 10Tesla Superconducting Magnetic System",
+    "buyer": "UK Research & Innovation",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036058-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036058-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "text": "The procurement documents are available for unrestricted and full direct access, free of charge, at https://www.delta-esourcing.com/tenders/UK-title/378CMJC8RN"
+          },
+          "newValue": {
+            "text": "The procurement documents are available for unrestricted and full direct access, free of charge, at https://www.delta-esourcing.com/tenders/UK-title/35ZB692MBC"
+          },
+          "where": {
+            "section": "I.3)",
+            "label": "The procurement documents are available for unrestricted and full direct access, free of charge, at https://www.delta-esourcing.com/tenders/UK-title/378CMJC8RN"
+          }
+        },
+        "normalized_section": "I.3)",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 7 November 2024, 12:05pm",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-07T12:05:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "I.3)"
+    ],
+    "effective_sections": [
+      "I.3)"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04b408",
+    "notice_id": "036082-2024",
+    "release_date": "2024-11-07T12:44:23Z",
+    "title": "Suffolk and North East Essex Long Covid and Myalgic Encephalomyelitis/Chronic Fatigue Syndrome (ME&CFS) Combined Service",
+    "buyer": "NHS Suffolk and North East Essex ICB",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036082-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036082-2024?origin=SearchResults",
+    "changes": [],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 7 November 2024, 12:44pm",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-07T12:44:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [],
+    "effective_sections": [],
+    "reported_change_count": 0,
+    "effective_change_count": 0,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-0447f2",
+    "notice_id": "036138-2024",
+    "release_date": "2024-11-07T15:23:26Z",
+    "title": "Renewal of the North Wales Domiciliary Care Agreement.",
+    "buyer": "Denbighshire County Council",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036138-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036138-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "date": "2024-11-08T12:00:00Z"
+          },
+          "newValue": {
+            "date": "2024-11-14T12:00:00Z"
+          },
+          "where": {
+            "section": "IV.2.2",
+            "label": "Time limit"
+          }
+        },
+        "normalized_section": "IV.2.2",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 7 November 2024,  3:23pm",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-07T15:23:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "IV.2.2"
+    ],
+    "effective_sections": [
+      "IV.2.2"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": true,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [
+      "/tender/amendments/0/unstructuredChanges/0"
+    ],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04b3a9",
+    "notice_id": "036151-2024",
+    "release_date": "2024-11-07T16:02:53Z",
+    "title": "ANDBC Pre-Qualification Questionnaire - Provision of Integrated Consultancy Services for Urban Waterfront and Public Realm under Bangor Waterfront Redevelopment",
+    "buyer": "Ards and North Down Borough Council",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036151-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036151-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "text": ""
+          },
+          "newValue": {
+            "classifications": [
+              {
+                "scheme": "CPV",
+                "id": "71230000",
+                "description": "Organisation of architectural design contests"
+              },
+              {
+                "scheme": "CPV",
+                "id": "71541000",
+                "description": "Construction project management services"
+              }
+            ]
+          },
+          "where": {
+            "section": "II.2.2)"
+          }
+        },
+        "normalized_section": "II.2.2)",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 7 November 2024,  4:02pm",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-07T16:02:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "II.2.2)"
+    ],
+    "effective_sections": [
+      "II.2.2)"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-041065",
+    "notice_id": "036158-2024",
+    "release_date": "2024-11-07T16:20:06Z",
+    "title": "YPO 001166 - Framework for International Recruitment of Social Work Roles and Associated Services",
+    "buyer": "YPO",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036158-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036158-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "date": "2024-11-15T12:00:00Z"
+          },
+          "newValue": {
+            "date": "2024-11-20T12:00:00Z"
+          },
+          "where": {
+            "section": "IV.2.2",
+            "label": "Time limit for receipt of tenders or requests to participate"
+          }
+        },
+        "normalized_section": "IV.2.2",
+        "has_old_and_new": true,
+        "old_new_different": true
+      },
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/1",
+        "change": {
+          "oldValue": {
+            "date": "2024-11-15T12:00:00Z"
+          },
+          "newValue": {
+            "date": "2024-11-20T12:00:00Z"
+          },
+          "where": {
+            "section": "IV.2.7",
+            "label": "Conditions for opening of tenders"
+          }
+        },
+        "normalized_section": "IV.2.7",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 7 November 2024,  4:20pm",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-07T16:20:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "IV.2.2",
+      "IV.2.7"
+    ],
+    "effective_sections": [
+      "IV.2.2",
+      "IV.2.7"
+    ],
+    "reported_change_count": 2,
+    "effective_change_count": 2,
+    "multi_section": true,
+    "multi_effective_section": true,
+    "receipt_deadline_date_change": true,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [
+      "/tender/amendments/0/unstructuredChanges/0"
+    ],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04b34a",
+    "notice_id": "036189-2024",
+    "release_date": "2024-11-08T08:58:37Z",
+    "title": "Calderdale - Online Mental Health & Emotional Wellbeing Service",
+    "buyer": "NHS West Yorkshire Integrated Care Board",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036189-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036189-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "text": "The Service Delivery Location is Bradford"
+          },
+          "newValue": {
+            "text": "The service delivery location is Calderdale"
+          },
+          "where": {
+            "section": "V1.3"
+          }
+        },
+        "normalized_section": "V1.3",
+        "has_old_and_new": true,
+        "old_new_different": true
+      },
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/1",
+        "change": {
+          "oldValue": {
+            "text": "2024752.00"
+          },
+          "newValue": {
+            "text": "£5,784,944"
+          },
+          "where": {
+            "section": "II.1.7",
+            "label": "Total Value of the Procurement"
+          }
+        },
+        "normalized_section": "II.1.7",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 8 November 2024,  8:58am",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-08T08:58:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "II.1.7",
+      "V1.3"
+    ],
+    "effective_sections": [
+      "II.1.7",
+      "V1.3"
+    ],
+    "reported_change_count": 2,
+    "effective_change_count": 2,
+    "multi_section": true,
+    "multi_effective_section": true,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04b4e7",
+    "notice_id": "036191-2024",
+    "release_date": "2024-11-08T09:07:43Z",
+    "title": "Automated Immunohaematology System [1689401]",
+    "buyer": "Procurement and Logistics Service",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036191-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036191-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "text": "595 156 GBP"
+          },
+          "newValue": {
+            "text": "1 486 061 GBP"
+          },
+          "where": {
+            "section": "V.2.4)",
+            "label": "Information on value of the contract/lot (excluding VAT) - Total value of the contract/lot:"
+          }
+        },
+        "normalized_section": "V.2.4)",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 8 November 2024,  9:07am",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-08T09:07:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "V.2.4)"
+    ],
+    "effective_sections": [
+      "V.2.4)"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04a6be",
+    "notice_id": "036195-2024",
+    "release_date": "2024-11-08T09:30:06Z",
+    "title": "Dropped Foot Stimulator and Associated Consumables",
+    "buyer": "Shropshire Healthcare Procurement Service",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036195-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036195-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "date": "2024-11-08T12:00:00Z"
+          },
+          "newValue": {
+            "date": "2024-11-12T12:00:00Z"
+          },
+          "where": {
+            "section": "IV.2.2",
+            "label": "Time limit for receipt of tenders or requests to participate"
+          }
+        },
+        "normalized_section": "IV.2.2",
+        "has_old_and_new": true,
+        "old_new_different": true
+      },
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/1",
+        "change": {
+          "oldValue": {
+            "date": "2024-11-08T12:00:00Z"
+          },
+          "newValue": {
+            "date": "2024-11-12T12:00:00Z"
+          },
+          "where": {
+            "section": "IV.2.7",
+            "label": "Conditions for opening of tenders"
+          }
+        },
+        "normalized_section": "IV.2.7",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 8 November 2024,  9:30am",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-08T09:30:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "IV.2.2",
+      "IV.2.7"
+    ],
+    "effective_sections": [
+      "IV.2.2",
+      "IV.2.7"
+    ],
+    "reported_change_count": 2,
+    "effective_change_count": 2,
+    "multi_section": true,
+    "multi_effective_section": true,
+    "receipt_deadline_date_change": true,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [
+      "/tender/amendments/0/unstructuredChanges/0"
+    ],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04b222",
+    "notice_id": "036197-2024",
+    "release_date": "2024-11-08T09:53:45Z",
+    "title": "MARKET TESTING - Re-Use at Essex County Council",
+    "buyer": "Essex County Council",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036197-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036197-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "text": "The closing date for this questionnaire is 12pm (midday) on Tuesday 12th November 2024."
+          },
+          "newValue": {
+            "text": "The closing date for this questionnaire is 6pm on Friday 15th November 2024."
+          },
+          "where": {
+            "section": "II.2.4"
+          }
+        },
+        "normalized_section": "II.2.4",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 8 November 2024,  9:53am",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-08T09:53:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "II.2.4"
+    ],
+    "effective_sections": [
+      "II.2.4"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04b4dd",
+    "notice_id": "036198-2024",
+    "release_date": "2024-11-08T09:55:08Z",
+    "title": "Grounds Maintenance and Associated Services",
+    "buyer": "City of Lincoln",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036198-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036198-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "text": "The City of Lincoln Council is seeking to procure a contractor to deliver Grounds\nMaintenance and Associated Services within its boundary.\nThe Contract will commence (Starting Date) with effect from 1st September 2024 and will be for a period of 10 years and 7 months, ending on 31st March 2035. The above period will cover the Mobilisation period (1st September 2024 to 31st August 2026) during which no costs will be reimbursed. This will then be followed by the Service Period (delivery of services) which will commence on 1st September 2026 with the duration of this element being 8 years and 7 months. Commencement of renumeration will be effect from this date. Please note that the initial contract period will be for the combined duration of the above (Mobilisation and Service Period) and there will be no break until this period ends. For clarity this period will commence on 1st September 2024 and will continue until 31st March 2035. In addition to this, there will be the option to extend the Service Period for one further period of 8 years, expiring 31st March 2043."
+          },
+          "newValue": {
+            "text": "The Contract will commence with effect from 1st July 2025 and will be for a period of 9 years and 9 months, ending on 31st March 2035.\nThe above period will cover both the Mobilisation Period and Service Period.  The Mobilisation Period will cover the period 1st July 2025 to 31st August 2026 (1 year 2 months), during which no costs will be reimbursed.  This will be followed by the Service Period (delivery of services) which will cover the period 1st September 2026 to 31st March 2035 (8 years 7 months).\nCommencement of renumeration will be effective from this date.  It should be noted that the above contract period will be for the combined duration of the above (Mobilisation and Service Period) and there will be no break until this period ends.  For clarity this period will commence on 1st July 2025 and will continue until 31st March 2025.\nIn addition to this, there will be the option to extend the Service Period for one\nfurther period of 8 years."
+          },
+          "where": {
+            "section": "II.1.4",
+            "label": "II.1.4"
+          }
+        },
+        "normalized_section": "II.1.4",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 8 November 2024,  9:55am",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-08T09:55:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "II.1.4"
+    ],
+    "effective_sections": [
+      "II.1.4"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04ad73",
+    "notice_id": "036205-2024",
+    "release_date": "2024-11-08T10:22:30Z",
+    "title": "Invitation to Tender  for the construction of the Hereford Railway Station Transport Hub",
+    "buyer": "Herefordshire Council",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036205-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036205-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "date": "2024-11-25T12:00:00Z"
+          },
+          "newValue": {
+            "date": "2024-12-18T12:00:00Z"
+          },
+          "where": {
+            "section": "IV.2.2"
+          }
+        },
+        "normalized_section": "IV.2.2",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 8 November 2024, 10:22am",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-08T10:22:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "IV.2.2"
+    ],
+    "effective_sections": [
+      "IV.2.2"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": true,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [
+      "/tender/amendments/0/unstructuredChanges/0"
+    ],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04ad73",
+    "notice_id": "036206-2024",
+    "release_date": "2024-11-08T10:29:53Z",
+    "title": "Invitation to Tender  for the construction of the Hereford Railway Station Transport Hub",
+    "buyer": "Herefordshire Council",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036206-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036206-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "date": "2025-02-24"
+          },
+          "newValue": {
+            "date": "2025-03-17"
+          },
+          "where": {
+            "section": "11.2.7"
+          }
+        },
+        "normalized_section": "11.2.7",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 8 November 2024, 10:29am",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-08T10:29:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "11.2.7"
+    ],
+    "effective_sections": [
+      "11.2.7"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-033ffb",
+    "notice_id": "036220-2024",
+    "release_date": "2024-11-08T11:22:33Z",
+    "title": "PROVISION OF HOUSEHOLD CO-MINGLED DRY RECYCLING COLLECTION SERVICES IN THE LEGACY ANTRIM BOROUGH COUNCIL AREA",
+    "buyer": "Antrim and Newtownabbey Borough Council",
+    "tags": [
+      "awardUpdate",
+      "contractUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036220-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036220-2024?origin=SearchResults",
+    "changes": [],
+    "form_label": "F20: Modification notice",
+    "published_label": "Published 8 November 2024, 11:22am",
+    "notice_fetch_status": "success",
+    "is_f14": false,
+    "published_utc_minute": "2024-11-08T11:22:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [],
+    "effective_sections": [],
+    "reported_change_count": 0,
+    "effective_change_count": 0,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-047211",
+    "notice_id": "036242-2024",
+    "release_date": "2024-11-08T12:27:30Z",
+    "title": "Regent Street, Piccadilly, Haymarket - Public Realm Design",
+    "buyer": "capitalEsourcing",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036242-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036242-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "text": "1600000"
+          },
+          "newValue": {
+            "text": "2800000"
+          },
+          "where": {
+            "section": "II.1.5"
+          }
+        },
+        "normalized_section": "II.1.5",
+        "has_old_and_new": true,
+        "old_new_different": true
+      },
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/1",
+        "change": {
+          "oldValue": {
+            "date": "2026-10-07"
+          },
+          "newValue": {
+            "date": "2030-10-07"
+          },
+          "where": {
+            "section": "II.2.7"
+          }
+        },
+        "normalized_section": "II.2.7",
+        "has_old_and_new": true,
+        "old_new_different": true
+      },
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/2",
+        "change": {
+          "oldValue": {
+            "text": ""
+          },
+          "newValue": {
+            "text": "- The contract is for RIBA stages 1-3 with the option for the Council to engage the successful supplier for RIBA stages 4-6. \nThe anticipated spend for RIBA stages 1-3 is £1.6m.  The anticipated spend for RIBA stages 4-6 is £1.2m. This gives a contract total of £2.6m if the successful supplier is engaged on RIBA stages 4-6.\n-The contract has an initial term of two years with the option to extend for a period or periods to cover services up until the end of RIBA stage 6 which is anticipated to be on or around 7 October 2030."
+          },
+          "where": {
+            "section": "II.2.4"
+          }
+        },
+        "normalized_section": "II.2.4",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 8 November 2024, 12:27pm",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-08T12:27:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "II.1.5",
+      "II.2.4",
+      "II.2.7"
+    ],
+    "effective_sections": [
+      "II.1.5",
+      "II.2.4",
+      "II.2.7"
+    ],
+    "reported_change_count": 3,
+    "effective_change_count": 3,
+    "multi_section": true,
+    "multi_effective_section": true,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04b51c",
+    "notice_id": "036264-2024",
+    "release_date": "2024-11-08T13:53:34Z",
+    "title": "Occupational Health Service [2786980]",
+    "buyer": "Procurement and Logistics Service",
+    "tags": [
+      "awardUpdate",
+      "contractUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036264-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036264-2024?origin=SearchResults",
+    "changes": [],
+    "form_label": "F20: Modification notice",
+    "published_label": "Published 8 November 2024,  1:53pm",
+    "notice_fetch_status": "success",
+    "is_f14": false,
+    "published_utc_minute": "2024-11-08T13:53:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [],
+    "effective_sections": [],
+    "reported_change_count": 0,
+    "effective_change_count": 0,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-042da0",
+    "notice_id": "036298-2024",
+    "release_date": "2024-11-08T15:15:23Z",
+    "title": "NHS Devon - High Intensity Use Service to Torbay and South Devon NHS Foundation Trust",
+    "buyer": "NHS Devon Integrated Care Board",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036298-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036298-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "text": ""
+          },
+          "newValue": {
+            "date": "2024-10-01"
+          },
+          "where": {
+            "section": "V.2.1"
+          }
+        },
+        "normalized_section": "V.2.1",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 8 November 2024,  3:15pm",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-08T15:15:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "V.2.1"
+    ],
+    "effective_sections": [
+      "V.2.1"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04b51e",
+    "notice_id": "036300-2024",
+    "release_date": "2024-11-08T15:26:20Z",
+    "title": "Venue Hire, Graduation Ceremonies",
+    "buyer": "Cardiff Metropolitan University",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036300-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036300-2024?origin=SearchResults",
+    "changes": [],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 8 November 2024,  3:26pm",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-08T15:26:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [],
+    "effective_sections": [],
+    "reported_change_count": 0,
+    "effective_change_count": 0,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-0470d3",
+    "notice_id": "036312-2024",
+    "release_date": "2024-11-08T15:56:37Z",
+    "title": "South Norfolk Council: Customer Relation Management Software Package",
+    "buyer": "South Norfolk Council",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036312-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036312-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "date": "2024-12-02T12:00:00Z"
+          },
+          "newValue": {
+            "date": "2024-12-09T16:00:00Z"
+          },
+          "where": {
+            "section": "IV.2.2",
+            "label": "Time limit for receipt of tenders or requests to participate"
+          }
+        },
+        "normalized_section": "IV.2.2",
+        "has_old_and_new": true,
+        "old_new_different": true
+      },
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/1",
+        "change": {
+          "oldValue": {
+            "text": "Provision of a statement of annual turnover – we reserve the right to exclude any supplier with an annual turnover of below £250k."
+          },
+          "newValue": {
+            "text": "Provision of a statement of annual turnover – we reserve the right to exclude any supplier with an annual turnover of below £250k. Additional minimum requirements as in the SQ guidance document published."
+          },
+          "where": {
+            "section": "III.1.2",
+            "label": "Economic and financial standing"
+          }
+        },
+        "normalized_section": "III.1.2",
+        "has_old_and_new": true,
+        "old_new_different": true
+      },
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/2",
+        "change": {
+          "oldValue": {
+            "text": "Provision of three examples of relevant technical ability and experience within a public sector client or equivalent"
+          },
+          "newValue": {
+            "text": "Provision of three examples of relevant technical ability and experience within a public sector client or equivalent and additional professional and technical capability questions as detailed in the SQ and accompanying guidance."
+          },
+          "where": {
+            "section": "III.1.3",
+            "label": "Technical and professional ability"
+          }
+        },
+        "normalized_section": "III.1.3",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 8 November 2024,  3:56pm",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-08T15:56:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "III.1.2",
+      "III.1.3",
+      "IV.2.2"
+    ],
+    "effective_sections": [
+      "III.1.2",
+      "III.1.3",
+      "IV.2.2"
+    ],
+    "reported_change_count": 3,
+    "effective_change_count": 3,
+    "multi_section": true,
+    "multi_effective_section": true,
+    "receipt_deadline_date_change": true,
+    "finance_section_change": true,
+    "technical_section_change": true,
+    "deadline_and_finance_or_technical": true,
+    "deadline_and_both_finance_and_technical": true,
+    "deadline_change_pointers": [
+      "/tender/amendments/0/unstructuredChanges/0"
+    ],
+    "finance_change_pointers": [
+      "/tender/amendments/0/unstructuredChanges/1"
+    ],
+    "technical_change_pointers": [
+      "/tender/amendments/0/unstructuredChanges/2"
+    ],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-049631",
+    "notice_id": "036322-2024",
+    "release_date": "2024-11-08T16:06:28Z",
+    "title": "Generation 5 Geotechnical and Geoenvironmental Framework 2025-2029",
+    "buyer": "HAMPSHIRE COUNTY COUNCIL",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036322-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036322-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "date": "2024-12-09T14:00:00Z"
+          },
+          "newValue": {
+            "date": "2024-12-20T14:00:00Z"
+          },
+          "where": {
+            "section": "IV.2.2",
+            "label": "Time limit for receipt of tenders or requests to participate"
+          }
+        },
+        "normalized_section": "IV.2.2",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 8 November 2024,  4:06pm",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-08T16:06:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "IV.2.2"
+    ],
+    "effective_sections": [
+      "IV.2.2"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": true,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [
+      "/tender/amendments/0/unstructuredChanges/0"
+    ],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  },
+  {
+    "ocid": "ocds-h6vhtk-04b52a",
+    "notice_id": "036326-2024",
+    "release_date": "2024-11-08T16:23:09Z",
+    "title": "Shared Lives Service",
+    "buyer": "Lincolnshire County Council",
+    "tags": [
+      "tenderUpdate"
+    ],
+    "notice_url": "https://www.find-tender.service.gov.uk/Notice/036326-2024",
+    "retrieval_url": "https://www.find-tender.service.gov.uk/Notice/036326-2024?origin=SearchResults",
+    "changes": [
+      {
+        "pointer": "/tender/amendments/0/unstructuredChanges/0",
+        "change": {
+          "oldValue": {
+            "text": "https://procontract.due-north.com/Advert?advertId=309150f0-4091-ef11-8130-005056b64545&p=527b4bbd-5c58-e511-80ef-000c29c9ba21"
+          },
+          "newValue": {
+            "text": ""
+          },
+          "where": {
+            "section": "I.3",
+            "label": "Advert link"
+          }
+        },
+        "normalized_section": "I.3",
+        "has_old_and_new": true,
+        "old_new_different": true
+      }
+    ],
+    "form_label": "F14: Notice for changes or additional information",
+    "published_label": "Published 8 November 2024,  4:23pm",
+    "notice_fetch_status": "success",
+    "is_f14": true,
+    "published_utc_minute": "2024-11-08T16:23:00Z",
+    "published_within_target_week": true,
+    "explicit_sections": [
+      "I.3"
+    ],
+    "effective_sections": [
+      "I.3"
+    ],
+    "reported_change_count": 1,
+    "effective_change_count": 1,
+    "multi_section": false,
+    "multi_effective_section": false,
+    "receipt_deadline_date_change": false,
+    "finance_section_change": false,
+    "technical_section_change": false,
+    "deadline_and_finance_or_technical": false,
+    "deadline_and_both_finance_and_technical": false,
+    "deadline_change_pointers": [],
+    "finance_change_pointers": [],
+    "technical_change_pointers": [],
+    "changes_without_section": []
+  }
+]

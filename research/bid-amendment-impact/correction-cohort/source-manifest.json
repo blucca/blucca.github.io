@@ -1,0 +1,382 @@
+[
+  {
+    "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2024-11-04T00%3A00%3A00&updatedTo=2024-11-10T23%3A59%3A59&limit=100",
+    "final_url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2024-11-04T00%3A00%3A00&updatedTo=2024-11-10T23%3A59%3A59&limit=100",
+    "retrieved_at": "2026-10-08T10:57:03.098417+00:00",
+    "status": 200,
+    "content_type": "application/json",
+    "bytes": 1286481,
+    "sha256": "bd42d43031c63ce1083d5c421b07defa1dd6c2fbb7efac655d56f69efd71dc83",
+    "file": "api/page-001.json"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2024-11-04T00:00:00&updatedTo=2024-11-10T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNC0xMS0wNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNC0xMS0xMFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTczMTI1OQ==",
+    "final_url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2024-11-04T00:00:00&updatedTo=2024-11-10T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNC0xMS0wNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNC0xMS0xMFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTczMTI1OQ==",
+    "retrieved_at": "2026-10-08T10:57:05.809926+00:00",
+    "status": 200,
+    "content_type": "application/json",
+    "bytes": 1554587,
+    "sha256": "2ffe4923d6b5d568668564c888c51c4f3922ff2825ab2996ed4ad92f34610e3d",
+    "file": "api/page-002.json"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2024-11-04T00:00:00&updatedTo=2024-11-10T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNC0xMS0wNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNC0xMS0xMFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTM5NTUxOA==",
+    "final_url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2024-11-04T00:00:00&updatedTo=2024-11-10T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNC0xMS0wNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNC0xMS0xMFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTM5NTUxOA==",
+    "retrieved_at": "2026-10-08T10:57:08.594344+00:00",
+    "status": 200,
+    "content_type": "application/json",
+    "bytes": 1317356,
+    "sha256": "bd32518068e427323ffc1476efc0069562b5c159f843e6a554b851c72abf5947",
+    "file": "api/page-003.json"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2024-11-04T00:00:00&updatedTo=2024-11-10T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNC0xMS0wNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNC0xMS0xMFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTM5NTEzMg==",
+    "final_url": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages?updatedFrom=2024-11-04T00:00:00&updatedTo=2024-11-10T23:59:59&limit=100&cursor=dXBkYXRlZEZyb209MjAyNC0xMS0wNFQwMDowMDowMHx1cGRhdGVkVG89MjAyNC0xMS0xMFQyMzo1OTo1OXxuZXh0Q3Vyc29yPTM5NTEzMg==",
+    "retrieved_at": "2026-10-08T10:57:11.209157+00:00",
+    "status": 200,
+    "content_type": "application/json",
+    "bytes": 607741,
+    "sha256": "f72913f79885a2bd420404a8027b6fc20495082fbb749235c1269863cd2ec1a5",
+    "file": "api/page-004.json"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/035611-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/035611-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:03:36.982046+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 44951,
+    "sha256": "9a54f1dcfa9f53406bad645471f3065c35f5f265e514a0c28e8f10958c928baf",
+    "file": "notices/035611-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/035671-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/035671-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:03:35.704173+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 43493,
+    "sha256": "d0550ddb0d2126b4b42a99b749b32c9986e6aa3f4416a00b2ff954f29a7320dc",
+    "file": "notices/035671-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/035828-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/035828-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:49.543746+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 43214,
+    "sha256": "64a9ccf9d45ecbbe64fd7e48c5c4e6c2a9aebfc63dc50f03b6fabd3e57501def",
+    "file": "notices/035828-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/035858-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/035858-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:49.985713+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 45137,
+    "sha256": "a178a4f23f67e5ca5b25d115167a380d7e60c57df576023b78cdcc30fada062f",
+    "file": "notices/035858-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/035887-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/035887-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:47.695596+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 51737,
+    "sha256": "ea7cfe34b1fddd08954ff612f98f50b549a47c40d346d578ca69cd36035d4449",
+    "file": "notices/035887-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/035899-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/035899-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:47.511881+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 43636,
+    "sha256": "3203caf9b7fe26e575790b892381b90005b5d77db4bfa57dbf811ddea8a03b75",
+    "file": "notices/035899-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/035905-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/035905-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:46.932521+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 43868,
+    "sha256": "45b9b5f4d8ef1335626c03cec9f1c2ad7bcba92cabb20d7bb2e7f4fbae61998a",
+    "file": "notices/035905-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/035918-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/035918-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:45.432970+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 42257,
+    "sha256": "e9448fe04ada38504a4489fb1080a83d345bc7a3d248fd60bc2ceb398ad3e4ae",
+    "file": "notices/035918-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/035951-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/035951-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:45.317233+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 43422,
+    "sha256": "0b273278875a80e7bef672ade8fc1617351fc0d9f136da28320b45982678c3ad",
+    "file": "notices/035951-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/035965-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/035965-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:45.026064+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 45462,
+    "sha256": "dcd3daa8392eafbe6eb35441b61f62a5c2b9073d00a6ca903c2009db7f674e74",
+    "file": "notices/035965-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036024-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036024-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:43.490494+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 44054,
+    "sha256": "8d6147c8f7b20a904bc19c9406da8839683a0191c82f3b8a52a2d0d20268d9a8",
+    "file": "notices/036024-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036034-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036034-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:42.625394+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 43127,
+    "sha256": "582bebecf08f45983da99c9fb38398e1120a41118858461f35c12ff1240eeb29",
+    "file": "notices/036034-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036037-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036037-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:42.774886+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 54447,
+    "sha256": "6876264be9a3e9770aa995a00464c0ae752b1048c3c60f1cbedf68c4ced95c07",
+    "file": "notices/036037-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036058-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036058-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:40.558970+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 45625,
+    "sha256": "d39b2be71bfe80742619fbfe98c9ed8921cded97e5ce1242dbe00082251a06e0",
+    "file": "notices/036058-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036082-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036082-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:39.431704+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 44341,
+    "sha256": "8aae3af2ce3159bd0257bd3cfe66b319d3a6983b1eed0b6545822871a9725351",
+    "file": "notices/036082-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036138-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036138-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:38.863851+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 58365,
+    "sha256": "acc5168106d4c8527a37f819634f4678b5f2c96fed8c40e94866d2f05162c2b7",
+    "file": "notices/036138-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036151-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036151-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:38.214762+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 45021,
+    "sha256": "dd6b80a64b40e3486983b92791648c1418f758321d414bbfd7fad0185bcd9f95",
+    "file": "notices/036151-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036158-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036158-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:37.406453+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 47980,
+    "sha256": "21ffbdace3a334343817b032955d906056abe9c62f591f13e333f5d59382a813",
+    "file": "notices/036158-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036189-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036189-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:36.419418+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 44298,
+    "sha256": "b09aa8b6d467e8c5761cfff9b940c52c2af52c52e74da92378d6c10ed36ca434",
+    "file": "notices/036189-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036191-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036191-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:35.903084+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 44026,
+    "sha256": "23023326ffeb38952cc4fb130f9672e6431988693975f67a56413c18258729b4",
+    "file": "notices/036191-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036195-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036195-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:34.670695+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 45153,
+    "sha256": "be8cd2c2b181f857bc822ee631e8fa23443b43205809dcbca4512a4e7181dc0e",
+    "file": "notices/036195-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036197-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036197-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:33.174046+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 42556,
+    "sha256": "dffc1f7bb88384696356b7a97acd27996df9b1214b33651c0d488f2648334653",
+    "file": "notices/036197-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036198-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036198-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:33.365099+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 45565,
+    "sha256": "c09b2b4f21b6351e9d553ee34a4f3b9c98595f375d2245db93f9ee1958180f9a",
+    "file": "notices/036198-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036205-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036205-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:32.096316+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 42957,
+    "sha256": "5187ce8d54b6f8a6a45bf9e7be1c8d5e9651f6c1117003141d602930d47daacc",
+    "file": "notices/036205-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036206-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036206-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:30.472139+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 42770,
+    "sha256": "b607d11425b00a29114f43e52618696af619f33ae52ac350e5c665370147631d",
+    "file": "notices/036206-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036220-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036220-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:30.246795+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 54891,
+    "sha256": "730dd2d7e5cffb720326d3eb3b7d2a4d36e55e21610764bb1058d17397177b19",
+    "file": "notices/036220-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036242-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036242-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:29.347088+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 45347,
+    "sha256": "d45669fcb4e8e279fc0302e26d9ac4d52adee521bad0df54e29a59ab7ec5f54f",
+    "file": "notices/036242-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036264-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036264-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:28.086237+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 55742,
+    "sha256": "12d0c599788bbcee90e6c2749bdca05c9825dbe85674ed4d5613c66152428b88",
+    "file": "notices/036264-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036298-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036298-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:27.498968+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 42364,
+    "sha256": "a0fb98c6e07ff7d092287207f82009500e32b1ca8e60efed8020a0273dfd0fab",
+    "file": "notices/036298-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036300-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036300-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:27.096169+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 42502,
+    "sha256": "77f4dbfb643237f7476b96ae6b3a54023796039fe4904a82683c98d1ace0441b",
+    "file": "notices/036300-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036312-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036312-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:25.803367+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 46393,
+    "sha256": "40461e0da3c04d617ce52fd8d0a147536ff57e1c2ae059b8dd5401a5fccea889",
+    "file": "notices/036312-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036322-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036322-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:24.619755+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 43833,
+    "sha256": "bc5fab7e6ca60580ddc00dbdcc1be68e818f0682fbb7c8b61e1544e3276ccd2d",
+    "file": "notices/036322-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/Notice/036326-2024?origin=SearchResults",
+    "final_url": "https://www.find-tender.service.gov.uk/Notice/036326-2024?origin=SearchResults",
+    "retrieved_at": "2026-10-08T11:00:25.424025+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 43583,
+    "sha256": "8c708cab4f867972cb715ff0dc29c217633bfe3bbeb20d036579c2a24c308186",
+    "file": "notices/036326-2024.html"
+  },
+  {
+    "url": "https://www.find-tender.service.gov.uk/apidocumentation/1.0/GET-ocdsReleasePackages",
+    "final_url": "https://www.find-tender.service.gov.uk/apidocumentation/1.0/GET-ocdsReleasePackages",
+    "retrieved_at": "2026-10-08T11:00:21.819700+00:00",
+    "status": 200,
+    "content_type": "text/html; charset=utf-8",
+    "bytes": 20851,
+    "sha256": "5216e232463c741d9b0c10d8024216f553ee9e022963824cbdeca77c35925120",
+    "file": "sources/ocds-api-documentation.html"
+  }
+]

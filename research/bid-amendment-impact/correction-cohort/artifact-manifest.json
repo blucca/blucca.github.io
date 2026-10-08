@@ -1,0 +1,52 @@
+{
+  "schema": "blucca-research-artifacts-v1",
+  "prepared_at_utc": "2026-10-08T11:10:46.458666+00:00",
+  "sample_name": "Find a Tender fixed API-window retrieval sample",
+  "files": [
+    {
+      "file": "README.md",
+      "bytes": 5027,
+      "sha256": "d7774d670136c29f15dc1b1224b1b86f68c161b28b58fcc6f7c18c0cfcc7c28b"
+    },
+    {
+      "file": "api-enumeration.json",
+      "bytes": 7130,
+      "sha256": "051947a0fae7b8168dfcc9cb03b90f7e0f81fe38df9efc9f4d5a7e28981815d5"
+    },
+    {
+      "file": "classified-candidates.json",
+      "bytes": 76803,
+      "sha256": "c0dd3a8aabd7d1bcea65421bf14542038aeea3d6342e99b7d2f46e5b7c803e9a"
+    },
+    {
+      "file": "cohort.py",
+      "bytes": 13524,
+      "sha256": "2c3f9f932f0ec1bd37eea148c38c017c58a96b2d4dc15917867781c28fe42da4"
+    },
+    {
+      "file": "f14-cohort.csv",
+      "bytes": 11534,
+      "sha256": "9194957d38d61fa0cef60a61041ae0d38d1df554bd736ed773d814445acbcc21"
+    },
+    {
+      "file": "f14-cohort.json",
+      "bytes": 66935,
+      "sha256": "7ca74f0eddee3eb15b705cf3e1bf207ffc08123522d5de54f8ecd5e8a611d4a3"
+    },
+    {
+      "file": "results.json",
+      "bytes": 3648,
+      "sha256": "752cd47e299015e98727665edaebe93c479697fca30afcc27ae348fdbed54d9f"
+    },
+    {
+      "file": "source-cache.zip",
+      "bytes": 924088,
+      "sha256": "6135697a6225e691848bbd56f2c60c01b16f1020984f1092cd27848a19b4ba59"
+    },
+    {
+      "file": "source-manifest.json",
+      "bytes": 18833,
+      "sha256": "8ee73dd04d601711021f23663c684d521fdda7afe614c134e2b2214fa8ce3a53"
+    }
+  ]
+}

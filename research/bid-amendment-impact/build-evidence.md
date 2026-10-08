@@ -112,6 +112,7 @@ The release candidate includes a first MP4/PDF upload and draft-save check. Fina
 
 ## Existing material
 
+- [Fixed-window correction study](correction-cohort/README.md): 30 verified historical F14 notices, explicit section changes, retrieval boundaries and an offline-reproducible source archive. This is pre-build context research.
 - [Research page](index.html) and [review plan](review-plan.md), published before application development.
 - [Original notice JSON](sources/035490-2024.json), [correction JSON](sources/036312-2024.json), and [source manifest](sources/manifest.json).
 - [Three-source research dataset](data-pack/README.md) and [downloadable archive](biddelta-research-data-v1.zip): official extracts, illustrative document/task tables, two independent snapshots, field definitions and static acceptance targets.

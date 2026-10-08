@@ -1,0 +1,116 @@
+{
+  "name": "Find a Tender fixed API-window retrieval sample",
+  "target_start_inclusive_utc": "2024-11-04T00:00:00Z",
+  "target_end_exclusive_utc": "2024-11-11T00:00:00Z",
+  "classification_denominator": "Unique (ocid, release.id) candidates in the complete recorded API links.next chain whose official notice HTML identifies form F14",
+  "candidate_rule": "Any non-empty recursively located unstructuredChanges array or release tag ending in Update; official F14 label then determines inclusion. Other API releases remain available in api-releases.json.",
+  "api_unique_releases": 309,
+  "candidate_count": 36,
+  "verified_f14_count": 30,
+  "non_f14_candidates": [
+    {
+      "notice_id": "036037-2024",
+      "form_label": "F20: Modification notice"
+    },
+    {
+      "notice_id": "036220-2024",
+      "form_label": "F20: Modification notice"
+    },
+    {
+      "notice_id": "036264-2024",
+      "form_label": "F20: Modification notice"
+    }
+  ],
+  "unresolved_candidates": [
+    {
+      "notice_id": "035747-2024",
+      "error": "HTTP Error 429: Too Many Requests",
+      "form_label": null
+    },
+    {
+      "notice_id": "035792-2024",
+      "error": "HTTP Error 429: Too Many Requests",
+      "form_label": null
+    },
+    {
+      "notice_id": "035810-2024",
+      "error": "HTTP Error 429: Too Many Requests",
+      "form_label": null
+    }
+  ],
+  "counts": {
+    "multi_section": 6,
+    "multi_effective_section": 6,
+    "receipt_deadline_date_change": 9,
+    "finance_section_change": 1,
+    "technical_section_change": 1,
+    "deadline_and_finance_or_technical": 1,
+    "deadline_and_both_finance_and_technical": 1
+  },
+  "f14_unique_ocids": 29,
+  "f14_notice_ids": [
+    "035611-2024",
+    "035671-2024",
+    "035828-2024",
+    "035858-2024",
+    "035887-2024",
+    "035899-2024",
+    "035905-2024",
+    "035918-2024",
+    "035951-2024",
+    "035965-2024",
+    "036024-2024",
+    "036034-2024",
+    "036058-2024",
+    "036082-2024",
+    "036138-2024",
+    "036151-2024",
+    "036158-2024",
+    "036189-2024",
+    "036191-2024",
+    "036195-2024",
+    "036197-2024",
+    "036198-2024",
+    "036205-2024",
+    "036206-2024",
+    "036242-2024",
+    "036298-2024",
+    "036300-2024",
+    "036312-2024",
+    "036322-2024",
+    "036326-2024"
+  ],
+  "multi_section_notice_ids": [
+    "035611-2024",
+    "036158-2024",
+    "036189-2024",
+    "036195-2024",
+    "036242-2024",
+    "036312-2024"
+  ],
+  "deadline_and_finance_or_technical_notice_ids": [
+    "036312-2024"
+  ],
+  "deadline_and_both_notice_ids": [
+    "036312-2024"
+  ],
+  "f14_without_structured_changes": [
+    "035905-2024",
+    "035951-2024",
+    "036034-2024",
+    "036082-2024",
+    "036300-2024"
+  ],
+  "f14_without_all_old_new": [],
+  "f14_without_section": [],
+  "f14_publication_outside_week": [],
+  "f14_publication_unparsed": [],
+  "definitions": {
+    "multi_section": "At least two distinct explicit where.section values in unstructuredChanges, whitespace removed and terminal dot removed.",
+    "multi_effective_section": "At least two such sections have both oldValue and newValue present and unequal as JSON values.",
+    "receipt_deadline_date_change": "IV.2.2 with explicit oldValue.date and newValue.date, both present and different.",
+    "finance_section_change": "III.1.2 with both oldValue and newValue present and different. Raw labels remain in evidence.",
+    "technical_section_change": "III.1.3 with both oldValue and newValue present and different. Raw labels remain in evidence.",
+    "count_unit": "One unique official F14 notice; multiple changes in one section count once for section incidence; repeated API deliveries are deduplicated."
+  }
+}
