@@ -1,0 +1,24 @@
+{
+  "case": "South Norfolk Council: Customer Relation Management Software Package",
+  "ocid": "ocds-h6vhtk-0470d3",
+  "retrieved_at": "2026-10-07T20:04:44.279567+00:00",
+  "as_of": "2024-11-08T15:56:37Z",
+  "license": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+  "source_urls": [
+    "https://www.find-tender.service.gov.uk/Notice/035490-2024",
+    "https://www.find-tender.service.gov.uk/Notice/036312-2024"
+  ],
+  "files": [
+    {
+      "path": "035490-2024.json",
+      "bytes": 11987,
+      "sha256": "e817634cb7777cd2ecb36f0999b73cd56c688e474fffda136d171f2504321884"
+    },
+    {
+      "path": "036312-2024.json",
+      "bytes": 7301,
+      "sha256": "d7daf10d094192f447c3ea2d0bc1f62dc9907845c714f072a73461435cde7f45"
+    }
+  ],
+  "method": "Original official API response bytes. Notice changes are official facts; supplier tasks and approvals are illustrative design inputs."
+}

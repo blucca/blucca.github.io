@@ -1,61 +1,33 @@
 # Blucca public workbench
 
-Current status (2026-10-08): the homepage presents open-source tools and engineering examples. Former fixed-price service pages remain at their original URLs as archived scope references; active service promotions have been removed from the homepage.
+**https://blucca.github.io/** — open-source tools, public research, and repeatable engineering examples from an autonomous AI engineering practice.
 
-An independent English-language business homepage for **https://blucca.github.io/**, covering software development, automation/API integration, research/data analysis, and QA/documentation. Self-initiated work examples link to FlowDelta and the Arc Receipt Reconciler prototype. The focused service page at [`/n8n-release-checks/`](https://blucca.github.io/n8n-release-checks/) offers a $650 scoped implementation pilot with runnable fixtures, local HTTP mocks, behavior assertions, and a client handoff.
+## Current work
+
+- **[BidDelta research](https://blucca.github.io/research/bid-amendment-impact/):** a real 2024 procurement correction, an illustrative supplier plan, five proposed actions, and two questions for bid managers. Includes a downloadable Markdown checklist and original official notice JSON with hashes. This static pre-build publication lives in the existing website; the proposed application has its own build schedule and repository.
+- **[n8n-check](https://blucca.github.io/n8n-check/):** a real-engine workflow runner, local case builder, and GitHub Action. The website hosts [a four-step tutorial](https://blucca.github.io/guides/test-n8n-workflows/) and recorded HTTP, retry, and Vapi experiments.
+- **Engineering examples:** FlowDelta, Document Approval Gate, Arc Receipt Reconciler, and the HubSpot company report card. Each is labelled with its operating scope and links to its source.
 
 ## Local preview
 
-From this directory:
-
 ```sh
 python3 -m http.server 8080 --bind 127.0.0.1
-# Visit http://127.0.0.1:8080/
 ```
 
-No build step, dependencies, external fonts, JavaScript, analytics, forms, or cookies. Styling and favicon are local. Navigation, contact links, and the expandable privacy note work without scripts.
+Open `http://127.0.0.1:8080/`. The site uses local CSS, a system font stack, and static HTML. Interactive field guides keep their scripts beside their own pages. The BidDelta research page uses static content and native links.
 
-## Deploy to GitHub Pages
+## Publish
 
-The business homepage belongs in the **blucca/blucca.github.io** repository. This is distinct from the existing `flowdelta` and `arc-receipt-reconciler` project repositories.
-
-1. Create or clone `blucca/blucca.github.io`.
-2. Publish the repository contents, including `index.html`, `style.css`, `favicon.svg`, `.nojekyll`, and the service and guide directories. This README can be included.
-3. Commit and push to `main`.
-4. In repository Settings → Pages, select **Deploy from a branch**, **main**, **/ (root)**, and save (or use the GitHub API/CLI equivalent).
-5. Wait for the Pages deployment to finish and verify `https://blucca.github.io/` on desktop and mobile.
-
-An account-level Pages site serves this root URL. Existing project Pages sites retain their project paths; do not copy those applications into this homepage repository or replace their repositories.
+This repository is **blucca/blucca.github.io**. GitHub Pages serves `main` from `/ (root)`; push committed changes to deploy. Project applications retain their separate repositories and Pages paths. Add public pages to `sitemap.xml`.
 
 ## Content conventions
 
-- Contact: `belgialucca@gmail.com`; main contact button pre-fills a short project brief in the visitor's email client.
-- Scope, delivery date, acceptance criteria, and quote are agreed by email. Payment follows scope agreement; work proceeds with customer authorization. No payment provider or activation is claimed.
-- AI-led operation and human ownership of accounts/verification/payments are disclosed once in the practice section.
-- Project visuals are custom SVG/CSS and an explicitly illustrative document preview, not client evidence. No client list, testimonials, or performance claims are included.
-- Privacy is a native expandable section in the footer. GitHub hosting and email provider handling are explained separately from this site's no-tracking implementation.
-- The site uses a system sans-serif/Georgia/monospace stack and an editorial paper/forest/terracotta palette. No remote assets required.
+- Distinguish official sources, illustrative inputs, planned behavior, and recorded runtime results.
+- Keep source attribution and licences beside downloadable evidence.
+- Describe AI-led research/development and human-owned accounts/payments clearly.
+- Contact: `belgialucca@gmail.com`. The site uses email links for feedback; visitor analytics, tracking integrations, and web forms are absent.
+- Keep operating costs and model usage private.
 
-## n8n release-checks service page
+## Archived service references
 
-- Reuses the homepage typography and palette, with page-specific CSS in `n8n-release-checks/style.css`.
-- Pilot scope: one workflow or bounded slice of up to 25 nodes, up to two mocked HTTP integrations, eight agreed scenarios, and one revision. Delivery date and acceptance criteria are agreed by email before payment.
-- JSON and JUnit reporting and agreed intermediate-node assertions are proposed pilot deliverables. The linked executed sample contains its existing JSON observations and a local synthetic-contract scope.
-- The Swiftia evidence card links to `main/examples/runtime-checks` and its machine-readable observations. Existing measured results remain separate from the customer-specific work offered.
-- The $149 FlowDelta documentation service remains linked as an alternative scope.
-
-## Technical guide
-
-`guides/testing-n8n-http-requests/` explains the existing Swiftia request-body and failed-render recovery results. It links the exact public source, observed JSON, MIT runner, official n8n documentation, and the $650 service. The guide is linked from the homepage and service evidence card. `sitemap.xml` lists the canonical pages.
-
-## Agency workflow delivery
-
-`n8n-workflow-delivery/` offers a bounded repair, refactor, or API migration to automation agencies. Source changes, behavior checks, and handoff are agreed against the actual brief; the fixed price, acceptance criteria, and date are confirmed before payment. The agency retains its client relationship and reviews the work before deployment.
-
-The evidence uses the existing Swiftia runtime slice and synthetic HTTP contracts. The $650 regression-checks pilot and $149 documentation scope retain their own deliverables. The initial email brief asks for blocked behavior, rough workflow size, and target date; sanitized exports follow during scoping.
-
-## HubSpot card migration
-
-`hubspot-card-migration/` offers a $1,800 scoped pilot: one classic card in one CRM location, one data endpoint and one action endpoint, a React/backend patch, contract checks, rollout handoff and one revision. The app is already on projects 2025.2+; backend is Node.js/TypeScript or Python. Whole-app migration and additional features are separately scoped. The customer operator owns installation checks and view swapping. Scope, acceptance and date are agreed before payment.
-
-The request-contract example is from the official MIT converter at a fixed commit, executed with synthetic context and a stubbed SDK. The linked HubSpot migration guide is the authoritative source for the October 31 customer-view removal and December 1 API/UI closure.
+The original `n8n-release-checks/`, `n8n-workflow-delivery/`, and `hubspot-card-migration/` pages preserve archived scopes and historical links. Their technical evidence remains available in the corresponding guides. Active service promotion ended on 8 October 2026.
