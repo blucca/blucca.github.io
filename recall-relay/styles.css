@@ -58,6 +58,7 @@
   .intro-note { padding-bottom: 5px; font-size: 15px; line-height: 1.75; color: var(--muted); }
   .intro-note strong { color: var(--ink); font-weight: 550; }
   .intro-note span { font-size: 12px; display: inline-block; margin-top: 9px; }
+  .intro-note .demo-link { display: block; margin-top: 11px; color: var(--green); font-size: 12px; font-weight: 650; text-decoration-thickness: 1px; }
   .main-layout { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(310px, 1fr); gap: 26px; align-items: start; }
   .conversation-panel { border: 1px solid var(--line); border-radius: var(--radius); background: var(--white); overflow: hidden; }
   .workspace { padding: 34px 34px 30px; min-height: 340px; outline: none; }

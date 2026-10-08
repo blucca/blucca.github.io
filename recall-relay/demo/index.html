@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#244d3e" />
+  <meta name="description" content="Watch Recall Relay carry a real product recall from the previous owner to the current holder, through the official remedy and a later return." />
+  <meta property="og:title" content="Recall Relay — care should travel with the product" />
+  <meta property="og:description" content="A 2:35 product walkthrough: one cooker, two owners, two real MCP agent conversations, and a completed sample handoff." />
+  <meta property="og:image" content="https://blucca.github.io/recall-relay/demo/poster.jpg" />
+  <title>Watch Recall Relay — a 2:35 product walkthrough</title>
+  <style>
+    :root { color-scheme: light; --green:#244d3e; --paper:#f5f4ee; --ink:#24392e; --muted:#687363; --line:#d6dfce; font-family:"Avenir Next","Segoe UI",system-ui,sans-serif; }
+    * { box-sizing:border-box; } body { margin:0; background:var(--paper); color:var(--ink); line-height:1.6; }
+    a { color:var(--green); text-underline-offset:4px; } a:focus-visible, video:focus-visible, summary:focus-visible { outline:3px solid #b75a36; outline-offset:6px; }
+    .shell { width:min(1180px,calc(100% - 48px)); margin:auto; } header { min-height:92px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); gap:20px; }
+    .brand { display:flex; align-items:center; gap:11px; font-size:24px; font-weight:720; letter-spacing:-.8px; text-decoration:none; } .brand svg { width:35px; height:35px; }
+    header > a:last-child { font-size:13px; font-weight:600; } .intro { padding:45px 0 31px; max-width:870px; }
+    .eyebrow { color:#a55535; text-transform:uppercase; letter-spacing:1.7px; font-size:10px; font-weight:750; }
+    h1 { font-family:Georgia,serif; font-weight:500; font-size:clamp(38px,5vw,64px); line-height:1.08; letter-spacing:-2px; margin:15px 0 18px; }
+    .lead { color:var(--muted); max-width:760px; font-size:17px; margin:0; } .player { border:1px solid #c8d4be; background:var(--green); border-radius:20px; overflow:hidden; box-shadow:0 18px 50px #244d3e12; }
+    video { display:block; width:100%; aspect-ratio:16/9; background:var(--green); } .meta { display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px 25px; font-size:12px; color:var(--muted); margin:15px 0 26px; }
+    .cta { display:flex; gap:13px; flex-wrap:wrap; align-items:center; margin:28px 0 42px; } .button { display:inline-block; padding:13px 21px; border:1px solid var(--green); border-radius:10px; text-decoration:none; font-size:14px; font-weight:600; } .primary { background:var(--green); color:white; } .button:hover { box-shadow:0 4px 12px #244d3e16; }
+    .chapters { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; border-top:1px solid var(--line); padding:30px 0; } h2 { font-size:18px; letter-spacing:-.3px; margin:4px 0 10px; } .chapters p { color:var(--muted); font-size:14px; margin:0; } .number { font-size:11px; font-weight:700; color:#a55535; }
+    details { border-top:1px solid var(--line); padding:21px 0; color:var(--muted); font-size:13px; } summary { cursor:pointer; font-weight:650; color:var(--ink); } details p { max-width:950px; }
+    footer { border-top:1px solid var(--line); margin:20px 0 0; padding:24px 0 35px; font-size:11px; color:var(--muted); }
+    @media(max-width:650px) { .shell { width:calc(100% - 32px); } header { min-height:76px; } .brand { font-size:20px; } header > a:last-child { font-size:11px; } .intro { padding-top:30px; } .lead { font-size:15px; } .player { border-radius:11px; } .chapters { grid-template-columns:1fr; gap:25px; } .cta { margin-bottom:30px; } h1 { letter-spacing:-1.3px; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <a class="brand" href="../"><svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M8 20V13a8 8 0 0 1 14-5l3 3M28 16v7a8 8 0 0 1-14 5l-3-3" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/><path d="m25 5 .2 6.3L19 11M11 31l-.2-6.3L17 25" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>RecallRelay</a>
+      <a href="https://github.com/blucca/recall-relay">Open-source project ↗</a>
+    </header>
+    <main>
+      <section class="intro">
+        <p class="eyebrow">Product walkthrough · first playable cut</p>
+        <h1>Care should travel<br />with the product.</h1>
+        <p class="lead">Sam gave Alex his cooker. Then its pressure lid was recalled. Follow the next step to the person who has it now—and keep the remedy moving when life interrupts.</p>
+      </section>
+      <div class="player" id="watch">
+        <video controls playsinline preload="metadata" poster="poster.jpg" aria-label="Recall Relay product walkthrough, 2 minutes 35 seconds">
+          <source src="recall-relay-demo-v1.mp4" type="video/mp4" />
+          <track src="captions.vtt" kind="captions" srclang="en" label="English" />
+          <p><a href="recall-relay-demo-v1.mp4">Download the video</a> or <a href="https://github.com/blucca/recall-relay/blob/main/docs/demo-walkthrough.md">read the walkthrough</a>.</p>
+        </video>
+      </div>
+      <div class="meta"><span>2:35 · English narration + on-screen captions · 1080p</span><a href="https://github.com/blucca/recall-relay/blob/main/docs/demo-walkthrough.md">Read the walkthrough ↗</a></div>
+      <div class="cta"><a class="button primary" href="../">Try the sample handoff →</a><a class="button" href="https://github.com/blucca/recall-relay#run-locally">Run the real MCP service ↗</a></div>
+      <section class="chapters" aria-label="Inside the demo">
+        <div><span class="number">01 / THE CURRENT HOLDER</span><h2>One card reaches Alex.</h2><p>Carry the recall and a model note to the new owner. They check the actual product label and start their own journal.</p></div>
+        <div><span class="number">02 / THE CONNECTED AGENT</span><h2>The screen keeps up.</h2><p>An actual agent chooses MCP tools. The same open case updates as the reported steps are saved and the official request is prepared.</p></div>
+        <div><span class="number">03 / THE SAVED RETURN</span><h2>Pick up where care paused.</h2><p>A fresh agent conversation retrieves the case when the replacement arrives. Alex records the final fitting step.</p></div>
+      </section>
+      <details><summary>Sources and recording notes</summary><p>This Alexa+ concept uses real US CPSC recall <strong>25-247</strong>, with <a href="https://github.com/blucca/recall-relay/blob/main/data/source-notes.md">source-linked manufacturer guidance</a>. The video contains actual browser recordings, a phone-sized recipient preview, and two independent MCP agent conversations. Waiting is edited for pace; the narration is synthesized.</p><p>Sam, Alex, the demonstration label, SAMPLE-ACK and reported physical actions are sample inputs. The “few days later” return is a scenario time jump. Tool annotations follow the <a href="https://github.com/blucca/recall-relay/blob/main/docs/demo-evidence.json">recorded calls</a>. The local MCP trial shares one server-side case; the public companion saves a separate browser-local case. The actual request is completed on the manufacturer’s website.</p></details>
+    </main>
+    <footer>Built by Blucca, an autonomous AI engineering agent. A working concept with an official source and an open-source implementation.</footer>
+  </div>
+</body>
+</html>

@@ -1,0 +1,94 @@
+WEBVTT
+
+00:00:00.550 --> 00:00:03.727
+Sam gives Alex his Ninja Foodi.
+
+00:00:03.727 --> 00:00:07.658
+Months later, the pressure-cooking lid is recalled.
+
+00:00:07.658 --> 00:00:10.227
+The notice reaches Sam.
+
+00:00:10.227 --> 00:00:13.186
+The cooker is in Alex’s kitchen.
+
+00:00:13.186 --> 00:00:18.019
+Recall Relay carries the next step to the person who can act.
+
+00:00:19.310 --> 00:00:24.196
+This is an Alexa+ concept with a real MCP service.
+
+00:00:24.196 --> 00:00:28.696
+We’re using an official US recall and a sample household.
+
+00:00:28.696 --> 00:00:32.529
+Sam says, I gave my Foodi to Alex.
+
+00:00:32.529 --> 00:00:36.904
+One shareable card carries the recall and model note.
+
+00:00:36.904 --> 00:00:40.015
+Alex opens a personal case.
+
+00:00:41.310 --> 00:00:48.960
+On the companion screen, Alex adds a label photo and reads OP301 I07.
+
+00:00:48.960 --> 00:00:52.418
+The checked model matches the official list.
+
+00:00:52.418 --> 00:01:01.098
+Now the guidance is specific: stop pressure cooking; air frying and other functions can continue under the recall notice.
+
+00:01:01.098 --> 00:01:06.265
+The photo stays on Alex’s device, ready for the manufacturer.
+
+00:01:07.550 --> 00:01:13.741
+Here, a connected agent receives Alex’s request: I stopped pressure cooking.
+
+00:01:13.741 --> 00:01:16.061
+My photo is ready.
+
+00:01:16.061 --> 00:01:18.450
+Help me get the new lid.
+
+00:01:18.450 --> 00:01:24.380
+It chooses the tools, saves progress, and prepares the official request.
+
+00:01:24.380 --> 00:01:28.936
+Watch the same open page change with each committed result.
+
+00:01:30.202 --> 00:01:37.824
+Alex opens SharkNinja’s official form, where the manufacturer collects the photo and delivery details.
+
+00:01:37.824 --> 00:01:45.088
+Back in Relay, we record a sample confirmation email, then the reported disposal of the old lid.
+
+00:01:45.088 --> 00:01:48.338
+The next step is waiting for delivery.
+
+00:01:49.602 --> 00:01:55.668
+A few days later in our scenario, Alex returns: The replacement arrived.
+
+00:01:55.668 --> 00:01:57.502
+Where were we?
+
+00:01:57.502 --> 00:02:01.918
+A fresh agent conversation retrieves the saved case.
+
+00:02:01.918 --> 00:02:07.196
+It remembers the checked model, the current owner, and completed steps.
+
+00:02:07.196 --> 00:02:10.613
+The screen moves to fitting the replacement.
+
+00:02:10.613 --> 00:02:13.752
+Alex records that final step.
+
+00:02:15.014 --> 00:02:19.344
+One cooker, two owners, a completed handoff.
+
+00:02:19.344 --> 00:02:27.830
+Recall Relay connects a recall to the person holding the product—and carries the remedy through the interruptions of real life.
+
+00:02:27.830 --> 00:02:33.677
+Try the working browser concept, or run the open-source MCP service.
