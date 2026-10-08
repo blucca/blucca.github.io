@@ -19,6 +19,7 @@
         </a>
         <div class="header-tools">
           <span class="connection-status" id="connection-status"><span class="status-dot"></span> Connecting</span>
+          <button type="button" class="quiet-button" id="focus-button" aria-pressed="false">Focus view <span aria-hidden="true">⤢</span></button>
           <button type="button" class="quiet-button" id="restart-button">Restart demo <span aria-hidden="true">↺</span></button>
         </div>
       </header>
@@ -40,6 +41,11 @@
             <li><span class="journey-number">4</span><span>Finish</span></li>
           </ol>
 
+          <div class="case-context" id="case-context">
+            <div><span class="small-label" id="case-role">Your saved case</span><strong id="case-person">Opening the thread</strong></div>
+            <span class="case-version" id="case-version"></span>
+          </div>
+          <section class="companion-display" id="companion-display" aria-label="Current next step" aria-live="polite" tabindex="-1" hidden></section>
           <div class="workspace" id="workspace" tabindex="-1" aria-live="polite">
             <p class="eyebrow">Opening your case</p>
             <h2>Picking up the thread.</h2>
@@ -53,10 +59,11 @@
               <h3 id="voice-heading"><span class="voice-orb" aria-hidden="true"><i></i><i></i><i></i><i></i></span> Say it your way</h3>
               <button type="button" class="read-button" id="read-button" title="Read the current step using an available on-device voice">
                 <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m9 4-4 3H2v6h3l4 3V4Zm4 3a5 5 0 0 1 0 6m3-9a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                Read aloud
+                Read next step
               </button>
             </div>
-            <p class="voice-caption">Type what you’d say to Alexa. The same tools power every button.</p>
+            <p class="voice-caption" id="voice-caption">Try a suggested phrase, or use the next-step button. Typed phrases simulate the Alexa+ conversation.</p>
+            <p class="live-update" id="live-update" role="status" hidden></p>
             <div class="spoken-reply" id="spoken-reply" hidden></div>
             <form id="command-form" class="command-form">
               <label class="sr-only" for="command-input">Your message</label>
