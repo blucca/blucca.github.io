@@ -1,0 +1,193 @@
+{
+    "uri": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages/035490-2024?limit=100&updatedTo=2026-10-07T21:04:42",
+    "version": "1.1",
+    "extensions": [
+        "https://standard.open-contracting.org/profiles/eu/latest/en/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_amendment_rationale_classifications_extension/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_budget_breakdown_extension/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_contract_completion_extension/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_documentation_extension/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_pagination_extension/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_suitability_extension/master/extension.json",
+        "https://raw.githubusercontent.com/portaledcahn/ocds_Links_extension/main/extension.json",
+        "https://raw.githubusercontent.com/cabinetoffice/ocds_uk_extension/main/extension.json"
+    ],
+    "publishedDate": "2024-11-01T13:59:07Z",
+    "publisher": {
+        "name": "Cabinet Office",
+        "scheme": "GB-GOR",
+        "uid": "D2",
+        "uri": "https://www.gov.uk/government/organisations/cabinet-office"
+    },
+    "license": "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+    "publicationPolicy": "https://www.gov.uk/government/publications/open-contracting",
+    "releases": [
+        {
+            "ocid": "ocds-h6vhtk-0470d3",
+            "id": "035490-2024",
+            "date": "2024-11-01T13:59:07Z",
+            "tag": [
+                "tender"
+            ],
+            "initiationType": "tender",
+            "tender": {
+                "id": "2547-PPT-R",
+                "legalBasis": {
+                    "id": "32014L0024",
+                    "scheme": "CELEX"
+                },
+                "title": "South Norfolk Council: Customer Relation Management Software Package",
+                "status": "active",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "72212100",
+                    "description": "Industry specific software development services"
+                },
+                "mainProcurementCategory": "services",
+                "description": "South Norfolk Council and Broadland District Council are offering this opportunity to participate in a competitive procedure with negotiation for a cloud-based customer experience platform. Both councils’ delivery plans outline a strategic objective to provide services for residents, businesses and communities that are innovative, efficient and easy to use against a backdrop of reduced funding and tougher economical times. An improved customer offer enabled by digital technology can have a direct impact on our ability to reduce operating costs to serve our customers, absorb growing demand within existing resources and enable greater efficiencies from understanding the end-to-end customer journey whilst enabling customers to interact with us in modern and efficient ways that are convenient to them. East Suffolk Council's Procurement Team is providing procurement support but the Contracting Authority is South Norfolk Council.",
+                "value": {
+                    "amount": 1250000,
+                    "currency": "GBP"
+                },
+                "lots": [
+                    {
+                        "id": "1",
+                        "description": "The Councils recognise that customer expectations and demands for seamless, efficient services are increasing, but due to the vast array of services offered by local authorities, this has led to disjointed, siloed customer entry points, reduced ability to extract customer insight, inefficient workflow practices, time delays and multiple hand-offs. These elements combined impact the efficiency and cost of operation, as well as the customer experience and interoperability of our technological architecture. The Councils have set themselves an ambition to improve customer experience and have set out to achieve the following as part of this programme of work: Objectives• To create easy to access services for all • To increase first point of contact resolution and keep the customer informed throughout • To use data and insight to benefit the way we work and our customers • To improve internal workflows and case management The Councils are looking to procure a cloud based customer experience platform which would include a customer portal, forms, case management/workflow, integrations and a content management system. We recognise that our platform may / will be made up of more than one technology provided by more than one supplier. We are open to suppliers collaborating in a consortium but prefer to manage the implementation and ongoing relationship through one lead supplier. The Contracting Authority intends to conduct a Competitive procedure with negotiation in accordance with Reg. 29 of the Public Contract Regulations 2015 (as amended) for the procurement of a customer experience platform.East Suffolk Council's Procurement Team is providing procurement support but the Contracting Authority is South Norfolk Council. Additional information: All communications and tenders must be managed through the In-tend e-sourcing Suite. Any communication outside of the In-tend system, without express permission of the Council (or the East Suffolk Procurement Team acting on its behalf), will be immediately rejected.",
+                        "value": {
+                            "amount": 1250000,
+                            "currency": "GBP"
+                        },
+                        "contractPeriod": {
+                            "durationInDays": 2520
+                        },
+                        "hasRenewal": true,
+                        "renewal": {
+                            "description": "Initial contract period will be five years (60 months). Two optional additional extensions of 1 year each (5+1+1  years)"
+                        },
+                        "secondStage": {
+                            "minimumCandidates": 3,
+                            "maximumCandidates": 5
+                        },
+                        "selectionCriteria": {
+                            "description": "As in the tender documents. Pass/Fail of SQ and Highest score on technical ability and experience."
+                        },
+                        "submissionTerms": {
+                            "variantPolicy": "notAllowed"
+                        },
+                        "hasOptions": false,
+                        "status": "active"
+                    }
+                ],
+                "items": [
+                    {
+                        "id": "1",
+                        "additionalClassifications": [
+                            {
+                                "scheme": "CPV",
+                                "id": "72212100",
+                                "description": "Industry specific software development services"
+                            }
+                        ],
+                        "deliveryAddresses": [
+                            {
+                                "region": "UKH17"
+                            }
+                        ],
+                        "relatedLot": "1"
+                    }
+                ],
+                "submissionMethod": [
+                    "written"
+                ],
+                "selectionCriteria": {
+                    "criteria": [
+                        {
+                            "minimum": "Provision of a statement of annual turnover – we reserve the right to exclude any supplier with an annual turnover of below £250k."
+                        }
+                    ]
+                },
+                "procurementMethod": "selective",
+                "procurementMethodDetails": "Competitive procedure with negotiation",
+                "secondStage": {
+                    "successiveReduction": true,
+                    "noNegotiationNecessary": true,
+                    "invitationDate": "2024-12-16T00:00:00Z"
+                },
+                "coveredBy": [
+                    "GPA"
+                ],
+                "tenderPeriod": {
+                    "endDate": "2024-12-02T12:00:00Z"
+                },
+                "submissionTerms": {
+                    "languages": [
+                        "en"
+                    ]
+                },
+                "hasRecurrence": false,
+                "reviewDetails": "The Contracting Authority will incorporate a standstill period at the point information on the award of the contract is communicated to tenderers. That notification will provide full information on the award decision. The standstill period, which will be for a minimum of 10 calendar days, provides time for unsuccessful tenderers to challenge the award decision before the contract is entered into. The Public Contracts Regulations 2015 (SI No 102) provides for aggrieved parties who have been harmed or are at risk of harm by a breach of the rules to take action in the High Court (England, Wales and Northern Ireland)."
+            },
+            "parties": [
+                {
+                    "name": "South Norfolk Council",
+                    "id": "GB-FTS-128891",
+                    "identifier": {
+                        "legalName": "South Norfolk Council"
+                    },
+                    "address": {
+                        "streetAddress": "The Horizon Centre, Broadland Business Park, Peachman Way",
+                        "locality": "Norwich",
+                        "region": "UKH17",
+                        "postalCode": "NR7 OWF",
+                        "countryName": "United Kingdom"
+                    },
+                    "contactPoint": {
+                        "name": "James Field",
+                        "email": "procurement@eastsuffolk.gov.uk",
+                        "url": "https://in-tendhost.co.uk/eastsuffolk/aspx/Home"
+                    },
+                    "roles": [
+                        "buyer",
+                        "centralPurchasingBody"
+                    ],
+                    "details": {
+                        "url": "https://www.southnorfolkandbroadland.gov.uk",
+                        "buyerProfile": "https://in-tendhost.co.uk/eastsuffolk/aspx/Home",
+                        "classifications": [
+                            {
+                                "scheme": "TED_CA_TYPE",
+                                "id": "REGIONAL_AUTHORITY",
+                                "description": "Regional or local authority"
+                            },
+                            {
+                                "scheme": "COFOG",
+                                "id": "01",
+                                "description": "General public services"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "name": "Royal Courts of Justice",
+                    "id": "GB-FTS-4500",
+                    "identifier": {
+                        "legalName": "Royal Courts of Justice"
+                    },
+                    "address": {
+                        "locality": "London",
+                        "postalCode": "WC2A 2LL",
+                        "countryName": "United Kingdom"
+                    },
+                    "roles": [
+                        "reviewBody"
+                    ]
+                }
+            ],
+            "buyer": {
+                "id": "GB-FTS-128891",
+                "name": "South Norfolk Council"
+            },
+            "language": "en"
+        }
+    ]
+}

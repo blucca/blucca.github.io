@@ -23,3 +23,6 @@
 .recovery-counts span{display:block;font-family:var(--mono);font-size:11px;line-height:1.5;margin-top:7px}
 @media(max-width:700px){.recovery-steps{grid-template-columns:1fr;gap:22px}.recovery-counts>div{padding:17px 13px}.recovery-counts strong{font-size:39px}.recovery-example{padding:20px}.recovery-example p{font-size:18px}}
 @media print{.recovery{padding:20px 0}.recovery-example,.recovery-counts{break-inside:avoid}.recovery-steps{grid-template-columns:repeat(3,1fr);gap:15px}.recovery-steps p{font-size:11px}.recovery-counts strong{font-size:32px}}
+
+/* Space the dataset download beneath its source cards. */
+#data .change-grid + p{margin-top:22px}

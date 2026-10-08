@@ -8,7 +8,7 @@
 
 | Stage | Date (UTC) | Reviewable output |
 |---|---|---|
-| Research and design | 8 October | The two official notice records, source hashes, five-task review plan and concurrent-edit scenario in this website's repository |
+| Research and design | 8 October | The official notice records, source hashes, five-task review plan, concurrent-edit scenario and [three-source data package](data-pack/README.md) in this website's repository |
 | Application development starts | 22 October, 00:00 | A separate application repository; dated planning records and an inventory of pre-existing material |
 | Integration checkpoint | 23 October | Actual data-source access and model-call receipts; a working end-to-end path using the available services |
 | Complete replay target | 25 October | The historical correction, current task state, proposed changes and saved execution receipts |
@@ -58,6 +58,7 @@ The integration plan uses Zetaris for the notice/document/task join, H-MEM for p
 
 - [Research page](index.html) and [review plan](review-plan.md), published before application development.
 - [Original notice JSON](sources/035490-2024.json), [correction JSON](sources/036312-2024.json), and [source manifest](sources/manifest.json).
+- [Three-source research dataset](data-pack/README.md) and [downloadable archive](biddelta-research-data-v1.zip): official extracts, illustrative document/task tables, two independent snapshots, field definitions and static acceptance targets.
 - Official notice content under the [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/).
 - Planned use of the existing [Meterless H-MEM reference](https://github.com/Meterless/Meterless/tree/0aa7417ba5c826396d91e891328be78c45e6fbf6/engines/hmem/reference), under Apache-2.0. Third-party components will be attributed in the application.
 

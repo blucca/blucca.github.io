@@ -1,0 +1,125 @@
+{
+    "uri": "https://www.find-tender.service.gov.uk/api/1.0/ocdsReleasePackages/036312-2024?limit=100&updatedTo=2026-10-07T21:02:27",
+    "version": "1.1",
+    "extensions": [
+        "https://standard.open-contracting.org/profiles/eu/latest/en/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_amendment_rationale_classifications_extension/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_budget_breakdown_extension/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_contract_completion_extension/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_documentation_extension/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_pagination_extension/master/extension.json",
+        "https://raw.githubusercontent.com/open-contracting-extensions/ocds_suitability_extension/master/extension.json",
+        "https://raw.githubusercontent.com/portaledcahn/ocds_Links_extension/main/extension.json",
+        "https://raw.githubusercontent.com/cabinetoffice/ocds_uk_extension/main/extension.json"
+    ],
+    "publishedDate": "2024-11-08T15:56:37Z",
+    "publisher": {
+        "name": "Cabinet Office",
+        "scheme": "GB-GOR",
+        "uid": "D2",
+        "uri": "https://www.gov.uk/government/organisations/cabinet-office"
+    },
+    "license": "http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+    "publicationPolicy": "https://www.gov.uk/government/publications/open-contracting",
+    "releases": [
+        {
+            "ocid": "ocds-h6vhtk-0470d3",
+            "id": "036312-2024",
+            "date": "2024-11-08T15:56:37Z",
+            "tag": [
+                "tenderUpdate"
+            ],
+            "initiationType": "tender",
+            "tender": {
+                "id": "2024/S 000-035490",
+                "legalBasis": {
+                    "id": "32014L0024",
+                    "scheme": "CELEX"
+                },
+                "title": "South Norfolk Council: Customer Relation Management Software Package",
+                "classification": {
+                    "scheme": "CPV",
+                    "id": "72212100",
+                    "description": "Industry specific software development services"
+                },
+                "mainProcurementCategory": "services",
+                "description": "South Norfolk Council and Broadland District Council are offering this opportunity to participate in a competitive procedure with negotiation for a cloud-based customer experience platform. Both councils’ delivery plans outline a strategic objective to provide services for residents, businesses and communities that are innovative, efficient and easy to use against a backdrop of reduced funding and tougher economical times. An improved customer offer enabled by digital technology can have a direct impact on our ability to reduce operating costs to serve our customers, absorb growing demand within existing resources and enable greater efficiencies from understanding the end-to-end customer journey whilst enabling customers to interact with us in modern and efficient ways that are convenient to them. East Suffolk Council's Procurement Team is providing procurement support but the Contracting Authority is South Norfolk Council.",
+                "amendments": [
+                    {
+                        "id": "1",
+                        "unstructuredChanges": [
+                            {
+                                "oldValue": {
+                                    "date": "2024-12-02T12:00:00Z"
+                                },
+                                "newValue": {
+                                    "date": "2024-12-09T16:00:00Z"
+                                },
+                                "where": {
+                                    "section": "IV.2.2",
+                                    "label": "Time limit for receipt of tenders or requests to participate"
+                                }
+                            },
+                            {
+                                "oldValue": {
+                                    "text": "Provision of a statement of annual turnover – we reserve the right to exclude any supplier with an annual turnover of below £250k."
+                                },
+                                "newValue": {
+                                    "text": "Provision of a statement of annual turnover – we reserve the right to exclude any supplier with an annual turnover of below £250k. Additional minimum requirements as in the SQ guidance document published."
+                                },
+                                "where": {
+                                    "section": "III.1.2",
+                                    "label": "Economic and financial standing"
+                                }
+                            },
+                            {
+                                "oldValue": {
+                                    "text": "Provision of three examples of relevant technical ability and experience within a public sector client or equivalent"
+                                },
+                                "newValue": {
+                                    "text": "Provision of three examples of relevant technical ability and experience within a public sector client or equivalent and additional professional and technical capability questions as detailed in the SQ and accompanying guidance."
+                                },
+                                "where": {
+                                    "section": "III.1.3",
+                                    "label": "Technical and professional ability"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            },
+            "parties": [
+                {
+                    "name": "South Norfolk Council",
+                    "id": "GB-FTS-128891",
+                    "identifier": {
+                        "legalName": "South Norfolk Council"
+                    },
+                    "address": {
+                        "streetAddress": "The Horizon Centre, Broadland Business Park, Peachman Way",
+                        "locality": "Norwich",
+                        "region": "UKH17",
+                        "postalCode": "NR7 OWF",
+                        "countryName": "United Kingdom"
+                    },
+                    "contactPoint": {
+                        "name": "James Field",
+                        "email": "procurement@eastsuffolk.gov.uk"
+                    },
+                    "roles": [
+                        "buyer"
+                    ],
+                    "details": {
+                        "url": "https://www.southnorfolkandbroadland.gov.uk",
+                        "buyerProfile": "https://in-tendhost.co.uk/eastsuffolk/aspx/Home"
+                    }
+                }
+            ],
+            "buyer": {
+                "id": "GB-FTS-128891",
+                "name": "South Norfolk Council"
+            },
+            "language": "en"
+        }
+    ]
+}

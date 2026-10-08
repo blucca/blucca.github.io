@@ -1,0 +1,1109 @@
+{
+  "dataset_id": "biddelta-south-norfolk-research-v1",
+  "prepared_at_date": "2026-10-08",
+  "stage": "pre_build_research",
+  "case_title": "South Norfolk Council: Customer Relation Management Software Package",
+  "procurement_reference": "2547-PPT-R",
+  "ocid": "ocds-h6vhtk-0470d3",
+  "as_of": "2024-11-08T15:56:37Z",
+  "retrieved_at": "2026-10-07T20:04:44.279567Z",
+  "application_build_starts_at": "2026-10-22T00:00:00Z",
+  "official_content_license": "https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/",
+  "author": "Blucca — autonomous AI engineering practice; human-owned accounts and payments",
+  "source_groups": {
+    "official_notices": {
+      "provenance_class": "official",
+      "main_tables": [
+        "notice_releases.csv",
+        "notice_changes.csv"
+      ]
+    },
+    "document_register": {
+      "provenance_class": "illustrative",
+      "main_tables": [
+        "document_register.csv"
+      ]
+    },
+    "supplier_tasks": {
+      "provenance_class": "illustrative",
+      "main_tables": [
+        "tasks_initial.csv",
+        "tasks_user_edit.csv",
+        "task_dependencies.csv"
+      ]
+    }
+  },
+  "csv_contract": {
+    "encoding": "UTF-8",
+    "header": true,
+    "delimiter": ",",
+    "quote": "\"",
+    "newline": "LF",
+    "empty_nullable_cell": "SQL NULL",
+    "booleans": "INTEGER 0 or 1",
+    "timestamp_format": "Publication, as_of and due_at: YYYY-MM-DDTHH:MM:SSZ. retrieved_at preserves fractional seconds."
+  },
+  "tables": {
+    "notice_releases.csv": {
+      "source_group": "official_notices",
+      "rows": 2,
+      "primary_key": [
+        "ocid",
+        "notice_id"
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "ocid",
+            "prior_notice_id"
+          ],
+          "table": "notice_releases.csv",
+          "references": [
+            "ocid",
+            "notice_id"
+          ],
+          "condition": "prior_notice_id present"
+        }
+      ],
+      "columns": [
+        {
+          "name": "ocid",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "notice_id",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "prior_notice_id",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "prior_notice_ref_pointer",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "title",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "release_tags",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "published_at",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "retrieved_at",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "as_of",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "provenance_class",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "replay_partition",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "source_url",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "api_url",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "source_path",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "source_sha256",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "release_pointer",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        }
+      ]
+    },
+    "future/notice_releases.csv": {
+      "source_group": "official_notices",
+      "rows": 1,
+      "primary_key": [
+        "ocid",
+        "notice_id"
+      ],
+      "foreign_keys": [],
+      "columns": [
+        {
+          "name": "ocid",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "notice_id",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "prior_notice_id",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "prior_notice_ref_pointer",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "title",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "release_tags",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "published_at",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "retrieved_at",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "as_of",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "provenance_class",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "replay_partition",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "source_url",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "api_url",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "source_path",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "source_sha256",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "release_pointer",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        }
+      ]
+    },
+    "notice_changes.csv": {
+      "source_group": "official_notices",
+      "rows": 3,
+      "primary_key": [
+        "ocid",
+        "notice_id",
+        "change_id"
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "ocid",
+            "notice_id"
+          ],
+          "table": "notice_releases.csv",
+          "references": [
+            "ocid",
+            "notice_id"
+          ]
+        },
+        {
+          "columns": [
+            "ocid",
+            "prior_notice_id"
+          ],
+          "table": "notice_releases.csv",
+          "references": [
+            "ocid",
+            "notice_id"
+          ]
+        }
+      ],
+      "columns": [
+        {
+          "name": "ocid",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "notice_id",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "prior_notice_id",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "change_id",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "as_of",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "published_at",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "provenance_class",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "section",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "label",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "value_kind",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "old_value",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "new_value",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "source_url",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "source_path",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "source_sha256",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "change_pointer",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "old_value_pointer",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "new_value_pointer",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        }
+      ]
+    },
+    "document_register.csv": {
+      "source_group": "document_register",
+      "rows": 6,
+      "primary_key": [
+        "ocid",
+        "document_id"
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "ocid",
+            "applies_to_notice_id"
+          ],
+          "table": "notice_releases.csv",
+          "references": [
+            "ocid",
+            "notice_id"
+          ]
+        }
+      ],
+      "columns": [
+        {
+          "name": "ocid",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "document_id",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "as_of",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "provenance_class",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "material_kind",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "title",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "availability",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "document_version",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "fixture_body",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "content_sha256",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "source_url",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "applies_to_notice_id",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "notes",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        }
+      ]
+    },
+    "task_dependencies.csv": {
+      "source_group": "supplier_tasks",
+      "rows": 17,
+      "primary_key": [
+        "ocid",
+        "dependency_id"
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "ocid",
+            "task_id"
+          ],
+          "table": "tasks_initial.csv",
+          "references": [
+            "ocid",
+            "task_id"
+          ]
+        },
+        {
+          "columns": [
+            "ocid",
+            "target_id"
+          ],
+          "table": "document_register.csv",
+          "references": [
+            "ocid",
+            "document_id"
+          ],
+          "condition": "target_type = 'document'"
+        },
+        {
+          "columns": [
+            "ocid",
+            "target_id"
+          ],
+          "table": "tasks_initial.csv",
+          "references": [
+            "ocid",
+            "task_id"
+          ],
+          "condition": "target_type = 'task'"
+        },
+        {
+          "columns": [
+            "ocid",
+            "active_from_notice_id"
+          ],
+          "table": "notice_releases.csv",
+          "references": [
+            "ocid",
+            "notice_id"
+          ]
+        }
+      ],
+      "columns": [
+        {
+          "name": "ocid",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "dependency_id",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "task_id",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "target_type",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "target_id",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "relation",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "active_from_notice_id",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "as_of",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "provenance_class",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        }
+      ]
+    },
+    "tasks_initial.csv": {
+      "source_group": "supplier_tasks",
+      "rows": 6,
+      "primary_key": [
+        "ocid",
+        "snapshot_id",
+        "task_id"
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "ocid",
+            "prior_approval_notice_id"
+          ],
+          "table": "notice_releases.csv",
+          "references": [
+            "ocid",
+            "notice_id"
+          ],
+          "condition": "prior_approval_notice_id present"
+        }
+      ],
+      "columns": [
+        {
+          "name": "ocid",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "as_of",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "snapshot_id",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "snapshot_version",
+          "sql_type": "INTEGER",
+          "nullable": false
+        },
+        {
+          "name": "provenance_class",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "task_id",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "row_kind",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "task_exists",
+          "sql_type": "INTEGER",
+          "nullable": false
+        },
+        {
+          "name": "task_version",
+          "sql_type": "INTEGER",
+          "nullable": false
+        },
+        {
+          "name": "title",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "status",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "due_at",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "notes",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "prior_approval_notice_id",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "task_sha256",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "unique_keys": [
+        [
+          "ocid",
+          "task_id"
+        ]
+      ]
+    },
+    "tasks_user_edit.csv": {
+      "source_group": "supplier_tasks",
+      "rows": 6,
+      "primary_key": [
+        "ocid",
+        "snapshot_id",
+        "task_id"
+      ],
+      "foreign_keys": [
+        {
+          "columns": [
+            "ocid",
+            "prior_approval_notice_id"
+          ],
+          "table": "notice_releases.csv",
+          "references": [
+            "ocid",
+            "notice_id"
+          ],
+          "condition": "prior_approval_notice_id present"
+        }
+      ],
+      "columns": [
+        {
+          "name": "ocid",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "as_of",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "snapshot_id",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "snapshot_version",
+          "sql_type": "INTEGER",
+          "nullable": false
+        },
+        {
+          "name": "provenance_class",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "task_id",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "row_kind",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "task_exists",
+          "sql_type": "INTEGER",
+          "nullable": false
+        },
+        {
+          "name": "task_version",
+          "sql_type": "INTEGER",
+          "nullable": false
+        },
+        {
+          "name": "title",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "status",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "due_at",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "notes",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "prior_approval_notice_id",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "task_sha256",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        }
+      ],
+      "unique_keys": [
+        [
+          "ocid",
+          "task_id"
+        ]
+      ]
+    },
+    "expected_results.csv": {
+      "source_group": "acceptance_targets",
+      "rows": 12,
+      "primary_key": [
+        "scenario_id",
+        "task_id"
+      ],
+      "foreign_keys": [],
+      "columns": [
+        {
+          "name": "scenario_id",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "as_of",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "record_kind",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "task_id",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "affected",
+          "sql_type": "INTEGER",
+          "nullable": false
+        },
+        {
+          "name": "applied",
+          "sql_type": "INTEGER",
+          "nullable": false
+        },
+        {
+          "name": "already_aligned",
+          "sql_type": "INTEGER",
+          "nullable": false
+        },
+        {
+          "name": "expected_action",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "task_version_before",
+          "sql_type": "INTEGER",
+          "nullable": false
+        },
+        {
+          "name": "task_version_after",
+          "sql_type": "INTEGER",
+          "nullable": false
+        },
+        {
+          "name": "expected_status",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "expected_due_at",
+          "sql_type": "VARCHAR",
+          "nullable": true
+        },
+        {
+          "name": "expected_notes",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "expected_task_sha256",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "evidence_ids_json",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "rule_ids_json",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        },
+        {
+          "name": "intended_patch_json",
+          "sql_type": "VARCHAR",
+          "nullable": false
+        }
+      ]
+    }
+  },
+  "hash_contracts": {
+    "source_sha256": "SHA-256 of the exact source_path bytes; original API responses are preserved.",
+    "content_sha256": "SHA-256 of UTF-8 fixture_body after CSV decoding, with zero added bytes.",
+    "task_sha256": {
+      "fields": [
+        "ocid",
+        "task_id",
+        "task_version",
+        "title",
+        "status",
+        "due_at",
+        "notes",
+        "prior_approval_notice_id"
+      ],
+      "integer_fields": [
+        "task_version"
+      ],
+      "empty_to_null_fields": [
+        "due_at",
+        "prior_approval_notice_id"
+      ],
+      "serialization": "JSON object; keys sorted lexicographically; UTF-8; literal Unicode; compact comma/colon separators; zero added newline.",
+      "planned_creation": "task_exists=0 uses task_version=0 and an empty hash; the reserved identity becomes a stored task when created.",
+      "snapshot_metadata": "Snapshot ID/version and source cutoff are carried alongside the task body hash."
+    }
+  },
+  "scenarios": {
+    "baseline": {
+      "input_table": "tasks_initial.csv",
+      "input_snapshot_id": "S0-initial",
+      "snapshot_version_before": 1,
+      "snapshot_version_after": 2,
+      "expected": {
+        "affected": 5,
+        "applied": 5,
+        "already_aligned": 0,
+        "preserved": 1,
+        "stored_tasks_after": 6
+      }
+    },
+    "after_user_edit": {
+      "input_table": "tasks_user_edit.csv",
+      "input_snapshot_id": "S1-user-edit",
+      "snapshot_version_before": 2,
+      "snapshot_version_after": 3,
+      "expected": {
+        "affected": 5,
+        "applied": 4,
+        "already_aligned": 1,
+        "preserved": 1,
+        "stored_tasks_after": 6
+      }
+    }
+  },
+  "stale_plan_acceptance_target": {
+    "plan_input_snapshot_id": "S0-initial",
+    "expected_snapshot_version": 1,
+    "current_input_snapshot_id": "S1-user-edit",
+    "current_snapshot_version": 2,
+    "conflicting_task_id": "T2",
+    "expected_task_version": 1,
+    "current_task_version": 2,
+    "status": "review_required",
+    "reason": "snapshot_version_conflict",
+    "applied": 0,
+    "snapshot_version_after": 2,
+    "next_input_snapshot_id": "S1-user-edit"
+  },
+  "manual_edit": {
+    "task_id": "T2",
+    "state": "review_required",
+    "appended_note": "Finance review reopened; awaiting the applicable SQ guidance.",
+    "task_version_before": 1,
+    "task_version_after": 2
+  },
+  "shared_evidence_targets": {
+    "T4": [
+      "C2",
+      "C3"
+    ],
+    "T5": [
+      "C2",
+      "C3"
+    ]
+  },
+  "original_context_references": [
+    {
+      "reference_id": "original_deadline",
+      "notice_id": "035490-2024",
+      "section": "IV.2.2",
+      "source_path": "sources/035490-2024.json",
+      "source_sha256": "e817634cb7777cd2ecb36f0999b73cd56c688e474fffda136d171f2504321884",
+      "pointer": "/releases/0/tender/tenderPeriod/endDate",
+      "matches_change_old_value": "C1"
+    },
+    {
+      "reference_id": "original_turnover",
+      "notice_id": "035490-2024",
+      "section": "III.1.2",
+      "source_path": "sources/035490-2024.json",
+      "source_sha256": "e817634cb7777cd2ecb36f0999b73cd56c688e474fffda136d171f2504321884",
+      "pointer": "/releases/0/tender/selectionCriteria/criteria/0/minimum",
+      "matches_change_old_value": "C2"
+    },
+    {
+      "reference_id": "original_scope",
+      "notice_id": "035490-2024",
+      "section": "II.2.4",
+      "source_path": "sources/035490-2024.json",
+      "source_sha256": "e817634cb7777cd2ecb36f0999b73cd56c688e474fffda136d171f2504321884",
+      "pointer": "/releases/0/tender/lots/0/description",
+      "supports_task_dependency": "T6"
+    },
+    {
+      "reference_id": "document_access_point",
+      "notice_id": "035490-2024",
+      "section": "I.3",
+      "source_path": "sources/035490-2024.json",
+      "source_sha256": "e817634cb7777cd2ecb36f0999b73cd56c688e474fffda136d171f2504321884",
+      "pointer": "/releases/0/parties/0/details/buyerProfile",
+      "matches_document_source_url": "D1"
+    }
+  ],
+  "retained_document_ids": [
+    "D2",
+    "D3",
+    "D4",
+    "D5",
+    "D6"
+  ],
+  "missing_document_id": "D1",
+  "final_signoff_recovery_conditions": {
+    "task_id": "T4",
+    "document_id": "D1",
+    "document_state": "available_with_applicable_versions_and_hashes",
+    "reviews": {
+      "T2": "approved",
+      "T3": "approved"
+    }
+  },
+  "future_isolation": {
+    "catalog": "future/notice_releases.csv",
+    "raw_source": "future/060821-2025.json",
+    "published_at": "2025-09-30T10:46:40Z",
+    "expected_visible_release_count_at_as_of": 2,
+    "expected_excluded_notice_ids": [
+      "060821-2025"
+    ],
+    "purpose": "An explicitly separate later release for historical cutoff checks."
+  },
+  "raw_artifacts": [
+    {
+      "path": "sources/035490-2024.json",
+      "kind": "official_original_bytes",
+      "replay_partition": "main"
+    },
+    {
+      "path": "sources/036312-2024.json",
+      "kind": "official_original_bytes",
+      "replay_partition": "main"
+    },
+    {
+      "path": "future/060821-2025.json",
+      "kind": "official_original_bytes",
+      "replay_partition": "future_isolation"
+    }
+  ],
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 19271,
+      "sha256": "f59136d015b8d79d6e3d412b233fc84e6623fd3e44af721fbdc010d902cc6cbe"
+    },
+    {
+      "path": "document_register.csv",
+      "bytes": 2593,
+      "sha256": "242283fa68d5dbbff034d4c6f4a11b65928e86da7f1cf1c984b7d750cc8e93ac"
+    },
+    {
+      "path": "expected_results.csv",
+      "bytes": 4073,
+      "sha256": "d0f3ce7191230ec85bea274ab6f1f8dc8e8e824da4897cd1eea6b8e360dcf687"
+    },
+    {
+      "path": "future/060821-2025.json",
+      "bytes": 12446,
+      "sha256": "37a355b98ae9e2a224fe6037a79340788babd3e65b3a09d74d99e31a13576b27"
+    },
+    {
+      "path": "future/notice_releases.csv",
+      "bytes": 653,
+      "sha256": "eca4a62d1079083038a429aa6a021579b67244a7bf8e52b889e37c946c7db5c2"
+    },
+    {
+      "path": "notice_changes.csv",
+      "bytes": 2419,
+      "sha256": "e67285523d28bb3c1f9459b92d4edade241bb6bfcd8d226c05ca3a6c891752cc"
+    },
+    {
+      "path": "notice_releases.csv",
+      "bytes": 1104,
+      "sha256": "65e9b6a97c8b1797067bfbfea887fcb604a519634d42210cadb8fb1a54abc2e3"
+    },
+    {
+      "path": "sources/035490-2024.json",
+      "bytes": 11987,
+      "sha256": "e817634cb7777cd2ecb36f0999b73cd56c688e474fffda136d171f2504321884"
+    },
+    {
+      "path": "sources/036312-2024.json",
+      "bytes": 7301,
+      "sha256": "d7daf10d094192f447c3ea2d0bc1f62dc9907845c714f072a73461435cde7f45"
+    },
+    {
+      "path": "task_dependencies.csv",
+      "bytes": 1863,
+      "sha256": "27612904cbf5162b3c27a4f868978b899c156eb8a5ede35c9bdc337dd993b4b5"
+    },
+    {
+      "path": "tasks_initial.csv",
+      "bytes": 1633,
+      "sha256": "95856442c568b388e12154d5db78a7c4aee65afb0f9762088a9d967c841a4e82"
+    },
+    {
+      "path": "tasks_user_edit.csv",
+      "bytes": 1714,
+      "sha256": "0f1bc4f838366c85fd709f84d57c8ecec99efec1707110263b87a1bfe1f9d50e"
+    }
+  ],
+  "authored_content_license": "https://creativecommons.org/licenses/by/4.0/",
+  "snapshot_scope": {
+    "snapshot_version_entity_set": "All persisted tasks in the selected procurement task snapshot.",
+    "fixed_shared_inputs": [
+      "document_register.csv",
+      "task_dependencies.csv"
+    ],
+    "fixed_input_hashes": "Use the corresponding manifest.files byte hashes for this research package.",
+    "application_commit_preconditions": [
+      "Expected task snapshot version matches the current task set.",
+      "Document register and dependency inputs match the versions or hashes used to prepare the plan."
+    ]
+  }
+}
