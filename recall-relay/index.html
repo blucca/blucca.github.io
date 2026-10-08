@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#244d3e" />
+    <meta name="description" content="Recall Relay is an Alexa+ concept that helps a product recall reach its current owner, and helps that owner finish the remedy." />
+    <title>Recall Relay — care that carries on</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="module" src="./app.mjs"></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#workspace">Skip to your next step</a>
+    <div class="page-shell">
+      <header class="masthead">
+        <a class="wordmark" href="./" aria-label="Recall Relay home">
+          <svg viewBox="0 0 36 36" fill="none" aria-hidden="true"><path d="M8 20V13a8 8 0 0 1 14-5l3 3M28 16v7a8 8 0 0 1-14 5l-3-3" stroke="currentColor" stroke-width="2.8" stroke-linecap="round"/><path d="m25 5 .2 6.3L19 11M11 31l-.2-6.3L17 25" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Recall<span class="wordmark-light">Relay</span></span>
+        </a>
+        <div class="header-tools">
+          <span class="connection-status" id="connection-status"><span class="status-dot"></span> Connecting</span>
+          <button type="button" class="quiet-button" id="restart-button">Restart demo <span aria-hidden="true">↺</span></button>
+        </div>
+      </header>
+
+      <section class="introduction" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow"><span class="eyebrow-line"></span> An Alexa+ concept · built around the next owner</p>
+          <h1 id="page-title">Care should travel<br />with the product<span class="accent-period">.</span></h1>
+        </div>
+        <p class="intro-note">The cooker changed hands.<br /><strong>Let’s make sure the recall does, too.</strong><br /><span>One real recall. One clear next step.</span></p>
+      </section>
+
+      <main class="main-layout" id="main-content">
+        <section class="conversation-panel" aria-label="Your recall case">
+          <ol class="journey" id="journey" aria-label="Recall journey">
+            <li class="current"><span class="journey-number">1</span><span>Reach owner</span></li>
+            <li><span class="journey-number">2</span><span>Check label</span></li>
+            <li><span class="journey-number">3</span><span>Get the lid</span></li>
+            <li><span class="journey-number">4</span><span>Finish</span></li>
+          </ol>
+
+          <div class="workspace" id="workspace" tabindex="-1" aria-live="polite">
+            <p class="eyebrow">Opening your case</p>
+            <h2>Picking up the thread.</h2>
+            <p class="body-copy">Your next step will appear here.</p>
+          </div>
+
+          <div class="message-banner" id="message-banner" role="status" hidden></div>
+
+          <section class="voice-console" aria-labelledby="voice-heading">
+            <div class="voice-console-top">
+              <h3 id="voice-heading"><span class="voice-orb" aria-hidden="true"><i></i><i></i><i></i><i></i></span> Say it your way</h3>
+              <button type="button" class="read-button" id="read-button" title="Read the current step using an available on-device voice">
+                <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m9 4-4 3H2v6h3l4 3V4Zm4 3a5 5 0 0 1 0 6m3-9a9 9 0 0 1 0 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Read aloud
+              </button>
+            </div>
+            <p class="voice-caption">Type what you’d say to Alexa. The same tools power every button.</p>
+            <div class="spoken-reply" id="spoken-reply" hidden></div>
+            <form id="command-form" class="command-form">
+              <label class="sr-only" for="command-input">Your message</label>
+              <input id="command-input" name="command" type="text" placeholder="“I gave my Foodi to Alex.”" maxlength="300" autocomplete="off" required />
+              <button type="submit" aria-label="Send message"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </form>
+            <div class="command-suggestions" id="command-suggestions"></div>
+          </section>
+        </section>
+
+        <aside class="case-sidebar" aria-label="Product and evidence">
+          <section class="product-card" aria-labelledby="product-name">
+            <div class="product-card-top"><span class="eyebrow">The product</span><span class="case-tag">US recall · 25-247</span></div>
+            <div class="product-art">
+              <svg viewBox="0 0 380 224" role="img" aria-label="Illustration of a multicooker and its pressure-cooking lid">
+                <ellipse cx="165" cy="203" rx="114" ry="9" fill="#d7ded1" />
+                <path d="M85 101c0-11 17-21 77-21s80 10 80 21l-8 81c-2 17-24 26-72 26s-70-9-72-26l-5-81Z" fill="#3e4742" />
+                <path d="M96 113c17 6 44 8 66 8s51-2 70-8l-7 67c-1 10-27 19-63 19s-60-9-61-19l-5-67Z" fill="#abb7ac" />
+                <path d="m102 117 5 59c1 10 14 12 23 15l-4-68-24-6Z" fill="#cbd3c7" />
+                <path d="m209 119-3 71c9-3 14-6 14-12l6-61-17 2Z" fill="#89988b" />
+                <path d="M93 121H72c-7 0-12-7-12-15v-9c0-4 3-7 7-7h22v13H76v6h18m142 12h20c7 0 12-7 12-15v-9c0-4-3-7-7-7h-21v13h13v6h-17" fill="#38463d" />
+                <rect x="134" y="127" width="61" height="56" rx="13" fill="#34433b" />
+                <rect x="142" y="136" width="45" height="19" rx="3" fill="#b6c7a9" />
+                <path d="M151 145h8m5 0h13" stroke="#57734d" stroke-width="2" stroke-linecap="round" />
+                <circle cx="151" cy="166" r="3" fill="#859b80" /><circle cx="164" cy="167" r="5" fill="#b9c6b2" /><circle cx="179" cy="166" r="3" fill="#859b80" />
+                <path d="M110 192v13m106-13v13" stroke="#34433b" stroke-width="10" stroke-linecap="round" />
+                <ellipse cx="163" cy="96" rx="82" ry="23" fill="#283b30" />
+                <ellipse cx="163" cy="91" rx="76" ry="20" fill="#56675a" />
+                <ellipse cx="163" cy="83" rx="65" ry="16" fill="#64786a" />
+                <path d="M94 85c-2-27 24-45 70-45s73 18 70 45c-5 15-133 16-140 0Z" fill="#354b3e" />
+                <path d="M96 80c29 15 110 17 138 0v7c-20 18-119 18-139-1Z" fill="#d2875f" />
+                <path d="M139 47V35c0-5 5-9 11-9h27c6 0 11 4 11 9v12h-12V38h-25v9h-12Z" fill="#273b2e" />
+                <path d="m111 66 5-7 9 2-4 9Z" fill="#24382c" /><ellipse cx="208" cy="65" rx="7" ry="3" fill="#9cae99" />
+                <path d="M236 75h43V51h18" stroke="#b6633e" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="3 4" />
+                <circle cx="237" cy="75" r="3.5" fill="#b6633e" />
+                <text x="302" y="48" fill="#7a4b32" font-family="system-ui, sans-serif" font-size="10" font-weight="600">PRESSURE</text>
+                <text x="302" y="62" fill="#7a4b32" font-family="system-ui, sans-serif" font-size="10" font-weight="600">LID</text>
+              </svg>
+              <span class="illustration-caption">Product illustration</span>
+            </div>
+            <h2 id="product-name">Ninja Foodi</h2>
+            <p class="product-type" id="product-type">Pressure cooker · OP300 series</p>
+            <div class="label-strip"><span>Model note</span><strong id="model-value">OP301 I07</strong></div>
+            <p class="label-provenance" id="label-provenance">The current owner checks the physical label.</p>
+            <div class="owner-strip"><span class="owner-avatar" id="owner-avatar">S</span><div><span class="small-label">Case kept by</span><strong id="owner-name">Sam</strong></div><span class="owner-badge">Owner-reported</span></div>
+            <button type="button" class="text-link import-trigger">Have a handoff? Open it <span aria-hidden="true">↗</span></button>
+          </section>
+
+          <section class="evidence-card" aria-labelledby="evidence-heading">
+            <div class="section-heading"><h2 id="evidence-heading">Grounded in the recall</h2><span class="official-tag">Official facts</span></div>
+            <div id="official-facts"><p class="small-copy">Loading the source-linked recall instructions.</p></div>
+            <a class="source-link" id="source-link" target="_blank" rel="noopener noreferrer" hidden>Read the CPSC notice <span aria-hidden="true">↗</span></a>
+          </section>
+          <details class="journal" id="journal">
+            <summary>Your case history <span id="event-count"></span></summary>
+            <p class="small-copy">Progress is reported by the owner. Official instructions are linked above.</p>
+            <ol id="event-list"></ol>
+          </details>
+        </aside>
+      </main>
+
+      <footer class="page-footer">
+        <p><strong>A working concept, with a real source.</strong> Household steps run in this simulator. The actual claim is filed on SharkNinja’s website.</p>
+        <p id="storage-note">Text and touch work here. Audio is optional. Photos stay with you.</p>
+      </footer>
+    </div>
+
+    <dialog id="import-dialog" aria-labelledby="import-title">
+      <div class="dialog-heading"><p class="eyebrow">Pick up the thread</p><button class="dialog-close" type="button" aria-label="Close handoff import">×</button></div>
+      <h2 id="import-title">This one’s yours now.</h2>
+      <p class="body-copy">Paste the handoff from the previous owner. You’ll check the model on your own cooker next.</p>
+      <form id="import-form">
+        <label for="import-owner">Your first name</label>
+        <input id="import-owner" name="owner" value="Alex" maxlength="80" required autocomplete="given-name" />
+        <label for="import-payload">Handoff JSON</label>
+        <textarea id="import-payload" name="handoff" rows="7" placeholder='Paste the exported handoff here…' required spellcheck="false"></textarea>
+        <p class="small-copy">A handoff carries the recall and model note. You start a fresh owner journal.</p>
+        <p class="form-error" id="import-error" role="alert" hidden></p>
+        <button class="primary-button" type="submit">Continue as this owner <span aria-hidden="true">→</span></button>
+      </form>
+    </dialog>
+    <div class="sr-only" id="screen-reader-status" role="status" aria-live="polite"></div>
+  </body>
+</html>
