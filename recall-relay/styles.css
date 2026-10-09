@@ -70,6 +70,8 @@
   .page-footer p:first-child { max-width: 570px; }
   .page-footer p:last-child { max-width: 310px; }
   .page-footer strong { color: #50624f; font-weight: 650; }
+  .feedback-note { margin-top: 6px; }
+  .feedback-note a { text-decoration: underline; text-underline-offset: 3px; }
 }
 
 @layer components {
@@ -202,6 +204,8 @@
   .command-suggestions button:hover { border-color: #90a77d; background: #e7eedd; }
   .spoken-reply { margin-top: 14px; border-left: 2px solid #88a379; padding-left: 12px; font-size: 12px; color: #506747; line-height: 1.6; }
   .spoken-reply .user-message { color: #7a8574; display: block; margin-bottom: 5px; font-size: 10px; }
+  .reply-sources { display: block; margin-top: 8px; }
+  .reply-sources a { color: var(--green); text-decoration: underline; text-underline-offset: 3px; }
   .product-card { border-radius: var(--radius); border: 1px solid #dce4d4; background: var(--sage); padding: 23px 24px 20px; }
   .product-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .case-tag { font-size: 9px; color: #718368; }
