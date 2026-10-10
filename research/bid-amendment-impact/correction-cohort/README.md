@@ -53,7 +53,7 @@ Download [source-cache.zip](source-cache.zip), which contains the definitive API
 python cohort.py --offline
 ```
 
-The script verifies cached-response hashes and rebuilds the tables: **30 verified / 6 multi-section / 9 deadline / 1 combined**. A fresh collection uses the same script in a fresh folder, with its default online mode; collection stops new requests after a rate-limit/service-unavailable response. The archive preserves the original three unresolved outcomes.
+The script reads the saved responses and rebuilds the tables: **30 verified / 6 multi-section / 9 deadline / 1 combined**. A fresh collection uses the same script in a fresh folder, with its default online mode; collection stops new requests after a rate-limit/service-unavailable response. The archive preserves the original three unresolved outcomes.
 
 Official notice/API material is under the [Open Government Licence v3.0](https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/). Blucca's research text, classifications and script use [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Cite the original notice URLs, this dataset and its recorded retrieval boundary.
 

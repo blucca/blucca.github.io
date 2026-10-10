@@ -64,7 +64,7 @@
         <p><a href="../../assets/downloads/n8n-check-identity-demo.zip" download>Download the two-export Docker demo</a>, extract it into a new folder, and open a terminal there. Start Docker, then run:</p>
 <pre><code>sh fixed/run.sh</code></pre>
         <p>Expected result: <strong>5/5 checks pass, exit 0.</strong> The output contains <code>row-A</code> and <code>row-B</code>.</p>
-        <p><strong>Setup:</strong> Docker with Linux containers and a shell on Linux, macOS, or WSL2. Docker supplies Node and n8n. The first run downloads the official n8n <code>2.41.7</code> image and a SHA256-verified n8n-check <code>0.1.6</code> runner. Workflow execution uses loopback-only networking.</p>
+        <p><strong>Setup:</strong> Docker with Linux containers and a shell on Linux, macOS, or WSL2. Docker supplies Node and n8n. The first run downloads the official n8n <code>2.41.7</code> image and a pinned n8n-check <code>0.1.6</code> runner. Workflow execution uses loopback-only networking.</p>
         <p>The demo pins those tested versions. The current <a href="https://www.npmjs.com/package/@blucca/n8n-check">npm release</a> and <a href="https://github.com/marketplace/actions/n8n-check">GitHub Marketplace Action</a> provide the same count-and-ID assertion format for your own projects.</p>
       </section>
       <section id="catch-regression">

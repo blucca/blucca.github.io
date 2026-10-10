@@ -8,7 +8,7 @@ IDs and exits 1. Both n8n executions succeed. Synthetic data throughout.
 
 - [Instructions and recorded results](https://github.com/blucca/n8n-check/tree/main/examples/identity-projection)
 - [Reproducible packaging source](https://github.com/blucca/n8n-check/blob/main/examples/identity-projection/build-demo.py)
-- Fixed runtime: n8n 2.41.7 and SHA256-verified n8n-check 0.1.6.
+- Fixed runtime: n8n 2.41.7 and pinned n8n-check 0.1.6.
 - Requires Docker Linux containers and a shell on Linux, macOS, or WSL2.
 
 Rebuild from the n8n-check repository with Python 3 and Node.js:

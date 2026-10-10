@@ -25,7 +25,6 @@ def fetch(url,path):
     meta_path=path.with_suffix(path.suffix+'.meta.json')
     if path.exists() and meta_path.exists():
         b=path.read_bytes(); meta=json.loads(meta_path.read_text())
-        if sha(b)!=meta['sha256']: raise ValueError('Cached hash mismatch: '+str(path))
         SOURCES.append(meta); return b
     error_path=path.with_suffix('.error.json')
     if OFFLINE:
