@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 840" role="img" aria-labelledby="title desc">
+  <title id="title">Capture Loop — observation, action, review</title>
+  <desc id="desc">A browser uploads a photo to an isolated station session. The native model calls inspect_capture, executing OpenCV 5 in a private AWS Lambda. Geometry and focus return to the model. It saves a recapture request or prepares field review. The reviewer separately confirms the visible value. The station retains the original, perspective view, capture history and trace.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z" fill="#234cdb"/></marker>
+    <style>text{font-family:Arial,Helvetica,sans-serif;fill:#20221d}.tag{font-size:13px;letter-spacing:1px;font-weight:700}.head{font-size:25px;font-weight:700}.body{font-size:17px}.small{font-size:14px;fill:#565b51}.arrow{fill:none;stroke:#234cdb;stroke-width:3;marker-end:url(#arrow)}.box{fill:#fffef7;stroke:#20221d;stroke-width:2}</style>
+  </defs>
+  <rect width="1280" height="840" fill="#e9eae3"/>
+  <rect x="0" y="0" width="1280" height="95" fill="#20221d"/>
+  <text x="44" y="37" class="tag" style="fill:#e4f25d">DOCKPROOF / CAPTURE LOOP</text>
+  <text x="44" y="72" class="head" style="fill:#fffef7">A measured photo changes the next action.</text>
+
+  <rect class="box" x="44" y="151" width="238" height="154"/>
+  <text class="tag" x="63" y="178">01 / BROWSER</text>
+  <text class="head" x="63" y="217">Upload a photo</text>
+  <text class="body" x="63" y="249">JPEG / PNG original</text>
+  <text class="small" x="63" y="278">POST /api/capture</text>
+  <path class="arrow" d="M282 220H337"/>
+  <text class="small" x="292" y="197">bytes</text>
+
+  <rect class="box" x="348" y="151" width="256" height="154"/>
+  <text class="tag" x="367" y="178">02 / STATION</text>
+  <text class="head" x="367" y="217" style="font-size:22px">Keep &amp; orchestrate</text>
+  <text class="body" x="367" y="249">Isolated browser session</text>
+  <text class="small" x="367" y="278">Original + previous request</text>
+  <path class="arrow" d="M604 220H651"/>
+
+  <rect x="662" y="151" width="240" height="154" fill="#e4f25d" stroke="#20221d" stroke-width="2"/>
+  <text class="tag" x="681" y="178">03 / NATIVE TOOL CALLS</text>
+  <text class="head" x="681" y="217">Nemotron agent</text>
+  <text class="body" x="681" y="249">Inspect → decide → act</text>
+  <text class="small" x="681" y="278">Numerical observations</text>
+
+  <rect class="box" x="972" y="151" width="264" height="220"/>
+  <text class="tag" x="991" y="178">04 / PRIVATE AWS LAMBDA</text>
+  <text class="head" x="991" y="217">OpenCV 5</text>
+  <text class="body" x="991" y="249">Contour + boundary contrast</text>
+  <text class="body" x="991" y="278">Normalized page focus</text>
+  <text class="body" x="991" y="307">Perspective transform</text>
+  <text class="small" x="991" y="346">Original bytes via tool runner</text>
+  <path class="arrow" d="M835 151V117H1104V142"/>
+  <text class="small" x="915" y="108">inspect_capture</text>
+  <path class="arrow" d="M972 258H913"/>
+  <text class="small" transform="translate(945 346) rotate(-90)">measurements</text>
+
+  <path class="arrow" d="M781 305V412H340V450"/>
+  <path class="arrow" d="M781 412H945V450"/>
+  <text class="small" x="497" y="397">Vision result selects one next-step tool</text>
+
+  <rect x="142" y="463" width="396" height="134" fill="#fffef7" stroke="#20221d" stroke-width="2"/>
+  <text class="tag" x="163" y="491">REQUEST_RECAPTURE</text>
+  <text class="head" x="163" y="530">A specific better-photo request</text>
+  <text class="body" x="163" y="566">Focus, framing or document-view recovery</text>
+  <path class="arrow" d="M142 530H73V318"/>
+  <text class="small" transform="translate(59 485) rotate(-90)">next original + saved request</text>
+
+  <rect x="746" y="463" width="396" height="134" fill="#fffef7" stroke="#20221d" stroke-width="2"/>
+  <text class="tag" x="767" y="491">PREPARE_FIELD_REVIEW</text>
+  <text class="head" x="767" y="530">Compare the two views</text>
+  <text class="body" x="767" y="566">A person enters and confirms the field</text>
+  <path class="arrow" d="M945 597V656"/>
+
+  <rect x="348" y="670" width="794" height="108" fill="#20221d"/>
+  <text class="tag" x="370" y="699" style="fill:#e4f25d">RETAINED RECORD / SESSION EXPORT</text>
+  <text class="body" x="370" y="734" style="fill:#fffef7">Originals · derived views · replacement chain · measurements · native tool calls · review</text>
+  <text class="small" x="370" y="762" style="fill:#c8cbbf">Field confirmation is a separate reviewer action. Trial session files expire after 24 hours.</text>
+  <path class="arrow" d="M476 305V355H618V635H500V658"/>
+  <text class="small" transform="translate(606 617) rotate(-90)">session history</text>
+  <text class="small" x="44" y="817">Flat-document pilot · HTTPS station + private AWS measurement · Model receives numerical results and the previous request</text>
+</svg>
