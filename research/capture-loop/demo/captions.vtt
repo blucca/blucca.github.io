@@ -1,0 +1,56 @@
+WEBVTT
+
+00:00:00.550 --> 00:00:05.436
+A useful parcel photo shows the evidence someone else needs to check.
+
+00:00:05.436 --> 00:00:14.713
+Capture Loop turns a photograph into a concrete next step, using OpenCV five, AWS, and a tool-using agent.
+
+00:00:16.378 --> 00:00:19.330
+Start with this cropped shipping label.
+
+00:00:19.330 --> 00:00:25.949
+The agent calls the image tool, reads the missing-boundary result, and asks for a complete view.
+
+00:00:25.949 --> 00:00:30.014
+That request stays in the history for the next photograph.
+
+00:00:31.778 --> 00:00:34.967
+Here is a separate GLS parcel.
+
+00:00:34.967 --> 00:00:40.099
+The cloud measurement finds all four corners and prepares a straightened view.
+
+00:00:40.099 --> 00:00:43.243
+The agent now opens field review.
+
+00:00:43.243 --> 00:00:46.849
+The original stays beside its derived image.
+
+00:00:48.618 --> 00:00:51.860
+The reviewer supplies the visible value.
+
+00:00:51.860 --> 00:00:58.583
+In this scripted demonstration, I compare the handwritten date, enter it, and save the confirmation.
+
+00:00:58.583 --> 00:01:04.689
+The export carries the photo history, measurements, tool calls, and review together.
+
+00:01:06.642 --> 00:01:12.028
+The browser sends the photo to a private OpenCV Lambda through the station.
+
+00:01:12.028 --> 00:01:18.213
+The model receives measurements and the previous request, then executes the next action.
+
+00:01:18.213 --> 00:01:23.068
+Four selected parcel examples document the current domain checks.
+
+00:01:25.026 --> 00:01:27.939
+Open the live station on your phone.
+
+00:01:27.939 --> 00:01:33.702
+Try the supplied samples, or one flat label against a contrasting surface.
+
+00:01:33.702 --> 00:01:39.452
+Tell us which capture instruction helped, and which detail still needed a clearer view.
+
