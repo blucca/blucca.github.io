@@ -1,56 +1,98 @@
 WEBVTT
 
-00:00:00.550 --> 00:00:05.436
-A useful parcel photo shows the evidence someone else needs to check.
+00:00:00.550 --> 00:00:04.871
+A parcel claim starts with photographs someone else can check.
 
-00:00:05.436 --> 00:00:14.713
-Capture Loop turns a photograph into a concrete next step, using OpenCV five, AWS, and a tool-using agent.
+00:00:04.871 --> 00:00:12.726
+Capture Loop keeps the full label, asks for a useful closer view, and links a confirmed field to both originals.
 
-00:00:16.378 --> 00:00:19.330
-Start with this cropped shipping label.
+00:00:12.726 --> 00:00:17.778
+This is the working OpenCV five and AWS application.
 
-00:00:19.330 --> 00:00:25.949
-The agent calls the image tool, reads the missing-boundary result, and asks for a complete view.
+00:00:19.450 --> 00:00:21.850
+Start the two-view sample.
 
-00:00:25.949 --> 00:00:30.014
-That request stays in the history for the next photograph.
+00:00:21.850 --> 00:00:30.481
+The agent calls the private AWS image tool, checks the document boundary and page focus, then opens field review.
 
-00:00:31.778 --> 00:00:34.967
-Here is a separate GLS parcel.
+00:00:30.481 --> 00:00:35.850
+The small printed code has only eighty-seven by twenty-five source pixels.
 
-00:00:34.967 --> 00:00:40.099
-The cloud measurement finds all four corners and prepares a straightened view.
+00:00:35.850 --> 00:00:40.507
+We keep that full-label context and request a closer detail.
 
-00:00:40.099 --> 00:00:43.243
-The agent now opens field review.
+00:00:42.266 --> 00:00:45.692
+First, a deliberate wrong-photo control.
 
-00:00:43.243 --> 00:00:46.849
-The original stays beside its derived image.
+00:00:45.692 --> 00:00:49.166
+I upload a separate parcel as the detail.
 
-00:00:48.618 --> 00:00:51.860
-The reviewer supplies the visible value.
+00:00:49.166 --> 00:00:53.166
+OpenCV finds too little corresponding print.
 
-00:00:51.860 --> 00:00:58.583
-In this scripted demonstration, I compare the handwritten date, enter it, and save the confirmation.
+00:00:53.166 --> 00:00:57.310
+The agent asks for another view with surrounding marks.
 
-00:00:58.583 --> 00:01:04.689
-The export carries the photo history, measurements, tool calls, and review together.
+00:00:57.310 --> 00:01:03.008
+The full label stays selected, and the next upload carries this request forward.
 
-00:01:06.642 --> 00:01:12.028
-The browser sends the photo to a private OpenCV Lambda through the station.
+00:01:04.770 --> 00:01:07.262
+Now load the paired detail.
 
-00:01:12.028 --> 00:01:18.213
-The model receives measurements and the previous request, then executes the next action.
+00:01:07.262 --> 00:01:14.130
+OpenCV matches features, checks the target coverage, and maps the field into the new original.
 
-00:01:18.213 --> 00:01:23.068
-Four selected parcel examples document the current domain checks.
+00:01:14.130 --> 00:01:17.130
+The agent opens a fresh review.
 
-00:01:25.026 --> 00:01:27.939
-Open the live station on your phone.
+00:01:17.130 --> 00:01:25.196
+The target now occupies one hundred seventy-one by forty-seven source pixels, about twice the linear sampling.
 
-00:01:27.939 --> 00:01:33.702
-Try the supplied samples, or one flat label against a contrasting surface.
+00:01:25.196 --> 00:01:29.235
+This controlled pair comes from one licensed photograph.
 
-00:01:33.702 --> 00:01:39.452
-Tell us which capture instruction helped, and which detail still needed a clearer view.
+00:01:30.994 --> 00:01:36.380
+Compare the two crops, enter the visible form code, and confirm the field.
+
+00:01:36.380 --> 00:01:39.288
+This reviewer entry is scripted.
+
+00:01:39.288 --> 00:01:46.538
+The saved review identifies both originals, both field crops, and the selected readability response.
+
+00:01:46.538 --> 00:01:51.959
+Export the session to inspect the measurements and the actual native tool calls.
+
+00:01:53.914 --> 00:01:56.182
+Here is the architecture.
+
+00:01:56.182 --> 00:02:00.656
+Whole-label measurements run in private AWS Lambda.
+
+00:02:00.656 --> 00:02:04.985
+Field mapping runs in the station with OpenCV five.
+
+00:02:04.985 --> 00:02:09.840
+The model receives numerical observations and prior requests.
+
+00:02:09.840 --> 00:02:14.235
+Its next tool either requests a retake or opens review.
+
+00:02:14.235 --> 00:02:19.971
+Executable checks govern both actions, and people supply the field values.
+
+00:02:21.946 --> 00:02:29.582
+The report separates selected parcel checks, controlled scale experiments, and natural handheld-video frames.
+
+00:02:29.582 --> 00:02:36.701
+Missing targets, weak correspondence, and insufficient sampling each have a recorded recovery path.
+
+00:02:36.701 --> 00:02:40.569
+Independent phone feedback is the next field test.
+
+00:02:40.569 --> 00:02:49.464
+Team Blucca combines the owner's account and submission responsibilities with autonomous AI research, engineering, and documentation.
+
+00:02:49.464 --> 00:02:53.569
+Try the live station and send one useful capture note.
 

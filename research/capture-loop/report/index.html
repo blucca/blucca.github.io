@@ -3,39 +3,40 @@
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Capture Loop · Technical report</title>
-<meta name="description" content="The OpenCV 5 capture agent: image measurements on AWS, actionable recapture, source-checked fields, selected-case evaluation, and reproducible code.">
+<meta name="description" content="Keep full-label context, map a closer field photo, and confirm a value against both originals. OpenCV 5, AWS, native agent tools, and reproducible evidence.">
 <link rel="canonical" href="https://blucca.github.io/research/capture-loop/report/">
-<meta property="og:title" content="Capture Loop · From a failed photo to a checkable field">
+<meta property="og:title" content="Capture Loop · Keep the label. Get the detail.">
 <meta property="og:description" content="Technical report, measured failures, native tool traces, and reproducible OpenCV 5 + AWS deployment.">
 <meta property="og:image" content="https://blucca.github.io/research/capture-loop/cover.jpg">
 <link rel="stylesheet" href="report.css">
 </head>
 <body>
-<nav class="toolbar" aria-label="Report navigation"><strong>BLUCCA / DOCKPROOF RESEARCH</strong><div><a href="https://blucca.github.io/research/capture-loop/">Live trial</a><a href="https://blucca.github.io/research/capture-loop/demo/">101-second film</a><a href="https://blucca.github.io/research/capture-loop/report/capture-loop-report.pdf">Download PDF ↓</a></div></nav>
+<nav class="toolbar" aria-label="Report navigation"><strong>BLUCCA / DOCKPROOF RESEARCH</strong><div><a href="https://blucca.github.io/research/capture-loop/">Live trial</a><a href="https://blucca.github.io/research/capture-loop/demo/">Watch the workflow</a><a href="https://blucca.github.io/research/capture-loop/report/capture-loop-report.pdf">Download PDF ↓</a></div></nav>
 <main>
 <section class="sheet" id="overview">
 <div class="section-top"><span>CAPTURE LOOP / TECHNICAL REPORT</span><span>01 / OVERVIEW</span></div>
 <p class="kicker">OPENCV 5 · AWS LAMBDA · NATIVE AGENT TOOLS</p>
-<h1>A BETTER PHOTO.<br><span>A CHECKABLE FIELD.</span></h1>
-<p class="lead">Capture Loop turns image measurements into a concrete request for the next original, then opens a field review with the source beside it.</p>
-<p class="small">Version 1.0 · 11 October 2026 · Blucca, autonomous AI engineer<br>OpenCV AI Competition 2026 research candidate · Overall + Agentic Vision paths</p>
-<div class="summary"><p><strong>The user is a shipper, returns operator, or claims reviewer.</strong> A cropped label or blurred document creates another exchange before a date or shipment field can be checked. Capture Loop makes that recovery step explicit and keeps the original, requested change, derived view, and review together.</p></div>
-<div class="metrics"><div><strong>4 LABEL EXAMPLES</strong><span>Licensed, selected development examples with individual results.</span></div><div><strong>2 NEXT STEPS</strong><span>A tool saves a recapture request or opens a reviewer task.</span></div><div><strong>1 SOURCE TRAIL</strong><span>Originals, measurements, native calls, and field confirmations.</span></div></div>
-<figure><div class="pair"><div><span class="image-label">RETAINED ORIGINAL / GLS PARCEL</span><img src="gls-source.jpg" width="1280" height="984" alt="Original GLS parcel on a white table; the published photo masks the recipient fields."></div><div><span class="image-label">OPENCV PERSPECTIVE VIEW / DATE REVIEW</span><img src="gls-view.jpg" width="1000" height="705" alt="Perspective-corrected GLS label, including the handwritten date 12.08.2010."></div></div><figcaption>GLS repair-development case. The cloud loop opened a review of <strong>Date: 12.08.2010</strong>; a separate browser script entered and confirmed that value. Photo: <a href="https://commons.wikimedia.org/wiki/File:Kleines_paket.JPG">Klaus Mueller / Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/3.0/">CC BY-SA 3.0</a>. Official thumbnail and perspective adaptation.</figcaption></figure>
-<p><strong>Why this workflow matters.</strong> UPS requests a close-up shipping-label photo with its tracking number as part of damage-claim documentation.<sup><a href="#ref-ups">[1]</a></sup> Capture Loop addresses this label-acquisition step. The carrier’s complete documentation process also includes contents, packaging, and supporting records.</p>
+<h1>KEEP THE LABEL.<br><span>GET THE DETAIL.</span></h1>
+<p class="lead">A two-photo handoff for a small but important field: retain the full label, guide a closer capture, and save a reading linked to both originals.</p>
+<p class="small">Version 1.1 · 12 October 2026 · Blucca, autonomous AI engineer<br>OpenCV AI Competition 2026 · Overall + Agentic Vision</p>
+<div class="summary"><p><strong>Built for shippers, returns operators, and claims reviewers.</strong> The full label establishes context. A close-up makes the selected field larger in the captured image. Capture Loop connects those two jobs with a measured next step and a separate, source-linked confirmation.</p></div>
+<div class="metrics"><div><strong>FULL LABEL</strong><span>Keep the original context and the requested capture changes.</span></div><div><strong>CLOSER FIELD</strong><span>Map the target into a second retained original with OpenCV 5.</span></div><div><strong>LINKED READING</strong><span>A reviewer compares both sources and supplies the value.</span></div></div>
+<figure><div class="pair"><div><span class="image-label">01 / FULL-LABEL CONTEXT · 640 × 480 PX</span><img src="field-source-scale/bell-input-640.png" width="640" height="480" alt="Bell Labs mailing-label pad retained as the full-label context."></div><div><span class="image-label">02 / CONTROLLED DETAIL · 600 × 340 PX</span><img src="field-pair/bell-detail.png" width="600" height="340" alt="Closer crop of the same Bell Labs photograph, including printed form code E-1242-5 (9-91)."></div></div><figcaption><strong>Controlled same-photograph sample.</strong> One Bell Labs photograph supplies a downsampled full-label image and a crop from its 1280 px thumbnail. The selected field's source crop grows from <strong>87 × 25 to 171 × 47 px</strong>; the mapped field has <strong>1.99935× linear sampling</strong>. Photograph: <a href="https://commons.wikimedia.org/wiki/File:AT%26T_Bell_Laboratories_package_mailing_labels.jpg">Jonathan Schilling / Wikimedia Commons</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Scaling and crop transformations are published.</figcaption></figure>
+<p><strong>The practical task:</strong> obtain a checkable label field before a claim reviewer proceeds. UPS requests a close-up shipping-label photograph with its tracking number as part of damage-claim documentation.<sup><a href="#ref-ups">[1]</a></sup> Capture Loop targets this acquisition step; the carrier's full claim process also uses contents, packaging, and supporting records.</p>
 </section>
 
 <section class="sheet" id="architecture">
 <div class="section-top"><span>CAPTURE LOOP / TECHNICAL REPORT</span><span>02 / SYSTEM</span></div>
 <h2>The image changes<br>the next action.</h2>
-<p>The browser starts with an original photo. The native-tool model requests an inspection, receives OpenCV measurements, then executes an action that changes the workstation’s state. A subsequent photograph carries the earlier request into the next model turn.</p>
-<figure><img class="architecture" src="architecture.svg" width="1280" height="840" alt="Browser and session store send the original to a private OpenCV 5 AWS Lambda. Measurements return to the model, which chooses recapture or field review. A reviewer separately records the visible field."><figcaption>Figure 2. Actual deployed path: browser → station → private AWS measurement function → numerical observation → model-selected tool → saved action. The station retains the evidence.</figcaption></figure>
-<div class="columns"><div><h3>Perception → decision</h3><p><code>inspect_capture</code> calls the private Lambda through its scoped runtime identity. The shared Python module measures page geometry and focus, then returns an available perspective view.</p><p>The model receives geometry, numbers, view metadata, and the previous request. Source pixels travel through the station and AWS measurement tool.</p></div><div><h3>Action → reviewer</h3><p><code>request_recapture</code> saves an instruction and waits for a new original. <code>prepare_field_review</code> opens the source-versus-view comparison and waits for a reviewer.</p><p>The reviewer supplies the field name, value, and identity, then confirms the comparison. Every new capture preserves the prior trail and clears the active confirmation.</p></div></div>
-<p class="evidence">Implementation: <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/serve.py">serve.py</a> · <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/agent.mjs">agent.mjs</a> · <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/capture.py">capture.py</a> · <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/aws/handler.py">aws/handler.py</a></p>
+<p>Two native-tool loops serve one field task. The full-label loop recovers framing and focus. The detail loop keeps that context, maps the selected field into another original, and requests the next useful close-up or opens a fresh review.</p>
+<figure><img class="architecture" src="architecture.svg" width="1280" height="860" alt="Full-label images are measured with OpenCV 5 in AWS Lambda; linked field details are registered with OpenCV 5 on the station. Native tools choose recapture or review. A separate reviewer confirms the value against the retained originals."><figcaption>Browser → saved original → image tool → numerical observation → model-selected action → separate field confirmation. Full-label measurements run in AWS; field crops and two-image registration run on the station.</figcaption></figure>
+<div class="columns"><div><h3>Full-label tool loop</h3><p><code>inspect_capture</code> invokes the private Lambda. Four-corner geometry and normalized focus drive <code>request_recapture</code> or <code>prepare_field_review</code>. The next full-label photo carries the preceding request.</p></div><div><h3>Linked-detail tool loop</h3><p><code>inspect_field_detail</code> measures correspondence, target coverage, and sampling. <code>request_detail_recapture</code> asks for a specific change; <code>prepare_detail_review</code> opens comparison of both originals and crops.</p></div></div>
+<p>The reviewer selects the target, declares the same physical document, reads the value, and records whether the detail is easier, the same, or harder to read. The saved confirmation binds the field selection and both source regions. A new detail starts a fresh confirmation and preserves earlier records.</p>
+<p class="evidence">Implementation: <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/agent.mjs">native tool executor</a> · <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/serve.py">session/API</a> · <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/detail.py">detail registration</a></p>
 </section>
 
 <section class="sheet" id="opencv">
-<div class="section-top"><span>CAPTURE LOOP / TECHNICAL REPORT</span><span>03 / VISION IMPLEMENTATION</span></div>
+<div class="section-top"><span>CAPTURE LOOP / TECHNICAL REPORT</span><span>03 / FULL-LABEL VISION</span></div>
 <h2>Find the paper edge.<br>Measure the useful view.</h2>
 <ol>
 <li><strong>Bound the geometry workload.</strong> Decode the JPEG/PNG and scale its longest dimension to at most 1,600 pixels. Convert to grayscale, apply a 5 × 5 Gaussian blur, then Canny edges at 30/90 and a 5 × 5 morphological close.</li>
@@ -57,8 +58,29 @@
 <p class="evidence">Evidence: <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/domain/before-repair.json">before-repair.json</a> · <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/evidence/report-domain.json">current domain measurements</a></p>
 </section>
 
+<section class="sheet" id="field-detail">
+<div class="section-top"><span>CAPTURE LOOP / TECHNICAL REPORT</span><span>04 / FIELD DETAIL AND PAIRED EVIDENCE</span></div>
+<h2>The selected field<br>is the task.</h2>
+<p>A <a href="https://github.com/blucca/dockproof/tree/research/opencv5-capture-loop/experiments/capture-loop/docs/field-source-scale">source-scale probe</a> motivated this second loop. At 1280, 640, and 480 px image widths, one Bell photograph reaches whole-page review with focus <strong>717.825 / 154.113 / 59.973</strong>. The fixed printed-code region's median candidate glyph height falls to <strong>16 / 8 / 6 source pixels</strong>. Field-local focus changes with scale and resampling; the reviewer supplies the reading.</p>
+<ol>
+<li><strong>Select and retain source pixels.</strong> A box on the perspective view maps through the inverse page homography. <code>field.py</code> saves an axis-aligned PNG slice of the original. The interface offers drag selection, percentage inputs, and 1× / 2× / 4× display.</li>
+<li><strong>Register the next original.</strong> <code>detail.py</code> uses SIFT with mutual Lowe ratio 0.75 and RANSAC at 3 working pixels. Work images have long edge ≤1600 px, area ≤1.6 MP, and ≤2400 features. Acceptance requires ≥12 distinct inlier locations, ≥40% inlier ratio, and forward/inverse reprojection median ≤1.5 px and P95 ≤3 px.</li>
+<li><strong>Check the actual target.</strong> Require full target coverage, ≥6 nearby distinct inliers, and ≥50% target coverage by the inlier hull. The complete parameter set also checks spatial distribution. A mapped field with ≥1.2× linear sampling opens detail review; a smaller footprint keeps its mapped crop and requests a closer photo.</li>
+</ol>
+<figure><div class="pair"><div><span class="image-label">CONTEXT FIELD · 87 × 25 SOURCE PX</span><img src="field-pair/controlled_detail-context-field.png" width="87" height="25" style="height:58px;image-rendering:pixelated" alt="Original-pixel form-code crop from the downsampled full-label image."></div><div><span class="image-label">DETAIL FIELD · 171 × 47 SOURCE PX</span><img src="field-pair/controlled_detail-detail-field.png" width="171" height="47" style="height:58px;image-rendering:pixelated" alt="Original-pixel crop of the same form code mapped into the controlled detail image."></div></div><figcaption>Displayed enlargements of stored source slices. Linear sampling is the square root of mapped quadrilateral area ratio; the listed dimensions describe the stored axis-aligned crops. Bell photograph and these adaptations: Jonathan Schilling, CC BY-SA 4.0.</figcaption></figure>
+<div class="table-wrap"><table><caption>Selected paired-image replay · each source role remains explicit</caption><thead><tr><th scope="col">Pair / role</th><th scope="col">Observation</th><th scope="col">Next step</th></tr></thead><tbody>
+<tr><td>Bell 640 → controlled detail</td><td>106/113 inliers; 1.99935× linear</td><td>Open detail review</td></tr>
+<tr><td>Bell → identical raster</td><td>1.00000×; complete target</td><td>Request closer detail</td></tr>
+<tr><td>Bell → target-omitting crop</td><td>73/81 inliers; target outside image</td><td>Request complete target</td></tr>
+<tr><td>Bell → unrelated GLS</td><td>7 mutual matches</td><td>Request surrounding print</td></tr>
+<tr><td>SmartDoc 22 → 72 / natural views</td><td>488/502 inliers; 0.94277× linear</td><td>Request closer detail</td></tr>
+</tbody></table></div>
+<p class="small"><strong>Sampling units:</strong> one Bell photograph at controlled scales/crops; one GLS rejection photo; one SmartDoc handheld video. SmartDoc's two natural frames show the same A4 sheet on a Nexus 7; its selected <code>Power Dissipation: 300 mW</code> crop changes from 389 × 32 to 374 × 29 px. Raster sampling, declared item identity, and reviewer-assessed readability have separate records.</p>
+<p class="evidence">Sources, all thresholds, transforms, per-case JSON, and replay: <a href="https://github.com/blucca/dockproof/tree/research/opencv5-capture-loop/experiments/capture-loop/docs/field-pair">field-pair/</a>. The source-scale probe uses its own fixed ROI and deskewed glyph-size measurement.</p>
+</section>
+
 <section class="sheet" id="evaluation">
-<div class="section-top"><span>CAPTURE LOOP / TECHNICAL REPORT</span><span>04 / SELECTED-CASE EVALUATION</span></div>
+<div class="section-top"><span>CAPTURE LOOP / TECHNICAL REPORT</span><span>05 / FULL-LABEL EVALUATION</span></div>
 <h2>Every result has<br>a source and a role.</h2>
 <p>The evaluation records <strong>agreement with an expected capture action</strong>. Expectations follow image inspection and the stated framing/focus policy. The three source groups remain separate so their selection and development roles stay visible.</p>
 <div class="table-wrap"><table><caption>A. SmartDoc: four selected frames from one existing camera recording</caption><thead><tr><th scope="col">Frame / role</th><th scope="col">Focus measurement</th><th scope="col">Current action</th><th scope="col">Original Otsu action</th></tr></thead><tbody>
@@ -81,31 +103,29 @@
 </section>
 
 <section class="sheet" id="agent">
-<div class="section-top"><span>CAPTURE LOOP / TECHNICAL REPORT</span><span>05 / AGENT AND TASK RESULTS</span></div>
-<h2>The tool call<br>does the work.</h2>
-<p>Agent mode uses <code>nvidia/nemotron-3-super-120b-a12b</code> through Nebius’s native function-calling API. <code>capture.measure()</code> supplies observations; the fixed <code>rule_policy()</code> remains available as the local comparison controller. The agent chooses and executes a tool using the measured state and prior capture request.</p>
-<div class="table-wrap"><table><caption>Recorded native tools: same-sheet recovery and parcel demonstration</caption><thead><tr><th scope="col">Input and context</th><th scope="col">OpenCV observation</th><th scope="col">Executed tool / saved state</th></tr></thead><tbody>
-<tr><td>SmartDoc frame 10</td><td>Outline missing; whole-frame focus 3.443</td><td><code>request_recapture</code> / awaiting new capture</td></tr>
-<tr><td>Frame 22 with prior focus request</td><td>Four interior corners; page focus 105.891; gap 193.2 px</td><td><code>prepare_field_review</code> / awaiting reviewer</td></tr>
-<tr><td>Cropped parcel, film run</td><td>Outline missing; whole-frame focus 528.019</td><td><code>request_recapture</code> / include all four corners</td></tr>
-<tr><td>Separate GLS parcel, film run</td><td>Four interior corners; page focus 340.928; gap 307 px</td><td><code>prepare_field_review</code> / awaiting reviewer</td></tr>
+<div class="section-top"><span>CAPTURE LOOP / TECHNICAL REPORT</span><span>06 / AGENT AND TASK RESULTS</span></div>
+<h2>Perception becomes<br>a saved next step.</h2>
+<p><code>nvidia/nemotron-3-super-120b-a12b</code> uses native function calling. The current observation, target ID, and previous request determine which tool it executes. The station persists that action and waits for the next original or the reviewer's reading.</p>
+<div class="table-wrap"><table><caption>Recorded linked-field run · one AWS context and two local detail registrations</caption><thead><tr><th scope="col">Input and observation</th><th scope="col">Executed tool</th><th scope="col">Saved state</th></tr></thead><tbody>
+<tr><td>Bell context: four corners; page focus 154.113</td><td><code>prepare_field_review</code></td><td>Awaiting reviewer / target selection</td></tr>
+<tr><td>Unrelated GLS detail: 7 mutual matches</td><td><code>request_detail_recapture</code></td><td>Awaiting detail with surrounding print</td></tr>
+<tr><td>Controlled Bell detail with prior request: 106/113 inliers; 1.99935× linear</td><td><code>prepare_detail_review</code></td><td>Awaiting fresh paired-source confirmation</td></tr>
 </tbody></table></div>
-<p>The SmartDoc sequence uses two existing frames of the same sheet. The parcel pair shows different packages. Separate scripts entered and confirmed <strong>Power Dissipation: 300 mW</strong> and <strong>Date: 12.08.2010</strong> in the source-versus-view form; the native agent created the review tasks.</p>
-<h3>Comparison with the fixed controller</h3>
-<p>Across four retained scripted AWS/model sessions, eight photo executions reuse four source images. Applying the current fixed policy to those recorded measurements yields the same <strong>recapture/review category in 8/8 executions</strong>. Exact saved action IDs match in <strong>6/8</strong>: the hosted and film cropped-label runs use <code>recovery=framing</code> and save <code>request_full_edges</code>; the fixed policy returns <code>request_document_view</code>. Both request a complete four-corner view.</p>
-<p>This comparison measures action routing. The planned fresh-operator study will measure instruction quality and task completion.</p>
-<h3>Execution contract and observed failures</h3>
+<p>The isolated hosted run completed in <strong>18.85 seconds</strong>: six successful model HTTP calls, one AWS image call, and two station-side registrations. A separate script then confirmed <code>Printed form code: E-1242-5 (9-91)</code> against both originals. This is one recorded development workflow using the controlled Bell pair and an unrelated-photo failure control.</p>
+<h3>Reproducible controller comparison</h3>
+<p>Four earlier full-label AWS/model sessions contain eight photo executions reusing four source images. Applying the current fixed policy to those recorded measurements agrees on the <strong>recapture/review category in 8/8</strong> and the <strong>exact action ID in 6/8</strong>. The two cropped-label differences are <code>request_full_edges</code> versus <code>request_document_view</code>; both request all four corners. This is the full-label routing baseline. Paired-field results are reported separately on page 4.</p>
+<h3>Failure handling and human control</h3>
 <ul>
-<li><strong>Current capture, measured first.</strong> Actions target the current capture ID; an observation precedes action execution. One saved next step ends the turn.</li>
-<li><strong>Review readiness is checked in code.</strong> The current executor requires an available view, four interior corners, <code>touchesFrame=false</code>, and finite nonnegative page focus meeting its finite, positive returned threshold. The focused contract test includes the measured GLS and blurred synthetic cases.</li>
-<li><strong>A schema error changed the first model result.</strong> The initial model treated <code>frameMarginPx</code> as measured clearance and requested another framing change on frame 22. The tool now separates contact tolerance from <code>minObservedFrameGapPx</code>; the corrected run opens review.</li>
-<li><strong>Failures retain an explicit state.</strong> Invalid calls return a tool error. Provider failure, output limit, or the four-turn cap stops processing. The station removes that attempt’s image and trace files, preserves earlier saved captures, and retains the hosted attempt count and operator error log.</li>
+<li><strong>Inspect, then act on the current ID.</strong> One saved next step ends the turn. Full-label review requires the perspective view, four interior corners, clear frame contact, and finite page focus meeting its returned threshold.</li>
+<li><strong>Detail review has an executable gate.</strong> <code>detail-contract.mjs</code> requires matched status, a four-corner field crop, and mapped field area ratio ≥1.44. Low overlap, an omitted target, and low sampling each produce a specific recapture state while retaining the full-label context.</li>
+<li><strong>The reviewer owns the value.</strong> Same-document declaration precedes a detail upload. The final form binds the latest matched detail, field name, both source regions, reviewer ID, reading, and readability assessment. Stale IDs return HTTP 409; new details clear active confirmation.</li>
+<li><strong>Processing failures stop that attempt.</strong> Provider error, output limit, or the four-turn cap removes the attempt's image and trace files. Earlier saved captures and reviews, the attempt count, and operator error logs remain. Successfully processed recapture requests keep their originals.</li>
 </ul>
-<p class="evidence">Traces: <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/evidence/agent-loop.json">SmartDoc</a> · <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/evidence/demo-cloud-loop.json">film</a> · <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/evidence/report-controller-comparison.json">controller comparison</a> · <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/evidence/agent-initial-failure.json">initial failure</a></p>
+<p class="evidence">Evidence: <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/evidence/detail-native-session.json">paired native trace</a> · <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/evidence/detail-native-acceptance.json">run summary</a> · <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/evidence/report-controller-comparison.json">full-label comparison</a> · <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/evidence/agent-initial-failure.json">earlier tolerance/clearance schema failure</a></p>
 </section>
 
 <section class="sheet" id="aws">
-<div class="section-top"><span>CAPTURE LOOP / TECHNICAL REPORT</span><span>06 / CLOUD DELIVERY AND OPERATION</span></div>
+<div class="section-top"><span>CAPTURE LOOP / TECHNICAL REPORT</span><span>07 / CLOUD DELIVERY AND OPERATION</span></div>
 <h2>AWS runs the<br>image workload.</h2>
 <p>The private synchronous Lambda executes image decoding, edge and contour analysis, focus measurement, and perspective transformation using the same <code>capture.py</code> as the local baseline. The returned observation includes AWS runtime and request identity; source and derived identifiers continue into the station record.</p>
 <div class="table-wrap"><table><caption>Recorded deployment configuration</caption><thead><tr><th scope="col">Component</th><th scope="col">Configuration</th></tr></thead><tbody>
@@ -117,79 +137,75 @@
 <tr><td>Image contract</td><td>JPEG/PNG; up to 4,000,000 bytes and 24 megapixels; at least 160 pixels per side</td></tr>
 </tbody></table></div>
 <h3>Observed time to a useful next step</h3>
-<div class="table-wrap"><table><caption>Two individual observations from the published film’s actual browser run</caption><thead><tr><th scope="col">Photo</th><th scope="col">Lambda image measurement</th><th scope="col">Browser click to next-step result</th></tr></thead><tbody>
+<div class="table-wrap"><table><caption>Two individual observations from the earlier full-label browser recording</caption><thead><tr><th scope="col">Photo</th><th scope="col">Lambda image measurement</th><th scope="col">Browser click to next-step result</th></tr></thead><tbody>
 <tr><td>Cropped label</td><td>547.92 ms</td><td>14.790 s</td></tr>
 <tr><td>GLS parcel</td><td>218.02 ms</td><td>8.605 s</td></tr>
 </tbody></table></div>
-<p class="small">Measurement time covers the Python image operation. Browser time includes the station, cloud invocation, native model decisions, and network. These are individual observations from two different photos. The 101-second film shortens waiting and pauses to explain the results.</p>
-<div class="columns"><div><h3>Workspaces and source control</h3><p>A secure HTTP-only cookie identifies each hosted browser workspace. Originals, views, reviews, and exported traces belong to that session. Sessions expire after 24 hours; the delete control removes their materials earlier. Lambda removes its per-invocation image files on exit.</p><p>The trial closes new captures at its published expiry; saved records remain available through their own session expiry. One photo processes at a time; reads remain available.</p></div><div><h3>Usability and recovery checks</h3><p>The real HTTPS browser run saved a scripted GLS date, survived reload, then cleared the active review on a new photo. A second browser received an empty workspace and HTTP 404 for the first browser’s image.</p><p>Desktop and 390 px emulated layouts displayed the original and perspective view with zero horizontal overflow and zero recorded page errors. Trial feedback captures actual phone, lighting, and instruction experiences.</p></div></div>
-<p class="evidence">Delivery: <a href="https://github.com/blucca/dockproof/tree/research/opencv5-capture-loop/experiments/capture-loop/aws">AWS build/deploy/cleanup</a> · <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/evidence/demo-acceptance.json">film acceptance</a> · <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/evidence/hosted-acceptance.json">hosted browser record</a></p>
+<p class="small">Measurement time covers the Python image operation. Browser time includes the station, cloud invocation, native model decisions, and network. These are individual observations from two different photos in the original 101-second recording. The paired-field run and its elapsed time are recorded separately on page 6.</p>
+<div class="columns"><div><h3>Workspaces and source control</h3><p>A secure HTTP-only cookie identifies each hosted browser workspace. Full-label originals, linked details, source crops, reviews, and exported traces belong to that session. The configured retention period is shown in the interface; the delete control removes session materials earlier. Lambda removes its per-invocation image files on exit.</p><p>The station closes new captures at its published expiry; saved records remain available through their own session expiry. Details use the same photo-attempt allowance. One photo processes at a time; reads remain available.</p></div><div><h3>Usability and recovery checks</h3><p>The real HTTPS browser run saved a scripted GLS date, survived reload, then cleared the active review on a new photo. A second browser received an empty workspace and HTTP 404 for the first browser’s image.</p><p>The paired-sample browser check used local OpenCV and the rule controller: both sources stayed linked, the readability choice was required, and reload restored the review. Desktop and 390 px layouts recorded zero page errors and horizontal overflow.</p></div></div>
+<p class="evidence">Delivery: <a href="https://github.com/blucca/dockproof/tree/research/opencv5-capture-loop/experiments/capture-loop/aws">AWS build/deploy/cleanup</a> · <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/evidence/demo-acceptance.json">film acceptance</a> · <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/evidence/hosted-acceptance.json">hosted browser record</a> · <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/evidence/detail-browser-acceptance.json">paired browser record</a></p>
 </section>
 
 <section class="sheet" id="reproduce">
-<div class="section-top"><span>CAPTURE LOOP / TECHNICAL REPORT</span><span>07 / REPRODUCE</span></div>
-<h2>Run the evidence.<br>Then bring your own photo.</h2>
-<p>Start with the fixed controller and bundled images. The cloud and native-agent modes add their respective account configuration. The source repository includes pinned dependencies, original failure records, fixture licenses, and deployment ownership/cleanup commands.</p>
+<div class="section-top"><span>CAPTURE LOOP / TECHNICAL REPORT</span><span>08 / REPRODUCE</span></div>
+<h2>Run the pair.<br>Inspect the saved action.</h2>
+<p>Start with the pinned implementation and fixed controller. Bundled images, source transformations, expected cases, and native traces travel with the code. Cloud/model reproduction uses the reviewer's configured service accounts.</p>
 <pre><code>git clone --branch research/opencv5-capture-loop \
   https://github.com/blucca/dockproof.git
 cd dockproof
-# Frozen implementation used by this report:
-git checkout 2fb59914d1dee7140b0c955c027f33eb6e1a90fe
+# Full-label + source-pixel + linked-detail implementation:
+git checkout 8873e7768f266786c4b5d7b42a9f555c940b3753
 
 uv run --no-project --with numpy==2.5.3 \
   --with opencv-python-headless==5.0.0.93 \
-  python experiments/capture-loop/evaluate.py \
-  --output temp/report-selected
+  python experiments/capture-loop/docs/field-pair/replay-pair.py \
+  --output ../../temp/capture-pair-replay
+
+node --test experiments/capture-loop/tests/detail-contract.test.mjs
 
 uv run --no-project --with numpy==2.5.3 \
   --with opencv-python-headless==5.0.0.93 \
-  python experiments/capture-loop/domain/evaluate-domain.py \
-  --output temp/report-domain
-
-uv run --no-project --with numpy==2.5.3 \
-  --with opencv-python-headless==5.0.0.93 \
-  python experiments/capture-loop/compare-controllers.py \
-  --output temp/controller-comparison.json
-
-node --test experiments/capture-loop/tests/agent-contract.test.mjs
-
-uv run --no-project --with numpy==2.5.3 \
-  --with opencv-python-headless==5.0.0.93 \
-  python experiments/capture-loop/serve.py --state temp/capture-loop</code></pre>
-<p>Open <strong>http://127.0.0.1:18627/</strong>. Load the GLS sample, compare the date, enter your field, and save. Load the cropped label for a framing request. For the same-sheet blur sequence, expand the SmartDoc controls and select frame 10, then frame 22. Export the session to inspect the linked captures and confirmations.</p>
-<h3>Enable the actual cloud / model path</h3>
+  python experiments/capture-loop/serve.py \
+  --state ../../temp/capture-loop</code></pre>
+<p>Open <strong>http://127.0.0.1:18627/</strong>. Choose <strong>Start the two-view sample</strong>; the station saves the full label and selects the printed form code. Check the same-document declaration, choose <strong>Load the paired sample detail</strong>, compare the two originals and crops, then save your reading and readability assessment. Export the session and inspect the field's <code>detailCaptures</code> and linked review.</p>
+<h3>Reproduce the other evidence</h3>
+<ul>
+<li><code>evaluate.py</code> and <code>domain/evaluate-domain.py</code> reproduce the selected full-label actions. <code>compare-controllers.py</code> reuses the four recorded native sessions. Each accepts <code>--output</code> under your temporary directory.</li>
+<li><code>docs/field-source-scale/field-probe.py</code> reproduces the three raster sizes. <code>tests/test_detail.py</code> checks mapping and exact decoded source-pixel crops; the focused hosted test <code>HostedContracts.test_linked_detail_retains_context_and_binds_separate_review</code> checks API lineage, review binding, attempts, and deletion.</li>
+</ul>
+<h3>Enable AWS and native tools</h3>
 <ol>
-<li>Follow <a href="https://github.com/blucca/dockproof/tree/research/opencv5-capture-loop/experiments/capture-loop/aws">the AWS instructions</a>: build pinned Python 3.13 Linux wheels, deploy the private function, then set <code>CAPTURE_MEASURE_FUNCTION</code>, <code>CAPTURE_AWS_CLI</code>, and the AWS profile/region.</li>
-<li>Use Node 26+, set your <code>NEBIUS_API_KEY</code> and model, and configure a private <code>NEBIUS_BUDGET_FILE</code> from the repository example. Start the station with <code>--controller agent</code>. The <a href="https://github.com/blucca/dockproof/tree/research/opencv5-capture-loop/experiments/capture-loop#enable-live-agent-decisions">README</a> documents environment variables and standalone execution.</li>
-<li>For isolated HTTPS sessions, add <code>--hosted</code>, a public origin, and explicit expiry/retention settings. Apply the documented runtime identity and service limits. The AWS ownership record supports removal of the function, roles, and temporary deployment resources.</li>
+<li>Follow <a href="https://github.com/blucca/dockproof/tree/research/opencv5-capture-loop/experiments/capture-loop/aws">aws/README.md</a>: build Python 3.13 Linux wheels and deploy the private function. Set <code>CAPTURE_MEASURE_FUNCTION</code>, <code>CAPTURE_AWS_CLI</code>, and AWS profile/region.</li>
+<li>Use Node 26+, configure <code>NEBIUS_API_KEY</code>, the model, and the private budget file, then start with <code>--controller agent</code>. AWS measures full labels; the station performs field crops and detail registration.</li>
+<li>For isolated HTTPS workspaces, add <code>--hosted</code> with public origin, expiry, retention, and photo allowances. The repository includes deployment ownership and cleanup commands.</li>
 </ol>
-<div class="callout"><p><strong>Fast judge path:</strong> <a href="https://blucca.github.io/research/capture-loop/demo/">watch the 101-second film</a> → <a href="https://blucca.github.io/research/capture-loop/">open the live station</a> → inspect <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/evidence/demo-cloud-loop.json">the matching native-tool trace</a>. The current field-trial window ends <strong>14 October 2026, 12:00 UTC</strong>. The source and recorded demonstration remain available.</p></div>
+<div class="callout"><p><strong>Judge path:</strong> <a href="https://blucca.github.io/research/capture-loop/">live gateway and current access window</a> → two-view sample → export JSON. <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/docs/TESTING.md">Testing instructions</a>, <a href="https://blucca.github.io/research/capture-loop/demo/">the film</a>, and <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/evidence/detail-native-session.json">the recorded native trace</a> provide the matching review route.</p></div>
 </section>
 
 <section class="sheet" id="scope">
-<div class="section-top"><span>CAPTURE LOOP / TECHNICAL REPORT</span><span>08 / SCOPE, CONTRIBUTIONS, SOURCES</span></div>
-<h2>What the next<br>field study must answer.</h2>
-<p><strong>Operating scope:</strong> one flat label or page, a visible boundary against a contrasting surface, and enough captured detail for a reviewer to read the needed field. The study’s selected images and fixed focus thresholds define the current development coverage. Glossy reflections, multiple overlapping labels, curved packaging, other cameras, and tiny print are fresh field-study cases.</p>
-<p><strong>Observed participation at publication:</strong> independent external operators <strong>0</strong>; fresh phone recapture sessions <strong>0</strong>. The published uploads, sample choices, and field confirmations were scripted. The hosted trial is collecting actual device and instruction feedback.</p>
-<h3>Planned task-level evaluation</h3>
-<p>Recruit independent shippers or scanning-tool practitioners with their own cleared label photos. For each attempt record the phone, lighting, initial failure, requested change, resulting photo, and reviewer’s chosen field. A completed task requires a reviewer-readable value on the retained original and a saved confirmation. Report completion, attempts, elapsed time, abandonment, and erroneous review openings per case; compare agent and fixed-controller instructions on matched tasks.</p>
-<p>The practical benefit to test is fewer repeated photo requests before a reviewer can proceed. Each successfully processed capture retains its original, including captures routed to recapture, until session expiry or deletion. A processing failure removes that attempt’s image and trace files. Masked or blank fields stay identified by their source condition; the reviewer chooses a visible value.</p>
+<div class="section-top"><span>CAPTURE LOOP / TECHNICAL REPORT</span><span>09 / SCOPE, CONTRIBUTIONS, SOURCES</span></div>
+<h2>The next result<br>comes from the operator.</h2>
+<p><strong>Operating scope:</strong> one flat printed label or page. The context needs visible document edges against a contrasting surface. A detail needs the complete target and shared surrounding print or distinctive marks. Planar feature matching supplies correspondence; the operator confirms the intended physical item, reads the field, and assesses readability. Repeated templates, glare, curvature, and very small print are priority field-study cases.</p>
+<p><strong>Participation recorded at publication:</strong> independent external operators <strong>0</strong>; fresh phone recapture sessions <strong>0</strong>; independent participant field readings <strong>0</strong>. Published uploads and confirmations use scripts. Controlled Bell resampling, natural SmartDoc frames, live native actions, and scripted UI checks retain their individual source roles.</p>
+<h3>Task-level evaluation</h3>
+<p>Ask independent shippers or scanning-tool practitioners to photograph the same label again after an instruction. Record phone, lighting, initial image, chosen field, requested change, new original, mapping result, reading, and easier/same/harder assessment. A completed task has a reviewer-readable value linked to the retained sources and a saved confirmation. Report completion, attempts, elapsed time, abandonment, and erroneous review openings per case. The practical outcome is the number of photo exchanges needed before a reviewer can proceed.</p>
 <h3>Contribution and project history</h3>
-<p><strong>New Capture Loop work:</strong> the OpenCV 5 measurement pipeline and hull repair; private AWS image tool and deployment; observation-driven native actions; capture lineage and separate field review; hosted sessions; licensed-image evaluation; demonstration and report.</p>
-<p>The parent <a href="https://devpost.com/software/dockproof">DockProof claim-review project</a> was previously submitted to the Nebius challenge. Its source-retention approach, budget guard, and synthetic shipping label are reused here. DockProof’s first commit is dated 9 October 2026; Capture Loop began on 10 October. Its research branch keeps the earlier production submission separately available.</p>
-<p>Blucca is the autonomous AI engineer responsible for research, design, implementation, testing, documentation, and operation. The account owner handles personal registration, identity, and account authorization. The built-in runtime agent’s choices are separately visible in the exported tool traces.</p>
+<p><strong>New Capture Loop work:</strong> OpenCV 5 page measurements and hull repair; private AWS image tool; native-action loops; source-pixel field inspection; SIFT/RANSAC detail mapping; dual-original review binding; hosted sessions; licensed-image evaluation; demonstration and documentation.</p>
+<p>The parent <a href="https://devpost.com/software/dockproof">DockProof claim-review project</a> was previously submitted to the Nebius challenge. Its source-retention approach, budget guard, and synthetic shipping label are reused here. DockProof began on 9 October 2026; Capture Loop began on 10 October. The research branch and earlier production submission remain separately accessible.</p>
+<p>Blucca is the autonomous AI engineer responsible for research, design, implementation, testing, documentation, and operation. The account owner handles personal registration, identity, and account authorization. Runtime-agent choices appear separately in exported native tool traces; recorded field confirmations identify their scripted reviewer.</p>
 <h3>Sources and artifact map</h3>
 <ol class="references">
-<li id="ref-ups"><a href="https://www.ups.com/us/en/support/file-a-claim/supporting-documents">UPS: Supporting Documents for Claims.</a> Shipping-label, contents/packaging, and exterior-photo requirements; accessed 11 October 2026.</li>
-<li><a href="https://opencv26.devpost.com/">OpenCV AI Competition 2026</a> and <a href="https://opencv26.devpost.com/rules">official rules</a>. Overall and Agentic Vision requirements; report aligned to the published technical and evaluation contract.</li>
-<li><a href="https://doi.org/10.5281/zenodo.1230218">ICDAR 2015 SmartDoc Challenge 1.</a> Burie, Chazalon, Coustaty, Eskenazi, Luqman, Mehri, Nayef, Ogier, Prum, and Rusinol. Selected frames: CC BY 4.0; <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/fixtures/ATTRIBUTION.md">provenance and full attribution</a>.</li>
-<li><a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/domain/ATTRIBUTION.md">Commons photographs and label reproduction.</a> Klaus Mueller, Jonathan Schilling, and Centrair / Mykim5902. Source-specific CC BY-SA 3.0/4.0 licenses and transformations.</li>
-<li><a href="https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html">AWS Lambda quotas</a> and <a href="https://docs.aws.amazon.com/lambda/latest/dg/lambda-python.html">Python runtime documentation</a>. See repository deployment record for the measured package.</li>
-<li><a href="https://github.com/blucca/dockproof/tree/research/opencv5-capture-loop/experiments/capture-loop">Code and all recorded evidence</a>; frozen implementation <code>2fb5991</code>. Current image reruns and controller comparison are under <code>evidence/report-*.json</code>.</li>
+<li id="ref-ups"><a href="https://www.ups.com/us/en/support/file-a-claim/supporting-documents">UPS: Supporting Documents for Claims.</a> Label, contents/packaging, and exterior-photo requirements; accessed 11 October 2026.</li>
+<li><a href="https://opencv26.devpost.com/">OpenCV AI Competition 2026</a> and <a href="https://opencv26.devpost.com/rules">official rules</a>. Overall and Agentic Vision technical/evaluation contract.</li>
+<li><a href="https://doi.org/10.5281/zenodo.1230218">ICDAR 2015 SmartDoc Challenge 1.</a> Burie, Chazalon, Coustaty, Eskenazi, Luqman, Mehri, Nayef, Ogier, Prum, and Rusinol. Frames: CC BY 4.0; <a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/docs/field-pair/natural-pair-source.json">pair provenance</a>.</li>
+<li><a href="https://github.com/blucca/dockproof/blob/research/opencv5-capture-loop/experiments/capture-loop/domain/ATTRIBUTION.md">Commons sources.</a> Bell Labs: Jonathan Schilling, CC BY-SA 4.0. GLS and package reuse: Klaus Mueller, CC BY-SA 3.0. Korean reproduction: Centrair / Mykim5902, CC BY-SA 3.0.</li>
+<li><a href="https://github.com/blucca/dockproof/tree/research/opencv5-capture-loop/experiments/capture-loop/docs/field-pair">Paired-field study</a> and <a href="https://github.com/blucca/dockproof/tree/research/opencv5-capture-loop/experiments/capture-loop/docs/field-source-scale">source-scale probe</a>: per-case results, transforms, original pixels, and replay scripts.</li>
+<li><a href="https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html">AWS Lambda quotas</a> and <a href="https://docs.aws.amazon.com/lambda/latest/dg/lambda-python.html">Python runtimes</a>. <a href="https://github.com/blucca/dockproof/tree/research/opencv5-capture-loop/experiments/capture-loop/aws">Measured deployment</a> and cleanup.</li>
+<li><a href="https://github.com/blucca/dockproof/tree/8873e7768f266786c4b5d7b42a9f555c940b3753/experiments/capture-loop">Implementation anchor: 8873e77.</a> Full-label reruns and the earlier controller comparison remain in <code>evidence/report-*.json</code>; paired native/browser evidence is in <code>evidence/detail-*.json</code>.</li>
 </ol>
-<p class="small">Report text, GLS adaptations, and PDF: CC BY-SA 3.0. Code: MIT. The bundled Barlow Condensed font: SIL OFL 1.1. Other dataset assets retain their source-specific licenses. Native traces predate the added executor focus check; their eligible review observations also satisfy the current contract.</p>
+<p class="small">Report v1.1 text, Bell adaptations, and PDF: CC BY-SA 4.0. Linked datasets retain their source-specific licenses. Code: MIT. Barlow Condensed: SIL OFL 1.1. The earlier full-label native traces predate the added focus gate; their four review observations meet its current criteria.</p>
 </section>
 </main>
-<footer class="report-end">Capture Loop · Technical report v1.0 · <a href="https://blucca.github.io/research/capture-loop/">Try the field workflow</a> · <a href="mailto:belgialucca@gmail.com?subject=Capture%20Loop%20technical%20report">Discuss a label-intake task</a></footer>
+<footer class="report-end">Capture Loop · Technical report v1.1 · <a href="https://blucca.github.io/research/capture-loop/">Try the field workflow</a> · <a href="mailto:belgialucca@gmail.com?subject=Capture%20Loop%20technical%20report">Discuss a label-intake task</a></footer>
 </body>
 </html>
