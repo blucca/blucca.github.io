@@ -4,11 +4,12 @@
 
 ## Current work
 
-- **[Recall Relay](https://blucca.github.io/recall-relay/):** a working Alexa+ concept and real MCP service for passing an appliance recall to its current owner, then keeping the remedy journey across conversations. The public companion, [2:35 demo](https://blucca.github.io/recall-relay/demo/), and [source](https://github.com/blucca/recall-relay) are linked from the homepage. The featured image is a crop of the recorded sample household's Focus view.
-- **[Relay State](https://github.com/blucca/relay-state):** the independently installable MIT-licensed library used by Recall Relay for serialized persistence and live committed snapshots; Return Desk demonstrates a second integration.
-- **[BidDelta research](https://blucca.github.io/research/bid-amendment-impact/):** a real 2024 procurement correction, an illustrative supplier plan, five proposed actions, and two questions for bid managers. Includes a downloadable Markdown checklist, original official notice JSON with hashes, a concurrent-edit recovery design, a [three-source data pack and field guide](research/bid-amendment-impact/data-pack/README.md), and a [dated build/evidence plan](research/bid-amendment-impact/build-evidence.md) with a three-check reviewer route, current-state handoff and per-run evidence contract. This static pre-build publication lives in the existing website; the proposed application has its own build schedule and repository.
-- **[n8n-check](https://blucca.github.io/n8n-check/):** a real-engine workflow runner, local case builder, and GitHub Action. The website hosts [a four-step tutorial](https://blucca.github.io/guides/test-n8n-workflows/) and recorded HTTP, retry, and Vapi experiments.
-- **Engineering examples:** FlowDelta, Document Approval Gate, Arc Receipt Reconciler, and the HubSpot company report card. Each is labelled with its operating scope and links to its source.
+- **[ShelfProof](https://blucca.github.io/shelfproof/):** a free local OCR checker for final PDF/image artwork and an approved SKU price CSV. Inspect source regions, confirm readings, and export a correction sheet. The homepage uses a real browser crop of its fictional sample. A scoped US$29 review covers up to 5 pages and 50 SKUs.
+- **[Raincheck](https://blucca.github.io/raincheck/):** workshop rebooking and partial refunds. The public preview uses simulated payments and recorded AI; the [105-second demo](https://blucca.github.io/raincheck/public/demo.html) shows PayPal sandbox and live AI.
+- **[Care Handoff](https://blucca.github.io/care-handoff/)** and **[Recall Relay](https://blucca.github.io/recall-relay/):** working handoff experiences for household visits and appliance recalls, each with a sample, demo, and source.
+- **[DockProof](https://blucca.github.io/dockproof/?case=scan-example), [SoundWalk](https://blucca.github.io/soundwalk/), and [Capture Loop](https://blucca.github.io/research/capture-loop/):** a source-linked claim desk, on-device sound observation, and camera-to-fields review.
+- **Reusable tools:** [n8n-check](https://blucca.github.io/n8n-check/), [FlowDelta](https://blucca.github.io/flowdelta/), and [Relay State](https://github.com/blucca/relay-state).
+- **Field notes:** procurement amendments, recorded n8n retry behavior, and an interactive HubSpot card migration guide. The `research/` and `guides/` directories retain the underlying evidence and examples.
 
 ## Local preview
 
@@ -16,7 +17,7 @@
 python3 -m http.server 8080 --bind 127.0.0.1
 ```
 
-Open `http://127.0.0.1:8080/`. The site uses local CSS, a system font stack, and static HTML. Interactive field guides keep their scripts beside their own pages. The BidDelta research page uses static content and native links.
+Open `http://127.0.0.1:8080/`. The homepage uses `homepage.css`, locally hosted Bricolage Grotesque and Instrument Sans fonts, and static HTML. Existing subpages retain `style.css` and their own typography. Interactive field guides keep their scripts beside their own pages. The BidDelta research page uses static content and native links.
 
 ## Publish
 
