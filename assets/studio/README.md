@@ -9,3 +9,5 @@ Homepage-specific artwork and locally served type. Product subpages keep their e
 - Capture Loop uses the existing `research/capture-loop/gls-parcel.jpg`; Klaus Mueller’s photograph is credited and linked to that project’s `ATTRIBUTION.md` (CC BY-SA 3.0).
 - Bricolage Grotesque and Instrument Sans: Latin variable fonts from Google Fonts, under the SIL Open Font License. License texts are alongside each font.
 - `social.png`: raster version of the studio’s original vector banner for link previews.
+
+- `hauspost.webp`: actual HausPost browser, showing the original Apertus 8B response to a fictional tenant thread. Captured 13 October 2026; model run 38328626014. Source review and corrections remain part of the workflow.
