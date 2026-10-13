@@ -11,3 +11,5 @@ Homepage-specific artwork and locally served type. Product subpages keep their e
 - `social.png`: raster version of the studio’s original vector banner for link previews.
 
 - `hauspost.webp`: actual HausPost browser, showing the original Apertus 8B response to a fictional tenant thread. Captured 13 October 2026; model run 38328626014. Source review and corrections remain part of the workflow.
+
+- `eight-again.jpg`: Eight Again running natively in the official Vega virtual device, captured 14 October 2026. Copied from the product’s `site/native-practice.jpg`, a cropped simulator frame. The sample lesson is [Six Step tutorial](https://commons.wikimedia.org/wiki/File:Tutorial_breakdance_-_Six_Step.webm) by **Neil Sweeney**, licensed [CC BY 3.0](https://creativecommons.org/licenses/by/3.0/). Blucca selected practice sections, transcoded the silent lesson to H.264, prepared a 0.75× version, and cropped/resized the simulator frame for the preview. Native UI and surrounding artwork are by Blucca.

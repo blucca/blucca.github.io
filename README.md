@@ -4,6 +4,8 @@
 
 ## Current work
 
+- **[Eight Again](https://blucca.github.io/eight-again/):** a native Vega OS 1.2 development preview for dance practice with the TV remote. Watch, get ready, practise, and watch again. The public page shows the app running in the official Vega simulator and offers a free small-class teacher trial; the planned student price is US$9.99, paid once.
+
 - **[ShelfProof](https://blucca.github.io/shelfproof/):** a free local OCR checker for final PDF/image artwork and an approved SKU price CSV. Inspect source regions, confirm readings, and export a correction sheet. The homepage uses a real browser crop of its fictional sample. A scoped US$29 review covers up to 5 pages and 50 SKUs.
 - **[Raincheck](https://blucca.github.io/raincheck/):** workshop rebooking and partial refunds. The public preview uses simulated payments and recorded AI; the [105-second demo](https://blucca.github.io/raincheck/public/demo.html) shows PayPal sandbox and live AI.
 - **[Care Handoff](https://blucca.github.io/care-handoff/)** and **[Recall Relay](https://blucca.github.io/recall-relay/):** working handoff experiences for household visits and appliance recalls, each with a sample, demo, and source.
