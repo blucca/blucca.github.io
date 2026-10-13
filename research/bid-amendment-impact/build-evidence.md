@@ -65,13 +65,17 @@ Each successful repair advances the global snapshot once. The expected version s
 The task store will be the authority for edits and atomic action commits. Zetaris will read a versioned, read-only projection of that store, alongside the notice records and document register.
 
 1. Save a UI edit in one local transaction. Export one coherent task snapshot with its version, task hashes and publication receipt.
-2. Expose that snapshot through the tenant's supported source connection. The planned first path is a JSON REST source; the supplied tenant determines the actual registration and refresh procedure.
-3. Close the earlier query token and start a new query. Record its request ID and the returned snapshot/task versions and hashes.
+2. Obtain the assigned namespace and source-registration privileges, or sponsor-side registration. Expose the snapshot through the tenant's supported source connection. The planned first path is a JSON REST source; the supplied tenant determines the actual registration and refresh procedure.
+3. Start a fresh query with new request/query IDs. Release an earlier query token when the supplied API issues one. Record the returned snapshot/task versions and hashes.
 4. Match the returned version to the local edited state. A stale source produces `source_stale` and stops application of the proposal. The final atomic commit also checks the local version, covering further edits during investigation.
 
 Successful repairs also publish the newly committed projection. Each bundle includes the complete final task snapshot and separate commit, source-publication and audit statuses. A delayed publication keeps its committed receipt and marks the projection as pending; the next investigation checks freshness again.
 
 The [Zetaris SQL Manual](https://kbase.zetaris.com/knowledge/sql-manual) describes REST sources and table cache controls; the supplied service's behavior will be measured during integration. The acceptance evidence is the complete **UI edit → source publication → remote read → validated repair** path. Static source fixtures supply repeatable starting states.
+
+**Access preparation, 14 October.** Zetaris's [current starter guide](https://github.com/zetaris/getting-started/blob/255f3b21a556024c6bb3ad179039cc318e5a2958/START-HERE.md#L9-L19) describes a shared event instance with assigned team names. Its [SQL command reference](https://github.com/zetaris/getting-started/blob/255f3b21a556024c6bb3ad179039cc318e5a2958/docs/guides/zetaris-lightning-sql-commands.md#L729-L758) lists REST-table creation as an administrator operation. The first access check therefore covers both query access and a supported route to register our sources.
+
+The current bundle's [direct REST client](https://github.com/zetaris/getting-started/blob/255f3b21a556024c6bb3ad179039cc318e5a2958/scripts/zetaris_sql.py#L184-L224) uses `POST <REST_BASE>/sql-editor/sqls/run` with `queryId`, `sql`, `source` and `limit`. The earlier hosted SaaS API uses `query/sql/start` with `select`, `pageLimit` and a query token. Integration will follow the supplied instance's OpenAPI and capture its actual response shape. For dynamic task sources, fresh query IDs and explicit cache handling will be checked by the version/hash round trip above.
 
 ## Evidence bundle contract
 
