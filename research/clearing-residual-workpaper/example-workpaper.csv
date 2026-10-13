@@ -1,0 +1,3 @@
+example_data,case_id,review_as_of,ledger_cutoff,payout_id,currency,residual_amount,category,evidence_ids,evidence_summary,next_action,action_owner,follow_up_on,proposed_debit_account,proposed_credit_account,proposed_amount,approved_by,posted_record_id,read_back_at,state
+FICTIONAL,H-104,2026-10-03,2026-10-03,P-104,USD,500.00,processor_reserve,S-104;H-104,Reserve notice retains USD 500 until scheduled release,Obtain release notice and matching Airwallex cash record,Bookkeeper,2026-10-15,,,,,,,supported_awaiting_release
+FICTIONAL,P-104-SHORT,2026-10-03,2026-10-03,P-104,USD,30.00,awaiting_charge_evidence,S-104;AW-D-104,USD 9500 sent and USD 9470 received,"Request charge advice with remitted amount, deductions and net amount",Bookkeeper,,,,,,,,open_evidence_needed
