@@ -1,0 +1,4 @@
+Scenario,Capacity,Ticket_price_GBP,Other_fixed_costs_GBP,Minimum_licence_GBP,Licence_box_office_share,Break_even_tickets,Capacity_check,Scenario_attendance,Modelled_licence_GBP,Modelled_surplus_GBP
+A Higher cost evening,100,10,250,93,0.35,"=ROUNDUP(MAX((D2+E2)/C2,D2/((1-F2)*C2)),0)","=IF(G2<=B2,""within capacity"",""over capacity"")",40,"=MAX(E2,F2*C2*I2)",=C2*I2-D2-J2
+B Lower cost evening,100,10,180,93,0.35,"=ROUNDUP(MAX((D3+E3)/C3,D3/((1-F3)*C3)),0)","=IF(G3<=B3,""within capacity"",""over capacity"")",30,"=MAX(E3,F3*C3*I3)",=C3*I3-D3-J3
+C Capacity failure,100,10,700,93,0.35,"=ROUNDUP(MAX((D4+E4)/C4,D4/((1-F4)*C4)),0)","=IF(G4<=B4,""within capacity"",""over capacity"")",100,"=MAX(E4,F4*C4*I4)",=C4*I4-D4-J4
