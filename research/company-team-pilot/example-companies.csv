@@ -1,0 +1,6 @@
+data_kind,company_id,company_name,registered_users,active_users_30d,existing_team,cohort_decision,prior_individual_mrr_usd,modeled_basic_billable_users,modeled_pro_billable_users,modeled_team_mrr_usd,modeled_net_new_mrr_usd,modeled_annualized_net_run_rate_usd,next_step
+FICTIONAL,SPRUCE,Spruce Signal,5,3,false,invite,0,2,1,12,12,144,Ask active organizer about client onboarding
+FICTIONAL,TERN,Tern Studio,4,3,false,invite,5,2,1,12,7,84,Ask organizer about consultant bookings
+FICTIONAL,HARBOR,Harbor Lab,18,10,false,invite,10,8,2,32,22,264,Ask organizer about customer check-ins
+FICTIONAL,CEDAR,Cedar Works,11,2,false,hold_recent_activity,0,,,,,,Hold for recent activity or concrete team request
+FICTIONAL,OPAL,Opal Office,8,6,true,route_existing_team,,,,,,,Route to existing team account owner

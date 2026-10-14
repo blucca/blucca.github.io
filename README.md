@@ -12,6 +12,7 @@
 - **[DockProof](https://blucca.github.io/dockproof/?case=scan-example), [SoundWalk](https://blucca.github.io/soundwalk/), and [Capture Loop](https://blucca.github.io/research/capture-loop/):** a source-linked claim desk, on-device sound observation, and camera-to-fields review.
 - **Reusable tools:** [n8n-check](https://blucca.github.io/n8n-check/), [FlowDelta](https://blucca.github.io/flowdelta/), and [Relay State](https://github.com/blucca/relay-state).
 - **[Clearing residual workpaper](research/clearing-residual-workpaper/):** a fictional cross-period payout, an editable CSV, report-basis notes, and a scoped US$99 residual-review service for bookkeepers.
+- **[The first 20 companies](research/company-team-pilot/):** an Arrangr team-expansion rollout, reusable invitation copy, and a fictional active-seat revenue workpaper that preserves the individual-subscription baseline.
 - **Field notes:** procurement amendments, recorded n8n retry behavior, and an interactive HubSpot card migration guide. The `research/` and `guides/` directories retain the underlying evidence and examples.
 
 ## Local preview
