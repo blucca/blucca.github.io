@@ -1,0 +1,340 @@
+{
+  "research_date": "2026-10-14",
+  "status": "Public-source inputs prepared; live Qloo validation awaiting API access.",
+  "scenario": "Fictional 100-seat mixed-arts venue. Each example community declares three cultural anchors.",
+  "booking_scope": "Public catalogues provide research and enquiry destinations. A booking requires a distributor response covering the UK territory, venue, dates, screening format and commercial terms.",
+  "runtime_scope": "Planning durations reproduce the named official source and edition. Confirm the supplied DCP or other exhibition-copy duration before fixing the final running order.",
+  "editorial_scope": "Literature/city and music/performance labels describe the pool. Every ranking uses the same full shortlist.",
+  "films": [
+    {
+      "slug": "la-haine-1995",
+      "name": "La Haine",
+      "entity_type": "urn:entity:movie",
+      "year": 1995,
+      "creator": "Mathieu Kassovitz",
+      "runtime_minutes": 98,
+      "runtime_edition": "BFI 30th-anniversary theatrical listing; BFI distribution spreadsheet lists DCP at 98mins.",
+      "catalogue_formats": [
+        "DCP"
+      ],
+      "programming_group": "literature_city",
+      "curatorial_rationale": "Urban friendship, social division and a single-day structure provide a discussion-led city-life programme.",
+      "source_url": "https://www.bfi.org.uk/bfi-film-releases/la-haine-30th-anniversary",
+      "supporting_source_urls": [
+        "https://core-cms.bfi.org.uk/media/35044/download"
+      ],
+      "booking_destination": "BFI Distribution",
+      "booking_enquiry_url": "https://www.bfi.org.uk/form/bfi-distribution-enquiry",
+      "booking_contact_reference_url": "https://www.bfi.org.uk/bfi-distribution/how-book-film",
+      "booking_route_status": "theatrical_catalogue_enquiry",
+      "booking_notes": "Current downloadable BFI catalogue: sheet2 rows 532 (DCP) and 533 (DVD). Ask for the proposed UK screening date and supplied edition."
+    },
+    {
+      "slug": "network-1976",
+      "name": "Network",
+      "entity_type": "urn:entity:movie",
+      "year": 1976,
+      "creator": "Sidney Lumet",
+      "runtime_minutes": 122,
+      "runtime_edition": "Park Circus title catalogue.",
+      "catalogue_formats": [
+        "DCP",
+        "4K DCP"
+      ],
+      "programming_group": "literature_city",
+      "curatorial_rationale": "Media institutions, public speech and commercial pressure connect a reading-group debate to cinema.",
+      "source_url": "https://parkcircus.com/film/102251-Network",
+      "supporting_source_urls": [],
+      "booking_destination": "Park Circus",
+      "booking_enquiry_url": "https://parkcircus.com/form",
+      "booking_contact_reference_url": "https://parkcircus.com/contact",
+      "booking_route_status": "theatrical_catalogue_enquiry",
+      "booking_notes": "Ask Park Circus for the named UK venue/date, available screening edition and full licence quotation."
+    },
+    {
+      "slug": "daisies-1966",
+      "name": "Daisies",
+      "entity_type": "urn:entity:movie",
+      "year": 1966,
+      "creator": "Věra Chytilová",
+      "runtime_minutes": 76,
+      "runtime_edition": "Second Run BD016, 1080/24fps Blu-ray, released 22 October 2018.",
+      "catalogue_formats": [
+        "Blu-ray"
+      ],
+      "programming_group": "literature_city",
+      "curatorial_rationale": "Feminist satire and formal play create a short, adventurous discussion film with a punk-culture crossover.",
+      "source_url": "https://www.secondrundvd.com/release_daisiesBD.html",
+      "supporting_source_urls": [],
+      "booking_destination": "Second Run: rights / screening referral",
+      "booking_enquiry_url": "https://www.secondrundvd.com/contact_mailinglist.php",
+      "booking_contact_reference_url": "https://www.secondrundvd.com/contact_mailinglist.php",
+      "booking_route_status": "rights_referral_enquiry",
+      "booking_notes": "Source documents the home-video edition. Ask Second Run for the current UK public-screening licensor and available exhibition formats. Public role contact: info@secondrundvd.com."
+    },
+    {
+      "slug": "before-sunrise-1995",
+      "name": "Before Sunrise",
+      "entity_type": "urn:entity:movie",
+      "year": 1995,
+      "creator": "Richard Linklater",
+      "runtime_minutes": 101,
+      "runtime_edition": "Park Circus title catalogue.",
+      "catalogue_formats": [
+        "DCP"
+      ],
+      "programming_group": "literature_city",
+      "curatorial_rationale": "Conversation, chance encounters and a walk through Vienna offer an accessible urban-literary opening.",
+      "source_url": "https://parkcircus.com/film/109869-Before-Sunrise",
+      "supporting_source_urls": [],
+      "booking_destination": "Park Circus",
+      "booking_enquiry_url": "https://parkcircus.com/form",
+      "booking_contact_reference_url": "https://parkcircus.com/contact",
+      "booking_route_status": "theatrical_catalogue_enquiry",
+      "booking_notes": "Ask Park Circus for the named UK venue/date, available screening edition and full licence quotation."
+    },
+    {
+      "slug": "bright-star-2009",
+      "name": "Bright Star",
+      "entity_type": "urn:entity:movie",
+      "year": 2009,
+      "creator": "Jane Campion",
+      "runtime_minutes": 119,
+      "runtime_edition": "Park Circus title catalogue.",
+      "catalogue_formats": [
+        "DCP"
+      ],
+      "programming_group": "literature_city",
+      "curatorial_rationale": "John Keats and Fanny Brawne provide a direct poetry, reading and creative-work connection.",
+      "source_url": "https://parkcircus.com/film/117306-Bright-Star",
+      "supporting_source_urls": [],
+      "booking_destination": "Park Circus",
+      "booking_enquiry_url": "https://parkcircus.com/form",
+      "booking_contact_reference_url": "https://parkcircus.com/contact",
+      "booking_route_status": "theatrical_catalogue_enquiry",
+      "booking_notes": "Ask Park Circus for the named UK venue/date, available screening edition and full licence quotation."
+    },
+    {
+      "slug": "wings-of-desire-1987",
+      "name": "Wings of Desire",
+      "entity_type": "urn:entity:movie",
+      "year": 1987,
+      "creator": "Wim Wenders",
+      "runtime_minutes": 128,
+      "runtime_edition": "BFI title-record planning duration; confirm the supplied Curzon screening edition.",
+      "catalogue_formats": [],
+      "programming_group": "literature_city",
+      "curatorial_rationale": "A poetic portrait of Berlin connects interior monologue, city observation and performing arts.",
+      "source_url": "https://www.bfi.org.uk/film/d9c6238e-5b38-58ff-b7f7-5e0a85ffd3b5/wings-of-desire",
+      "supporting_source_urls": [
+        "https://film.curzon.com/film/wings-of-desire/"
+      ],
+      "booking_destination": "Curzon Film",
+      "booking_enquiry_url": "https://film.curzon.com/about/",
+      "booking_contact_reference_url": "https://film.curzon.com/about/",
+      "booking_route_status": "distributor_screening_enquiry",
+      "booking_notes": "Curzon has a dedicated film-bookings, cinema-screenings and event-rentals contact: bookings@curzon.com. Curzon title page covers its 4K UHD edition; request the current UK theatrical format and running time."
+    },
+    {
+      "slug": "inside-llewyn-davis-2013",
+      "name": "Inside Llewyn Davis",
+      "entity_type": "urn:entity:movie",
+      "year": 2013,
+      "creator": "Ethan Coen; Joel Coen",
+      "runtime_minutes": 104,
+      "runtime_edition": "Park Circus title catalogue: 104 minutes.",
+      "catalogue_formats": [
+        "DCP"
+      ],
+      "programming_group": "music_performance",
+      "curatorial_rationale": "Greenwich Village folk culture, an itinerant singer and artistic work connect directly to record-shop discussion.",
+      "source_url": "https://parkcircus.com/film/114676-Inside-Llewyn-Davis",
+      "supporting_source_urls": [],
+      "booking_destination": "Park Circus",
+      "booking_enquiry_url": "https://parkcircus.com/form",
+      "booking_contact_reference_url": "https://parkcircus.com/contact",
+      "booking_route_status": "theatrical_catalogue_enquiry",
+      "booking_notes": "Ask Park Circus for the named UK venue/date, available screening edition and full licence quotation."
+    },
+    {
+      "slug": "the-red-shoes-1948",
+      "name": "The Red Shoes",
+      "entity_type": "urn:entity:movie",
+      "year": 1948,
+      "creator": "Michael Powell; Emeric Pressburger",
+      "runtime_minutes": 135,
+      "runtime_edition": "Park Circus title catalogue: 135 minutes.",
+      "catalogue_formats": [
+        "DCP"
+      ],
+      "programming_group": "music_performance",
+      "curatorial_rationale": "A ballerina’s artistic ambition and performance offer a bridge to dance and mixed-arts audiences.",
+      "source_url": "https://parkcircus.com/film/104483",
+      "supporting_source_urls": [],
+      "booking_destination": "Park Circus",
+      "booking_enquiry_url": "https://parkcircus.com/form",
+      "booking_contact_reference_url": "https://parkcircus.com/contact",
+      "booking_route_status": "theatrical_catalogue_enquiry",
+      "booking_notes": "Ask Park Circus for the named UK venue/date, available screening edition and full licence quotation."
+    },
+    {
+      "slug": "singin-in-the-rain-1952",
+      "name": "Singin' in the Rain",
+      "entity_type": "urn:entity:movie",
+      "year": 1952,
+      "creator": "Gene Kelly; Stanley Donen",
+      "runtime_minutes": 103,
+      "runtime_edition": "Park Circus title catalogue.",
+      "catalogue_formats": [
+        "DCP",
+        "4K DCP"
+      ],
+      "programming_group": "music_performance",
+      "curatorial_rationale": "Song, dance and the transition to recorded sound offer a familiar performance-culture entry point.",
+      "source_url": "https://parkcircus.com/film/115238-Singin%27-in-the-Rain",
+      "supporting_source_urls": [],
+      "booking_destination": "Park Circus",
+      "booking_enquiry_url": "https://parkcircus.com/form",
+      "booking_contact_reference_url": "https://parkcircus.com/contact",
+      "booking_route_status": "theatrical_catalogue_enquiry",
+      "booking_notes": "Ask Park Circus for the named UK venue/date, available screening edition and full licence quotation."
+    },
+    {
+      "slug": "the-last-waltz-1978",
+      "name": "The Last Waltz",
+      "entity_type": "urn:entity:movie",
+      "year": 1978,
+      "creator": "Martin Scorsese",
+      "runtime_minutes": 117,
+      "runtime_edition": "Park Circus title catalogue.",
+      "catalogue_formats": [
+        "DCP",
+        "4K DCP"
+      ],
+      "programming_group": "music_performance",
+      "curatorial_rationale": "The Band’s farewell concert and an ensemble of recording artists create the clearest concert-film candidate.",
+      "source_url": "https://parkcircus.com/film/101829-The-Last-Waltz",
+      "supporting_source_urls": [],
+      "booking_destination": "Park Circus",
+      "booking_enquiry_url": "https://parkcircus.com/form",
+      "booking_contact_reference_url": "https://parkcircus.com/contact",
+      "booking_route_status": "theatrical_catalogue_enquiry",
+      "booking_notes": "Ask Park Circus for the named UK venue/date, available screening edition and full licence quotation."
+    },
+    {
+      "slug": "cabaret-1972",
+      "name": "Cabaret",
+      "entity_type": "urn:entity:movie",
+      "year": 1972,
+      "creator": "Bob Fosse",
+      "runtime_minutes": 123,
+      "runtime_edition": "BFI Southbank 2026 programme: Digital, 123min.",
+      "catalogue_formats": [
+        "Digital (BFI programme)"
+      ],
+      "programming_group": "music_performance",
+      "curatorial_rationale": "Isherwood’s Berlin, nightlife and stage performance make a deliberate literary-and-music crossover.",
+      "source_url": "https://whatson.bfi.org.uk/Online/default.asp?BOparam%3A%3AWScontent%3A%3AloadArticle%3A%3Apermalink=cabaret-2026",
+      "supporting_source_urls": [
+        "https://parkcircus.com/latest/P2812-movie-musicals-collection"
+      ],
+      "booking_destination": "Park Circus",
+      "booking_enquiry_url": "https://parkcircus.com/form",
+      "booking_contact_reference_url": "https://parkcircus.com/contact",
+      "booking_route_status": "theatrical_collection_enquiry",
+      "booking_notes": "Park Circus Movie Musicals collection lists Cabaret / Bob Fosse / 1972 and invites screening enquiries. Runtime and Digital format come from BFI Southbank; request Park Circus territory, format and supplied-edition duration."
+    },
+    {
+      "slug": "chicago-2002",
+      "name": "Chicago",
+      "entity_type": "urn:entity:movie",
+      "year": 2002,
+      "creator": "Rob Marshall",
+      "runtime_minutes": 113,
+      "runtime_edition": "Park Circus title catalogue.",
+      "catalogue_formats": [
+        "DCP"
+      ],
+      "programming_group": "music_performance",
+      "curatorial_rationale": "A modern screen musical supplies a broad performance anchor alongside concert and art-cinema choices.",
+      "source_url": "https://parkcircus.com/film/107444-Chicago",
+      "supporting_source_urls": [],
+      "booking_destination": "Park Circus",
+      "booking_enquiry_url": "https://parkcircus.com/form",
+      "booking_contact_reference_url": "https://parkcircus.com/contact",
+      "booking_route_status": "theatrical_catalogue_enquiry",
+      "booking_notes": "Ask Park Circus for the named UK venue/date, available screening edition and full licence quotation."
+    }
+  ],
+  "anchors": {
+    "regular_cinema": [
+      {
+        "slug": "amelie",
+        "name": "Amélie",
+        "entity_type": "urn:entity:movie",
+        "creator": "Jean-Pierre Jeunet",
+        "year": 2001,
+        "source_url": "https://www.miramax.com/movie/amelie/"
+      },
+      {
+        "slug": "cinema-paradiso",
+        "name": "Cinema Paradiso",
+        "entity_type": "urn:entity:movie",
+        "creator": "Giuseppe Tornatore",
+        "year": 1988,
+        "source_url": "https://www.miramax.com/movie/cinema-paradiso/"
+      },
+      {
+        "slug": "the-grand-budapest-hotel",
+        "name": "The Grand Budapest Hotel",
+        "entity_type": "urn:entity:movie",
+        "creator": "Wes Anderson",
+        "year": 2014,
+        "source_url": "https://www.20thcenturystudios.com/movies/the-grand-budapest-hotel"
+      }
+    ],
+    "book_club": [
+      {
+        "slug": "mrs-dalloway",
+        "name": "Mrs Dalloway",
+        "entity_type": "urn:entity:book",
+        "creator": "Virginia Woolf",
+        "source_url": "https://www.penguin.co.uk/books/57014/mrs-dalloway-by-woolf-virginia/9780241341117"
+      },
+      {
+        "slug": "white-teeth",
+        "name": "White Teeth",
+        "entity_type": "urn:entity:book",
+        "creator": "Zadie Smith",
+        "source_url": "https://www.penguin.co.uk/books/24575/white-teeth-by-smith-zadie/9780241981399"
+      },
+      {
+        "slug": "norwegian-wood",
+        "name": "Norwegian Wood",
+        "entity_type": "urn:entity:book",
+        "creator": "Haruki Murakami",
+        "source_url": "https://www.penguin.co.uk/books/353616/norwegian-wood-by-murakami-haruki/9781784877996"
+      }
+    ],
+    "record_shop": [
+      {
+        "slug": "talking-heads",
+        "name": "Talking Heads",
+        "entity_type": "urn:entity:artist",
+        "source_url": "https://www.rhino.com/artist/talking-heads"
+      },
+      {
+        "slug": "david-bowie",
+        "name": "David Bowie",
+        "entity_type": "urn:entity:artist",
+        "source_url": "https://www.davidbowie.com/about"
+      },
+      {
+        "slug": "nina-simone",
+        "name": "Nina Simone",
+        "entity_type": "urn:entity:artist",
+        "source_url": "https://www.ninasimone.com/biography/"
+      }
+    ]
+  }
+}
