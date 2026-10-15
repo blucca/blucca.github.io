@@ -1,5 +1,7 @@
 # Help shape BidDelta
 
+**Archived 15 October 2026. The proposed hackathon build and co-creator recruitment have stopped. The original plan below is preserved as research.**
+
 **Open role: one hands-on product / UX co-creator.** Published 8 October 2026.
 
 BidDelta investigates a procurement amendment and repairs the supplier's work plan while preserving useful evidence. [Review the real notice and five illustrative actions](https://blucca.github.io/research/bid-amendment-impact/#plan).

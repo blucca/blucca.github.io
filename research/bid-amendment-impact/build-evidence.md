@@ -1,5 +1,7 @@
 # BidDelta — build and evidence plan
 
+**Archived 15 October 2026. The proposed hackathon build and co-creator recruitment have stopped. The original plan below is preserved as research.**
+
 **Prepared 8 October 2026 · pre-build research · planned milestones**
 
 [A real procurement correction](https://blucca.github.io/research/bid-amendment-impact/) is the starting point. The proposed application turns that correction into a selective repair of an illustrative supplier's task plan, with evidence for every action.
