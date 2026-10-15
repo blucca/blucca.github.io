@@ -4,7 +4,7 @@
 
 A planning study for small arts venues: choose two separately ticketed films that connect regular cinema-goers with a book club or music community the venue already knows.
 
-**Available now:** an editable [screening budget](screening-budget.csv), a sourced [12-film working shelf](film-shelf.csv) and a [distributor enquiry brief](booking-request.md). The Qloo-powered programming agent is in research and API-access preparation.
+**Available now:** the [interactive two-screening worksheet](https://blucca.github.io/research/bridgebill/planner/) with editable quotes, break-even seats, saved plans and a downloadable enquiry pack; an editable [screening budget CSV](screening-budget.csv); a sourced [12-film working shelf](film-shelf.csv); and a [distributor enquiry brief](booking-request.md). The Qloo-powered cultural-ranking layer awaits live API validation.
 
 ## Start with the cost of saying yes
 
@@ -41,6 +41,8 @@ All three rows use the same illustrative 100-seat capacity, £10 ticket price an
 - Distributor approval, the applicable licence and the final quotation precede a booking commitment.
 
 The arithmetic has a small runnable check: `python check_budget.py`.
+
+The [browser worksheet](planner/) applies percentage-licence fees rounded half-up to the nearest penny and finds the first sufficient whole ticket count. This CSV study uses the unrounded percentage formula above. Match the selected distributor’s rounding, tax and receipt terms to the calculation you use.
 
 ## A working shelf, with a route to the next question
 
@@ -114,7 +116,7 @@ The three requests hold `filter.results.entities` fixed and change `signal.inter
 2. All three responses contain at least 10 common, unique shortlisted films with finite affinity scores in the documented 0–1 range. Returned IDs stay within the requested shortlist.
 3. Switching the book club to the record shop changes the partner's top-three membership through a strict score ordering. Boundary ties are recorded separately.
 
-Save the returned ranks, scores and missing entities alongside the inputs. A failed first pass gets one documented revision of the shelf or anchors. A second failed pass ends this product slice's build attempt. The next application milestone depends on a successful live check.
+Save the returned ranks, scores and missing entities alongside the inputs. A failed first pass gets one documented revision of the shelf or anchors. A second failed pass ends the cultural-ranking build attempt. The next Qloo application milestone depends on a successful live check; the independent budget worksheet remains available.
 
 **Current evidence:** public-source identities and local input/query-shape checks are complete; live Qloo calls: **0**. Request fields follow [Search Entities](https://docs.qloo.com/reference/get-search) and the [movie parameter guide](https://docs.qloo.com/reference/available-parameters-by-entity-type).
 
