@@ -4,6 +4,8 @@
 
 ## Current work
 
+- **[Bridgebill](https://blucca.github.io/research/bridgebill/planner/):** a two-night programme desk for mixed-arts venues: real Qloo taste comparison, film locks, per-screening budgets and AI-assisted booking packs. [Live architecture and setup](research/bridgebill/LIVE.md).
+
 - **[Eight Again](https://blucca.github.io/eight-again/):** a native Vega OS 1.2 development preview for dance practice with the TV remote. Watch, get ready, practise, and watch again. The public page shows the app running in the official Vega simulator and offers a free small-class teacher trial; the planned student price is US$9.99, paid once.
 
 - **[ShelfProof](https://blucca.github.io/shelfproof/):** a free local OCR checker for final PDF/image artwork and an approved SKU price CSV. Inspect source regions, confirm readings, and export a correction sheet. The homepage uses a real browser crop of its fictional sample. A scoped US$29 review covers up to 5 pages and 50 SKUs.
@@ -38,3 +40,7 @@ This repository is **blucca/blucca.github.io**. GitHub Pages serves `main` from 
 ## Archived service references
 
 The original `n8n-release-checks/`, `n8n-workflow-delivery/`, and `hubspot-card-migration/` pages preserve archived scopes and historical links. Their technical evidence remains available in the corresponding guides. Active service promotion ended on 8 October 2026.
+
+## Licence
+
+Original code is available under the root MIT licence, with existing per-project CC0 and other explicit licences retained. Third-party assets keep their bundled licences and attribution. In particular, site fonts use the SIL Open Font Licence, and the Bridgebill research worksheets retain CC0.

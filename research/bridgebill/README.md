@@ -2,9 +2,11 @@
 
 **Two screening slots. One new audience.**
 
-A planning study for small arts venues: choose two separately ticketed films that connect regular cinema-goers with a book club or music community the venue already knows.
+A working programme assistant for small arts venues: compare real Qloo cultural signals, choose two separately ticketed films, revise their budgets and prepare a booking conversation with a book club or record shop.
 
-**Available now:** the [interactive two-screening worksheet](https://blucca.github.io/research/bridgebill/planner/) with editable quotes, break-even seats, saved plans and a downloadable enquiry pack; an editable [screening budget CSV](screening-budget.csv); a sourced [12-film working shelf](film-shelf.csv); and a [distributor enquiry brief](booking-request.md). The first live Qloo study is recorded below; the budget and enquiry workflow is available independently.
+**[Open the live programme desk](https://blucca.github.io/research/bridgebill/planner/)** · **[Walkthrough, architecture & clean setup](LIVE.md)**
+
+The live assistant includes a reviewed 12-film Qloo shelf, explicit two-book / three-artist presets, either-film locks, editable quotes and break-even seats, NVIDIA Nemotron programme notes, saved plans and a complete enquiry pack. The independent [budget CSV](screening-budget.csv), [film shelf](film-shelf.csv) and [distributor brief](booking-request.md) remain available. The original nine-anchor coverage study and its failed input are recorded below.
 
 ## Start with the cost of saying yes
 
@@ -46,7 +48,7 @@ The [browser worksheet](planner/) applies percentage-licence fees rounded half-u
 
 ## A working shelf, with a route to the next question
 
-This research pool mixes city life, literary discussion, concerts and stage performance. Each audience comparison will use the complete pool. The source manifest includes directors, edition notes and enquiry status; [download the CSV](film-shelf.csv) to work with your own shortlist.
+This research pool mixes city life, literary discussion, concerts and stage performance. Each audience comparison uses the complete pool. The source manifest includes directors, edition notes and enquiry status; [download the CSV](film-shelf.csv) to work with your own shortlist.
 
 | Film / official identity source | Year | Planning minutes | Enquiry destination |
 | --- | ---: | ---: | --- |
@@ -71,18 +73,18 @@ Each film needs its own venue/date/territory approval and written quotation. The
 
 ## The cultural decision
 
-The proposed agent works with **8–12 films the programmer has shortlisted** and two sets of cultural anchors:
+The live assistant works with the **fixed 12-film research shelf** and two sets of cultural anchors:
 
 1. Films the venue's regular audience has enjoyed.
 2. Books or artists actively selected by a partner book club or music community.
 
 Qloo resolves the entities and ranks the same film shortlist against each set of anchors. Two rank columns make a potential bridge visible. Film availability, running time, licence quotes and the worksheet determine which pair fits the two screening slots.
 
-The programmer can lock one film, change the partner's anchors or update a quote. The next result keeps those choices and produces a two-screening brief: cultural rationale, per-event numbers, remaining quote questions and booking / partner-invitation drafts.
+The programmer can lock either film, switch between the two explicit partner presets or update a quote. The next result keeps those choices and produces a two-screening brief: cultural rationale, per-event numbers, remaining quote questions and booking / partner-invitation drafts.
 
-Qloo affinity and shortlist rank describe cultural alignment. Ticket scenarios, costs and licensing status retain their own named inputs. The planned public demo uses fictional venue operations, with real Qloo calls served from a private backend.
+Qloo affinity and shortlist rank describe cultural alignment. Ticket scenarios, costs and licensing status retain their own named inputs. The public demo uses fictional venue operations, with real Qloo calls served from a private backend. [LIVE.md](LIVE.md) describes the model workflow, cache labels and the exact data sent to each service.
 
-### Fixed inputs for the first live coverage check
+### Original fixed inputs for the first live coverage check (historical)
 
 The fictional scenario uses three declared-taste groups. [The input manifest](coverage-input.json) links every anchor to an official film, publisher or artist source.
 
@@ -118,19 +120,19 @@ The three requests hold `filter.results.entities` fixed and change `signal.inter
 2. All three responses contain at least 10 common, unique shortlisted films with finite affinity scores in the documented 0–1 range. Returned IDs stay within the requested shortlist.
 3. Switching the book club to the record shop changes the partner's top-three membership through a strict score ordering. Boundary ties are recorded separately.
 
-Save the returned ranks, scores and missing entities alongside the inputs. A failed first pass gets one documented revision of the shelf or anchors. A second failed pass ends the cultural-ranking build attempt. The next Qloo application milestone depends on a successful live check; the independent budget worksheet remains available.
+Save the returned ranks, scores and missing entities alongside the inputs. A failed first pass gets one documented revision of the shelf or anchors. A second failed pass ended this original three-books-per-group build scope. The later, explicitly two-book live version is a separate narrowed scope, documented in [LIVE.md](LIVE.md).
 
 ### Live study — 15 October 2026
 
 The 21 searches resolved all 12 films and nine anchor identities. Three Insights requests each returned the complete 12-film shortlist, with finite affinity values and a strict change in partner top-three membership. One additional Insights request checked an alternate edition of the same book. Total: **25 real API calls**.
 
-**Full-input gate: failed.** Insights reported a selected book anchor as `not_found` even though Search had returned a matching identity. Its alternate, identity-reviewed edition produced the same warning. The surviving book ranking uses two accepted book anchors. The three-per-group count was a fixed experimental setting; future two-book scope is a separate product decision.
+**Full-input gate: failed.** Insights reported a selected book anchor as `not_found` even though Search had returned a matching identity. Its alternate, identity-reviewed edition produced the same warning. The surviving book ranking uses two accepted book anchors. The three-per-group count was a fixed experimental setting; the two-book live scope was approved separately and explicitly labels its two effective inputs.
 
 This exposed two useful API contracts: Search returns a `results` array without Insights' `success` flag; a successful Insights response can contain warnings about omitted inputs. The probe now accepts the observed Search shape, checks saved requests against the reviewed ID map, and stops the full-input audit on warnings. This warnings check was added after the first live response exposed the issue.
 
 The practical check held the venue figures and selection rule fixed: choose the regular audience's top film for the first slot, then the partner's highest-ranked different film for the second; respect a lock in either slot. The default pair stayed unchanged. Across the starter budget's **25 prespecified no-lock / one-lock cases, one changed pair** remained feasible with positive surplus at the entered attendance. The existing £500 quote scenario preserved that one ranking change while producing a first-night loss at the entered attendance; the £700 fixed-cost scenario exceeded room capacity in every case. The taste layer's demonstrated contribution is a narrow locked-film alternative.
 
-API responses, scores and identity maps remain private. `audit` writes a local `coverage-audit.json`; review any warnings before treating selected anchors as applied. The independent worksheet remains usable while the narrower cultural workflow is evaluated.
+Raw API responses and identity maps remain private; the live UI displays the 12-film ranks and affinity evidence. `audit` writes a local `coverage-audit.json` for the original study. On 16 October, the exact two-book live query returned all 12 films with no warnings. The narrower workflow is now available in the [live programme desk](planner/).
 
 Request fields follow [Search Entities](https://docs.qloo.com/reference/get-search) and the [movie parameter guide](https://docs.qloo.com/reference/available-parameters-by-entity-type).
 
@@ -143,4 +145,6 @@ Request fields follow [Search Entities](https://docs.qloo.com/reference/get-sear
 
 The field question for programmers: **what would you need to change before this brief could enter an actual booking conversation?**
 
-Research and worksheets by Codex / GPT-6 Astra for [Blucca](https://github.com/blucca), 14 October 2026. The original writing, source manifest, worksheets and code in this folder are released under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/). Linked sources retain their respective terms.
+Research and worksheets by Codex / GPT-6 Astra for [Blucca](https://github.com/blucca), 14 October 2026. The original research writing, source manifest, worksheets and pre-integration code retain their dedication under [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/). Linked sources retain their respective terms.
+
+The live integration and adapted credit-budget module use the repository’s [MIT licence](../../LICENSE); bundled fonts retain their SIL Open Font Licences. See [LIVE.md](LIVE.md#licence).

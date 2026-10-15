@@ -4,7 +4,7 @@
 
 Two independently ticketed film screenings, one editable plan. Change the ticket price, minimum-or-percentage licence terms, event costs or your attendance scenario. The worksheet shows each screening’s break-even ticket count, capacity constraint and scenario surplus, then creates two distributor enquiries with the same figures.
 
-The starting arts centre, dates, partner and fees are illustrative. Film identities, edition notes and enquiry routes come from the [sourced working shelf](../coverage-input.json). Cultural ranking remains a separate planned feature, subject to live Qloo validation.
+The starting arts centre, dates, partner and fees are illustrative. Film identities, edition notes and enquiry routes come from the [sourced working shelf](../coverage-input.json). The live version now adds real Qloo comparison, a two-book / three-artist partner choice, film locks and AI-assisted programme notes. **[Full walkthrough, Qloo request/result evidence and live setup](../LIVE.md).**
 
 ## Use it
 
@@ -14,7 +14,7 @@ The starting arts centre, dates, partner and fees are illustrative. Film identit
 4. Add venue/contact/format details and the quote or licence reference. Record the evidence you hold. Changing a film, venue, date, format, capacity or ticket price returns the affected licence status to a planning estimate for reconfirmation.
 5. Download the **enquiry pack**: a self-contained HTML document with the two budgets, film sources and two draft messages to review, copy or print. **Save plan** downloads JSON; **Open plan** restores it for the next revision.
 
-Inputs use browser local storage. **Clear saved plan** removes the local copy. Save a JSON file before moving devices or clearing site data. GitHub Pages serves the static application; venue and quotation inputs stay in the browser.
+Inputs use browser local storage. **Clear saved plan** removes the local copy. Save a JSON file before moving devices or clearing site data. GitHub Pages serves the frontend; the private live service supplies Qloo rankings and optional model prose. Venue and quotation inputs stay in the browser. The model receives fixed film context, preset and capacity/quote states.
 
 ## Calculation
 
@@ -34,7 +34,7 @@ python3 -m http.server 8139
 node research/bridgebill/planner/budget.check.mjs
 ```
 
-Static HTML, CSS and JavaScript modules; browser-native date fields, BigInt, local storage and downloads. The app reads the existing `../coverage-input.json` source manifest. A current browser is sufficient.
+The command above runs the independent budget frontend. For Qloo and model integration, follow [the live server setup](../LIVE.md#run-from-a-clean-checkout). Static HTML, CSS and JavaScript modules; browser-native date fields, BigInt, local storage and downloads. The app reads the existing `../coverage-input.json` source manifest. A current browser is sufficient.
 
 ### Scripted acceptance, 15 October 2026
 
@@ -46,8 +46,10 @@ Static HTML, CSS and JavaScript modules; browser-native date fields, BigInt, loc
 
 ## Source and licence
 
-Original worksheet, interface, code and documentation: [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/), matching the parent research folder. Built by Codex / GPT-6 Astra for [Blucca](https://blucca.github.io/).
+Original worksheet, interface, pre-integration code and documentation: [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/), matching the parent research folder. Built by Codex / GPT-6 Astra for [Blucca](https://blucca.github.io/).
 
 - **Londrina Solid**, Marcelo Magalhães: [Google Fonts source](https://github.com/google/fonts/tree/main/ofl/londrinasolid), SIL Open Font License in `fonts/OFL.txt`.
 - **Instrument Sans**, Rodrigo Fuenzalida, Jordan Egstad: existing local website asset, SIL Open Font License in `../../../assets/studio/fonts/instrument-sans-OFL.txt`.
 - Film sources retain their own terms and are linked from the shared manifest. The £93 / 35% worked fee structure comes from [Filmbankmedia’s public pricing](https://www.filmbankmedia.com/pricing/), checked 14 October 2026. Each title’s screening rights, supplied copy and commercial quotation are confirmed with its distributor.
+
+The live programme integration uses the root MIT licence. The original CC0 worksheet and bundled font licences remain in force.

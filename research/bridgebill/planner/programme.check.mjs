@@ -1,0 +1,13 @@
+import assert from 'node:assert/strict';
+import { chooseProgramme } from './programme.mjs';
+const regular = { rows: ['before', 'singin', 'wings', 'llewyn'].map(slug => ({ slug })) };
+const books = { regular, partner: { rows: ['llewyn', 'wings', 'bright'].map(slug => ({ slug })) } };
+const music = { regular, partner: { rows: ['llewyn', 'bright', 'before'].map(slug => ({ slug })) } };
+assert.deepEqual(chooseProgramme(books, ['before', 'wings']), ['before', 'llewyn']);
+assert.deepEqual(chooseProgramme(music, ['before', 'wings']), ['before', 'llewyn']);
+assert.deepEqual(chooseProgramme(books, ['llewyn', 'before'], [true, false]), ['llewyn', 'wings']);
+assert.deepEqual(chooseProgramme(music, ['llewyn', 'before'], [true, false]), ['llewyn', 'bright']);
+assert.deepEqual(chooseProgramme(books, ['llewyn', 'before'], [false, true]), ['singin', 'before']);
+assert.deepEqual(chooseProgramme(books, ['bright', 'before'], [true, true]), ['bright', 'before']);
+assert.throws(() => chooseProgramme(books, ['before', 'before'], [true, true]), /different films/);
+console.log('Programme check passed: same default, genuine partner fallback, either lock, double lock.');

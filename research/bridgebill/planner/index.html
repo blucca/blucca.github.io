@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Bridgebill — a two-screening budget & booking worksheet</title>
-  <meta name="description" content="Plan two independently ticketed film screenings. Check break-even seats, revise licence quotes, and download a distributor enquiry pack. Free, local-in-browser worksheet.">
+  <title>Bridgebill — two nights, one new audience</title>
+  <meta name="description" content="Connect cinema regulars with a book club or record shop. Compare Qloo cultural rankings, plan two screening budgets, and prepare an AI-assisted booking pack.">
   <link rel="icon" href="../../../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="style.css">
   <script type="module" src="app.mjs"></script>
@@ -13,7 +13,7 @@
   <a class="skip" href="#plan">Skip to the worksheet</a>
   <div class="page">
     <header class="masthead">
-      <a class="brand" href="https://github.com/blucca/blucca.github.io/tree/main/research/bridgebill">Bridgebill<span>Programme worksheet</span></a>
+      <a class="brand" href="https://github.com/blucca/blucca.github.io/tree/main/research/bridgebill">Bridgebill<span>Two-screening programme desk</span></a>
       <nav aria-label="Plan files">
         <button id="save-plan" type="button">Save plan</button>
         <label class="file-button" for="open-plan">Open plan</label>
@@ -23,14 +23,32 @@
     </header>
 
     <section class="intro" aria-labelledby="title">
-      <h1 id="title">Two nights.<br>One working plan.</h1>
+      <h1 id="title">Two nights.<br>One new audience.</h1>
       <div class="intro-copy">
-        <p>Choose two films. Find the seats each one needs to pay its way. Take the numbers into a booking conversation.</p>
-        <p class="small">Each screening has its own tickets and costs. Your attendance scenario is an input. All calculations happen in your browser.</p>
+        <p>Find a familiar first night and a reason for a new community to come back. Compare cultural taste, keep the films you want, and take a working budget into the booking conversation.</p>
+        <p class="small">A fixed shelf of 12 films. Real Qloo cultural signals. Two independently ticketed nights, with attendance scenarios supplied by you.</p>
       </div>
     </section>
 
     <main id="plan" tabindex="-1">
+      <section class="taste-desk" aria-labelledby="taste-heading">
+        <div class="taste-brief">
+          <h2 id="taste-heading">Who could join your regulars?</h2>
+          <p class="regular-anchors">Your example cinema audience likes <strong>Amélie, Cinema Paradiso and The Grand Budapest Hotel.</strong></p>
+          <label>Partner taste preset<select id="partner-preset"><option value="book_club">Book club · 2 books</option><option value="record_shop">Record shop · 3 artists</option></select></label>
+          <p id="partner-anchors" class="anchor-list"></p>
+          <button id="suggest-programme" class="primary" type="button" disabled>Suggest unlocked films</button>
+          <p class="small">Keep either screening below to make it a fixed starting point. Suggestions preserve your dates, costs and attendance inputs.</p>
+        </div>
+        <div class="taste-evidence">
+          <p id="taste-status" role="status" aria-live="polite">Loading Qloo’s reviewed 12-film shelf…</p>
+          <div id="suggestion" class="suggestion"></div>
+          <details id="ranking-details"><summary>See all 12 ranks &amp; source evidence</summary><div id="rankings"></div>
+            <p class="small">Ranks are relative to this shelf; affinity is Qloo’s returned cultural score. Attendance remains a separate venue input. The book preset contains <strong>White Teeth and Norwegian Wood</strong>. Both reviewed editions of Mrs Dalloway were ignored by Qloo Insights, so that book is omitted.</p>
+          </details>
+          <p class="taste-example">Try a different bridge: choose <strong>Inside Llewyn Davis</strong> for screening 1, keep it, then compare the book club with the record shop.</p>
+        </div>
+      </section>
       <p class="example-note">Start with the fictional venue below, then add your own figures. The £93 / 35% fees are illustrative; request a quotation for each selected film.</p>
       <section class="venue" aria-label="Venue and enquiry details">
         <label class="venue-name">Venue name<input id="venue-name" maxlength="160" autocomplete="off" placeholder="Your arts centre"></label>
@@ -56,6 +74,13 @@
         <div class="total-result"><strong id="total-value">—</strong><span id="total-label">Combined surplus / loss</span></div>
         <button id="download-pack" class="primary" disabled type="button">Download enquiry pack</button>
       </section>
+      <section class="agent-desk" aria-labelledby="agent-heading">
+        <div><h2 id="agent-heading">Give the programme a voice</h2><p>Get a short rationale, a partner invitation and the questions to settle before booking. Review the draft, then download the complete enquiry pack.</p>
+          <button id="draft-brief" type="button" disabled>Draft programme notes</button>
+          <p class="small">The writing service receives the two shelf films, partner preset and capacity / quote states. Venue details, contact information and monetary figures stay in your browser.</p>
+        </div>
+        <div><p id="brief-status" role="status" aria-live="polite">Choose two different shelf films to draft notes.</p><div id="agent-notes" hidden></div></div>
+      </section>
       <p id="status" class="status" role="status" aria-live="polite"></p>
 
       <details class="method">
@@ -64,7 +89,7 @@
           <p><strong>Receipts = attendance × ticket price.</strong> The licence is the greater of the minimum fee and the box-office percentage, rounded half-up to the nearest penny. Surplus is receipts less the licence and other fixed costs. Break-even is the first whole ticket count with a surplus of zero or more.</p>
           <p>Enter a single ticket price and a minimum-or-percentage quotation. Use the same tax and receipts basis throughout. Add compulsory delivery, copy, KDM and other fixed charges to the event costs. Each screening is calculated separately, including its minimum fee.</p>
           <p>The example fee structure comes from <a href="https://www.filmbankmedia.com/pricing/">Filmbankmedia’s public tariff</a>, checked 14 October 2026. The sourced film shelf uses several distributors. Each film’s actual licence, edition, date, territory, rounding and tax terms come from its distributor.</p>
-          <p>This worksheet covers budgets and enquiries. Cultural ranking is a separate planned feature, subject to live Qloo data validation. <a href="https://github.com/blucca/blucca.github.io/tree/main/research/bridgebill">Read the research and source list</a>.</p>
+          <p>Qloo ranks the same reviewed 12-film shelf for cinema regulars and your selected partner preset. The programme assistant selects the highest-ranked familiar entrance, then the highest-ranked different partner choice, respecting your locks. A NVIDIA Nemotron model turns those tool results and booking states into an editable-action draft. The default film pair can stay the same when the partner changes; the evidence table shows what changed. <a href="https://github.com/blucca/blucca.github.io/tree/main/research/bridgebill">Read the research and source list</a>.</p>
         </div>
       </details>
     </main>
@@ -72,7 +97,7 @@
     <footer>
       <p>A free worksheet by <a href="../../../">Blucca</a>, an AI-led software studio. Built by Codex / GPT-6 Astra.</p>
       <p>Plans are saved in this browser’s local storage. Save a plan file to keep a copy or move devices. <button id="clear-plan" class="text-button" type="button">Clear saved plan</button></p>
-      <p>GitHub Pages serves this page. Plan inputs stay in your browser; downloading an enquiry pack keeps sending in your hands. <a href="https://github.com/blucca/blucca.github.io/tree/main/research/bridgebill/planner">Source & setup</a>.</p>
+      <p>GitHub Pages and the Bridgebill live service deliver this app. Qloo signals are cached on the private server for one day, with retrieval times shown. AI prose uses a labelled server cache. The downloaded pack stays with you to review and send. <a href="https://github.com/blucca/blucca.github.io/tree/main/research/bridgebill/planner">Source & setup</a>.</p>
       <p>What would you change before sending this to a distributor? <a href="mailto:belgialucca@gmail.com?subject=Bridgebill%20worksheet%20feedback">Send a field or workflow suggestion</a>.</p>
     </footer>
   </div>

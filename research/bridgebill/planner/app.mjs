@@ -1,4 +1,5 @@
 import { calculateBudget } from './budget.mjs';
+import { chooseProgramme, partnerLabels, partnerAnchors } from './programme.mjs';
 
 const STORAGE = 'bridgebill-worksheet-v1';
 const money = pence => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(pence / 100);
@@ -7,12 +8,13 @@ const $ = id => document.getElementById(id);
 const quoteLabels = { estimate: 'Planning estimate', quoted: 'Written quote received', confirmed: 'Screening rights confirmed' };
 const venueFields = ['name', 'partner', 'address', 'contact', 'format', 'basis'];
 const numericFields = ['capacity', 'attendance', 'ticketPrice', 'fixedCosts', 'minimumFee', 'sharePercent'];
-let films = [], plan, results = [];
+let films = [], plan, results = [], taste = null, apiBase = '', tasteRequest = 0;
+let briefBusy = false;
 
 function examplePlan() {
-  const screening = { customTitle: '', customRuntime: '', time: '19:30', capacity: '100', ticketPrice: '10.00', minimumFee: '93.00', sharePercent: '35', quoteStatus: 'estimate', quoteReference: '', notes: '' };
+  const screening = { customTitle: '', customRuntime: '', time: '19:30', capacity: '100', ticketPrice: '10.00', minimumFee: '93.00', sharePercent: '35', quoteStatus: 'estimate', quoteReference: '', notes: '', locked: false };
   return {
-    kind: 'bridgebill-worksheet', version: 1,
+    kind: 'bridgebill-worksheet', version: 1, taste: { partner: 'book_club' }, agent: null,
     venue: { name: 'Example Arts Centre', partner: 'A season with our local book club', address: '', contact: '', format: 'DCP', basis: 'VAT-exclusive' },
     screenings: [
       { ...screening, filmId: 'before-sunrise-1995', date: '2026-11-20', fixedCosts: '250.00', attendance: '40' },
@@ -36,7 +38,7 @@ function validatedPlan(raw) {
   const screenings = raw.screenings.map((s, i) => {
     if (!s || (!films.some(f => f.slug === s.filmId) && s.filmId !== 'custom')) throw new Error(`Screening ${i + 1}: select a film from the shelf or your own title.`);
     if (!Object.hasOwn(quoteLabels, s.quoteStatus)) throw new Error(`Screening ${i + 1}: select a quotation status.`);
-    const out = { filmId: s.filmId, quoteStatus: s.quoteStatus };
+    const out = { filmId: s.filmId, quoteStatus: s.quoteStatus, locked: s.locked === true };
     for (const key of ['customTitle', 'customRuntime', 'date', 'time', 'quoteReference', 'notes']) out[key] = text(s[key], `Screening ${i + 1} ${key}`, key === 'notes' ? 2000 : 350);
     if (out.date && (!/^\d{4}-\d{2}-\d{2}$/.test(out.date) || !Number.isFinite(Date.parse(out.date)) || new Date(out.date).toISOString().slice(0, 10) !== out.date)) throw new Error(`Screening ${i + 1}: enter a calendar date as YYYY-MM-DD.`);
     if (out.time && !/^([01]\d|2[0-3]):[0-5]\d$/.test(out.time)) throw new Error(`Screening ${i + 1}: enter a start time as HH:MM.`);
@@ -48,7 +50,15 @@ function validatedPlan(raw) {
     calculateBudget(out);
     return out;
   });
-  return { kind: 'bridgebill-worksheet', version: 1, venue, screenings };
+  const partner = raw.taste?.partner || 'book_club';
+  if (!Object.hasOwn(partnerLabels, partner)) throw new Error('Choose the Book club or Record shop preset.');
+  let agent = null;
+  if (raw.agent) {
+    const a = raw.agent, b = a.brief;
+    if (!b || typeof a.signature !== 'string' || a.signature.length > 1000 || typeof a.generatedAt !== 'string' || typeof a.model !== 'string' || ['programme_title', 'opening_note', 'partner_note', 'invitation_draft'].some(k => typeof b[k] !== 'string' || b[k].length > 1600) || !Array.isArray(b.questions) || b.questions.length > 5 || b.questions.some(q => typeof q !== 'string' || q.length > 500)) throw new Error('The saved programme notes need review.');
+    agent = { signature: a.signature, generatedAt: a.generatedAt.slice(0, 50), model: a.model.slice(0, 100), cached: !!a.cached, brief: b };
+  }
+  return { kind: 'bridgebill-worksheet', version: 1, venue, screenings, taste: { partner }, agent };
 }
 
 function numberField(i, key, label, unit, min, max, step = '0.01') {
@@ -57,6 +67,8 @@ function numberField(i, key, label, unit, min, max, step = '0.01') {
 
 function render() {
   for (const key of venueFields) $(`venue-${key}`).value = plan.venue[key];
+  $('partner-preset').value = plan.taste.partner;
+  $('partner-anchors').textContent = partnerAnchors[plan.taste.partner].join(' / ');
   $('screenings').innerHTML = plan.screenings.map((s, i) => `
     <article class="screening" data-screening="${i}" aria-labelledby="s${i}-heading">
       <div class="night-line"><strong id="s${i}-heading">Screening ${i + 1}</strong><span class="quote-badge" id="s${i}-badge"></span></div>
@@ -64,6 +76,7 @@ function render() {
         ${films.map(f => `<option value="${f.slug}"${f.slug === s.filmId ? ' selected' : ''}>${esc(f.name)}</option>`).join('')}
         <option value="custom"${s.filmId === 'custom' ? ' selected' : ''}>Your own film</option>
       </select></label>
+      <label class="film-lock"><input type="checkbox" data-field="locked" id="s${i}-locked"${s.locked ? ' checked' : ''}>Keep this film when suggesting</label>
       <p class="film-meta" id="s${i}-film-meta"></p>
       <div id="s${i}-custom" class="custom-film"${s.filmId === 'custom' ? '' : ' hidden'}>
         <label>Film title & year<input id="s${i}-customTitle" data-field="customTitle" maxlength="160" value="${esc(s.customTitle)}" placeholder="Title, original year"></label>
@@ -161,6 +174,9 @@ function update(persist = true) {
   const valid = results.every(Boolean) && !detailError;
   $('download-pack').disabled = !valid;
   $('save-plan').disabled = !valid;
+  $('draft-brief').disabled = !valid || briefBusy || plan.screenings.some(s => s.filmId === 'custom') || plan.screenings[0].filmId === plan.screenings[1].filmId;
+  renderBrief();
+  renderTaste();
   if (valid) {
     const total = results.reduce((sum, r) => sum + r.surplusPence, 0);
     const quoteCount = plan.screenings.filter(s => s.quoteStatus === 'estimate' || !s.quoteReference.trim()).length;
@@ -249,7 +265,60 @@ function bookingPack() {
   return `<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(v.name || 'Venue')} — Bridgebill enquiry pack</title>
     <style>body{font:15px/1.55 system-ui,sans-serif;color:#302640;max-width:880px;margin:35px auto;padding:0 24px}h1{font-size:29px;line-height:1.2}h2{font-size:22px;margin:30px 0 7px}h3{font-size:16px;margin-top:25px}p{max-width:80ch}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;vertical-align:top;border-bottom:1px solid #ddd;padding:8px 10px}th{width:42%;font-weight:600}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.65 system-ui,sans-serif;background:#f5f2f8;padding:20px}.small,footer{font-size:12px;color:#5d5367}a{color:inherit}section{border-top:2px solid #795fa5;margin-top:28px}footer{margin-top:30px;border-top:1px solid #ddd;padding-top:15px}@media print{body{margin:0;max-width:none;font-size:11px}pre,table{font-size:10px}h2,h3{break-after:avoid}tr{break-inside:avoid}section+section{break-before:page}a{text-decoration:none}}</style>
     <header><p>Bridgebill / two independent screenings</p><h1>${esc(v.name || '[Add venue]')}<br>Draft booking enquiries</h1><p>${esc(v.partner || 'Two-screening programme')}</p><p>Created ${esc(created)}. Accounting basis: ${esc(v.basis || '[Confirm basis]')}.</p><p><strong>Combined attendance-scenario surplus / loss: ${money(total)}.</strong> Each screening uses its own ticket sales, minimum licence fee and fixed costs. Review each night’s break-even and licensing status below.</p></header>
+    ${currentBrief() ? `<section class="programme-notes"><h2>Programme notes / AI-assisted draft</h2>${briefHtml(plan.agent)}<p class="small">Model: ${esc(plan.agent.model)}. Generated ${esc(plan.agent.generatedAt)}. Based on ${esc(partnerLabels[plan.taste.partner])} preset and current film/booking states. Cultural fit is a hypothesis for your chosen anchors; check it with the partner.</p></section>` : ''}
     ${cards}<footer><p>Attendance is supplied by the venue. The licence model is minimum-or-percentage, rounded half-up to the nearest penny. Match the distributor’s actual receipt, tax and rounding terms. Booking follows written distributor approval for the venue, date, format and terms. The starting venue and fees are fictional/illustrative inputs.</p><p>Generated locally with <a href="https://blucca.github.io/research/bridgebill/planner/">Bridgebill</a> by Blucca. Save the separate JSON plan to reopen and revise the same figures.</p></footer></html>`;
+}
+
+async function api(route, input) {
+  const response = await fetch(`${apiBase}${route}`, input ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(input), signal: AbortSignal.timeout(90000) } : { signal: AbortSignal.timeout(65000) });
+  let data;
+  try { data = await response.json(); } catch { throw new Error('The live service is unavailable. Keep using the local budget, or try again later.'); }
+  if (!response.ok) throw new Error(data.message || 'The live service is unavailable. Try again later.');
+  return data;
+}
+
+function renderTaste() {
+  if (!taste || taste.partner.group !== plan.taste.partner) return;
+  let pair;
+  try { pair = chooseProgramme(taste, plan.screenings.map(s => s.filmId), plan.screenings.map(s => s.locked)); }
+  catch (error) { $('suggestion').textContent = error.message; return; }
+  $('suggestion').innerHTML = pair.map((slug, i) => `<div><span>${i ? 'A partner bridge' : 'A familiar entrance'}${plan.screenings[i].locked ? ' / kept by you' : ''}</span><strong>${esc(films.find(f => f.slug === slug)?.name || plan.screenings[i].customTitle)}</strong></div>`).join('');
+}
+
+async function loadTaste() {
+  const sequence = ++tasteRequest, partner = plan.taste.partner;
+  $('suggest-programme').disabled = true;
+  $('partner-anchors').textContent = partnerAnchors[partner].join(' / ');
+  $('taste-status').textContent = 'Comparing the same 12 films with Qloo…';
+  try {
+    const data = await api(`/api/rankings?partner=${partner}`);
+    if (sequence !== tasteRequest) return;
+    taste = data;
+    const date = new Date(data.partner.fetchedAt).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' });
+    $('taste-status').textContent = `${data.partner.stale || data.regular.stale ? 'Last available Qloo response' : data.partner.cached ? 'Cached Qloo response' : 'Live Qloo response'} / ${date}. All 12 films covered.`;
+    $('rankings').innerHTML = `<table><caption>Qloo ranks within the 12-film shelf</caption><thead><tr><th>Film</th><th>Cinema</th><th>${esc(partnerLabels[partner])}</th></tr></thead><tbody>${data.regular.rows.map(row => {
+      const other = data.partner.rows.find(r => r.slug === row.slug);
+      return `<tr><th scope="row">${esc(row.title)}</th><td>${row.rank}<small>${row.affinity.toFixed(4)}</small></td><td>${other.rank}<small>${other.affinity.toFixed(4)}</small></td></tr>`;
+    }).join('')}</tbody></table><p class="small">Regulars fetched ${esc(new Date(data.regular.fetchedAt).toLocaleString('en-GB'))}; partner fetched ${esc(date)}. Scores are retrieved from Qloo, not generated by the language model. Equal affinity shares the same rank; ties use a stable film-ID order.</p>`;
+    $('suggest-programme').disabled = false;
+    renderTaste();
+  } catch (error) { if (sequence === tasteRequest) $('taste-status').textContent = `${error.message} Your two-screening budget remains usable.`; }
+}
+
+function briefInput() {
+  return { version: 2, partner: plan.taste.partner, films: plan.screenings.map(s => s.filmId), flags: plan.screenings.map((s, i) => ({ capacityIssue: results[i] ? !results[i].feasible : false, quoteStatus: s.quoteStatus })) };
+}
+function currentBrief() { return plan.agent?.signature === JSON.stringify(briefInput()); }
+function briefHtml(agent) {
+  const b = agent.brief;
+  return `<h3>${esc(b.programme_title)}</h3><p><strong>First night.</strong> ${esc(b.opening_note)}</p><p><strong>Second night.</strong> ${esc(b.partner_note)}</p><h4>Ask before booking</h4><ul>${b.questions.map(q => `<li>${esc(q)}</li>`).join('')}</ul><h4>Partner invitation to review</h4><p class="invitation">${esc(b.invitation_draft)}</p>`;
+}
+function renderBrief() {
+  if (!plan) return;
+  const ready = currentBrief();
+  $('agent-notes').hidden = !ready;
+  if (ready) { $('agent-notes').innerHTML = briefHtml(plan.agent); $('brief-status').textContent = `AI-assisted draft / ${plan.agent.cached ? 'reused from the same programme evidence' : 'generated with NVIDIA Nemotron'} / ${new Date(plan.agent.generatedAt).toLocaleString('en-GB')}. Included in the enquiry pack.`; }
+  else if (!briefBusy) $('brief-status').textContent = plan.agent ? 'The films, partner or booking states have changed. Draft fresh notes for this revision.' : 'Your numbers stay deterministic. Programme prose is a draft for you to review.';
 }
 
 async function start() {
@@ -262,7 +331,8 @@ async function start() {
     const saved = localStorage.getItem(STORAGE);
     if (saved) { plan = validatedPlan(JSON.parse(saved)); savedMessage = 'Your saved plan is open. All inputs remain in this browser.'; }
   } catch { savedMessage = 'The saved plan needs review. The example is open; use a saved JSON file to restore your work.'; }
-  render(); message(savedMessage);
+  try { const config = await fetch('service.json').then(r => r.ok ? r.json() : null); if (config?.url && location.hostname === 'blucca.github.io') apiBase = config.url; } catch {}
+  render(); message(savedMessage); loadTaste();
 
   function resetQuote(i, clearReference = false) {
     plan.screenings[i].quoteStatus = 'estimate';
@@ -273,7 +343,7 @@ async function start() {
     const field = event.target.dataset.field;
     if (!field) return;
     const i = Number(event.target.closest('[data-screening]').dataset.screening);
-    plan.screenings[i][field] = event.target.value;
+    plan.screenings[i][field] = field === 'locked' ? event.target.checked : event.target.value;
     if (['filmId', 'customTitle', 'customRuntime', 'date', 'time', 'capacity', 'ticketPrice'].includes(field)) resetQuote(i, ['filmId', 'customTitle'].includes(field));
     update();
     if (field === 'filmId') message('Film changed. The fee figures are planning estimates; request this film’s quotation and review the notes.');
@@ -282,6 +352,30 @@ async function start() {
     plan.venue[key] = event.target.value;
     if (['name', 'address', 'format', 'basis'].includes(key)) for (let i = 0; i < 2; i++) resetQuote(i);
     update();
+  });
+  $('partner-preset').addEventListener('change', event => {
+    plan.taste.partner = event.target.value;
+    if (plan.venue.partner.startsWith('A season with our local ')) { plan.venue.partner = `A season with our local ${partnerLabels[plan.taste.partner].toLowerCase()}`; $('venue-partner').value = plan.venue.partner; }
+    update(); loadTaste();
+  });
+  $('suggest-programme').addEventListener('click', () => {
+    if (!taste || taste.partner.group !== plan.taste.partner) return;
+    try {
+      const pair = chooseProgramme(taste, plan.screenings.map(s => s.filmId), plan.screenings.map(s => s.locked));
+      let changed = 0;
+      pair.forEach((slug, i) => { if (slug !== plan.screenings[i].filmId) { plan.screenings[i].filmId = slug; plan.screenings[i].quoteStatus = 'estimate'; plan.screenings[i].quoteReference = ''; changed++; } });
+      render(); update(); message(changed ? `${changed} ${changed === 1 ? 'film updated' : 'films updated'}. Your dates and budget inputs are retained; request each changed film’s quote.` : 'The same films lead this programme. The evidence table shows the partner’s different ranking.');
+    } catch (error) { message(error.message); }
+  });
+  $('draft-brief').addEventListener('click', async () => {
+    const input = briefInput(), signature = JSON.stringify(input);
+    briefBusy = true; $('draft-brief').disabled = true; $('brief-status').textContent = 'The assistant is turning Qloo evidence and booking states into programme notes…';
+    try {
+      const reply = await api('/api/brief', input);
+      if (signature !== JSON.stringify(briefInput())) throw new Error('The programme changed while the draft was being written. Draft again for the current films.');
+      plan.agent = { signature, generatedAt: reply.generatedAt, model: reply.model, cached: reply.cached, brief: reply.brief };
+      briefBusy = false; update();
+    } catch (error) { briefBusy = false; update(); $('brief-status').textContent = error.message; }
   });
   $('save-plan').addEventListener('click', () => {
     try { const checked = validatedPlan(plan); download('bridgebill-plan.json', JSON.stringify(checked, null, 2) + '\n', 'application/json'); message('Plan downloaded. Open this JSON file here to continue later.'); }
@@ -298,17 +392,17 @@ async function start() {
       if (file.size > 150000) throw new Error('Open a Bridgebill plan smaller than 150 KB.');
       const next = validatedPlan(JSON.parse(await file.text()));
       if (!confirm('Replace the current worksheet with this saved plan? Save your current plan first to keep a separate copy.')) return;
-      plan = next; render(); update(); message(`Opened ${file.name}. Both screening budgets have been recalculated.`);
+      plan = next; render(); update(); loadTaste(); message(`Opened ${file.name}. Both screening budgets have been recalculated.`);
     } catch (error) { message(`Plan opening failed: ${error.message} Your current worksheet is retained.`); }
     finally { event.target.value = ''; }
   });
   $('reset-plan').addEventListener('click', () => {
     if (!confirm('Replace this worksheet with the fictional example? Save your current plan first to keep a copy.')) return;
-    plan = examplePlan(); render(); update(); message('Fictional example loaded. Edit each film’s actual quotation before a booking.');
+    plan = examplePlan(); render(); update(); loadTaste(); message('Fictional example loaded. Edit each film’s actual quotation before a booking.');
   });
   $('clear-plan').addEventListener('click', () => {
     if (!confirm('Clear the saved browser plan and reset this worksheet? Save a JSON copy first if you want to keep it.')) return;
-    try { localStorage.removeItem(STORAGE); plan = examplePlan(); render(); message('Saved browser plan cleared. The example is open; new edits start a new saved plan.'); }
+    try { localStorage.removeItem(STORAGE); plan = examplePlan(); render(); loadTaste(); message('Saved browser plan cleared. The example is open; new edits start a new saved plan.'); }
     catch { message('Browser storage is unavailable. Clear this site’s saved data through your browser settings.'); }
   });
 }
