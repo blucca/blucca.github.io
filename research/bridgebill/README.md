@@ -4,7 +4,7 @@
 
 A planning study for small arts venues: choose two separately ticketed films that connect regular cinema-goers with a book club or music community the venue already knows.
 
-**Available now:** the [interactive two-screening worksheet](https://blucca.github.io/research/bridgebill/planner/) with editable quotes, break-even seats, saved plans and a downloadable enquiry pack; an editable [screening budget CSV](screening-budget.csv); a sourced [12-film working shelf](film-shelf.csv); and a [distributor enquiry brief](booking-request.md). The Qloo-powered cultural-ranking layer awaits live API validation.
+**Available now:** the [interactive two-screening worksheet](https://blucca.github.io/research/bridgebill/planner/) with editable quotes, break-even seats, saved plans and a downloadable enquiry pack; an editable [screening budget CSV](screening-budget.csv); a sourced [12-film working shelf](film-shelf.csv); and a [distributor enquiry brief](booking-request.md). The first live Qloo study is recorded below; the budget and enquiry workflow is available independently.
 
 ## Start with the cost of saying yes
 
@@ -106,6 +106,8 @@ Inspect the saved search responses. Match films by title, year and director, boo
 ```sh
 python probe_qloo.py insights --out "$PRIVATE_QLOO_DIR" \
   --ids "$PRIVATE_QLOO_DIR/entity-ids.json"
+python probe_qloo.py audit --out "$PRIVATE_QLOO_DIR" \
+  --ids "$PRIVATE_QLOO_DIR/entity-ids.json"
 ```
 
 The three requests hold `filter.results.entities` fixed and change `signal.interests.entities`. `bias.trends=off` keeps the comparison focused on the chosen anchors. Successful responses are reused while their request parameters match; changed inputs use a fresh output directory. Raw responses and resolved identity maps stay in that private directory.
@@ -118,7 +120,19 @@ The three requests hold `filter.results.entities` fixed and change `signal.inter
 
 Save the returned ranks, scores and missing entities alongside the inputs. A failed first pass gets one documented revision of the shelf or anchors. A second failed pass ends the cultural-ranking build attempt. The next Qloo application milestone depends on a successful live check; the independent budget worksheet remains available.
 
-**Current evidence:** public-source identities and local input/query-shape checks are complete; live Qloo calls: **0**. Request fields follow [Search Entities](https://docs.qloo.com/reference/get-search) and the [movie parameter guide](https://docs.qloo.com/reference/available-parameters-by-entity-type).
+### Live study — 15 October 2026
+
+The 21 searches resolved all 12 films and nine anchor identities. Three Insights requests each returned the complete 12-film shortlist, with finite affinity values and a strict change in partner top-three membership. One additional Insights request checked an alternate edition of the same book. Total: **25 real API calls**.
+
+**Full-input gate: failed.** Insights reported a selected book anchor as `not_found` even though Search had returned a matching identity. Its alternate, identity-reviewed edition produced the same warning. The surviving book ranking uses two accepted book anchors. The three-per-group count was a fixed experimental setting; future two-book scope is a separate product decision.
+
+This exposed two useful API contracts: Search returns a `results` array without Insights' `success` flag; a successful Insights response can contain warnings about omitted inputs. The probe now accepts the observed Search shape, checks saved requests against the reviewed ID map, and stops the full-input audit on warnings. This warnings check was added after the first live response exposed the issue.
+
+The practical check held the venue figures and selection rule fixed: choose the regular audience's top film for the first slot, then the partner's highest-ranked different film for the second; respect a lock in either slot. The default pair stayed unchanged. Across the starter budget's **25 prespecified no-lock / one-lock cases, one changed pair** remained feasible with positive surplus at the entered attendance. The existing £500 quote scenario preserved that one ranking change while producing a first-night loss at the entered attendance; the £700 fixed-cost scenario exceeded room capacity in every case. The taste layer's demonstrated contribution is a narrow locked-film alternative.
+
+API responses, scores and identity maps remain private. `audit` writes a local `coverage-audit.json`; review any warnings before treating selected anchors as applied. The independent worksheet remains usable while the narrower cultural workflow is evaluated.
+
+Request fields follow [Search Entities](https://docs.qloo.com/reference/get-search) and the [movie parameter guide](https://docs.qloo.com/reference/available-parameters-by-entity-type).
 
 ## Why this workflow
 

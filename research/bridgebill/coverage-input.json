@@ -1,6 +1,6 @@
 {
   "research_date": "2026-10-14",
-  "status": "Public-source inputs prepared; live Qloo validation awaiting API access.",
+  "status": "Live probe completed 2026-10-15: 12 films and 9 anchor identities resolved; one book anchor omitted by Insights under both reviewed editions. Full-input audit failed; independent planner remains available.",
   "scenario": "Fictional 100-seat mixed-arts venue. Each example community declares three cultural anchors.",
   "booking_scope": "Public catalogues provide research and enquiry destinations. A booking requires a distributor response covering the UK territory, venue, dates, screening format and commercial terms.",
   "runtime_scope": "Planning durations reproduce the named official source and edition. Confirm the supplied DCP or other exhibition-copy duration before fixing the final running order.",
@@ -336,5 +336,6 @@
         "source_url": "https://www.ninasimone.com/biography/"
       }
     ]
-  }
+  },
+  "validation_date": "2026-10-15"
 }
