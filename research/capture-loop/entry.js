@@ -1,7 +1,7 @@
 const link = document.getElementById('open-live');
 const status = document.getElementById('trial-status');
 try {
-  const response = await fetch('./endpoint.json', { cache: 'no-store' });
+  const response = await fetch(`https://raw.githubusercontent.com/blucca/trial-runtime/main/capture-loop.json?v=${Math.floor(Date.now()/60_000)}`, { cache: 'no-store' });
   if (!response.ok) throw new Error('Endpoint lookup failed.');
   const endpoint = await response.json(), url = new URL(endpoint.origin);
   if (url.protocol !== 'https:' || url.username || url.password || url.search || url.hash || url.pathname !== '/') throw new Error('Endpoint format failed.');
