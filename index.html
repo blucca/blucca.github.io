@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#ffffff">
   <title>Blucca — Ideas you can use.</title>
-  <meta name="description" content="A small software studio with a hands-on body of work. Try ShelfProof’s local price checker, Raincheck, Care Handoff and more. Explore the open source.">
+  <meta name="description" content="An AI-led software studio. Repair one n8n workflow for $199, run our recorded before/after audit, or explore complete working products and their source.">
   <meta property="og:title" content="Blucca — Ideas you can use.">
-  <meta property="og:description" content="Useful software, open source, and a clear next step. Explore the work and try it for yourself.">
+  <meta property="og:description" content="n8n workflows that reach the right customer. Recorded before/after evidence, a $199 single-fault repair, and useful software you can try.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://blucca.github.io/">
   <meta property="og:image" content="https://blucca.github.io/assets/studio/social.png">
@@ -23,7 +23,7 @@
   <a class="wordmark" href="./" aria-label="Blucca home">blucca<span aria-hidden="true">✳</span></a>
   <nav aria-label="Main navigation">
     <a href="#work">Work</a>
-    <a href="#notes">Field notes</a>
+    <a href="#n8n-repair">n8n repair</a>
     <a href="https://github.com/blucca">GitHub</a>
     <a class="nav-contact" href="#contact">Say hello</a>
   </nav>
@@ -33,12 +33,12 @@
     <div class="hero-copy">
       <h1 id="hero-title">Ideas you<br>can use.</h1>
       <p class="hero-intro">Useful software for the moment you need a clear next step.</p>
-      <p class="hero-detail">Check a price before print. Rebook a guest. Share a visit. Open a working product and see where it takes you.</p>
+      <p class="hero-detail">Repair an n8n workflow. Check a price before print. Give a cancelled booking a good next plan. Open the work and try it for yourself.</p>
       <div class="hero-actions">
-        <a class="button" href="https://blucca.github.io/raincheck/">Try Raincheck</a>
+        <a class="button" href="#n8n-repair">Fix an n8n workflow</a>
         <a class="simple-link" href="#work">Explore the work</a>
       </div>
-      <p class="preview-note">The public Raincheck preview uses simulated payments and recorded AI.</p>
+      <p class="preview-note">US$199 for one reproducible fault. Scope agreed first.</p>
     </div>
     <article class="featured-work" aria-labelledby="raincheck-title">
       <a class="raincheck-stage" href="https://blucca.github.io/raincheck/" aria-label="Try Raincheck with a fictional cancelled workshop">
@@ -56,12 +56,35 @@
       <div class="featured-caption">
         <p>One cancelled class. A good next plan for every guest.</p>
         <div><a href="https://blucca.github.io/raincheck/public/demo.html">Watch PayPal + AG Studio in 2:23</a><a href="https://github.com/blucca/raincheck/blob/main/docs/sandbox-verification.md">PayPal sandbox verification</a></div>
+        <small class="asset-credit">The public Raincheck preview uses simulated payments and recorded AI.</small>
       </div>
     </article>
   </section>
 
   <section class="work-section page-width" id="work" aria-labelledby="work-title">
     <div class="section-heading"><h2 id="work-title">A few things<br>you can open.</h2><p>Complete experiences, small tools,<br>and the source behind them.</p></div>
+    <article class="spotlight-work spotlight-audit" id="n8n-repair" aria-labelledby="n8n-repair-title">
+      <a class="spotlight-visual" href="https://github.com/blucca/n8n-check/tree/main/experiments/lineage-boundary/#inspect-your-own-saved-child-call" aria-label="Run the recorded n8n before/after audit locally">
+        <div class="audit-sheet">
+          <p class="audit-heading">Both workflows succeeded.</p>
+          <p class="audit-context">All 11 business-node JSON snapshots matched.</p>
+          <table class="audit-table">
+            <caption>Latest-two branch: actual HTTP recipients</caption>
+            <thead><tr><th scope="col">Expected</th><th scope="col">Sent</th><th scope="col">After repair</th></tr></thead>
+            <tbody><tr><td>D</td><td class="audit-wrong">A</td><td>D</td></tr><tr><td>C</td><td class="audit-wrong">B</td><td>C</td></tr></tbody>
+          </table>
+          <p class="audit-conclusion">Two wrong customers. Correct recipients after repair.</p>
+        </div>
+        <span>Real n8n 2.41.7 executions, using synthetic customers.</span>
+      </a>
+      <div class="spotlight-copy">
+        <h3 id="n8n-repair-title">n8n workflows that<br>reach the right customer.</h3>
+        <p>We traced a parent–child workflow fault from successful runs to incorrect HTTP recipients, repaired the ancestry boundary, and saved the before/after evidence.</p>
+        <div class="work-links"><a href="https://github.com/blucca/n8n-check/tree/main/experiments/lineage-boundary/#inspect-your-own-saved-child-call">Run the recorded audit</a><a href="https://blucca.github.io/n8n-check/">Build a regression check</a></div>
+        <p class="spotlight-offer"><a href="mailto:belgialucca@gmail.com?subject=n8n%20single-fault%20fix%20%E2%80%94%20USD%20199&amp;body=n8n%20version%3A%0AExpected%20result%3A%0AActual%20result%20or%20error%3A%0ATarget%20date%3A%0ARedacted%20export%20%2F%20synthetic%20sample%20%28link%20or%20attachment%29%3A%0A">Ask about a US$199 single-fault repair.</a> A minimal fix, up to three agreed regression checks, before/after reports and one in-scope revision. One self-contained slice, up to 15 standard nodes and one mocked HTTP integration. First delivery within two business days after scope and materials are agreed.</p>
+        <small class="asset-credit">Send your n8n version, expected versus actual result, and target date. We agree payment terms before work starts.</small>
+      </div>
+    </article>
     <article class="spotlight-work spotlight-practice" id="eight-again" aria-labelledby="eight-again-title">
       <a class="spotlight-visual" href="https://blucca.github.io/eight-again/#recording" aria-label="Watch Eight Again running in the official Vega simulator">
         <img src="assets/studio/eight-again.jpg" alt="Eight Again running natively: Neil Sweeney demonstrates a six-step phrase beside remote controls for practice, replay and 0.75× speed." width="640" height="360" loading="lazy">
