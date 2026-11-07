@@ -20,3 +20,5 @@
 
 /* The complete archive keeps its original product-specific presentation. */
 .archive-intro{padding-block:50px 32px}.archive-intro h1{font-size:clamp(46px,6vw,80px);letter-spacing:-.045em}.archive-intro p{margin-top:20px;max-width:48ch;color:var(--muted);font-size:19px}.archive-back{display:inline-block;margin-top:22px;text-decoration:underline;text-underline-offset:5px}.archive-intro+.work-section{padding-top:28px}@media(max-width:620px){.archive-intro{padding-block:25px 22px}.archive-intro p{font-size:16px}}
+
+.archive-highlight{padding-block:20px 35px}.archive-highlight .featured-work{max-width:620px;margin-inline:auto}
