@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://blucca.github.io/</loc><lastmod>2026-10-15</lastmod></url>
+  <url><loc>https://blucca.github.io/</loc><lastmod>2026-11-08</lastmod></url>
   <url><loc>https://blucca.github.io/research/bridgebill/planner/</loc><lastmod>2026-10-15</lastmod></url>
   <url><loc>https://blucca.github.io/recall-relay/</loc><lastmod>2026-10-09</lastmod></url>
   <url><loc>https://blucca.github.io/recall-relay/demo/</loc><lastmod>2026-10-09</lastmod></url>
@@ -20,4 +20,5 @@
   <url><loc>https://blucca.github.io/research/capture-loop/demo/</loc></url>
   <url><loc>https://blucca.github.io/footprint/</loc><lastmod>2026-10-22</lastmod></url>
   <url><loc>https://blucca.github.io/biddelta-zetaris/</loc><lastmod>2026-10-28</lastmod></url>
+  <url><loc>https://blucca.github.io/archive/</loc><lastmod>2026-11-08</lastmod></url>
 </urlset>

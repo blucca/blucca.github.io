@@ -17,3 +17,9 @@ Homepage-specific artwork and locally served type. Product subpages keep their e
 - `forkline.webp`: resized from Forkline’s own final `assets/studio.png`, captured 29 October 2026. Actual browser replay of the local example: one Wait edit, two synchronized futures. Example author labels belong to the local sample. UI, robot artwork and maps are original Blucca work.
 
 - `traceglass.webp`: full-frame conversion of the published Traceglass `screenshot.png` at [n8n-check commit fa7f010](https://github.com/blucca/n8n-check/tree/fa7f010/traceglass), captured 2 November 2026. Actual shared workbench on the recorded synthetic original call: cyan derived ancestry, red recorded parent pairing, exact raw JSON pointers, and a downloaded release dossier. Original Blucca UI; 1440 × 1000, converted to WebP with the complete frame preserved.
+
+## The right thread / November 2026
+
+- `threadbare.webp`: full-frame WebP of Threadbare's own `demo/poster.jpg` (1280 × 720), a real browser view of its recorded synthetic saved-execution case. Original Blucca UI and demo. The featured entry names the two separate evidence roles; personal execution contents are absent from the image.
+- `social.png`: now the static version of Blucca's original **The right thread** banner. Source geometry, local fonts, still and GIF generator are in [blucca/blucca/assets](https://github.com/blucca/blucca/tree/main/assets). It is an illustration of two items reaching matching recipients, with no activity counters or measured-performance claims.
+- The homepage draws the matching vector route inline; its native animation has a pause button and follows reduced-motion preferences. No third-party animation endpoint or workflow runner is required.
