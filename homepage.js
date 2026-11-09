@@ -1,5 +1,5 @@
 // Existing public project bookmarks retain their destination in the archive.
-const archivedSections = new Set(["raincheck-title", "traceglass", "traceglass-title", "paypatch", "paypatch-title", "eight-again", "eight-again-title", "hauspost", "hauspost-title", "forkline", "forkline-title", "care-handoff", "recall-relay", "tools-title", "notes", "quietcue", "portproof", "little-room", "flat-out", "footprint", "orbit-cut", "genco-split-audit", "biddelta", "counterparty-desk"]);
+const archivedSections = new Set(["raincheck-title", "traceglass", "traceglass-title", "paypatch", "paypatch-title", "eight-again", "eight-again-title", "hauspost", "hauspost-title", "forkline", "forkline-title", "care-handoff", "recall-relay", "tools-title", "notes", "quietcue", "portproof", "little-room", "flat-out", "footprint", "orbit-cut", "genco-split-audit", "biddelta", "counterparty-desk", "shelfproof", "shelfproof-title", "sourcebind"]);
 function followArchivedLink() {
   const section = location.hash.slice(1);
   if (archivedSections.has(section)) location.replace(`archive/#${section}`);
