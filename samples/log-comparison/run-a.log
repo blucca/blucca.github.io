@@ -1,0 +1,6 @@
+09:00:00 INFO batch start rows=3
+09:00:01 INFO customer=ct-91 status=200 latency_ms=120
+09:00:02 WARN customer=nw-41 attempt=1 status=503 latency_ms=680
+09:00:03 INFO customer=nw-41 attempt=2 status=200 latency_ms=350
+09:00:04 ERROR customer=al-22 status=422 latency_ms=95
+09:00:05 INFO batch finish accepted=2 rejected=1
