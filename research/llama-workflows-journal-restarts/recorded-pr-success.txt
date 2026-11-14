@@ -1,0 +1,17 @@
+{"phase": 0, "pid": 29565, "prompts": ["vendor:0", "invoice:0"], "status": "saved", "run_id": "eXIViDJXZd"}
+{"phase": 1, "pid": 29566, "prompts": ["vendor:1", "invoice:1"], "status": "saved", "run_id": "tLrpIuF0AN"}
+{"phase": 2, "pid": 29567, "result": {"vendor:0": "FR", "invoice:0": "1,234.50", "vendor:1": "FR12345678901", "invoice:1": "EUR"}, "status": "completed", "run_id": "2E1ZWngrJx"}
+{
+  "completed": true,
+  "processes": [
+    29565,
+    29566,
+    29567
+  ],
+  "result": {
+    "vendor:0": "FR",
+    "invoice:0": "1,234.50",
+    "vendor:1": "FR12345678901",
+    "invoice:1": "EUR"
+  }
+}

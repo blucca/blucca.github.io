@@ -1,0 +1,138 @@
+{
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux x86-64, kernel 6.8.0-142-generic, glibc 2.39",
+    "pydantic": "2.14.3",
+    "llama-index-instrumentation": "0.6.0",
+    "package_metadata_version": "2.26.1"
+  },
+  "sources": {
+    "main": {
+      "sha": "cb953fd9510ae88682a67058860b0e1b0ef96478",
+      "repo": "run-llama/llama-agents"
+    },
+    "pr893": {
+      "sha": "25bc8734927c561c624397e128d63493fd28457b",
+      "repo": "taruki11/llama-agents"
+    },
+    "released": "2.26.1"
+  },
+  "scope": "Each complete runtime produces and replays its own journals; two parallel filtered branches, two answers each; local synthetic inputs, no live model or external application calls.",
+  "original_report_checks": [
+    {
+      "runtime": "released",
+      "check": "original #23795 program",
+      "exit_code": 1,
+      "duration_s": 0.417,
+      "error": "Invocation invocation_7 of step ask_b on worker 0 not found in in_progress",
+      "completed": false
+    },
+    {
+      "runtime": "released",
+      "check": "four distinct answers and route assertions",
+      "exit_code": 1,
+      "duration_s": 0.417,
+      "error": "('b0', Answer(waiter='a0', value='Paris'))",
+      "completed": false
+    },
+    {
+      "runtime": "main",
+      "check": "original #23795 program",
+      "exit_code": 1,
+      "duration_s": 0.468,
+      "error": "Invocation invocation_7 of step ask_b on worker 0 not found in in_progress",
+      "completed": false
+    },
+    {
+      "runtime": "main",
+      "check": "four distinct answers and route assertions",
+      "exit_code": 1,
+      "duration_s": 0.469,
+      "error": "('b0', Answer(waiter='a0', value='Paris'))",
+      "completed": false
+    },
+    {
+      "runtime": "pr893",
+      "check": "original #23795 program",
+      "exit_code": 0,
+      "duration_s": 0.417,
+      "error": null,
+      "completed": true
+    },
+    {
+      "runtime": "pr893",
+      "check": "four distinct answers and route assertions",
+      "exit_code": 0,
+      "duration_s": 0.417,
+      "error": null,
+      "completed": true
+    }
+  ],
+  "application_cold_starts": {
+    "main": {
+      "exit_code": 1,
+      "failure": "invoice:0 received reply for vendor:0",
+      "phase": 1
+    },
+    "pr893": {
+      "exit_code": 0,
+      "process_pids": [
+        29565,
+        29566,
+        29567
+      ],
+      "phases": [
+        {
+          "phase": 0,
+          "status": "saved",
+          "journal_records": 9,
+          "prompts": [
+            "vendor:0",
+            "invoice:0"
+          ]
+        },
+        {
+          "phase": 1,
+          "status": "saved",
+          "journal_records": 16,
+          "prompts": [
+            "vendor:1",
+            "invoice:1"
+          ]
+        },
+        {
+          "phase": 2,
+          "status": "completed",
+          "journal_records": 0,
+          "prompts": []
+        }
+      ],
+      "result": {
+        "vendor:0": "FR",
+        "invoice:0": "1,234.50",
+        "vendor:1": "FR12345678901",
+        "invoice:1": "EUR"
+      },
+      "two_process_restarts": true,
+      "json_round_trips": true,
+      "send_event_branch_preserved": true
+    }
+  },
+  "delivery_check": {
+    "fresh_virtual_environment": true,
+    "exact_published_requirements_installed": true,
+    "pip_exit": 0,
+    "native_exit": 0,
+    "process_pids": [
+      29668,
+      29669,
+      29670
+    ],
+    "result": {
+      "vendor:0": "FR",
+      "invoice:0": "1,234.50",
+      "vendor:1": "FR12345678901",
+      "invoice:1": "EUR"
+    }
+  }
+}

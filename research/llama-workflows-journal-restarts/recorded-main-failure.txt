@@ -1,0 +1,64 @@
+{"phase": 0, "pid": 29562, "prompts": ["vendor:0", "invoice:0"], "status": "saved", "run_id": "zCJhuqjCMf"}
+Traceback (most recent call last):
+  File "<native>/restart_case.py", line 140, in <module>
+    asyncio.run(phase(int(sys.argv[1]), Path(sys.argv[2]).resolve()))
+  File "/usr/lib/python3.12/asyncio/runners.py", line 194, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/asyncio/base_events.py", line 687, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "<native>/restart_case.py", line 117, in phase
+    await handler  # Surface a failed workflow before checking the expected pause.
+    ^^^^^^^^^^^^^
+  File "<native>/main-venv/lib/python3.12/site-packages/workflows/handler.py", line 34, in _await_result
+    stop_event = await self.stop_event_result()
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<native>/main-venv/lib/python3.12/site-packages/workflows/handler.py", line 95, in stop_event_result
+    return await self._result_task
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "<native>/main-venv/lib/python3.12/site-packages/workflows/handler.py", line 66, in _wait_for_result
+    result = await self._external_adapter.get_result()
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<native>/main-venv/lib/python3.12/site-packages/workflows/plugins/basic.py", line 228, in get_result
+    return await self._queues.complete
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<native>/main-venv/lib/python3.12/site-packages/workflows/plugins/basic.py", line 359, in run_with_concurrency_limit
+    return await registered.workflow_run_fn(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<native>/main-venv/lib/python3.12/site-packages/workflows/runtime/types/step_function.py", line 455, in run_workflow
+    result = await control_loop_fn(
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "<native>/main-venv/lib/python3.12/site-packages/workflows/runtime/control_loop/runner.py", line 680, in control_loop
+    return await runner.run(start_event=start_event)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<native>/main-venv/lib/python3.12/site-packages/workflows/runtime/control_loop/runner.py", line 511, in run
+    result = await self._process_tick(tick)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<native>/main-venv/lib/python3.12/site-packages/workflows/runtime/control_loop/runner.py", line 652, in _process_tick
+    result = await self.process_command(command)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<native>/main-venv/lib/python3.12/site-packages/workflows/runtime/control_loop/runner.py", line 383, in process_command
+    raise command.exception
+  File "<native>/main-venv/lib/python3.12/site-packages/workflows/runtime/types/step_function.py", line 300, in wrapper
+    result = await partial_func()
+             ^^^^^^^^^^^^^^^^^^^^
+  File "<native>/main-venv/lib/python3.12/site-packages/llama_index_instrumentation/dispatcher.py", line 464, in async_wrapper
+    result = await func(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<native>/main-venv/lib/python3.12/site-packages/workflows/runtime/types/step_function.py", line 233, in span_safe_call
+    step_result = await call_func(*args, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<native>/restart_case.py", line 73, in invoice
+    assert reply.key == key, f"{key} received reply for {reply.key}"
+           ^^^^^^^^^^^^^^^^
+AssertionError: invoice:0 received reply for vendor:0
+Traceback (most recent call last):
+  File "<native>/run_case.py", line 13, in <module>
+    subprocess.run([sys.executable, str(case), str(phase), str(directory)],
+  File "/usr/lib/python3.12/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['<native>/main-venv/bin/python', '<native>/restart_case.py', '1', '<native>/main-cold-final']' returned non-zero exit status 1.
