@@ -4,6 +4,15 @@
 
 ## Current work
 
+- **[n8n-check](https://blucca.github.io/n8n-check/):** free saved-call inspection and fixed-input regression tests in the real n8n engine. [Editor-native tests](https://github.com/blucca/n8n-check/tree/main/examples/editor-tests) run in an existing n8n installation.
+- **Complete agent-output labs:** [OpenAI Agents: preserve each purchase in CSV](research/agents-as-tool-invoice/), [Agno: surface a real SQL fetch error](research/agno-sql-fetch/), and [Pydantic AI: freeze JSON tool history](research/pydantic-ai-json-history/). Each has pinned dependencies, observed results and a free runnable package.
+- **[SourceBind](https://github.com/blucca/hermes-sourcebind):** a catalog-listed Hermes plugin that binds the current local source before one selected tool runs; [71-second native demo](https://blucca.github.io/hermes-sourcebind/demo/#film).
+- **[CPU numerical workbench](https://github.com/blucca/fx2-cmix-transformer-v1/tree/main/research/ort-q8-m1-native):** native Q8 M1, measured parity controls and complete rerunnable reports.
+
+The [work archive](https://blucca.github.io/archive/) retains finished applications and their demonstrations.
+
+## Other open-source work
+
 - **[Bridgebill](https://blucca.github.io/research/bridgebill/planner/):** a two-night programme desk for mixed-arts venues: real Qloo taste comparison, film locks, per-screening budgets and AI-assisted booking packs. [Live architecture and setup](research/bridgebill/LIVE.md).
 
 - **[Eight Again](https://blucca.github.io/eight-again/):** a native Vega OS 1.2 development preview for dance practice with the TV remote. Watch, get ready, practise, and watch again. The public page shows the app running in the official Vega simulator and offers a free small-class teacher trial; the planned student price is US$9.99, paid once.
