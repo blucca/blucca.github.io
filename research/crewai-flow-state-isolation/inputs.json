@@ -1,0 +1,52 @@
+{
+  "source_issue": "https://github.com/crewAIInc/crewAI/issues/9383",
+  "source_author": "master1018",
+  "reported_environment": {
+    "os": "Ubuntu 20.04",
+    "python": "3.11",
+    "crewai": "1.15.39",
+    "crewai_tools": "1.15.39",
+    "llm": "DeepSeek via custom OpenAI-compatible LLM"
+  },
+  "fixture": {
+    "initial_state": {
+      "wallet": {
+        "expenses": []
+      }
+    },
+    "budget_usd_per_department": 100,
+    "notebook_price_usd": 5,
+    "requests": {
+      "Marketing": "Buy 8 notebooks and tell me my remaining budget.",
+      "Engineering": "Buy 2 notebooks and tell me my remaining budget."
+    },
+    "paths": [
+      "shared settings",
+      "dict(settings) per constructor",
+      "copy.deepcopy(settings) per constructor"
+    ]
+  },
+  "lab_scope": {
+    "crewai": "PyPI crewai==1.15.39 without extras",
+    "llm": "Official BaseLLM subclass; finish after native tool observation",
+    "provider_calls": 0,
+    "purchase_type": "Fixed integer fictional amounts",
+    "reported_python_3_11_and_provider_check": "For original author"
+  },
+  "expected_deepcopy": {
+    "settings": {
+      "wallet": {
+        "expenses": []
+      }
+    },
+    "marketing_expenses": [
+      40
+    ],
+    "engineering_expenses": [
+      10
+    ],
+    "marketing_remaining_usd": 60,
+    "engineering_remaining_usd": 90,
+    "engineering_expenses_after_marketing_before_own_run": []
+  }
+}

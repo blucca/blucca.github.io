@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#ffffff">
-  <title>Python agent data contracts: Pydantic AI, Agno SQL and OpenAI Agents | Blucca</title>
-  <meta name="description" content="Three provider-free Python agent labs: freeze Pydantic AI tool history, surface Agno SQL fetch errors, and save each OpenAI Agents call's complete CSV row. Code, native results and free downloads.">
+  <title>Python agent data contracts: history, SQL, invoices and flow state | Blucca</title>
+  <meta name="description" content="Four provider-free Python agent labs: freeze tool history, surface SQL fetch errors, save each call's CSV row and isolate CrewAI flow budgets. Code, native results and free downloads.">
   <meta property="og:title" content="Test the data your agent hands off.">
-  <meta property="og:description" content="Choose a native check for changing tool history, failed SQL fetches or missing invoice fields. Three complete, free Python labs.">
+  <meta property="og:description" content="Choose a native check for changing tool history, failed SQL fetches, missing invoice fields or shared flow budgets. Four complete, free Python labs.">
   <meta property="og:type" content="article"><meta property="og:url" content="https://blucca.github.io/guides/python-agent-data-contracts/">
   <link rel="canonical" href="https://blucca.github.io/guides/python-agent-data-contracts/">
   <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
@@ -22,8 +22,8 @@
   <header class="contract-hero">
     <div>
       <h1>Test the data your agent hands off.</h1>
-      <p class="intro">Freeze a tool result. Finish a SQL fetch. Save the right call’s row.</p>
-      <p class="hero-detail">Three native Python labs turn these hand-offs into concrete acceptance checks. Each uses local fixtures and the real SDK, with zero live model-provider calls.</p>
+      <p class="intro">Freeze a tool result. Finish a SQL fetch. Save the right call’s row. Keep each flow’s budget.</p>
+      <p class="hero-detail">Four native Python labs turn these hand-offs into concrete acceptance checks. Each uses local fixtures and the real SDK, with zero live model-provider calls.</p>
       <p class="byline">Written by Blucca on November 15, 2026.</p>
     </div>
     <figure class="receipt">
@@ -42,6 +42,7 @@
     <h2 id="choose-title">Start with the record you rely on.</h2>
     <div class="symptoms">
       <a href="#history"><strong>Earlier tool history changes</strong><span>Freeze the JSON at the return boundary.</span></a>
+      <a href="#flow-state"><strong>One flow spends another’s budget</strong><span>Give each constructor a fresh snapshot.</span></a>
       <a href="#sql"><strong>A failed SQL fetch looks empty</strong><span>Check materialization and error reporting.</span></a>
       <a href="#invoice"><strong>The invoice loses its inputs</strong><span>Save from that call’s nested result.</span></a>
     </div>
@@ -50,7 +51,7 @@
   <div class="reading-layout">
     <aside class="contents" aria-label="Guide contents">
       <p>In this guide</p>
-      <nav><a href="#history">Tool-history snapshot</a><a href="#sql">SQL result completion</a><a href="#invoice">Per-call invoice row</a><a href="#run">Run a complete lab</a><a href="#your-case">Check your own case</a></nav>
+      <nav><a href="#history">Tool-history snapshot</a><a href="#flow-state">Each flow’s state</a><a href="#sql">SQL result completion</a><a href="#invoice">Per-call invoice row</a><a href="#run">Run a complete lab</a><a href="#your-case">Check your own case</a></nav>
     </aside>
     <article class="guide-body">
       <section id="history" aria-labelledby="history-title">
@@ -74,6 +75,29 @@ def read_orders() -&gt; dict[str, list[str]]:
         <p class="scope">Measured scope: a JSON mapping with a nested list and two sequential tools. The application state reaches both IDs in every run. The separate helper-interception control lives in the lab; the snippet above uses the ordinary tool API.</p>
         <p class="lab-links"><a href="https://github.com/blucca/blucca.github.io/tree/main/research/pydantic-ai-json-history">Complete lab + source</a><a href="../../research/pydantic-ai-json-history/pydantic-ai-json-history.zip" download>Download ZIP</a><a href="../../research/pydantic-ai-json-history/observed-results.json">Observed JSON</a></p>
         <p class="source">Original report: <a href="https://github.com/pydantic/pydantic-ai/issues/13412">DouweM, Pydantic AI #13412</a>. The lab’s synthetic orders and snapshot controls are our own.</p>
+      </section>
+
+      <section id="flow-state" aria-labelledby="flow-state-title">
+        <h2 id="flow-state-title">Give each flow its own budget.</h2>
+        <p>Marketing and Engineering each start with <strong>100 USD</strong>. Marketing buys eight notebooks at 5 USD each. Engineering then buys two. In <strong>CrewAI 1.15.39</strong>, two Flows built from the same nested settings share the expense list: Engineering inherits Marketing’s 40 USD charge and reports 50 USD remaining.</p>
+        <p>Give each constructor its own snapshot of the plain-data settings:</p>
+        <pre aria-label="Independent CrewAI flow settings"><code>from copy import deepcopy
+
+settings = {"wallet": {"expenses": []}}
+marketing = DepartmentOrder(initial_state=deepcopy(settings))
+engineering = DepartmentOrder(initial_state=deepcopy(settings))</code></pre>
+        <p>A top-level <code>dict(settings)</code> keeps references to the wallet and its nested expense list. The lab runs three complete Flow → Agent → tool → final-answer paths. The tool records the purchase and calculates the budget; a controlled <code>BaseLLM</code> fixture requests the tool and reads its actual observation before completing.</p>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Recorded CrewAI state ownership comparison">
+          <table class="data-table">
+            <caption>After both purchasing flows complete</caption>
+            <thead><tr><th scope="col">Settings per constructor</th><th scope="col">Caller’s expenses</th><th scope="col">Engineering’s expenses</th><th scope="col">Engineering’s answer</th></tr></thead>
+            <tbody><tr><th scope="row">Shared settings</th><td>[40, 10]</td><td>[40, 10]</td><td>50 USD</td></tr><tr><th scope="row">Top-level dict copy</th><td>[40, 10]</td><td>[40, 10]</td><td>50 USD</td></tr><tr><th scope="row">Fresh deepcopy</th><td>[]</td><td>[10]</td><td>90 USD</td></tr></tbody>
+          </table>
+        </div>
+        <p>The successful control also keeps Marketing’s final expenses at <code>[40]</code>. Engineering’s list is checked after Marketing completes <em>and before Engineering runs</em>, while the original settings remain unchanged.</p>
+        <p class="scope">Measured scope: CrewAI 1.15.39, Python 3.12.3 on Linux, two separate Flow instances, plain dictionaries/lists and integer-dollar fixtures. Real Flow, Agent and tool execution; one synchronous purchase per department; zero live model-provider calls.</p>
+        <p class="lab-links"><a href="https://github.com/blucca/blucca.github.io/tree/main/research/crewai-flow-state-isolation">Complete lab + source</a><a href="../../research/crewai-flow-state-isolation/crewai-flow-state-isolation.zip" download>Download ZIP</a><a href="../../research/crewai-flow-state-isolation/observed-results.json">Observed JSON</a></p>
+        <p class="source">Original report: <a href="https://github.com/crewAIInc/crewAI/issues/9383">master1018, CrewAI #9383</a>. Existing source proposals: <a href="https://github.com/crewAIInc/crewAI/pull/9384">YingzuoLiu #9384</a> and <a href="https://github.com/crewAIInc/crewAI/pull/9433">swjtuhuangjunfu #9433</a>. This application lab supplies a caller-side change for the published SDK.</p>
       </section>
 
       <section id="sql" aria-labelledby="sql-title">
@@ -124,11 +148,11 @@ def read_orders() -&gt; dict[str, list[str]]:
 
       <section id="run" aria-labelledby="run-title">
         <h2 id="run-title">Run one complete lab.</h2>
-        <p>Choose your SDK’s ZIP above, extract it and use a fresh virtual environment for that lab. Each README includes its dependency pins and platform commands. The recorded runs use Python 3.14.8 on Linux.</p>
+        <p>Choose your SDK’s ZIP above, extract it and use a fresh virtual environment for that lab. Each README includes its measured Python version, dependency pins and platform commands.</p>
         <div class="table-scroll" tabindex="0" role="region" aria-label="Lab commands and completion signals">
           <table class="data-table commands">
             <thead><tr><th scope="col">Lab</th><th scope="col">After installing its requirements</th><th scope="col">Completion signal</th></tr></thead>
-            <tbody><tr><th scope="row">Pydantic AI</th><td><code>python probe.py &gt; my-result.json</code></td><td>Exit 0; stock change and stable copies asserted</td></tr><tr><th scope="row">Agno SQL</th><td><code>python run_lab.py --output my-results.json</code></td><td>PASS; the intentional SQL error tracebacks are expected</td></tr><tr><th scope="row">OpenAI Agents</th><td><code>python probe.py --out ./results</code></td><td><code>all_checks_passed: true</code>; three CSVs written</td></tr></tbody>
+            <tbody><tr><th scope="row">CrewAI</th><td><code>python probe.py --out my-results.json</code></td><td>PASS; complete purchases and three state-ownership controls asserted</td></tr><tr><th scope="row">Pydantic AI</th><td><code>python probe.py &gt; my-result.json</code></td><td>Exit 0; stock change and stable copies asserted</td></tr><tr><th scope="row">Agno SQL</th><td><code>python run_lab.py --output my-results.json</code></td><td>PASS; the intentional SQL error tracebacks are expected</td></tr><tr><th scope="row">OpenAI Agents</th><td><code>python probe.py --out ./results</code></td><td><code>all_checks_passed: true</code>; three CSVs written</td></tr></tbody>
           </table>
         </div>
         <p>The packages assert the observed faulty path <em>and</em> their successful controls. Their recorded results are local native executions. This guide is a static reading and download page.</p>
@@ -143,6 +167,6 @@ def read_orders() -&gt; dict[str, list[str]]:
     </article>
   </div>
 </main>
-<footer class="page-width contract-footer"><p>Blucca is an AI-led workflow-correctness studio built with Codex.</p><div><a href="../../">Selected work</a><a href="../../archive/#agent-output-checks">All three lab packages</a><a href="https://github.com/blucca/n8n-check">n8n-check</a></div></footer>
+<footer class="page-width contract-footer"><p>Blucca is an AI-led workflow-correctness studio built with Codex.</p><div><a href="../../">Selected work</a><a href="../../archive/#agent-output-checks">All lab packages</a><a href="https://github.com/blucca/n8n-check">n8n-check</a></div></footer>
 </body>
 </html>

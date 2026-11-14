@@ -1,0 +1,570 @@
+{
+  "status": "PASS",
+  "source_issue": "https://github.com/crewAIInc/crewAI/issues/9383",
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-142-generic-x86_64-with-glibc2.39",
+    "packages": {
+      "crewai": "1.15.39",
+      "crewai-core": "1.15.39",
+      "crewai-cli": "1.15.39",
+      "pydantic": "2.12.5"
+    },
+    "llm": "Official BaseLLM subclass; controlled ReAct replies from actual tool observations",
+    "provider_calls": 0,
+    "peak_rss_kib": 279200
+  },
+  "cases": [
+    {
+      "path": "shared",
+      "nested_state_isolated": false,
+      "aliases_at_construction": {
+        "flow_state_dict_shared": false,
+        "flow_wallet_shared": true,
+        "flow_expense_list_shared": true,
+        "settings_expenses_shared_with_marketing": true
+      },
+      "before_runs": {
+        "settings": {
+          "wallet": {
+            "expenses": []
+          }
+        },
+        "marketing_state": {
+          "wallet": {
+            "expenses": []
+          },
+          "id": "534288b0-747b-4c36-84b0-ccc76ca8ccab"
+        },
+        "engineering_state": {
+          "wallet": {
+            "expenses": []
+          },
+          "id": "5ed915bb-e05a-4089-89ea-6503fcff3dee"
+        }
+      },
+      "after_marketing_before_engineering": {
+        "settings": {
+          "wallet": {
+            "expenses": [
+              40
+            ]
+          }
+        },
+        "marketing_state": {
+          "wallet": {
+            "expenses": [
+              40
+            ]
+          },
+          "id": "534288b0-747b-4c36-84b0-ccc76ca8ccab",
+          "request": "Buy 8 notebooks and tell me my remaining budget."
+        },
+        "engineering_state": {
+          "wallet": {
+            "expenses": [
+              40
+            ]
+          },
+          "id": "5ed915bb-e05a-4089-89ea-6503fcff3dee"
+        }
+      },
+      "after_both_runs": {
+        "settings": {
+          "wallet": {
+            "expenses": [
+              40,
+              10
+            ]
+          }
+        },
+        "marketing_state": {
+          "wallet": {
+            "expenses": [
+              40,
+              10
+            ]
+          },
+          "id": "534288b0-747b-4c36-84b0-ccc76ca8ccab",
+          "request": "Buy 8 notebooks and tell me my remaining budget."
+        },
+        "engineering_state": {
+          "wallet": {
+            "expenses": [
+              40,
+              10
+            ]
+          },
+          "id": "5ed915bb-e05a-4089-89ea-6503fcff3dee",
+          "request": "Buy 2 notebooks and tell me my remaining budget."
+        }
+      },
+      "marketing": {
+        "llm_calls": [
+          {
+            "call_number": 1,
+            "message_count": 2,
+            "message_roles": [
+              "system",
+              "user"
+            ],
+            "last_message_content": "\nCurrent Task: Buy 8 notebooks and tell me my remaining budget.\n\nBegin! This is VERY important to you, use the tools available and give your best Final Answer, your job depends on it!\n\nThought:",
+            "tool_observation_received": false,
+            "tool_observations": [],
+            "response": "Thought: I must buy the requested notebooks using the tool.\nAction: buy_notebooks\nAction Input: {\"quantity\": 8}"
+          },
+          {
+            "call_number": 2,
+            "message_count": 4,
+            "message_roles": [
+              "system",
+              "user",
+              "assistant",
+              "user"
+            ],
+            "last_message_content": "Analyze the tool result. If requirements are met, provide the Final Answer. Otherwise, call the next tool. Deliver only the answer without meta-commentary.",
+            "tool_observation_received": true,
+            "tool_observations": [
+              "Observation: Remaining budget: 60 USD"
+            ],
+            "response": "Thought: The purchasing tool returned the remaining budget.\nFinal Answer: Bought 8 notebooks. Remaining budget: 60 USD."
+          }
+        ],
+        "llm_call_count": 2,
+        "tool_calls": [
+          {
+            "name": "buy_notebooks",
+            "quantity": 8,
+            "expense_usd": 40,
+            "expenses_before": [],
+            "expenses_after": [
+              40
+            ],
+            "remaining_usd": 60,
+            "returned_observation": "Remaining budget: 60 USD"
+          }
+        ],
+        "tool_call_count": 1,
+        "output_type": "LiteAgentOutput",
+        "final_raw": "Bought 8 notebooks. Remaining budget: 60 USD."
+      },
+      "engineering": {
+        "llm_calls": [
+          {
+            "call_number": 1,
+            "message_count": 2,
+            "message_roles": [
+              "system",
+              "user"
+            ],
+            "last_message_content": "\nCurrent Task: Buy 2 notebooks and tell me my remaining budget.\n\nBegin! This is VERY important to you, use the tools available and give your best Final Answer, your job depends on it!\n\nThought:",
+            "tool_observation_received": false,
+            "tool_observations": [],
+            "response": "Thought: I must buy the requested notebooks using the tool.\nAction: buy_notebooks\nAction Input: {\"quantity\": 2}"
+          },
+          {
+            "call_number": 2,
+            "message_count": 4,
+            "message_roles": [
+              "system",
+              "user",
+              "assistant",
+              "user"
+            ],
+            "last_message_content": "Analyze the tool result. If requirements are met, provide the Final Answer. Otherwise, call the next tool. Deliver only the answer without meta-commentary.",
+            "tool_observation_received": true,
+            "tool_observations": [
+              "Observation: Remaining budget: 50 USD"
+            ],
+            "response": "Thought: The purchasing tool returned the remaining budget.\nFinal Answer: Bought 2 notebooks. Remaining budget: 50 USD."
+          }
+        ],
+        "llm_call_count": 2,
+        "tool_calls": [
+          {
+            "name": "buy_notebooks",
+            "quantity": 2,
+            "expense_usd": 10,
+            "expenses_before": [
+              40
+            ],
+            "expenses_after": [
+              40,
+              10
+            ],
+            "remaining_usd": 50,
+            "returned_observation": "Remaining budget: 50 USD"
+          }
+        ],
+        "tool_call_count": 1,
+        "output_type": "LiteAgentOutput",
+        "final_raw": "Bought 2 notebooks. Remaining budget: 50 USD."
+      }
+    },
+    {
+      "path": "shallow",
+      "nested_state_isolated": false,
+      "aliases_at_construction": {
+        "flow_state_dict_shared": false,
+        "flow_wallet_shared": true,
+        "flow_expense_list_shared": true,
+        "settings_expenses_shared_with_marketing": true
+      },
+      "before_runs": {
+        "settings": {
+          "wallet": {
+            "expenses": []
+          }
+        },
+        "marketing_state": {
+          "wallet": {
+            "expenses": []
+          },
+          "id": "6c310f3e-7e17-4ff4-8381-f0818c8b1623"
+        },
+        "engineering_state": {
+          "wallet": {
+            "expenses": []
+          },
+          "id": "0414b556-4fdd-4090-87ad-b7f3336e7a7a"
+        }
+      },
+      "after_marketing_before_engineering": {
+        "settings": {
+          "wallet": {
+            "expenses": [
+              40
+            ]
+          }
+        },
+        "marketing_state": {
+          "wallet": {
+            "expenses": [
+              40
+            ]
+          },
+          "id": "6c310f3e-7e17-4ff4-8381-f0818c8b1623",
+          "request": "Buy 8 notebooks and tell me my remaining budget."
+        },
+        "engineering_state": {
+          "wallet": {
+            "expenses": [
+              40
+            ]
+          },
+          "id": "0414b556-4fdd-4090-87ad-b7f3336e7a7a"
+        }
+      },
+      "after_both_runs": {
+        "settings": {
+          "wallet": {
+            "expenses": [
+              40,
+              10
+            ]
+          }
+        },
+        "marketing_state": {
+          "wallet": {
+            "expenses": [
+              40,
+              10
+            ]
+          },
+          "id": "6c310f3e-7e17-4ff4-8381-f0818c8b1623",
+          "request": "Buy 8 notebooks and tell me my remaining budget."
+        },
+        "engineering_state": {
+          "wallet": {
+            "expenses": [
+              40,
+              10
+            ]
+          },
+          "id": "0414b556-4fdd-4090-87ad-b7f3336e7a7a",
+          "request": "Buy 2 notebooks and tell me my remaining budget."
+        }
+      },
+      "marketing": {
+        "llm_calls": [
+          {
+            "call_number": 1,
+            "message_count": 2,
+            "message_roles": [
+              "system",
+              "user"
+            ],
+            "last_message_content": "\nCurrent Task: Buy 8 notebooks and tell me my remaining budget.\n\nBegin! This is VERY important to you, use the tools available and give your best Final Answer, your job depends on it!\n\nThought:",
+            "tool_observation_received": false,
+            "tool_observations": [],
+            "response": "Thought: I must buy the requested notebooks using the tool.\nAction: buy_notebooks\nAction Input: {\"quantity\": 8}"
+          },
+          {
+            "call_number": 2,
+            "message_count": 4,
+            "message_roles": [
+              "system",
+              "user",
+              "assistant",
+              "user"
+            ],
+            "last_message_content": "Analyze the tool result. If requirements are met, provide the Final Answer. Otherwise, call the next tool. Deliver only the answer without meta-commentary.",
+            "tool_observation_received": true,
+            "tool_observations": [
+              "Observation: Remaining budget: 60 USD"
+            ],
+            "response": "Thought: The purchasing tool returned the remaining budget.\nFinal Answer: Bought 8 notebooks. Remaining budget: 60 USD."
+          }
+        ],
+        "llm_call_count": 2,
+        "tool_calls": [
+          {
+            "name": "buy_notebooks",
+            "quantity": 8,
+            "expense_usd": 40,
+            "expenses_before": [],
+            "expenses_after": [
+              40
+            ],
+            "remaining_usd": 60,
+            "returned_observation": "Remaining budget: 60 USD"
+          }
+        ],
+        "tool_call_count": 1,
+        "output_type": "LiteAgentOutput",
+        "final_raw": "Bought 8 notebooks. Remaining budget: 60 USD."
+      },
+      "engineering": {
+        "llm_calls": [
+          {
+            "call_number": 1,
+            "message_count": 2,
+            "message_roles": [
+              "system",
+              "user"
+            ],
+            "last_message_content": "\nCurrent Task: Buy 2 notebooks and tell me my remaining budget.\n\nBegin! This is VERY important to you, use the tools available and give your best Final Answer, your job depends on it!\n\nThought:",
+            "tool_observation_received": false,
+            "tool_observations": [],
+            "response": "Thought: I must buy the requested notebooks using the tool.\nAction: buy_notebooks\nAction Input: {\"quantity\": 2}"
+          },
+          {
+            "call_number": 2,
+            "message_count": 4,
+            "message_roles": [
+              "system",
+              "user",
+              "assistant",
+              "user"
+            ],
+            "last_message_content": "Analyze the tool result. If requirements are met, provide the Final Answer. Otherwise, call the next tool. Deliver only the answer without meta-commentary.",
+            "tool_observation_received": true,
+            "tool_observations": [
+              "Observation: Remaining budget: 50 USD"
+            ],
+            "response": "Thought: The purchasing tool returned the remaining budget.\nFinal Answer: Bought 2 notebooks. Remaining budget: 50 USD."
+          }
+        ],
+        "llm_call_count": 2,
+        "tool_calls": [
+          {
+            "name": "buy_notebooks",
+            "quantity": 2,
+            "expense_usd": 10,
+            "expenses_before": [
+              40
+            ],
+            "expenses_after": [
+              40,
+              10
+            ],
+            "remaining_usd": 50,
+            "returned_observation": "Remaining budget: 50 USD"
+          }
+        ],
+        "tool_call_count": 1,
+        "output_type": "LiteAgentOutput",
+        "final_raw": "Bought 2 notebooks. Remaining budget: 50 USD."
+      }
+    },
+    {
+      "path": "deepcopy",
+      "nested_state_isolated": true,
+      "aliases_at_construction": {
+        "flow_state_dict_shared": false,
+        "flow_wallet_shared": false,
+        "flow_expense_list_shared": false,
+        "settings_expenses_shared_with_marketing": false
+      },
+      "before_runs": {
+        "settings": {
+          "wallet": {
+            "expenses": []
+          }
+        },
+        "marketing_state": {
+          "wallet": {
+            "expenses": []
+          },
+          "id": "69331fd4-5854-4893-95f0-c97452d45426"
+        },
+        "engineering_state": {
+          "wallet": {
+            "expenses": []
+          },
+          "id": "32de0d3a-25dd-4e38-aa05-fe60906c3518"
+        }
+      },
+      "after_marketing_before_engineering": {
+        "settings": {
+          "wallet": {
+            "expenses": []
+          }
+        },
+        "marketing_state": {
+          "wallet": {
+            "expenses": [
+              40
+            ]
+          },
+          "id": "69331fd4-5854-4893-95f0-c97452d45426",
+          "request": "Buy 8 notebooks and tell me my remaining budget."
+        },
+        "engineering_state": {
+          "wallet": {
+            "expenses": []
+          },
+          "id": "32de0d3a-25dd-4e38-aa05-fe60906c3518"
+        }
+      },
+      "after_both_runs": {
+        "settings": {
+          "wallet": {
+            "expenses": []
+          }
+        },
+        "marketing_state": {
+          "wallet": {
+            "expenses": [
+              40
+            ]
+          },
+          "id": "69331fd4-5854-4893-95f0-c97452d45426",
+          "request": "Buy 8 notebooks and tell me my remaining budget."
+        },
+        "engineering_state": {
+          "wallet": {
+            "expenses": [
+              10
+            ]
+          },
+          "id": "32de0d3a-25dd-4e38-aa05-fe60906c3518",
+          "request": "Buy 2 notebooks and tell me my remaining budget."
+        }
+      },
+      "marketing": {
+        "llm_calls": [
+          {
+            "call_number": 1,
+            "message_count": 2,
+            "message_roles": [
+              "system",
+              "user"
+            ],
+            "last_message_content": "\nCurrent Task: Buy 8 notebooks and tell me my remaining budget.\n\nBegin! This is VERY important to you, use the tools available and give your best Final Answer, your job depends on it!\n\nThought:",
+            "tool_observation_received": false,
+            "tool_observations": [],
+            "response": "Thought: I must buy the requested notebooks using the tool.\nAction: buy_notebooks\nAction Input: {\"quantity\": 8}"
+          },
+          {
+            "call_number": 2,
+            "message_count": 4,
+            "message_roles": [
+              "system",
+              "user",
+              "assistant",
+              "user"
+            ],
+            "last_message_content": "Analyze the tool result. If requirements are met, provide the Final Answer. Otherwise, call the next tool. Deliver only the answer without meta-commentary.",
+            "tool_observation_received": true,
+            "tool_observations": [
+              "Observation: Remaining budget: 60 USD"
+            ],
+            "response": "Thought: The purchasing tool returned the remaining budget.\nFinal Answer: Bought 8 notebooks. Remaining budget: 60 USD."
+          }
+        ],
+        "llm_call_count": 2,
+        "tool_calls": [
+          {
+            "name": "buy_notebooks",
+            "quantity": 8,
+            "expense_usd": 40,
+            "expenses_before": [],
+            "expenses_after": [
+              40
+            ],
+            "remaining_usd": 60,
+            "returned_observation": "Remaining budget: 60 USD"
+          }
+        ],
+        "tool_call_count": 1,
+        "output_type": "LiteAgentOutput",
+        "final_raw": "Bought 8 notebooks. Remaining budget: 60 USD."
+      },
+      "engineering": {
+        "llm_calls": [
+          {
+            "call_number": 1,
+            "message_count": 2,
+            "message_roles": [
+              "system",
+              "user"
+            ],
+            "last_message_content": "\nCurrent Task: Buy 2 notebooks and tell me my remaining budget.\n\nBegin! This is VERY important to you, use the tools available and give your best Final Answer, your job depends on it!\n\nThought:",
+            "tool_observation_received": false,
+            "tool_observations": [],
+            "response": "Thought: I must buy the requested notebooks using the tool.\nAction: buy_notebooks\nAction Input: {\"quantity\": 2}"
+          },
+          {
+            "call_number": 2,
+            "message_count": 4,
+            "message_roles": [
+              "system",
+              "user",
+              "assistant",
+              "user"
+            ],
+            "last_message_content": "Analyze the tool result. If requirements are met, provide the Final Answer. Otherwise, call the next tool. Deliver only the answer without meta-commentary.",
+            "tool_observation_received": true,
+            "tool_observations": [
+              "Observation: Remaining budget: 90 USD"
+            ],
+            "response": "Thought: The purchasing tool returned the remaining budget.\nFinal Answer: Bought 2 notebooks. Remaining budget: 90 USD."
+          }
+        ],
+        "llm_call_count": 2,
+        "tool_calls": [
+          {
+            "name": "buy_notebooks",
+            "quantity": 2,
+            "expense_usd": 10,
+            "expenses_before": [],
+            "expenses_after": [
+              10
+            ],
+            "remaining_usd": 90,
+            "returned_observation": "Remaining budget: 90 USD"
+          }
+        ],
+        "tool_call_count": 1,
+        "output_type": "LiteAgentOutput",
+        "final_raw": "Bought 2 notebooks. Remaining budget: 90 USD."
+      }
+    }
+  ],
+  "totals": {
+    "flows": 6,
+    "llm_calls": 12,
+    "tool_calls": 6
+  }
+}
