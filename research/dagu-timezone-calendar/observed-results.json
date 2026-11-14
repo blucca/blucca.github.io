@@ -1,0 +1,183 @@
+{
+  "daguVersion": "2.26.0",
+  "platform": "linux",
+  "cases": [
+    {
+      "name": "tokyo-midnight",
+      "instant": "2026-11-12T17:14:00Z",
+      "processTZ": "UTC",
+      "dagTZ": "Asia/Tokyo",
+      "stepTZ": null,
+      "expected": {
+        "day": 13,
+        "hour": 2,
+        "minute": 14,
+        "month": 11,
+        "offset": -540,
+        "year": 2026
+      },
+      "returncode": 0,
+      "original": {
+        "year": 2026,
+        "month": 11,
+        "day": 12,
+        "hour": 17,
+        "minute": 14,
+        "offset": 0
+      },
+      "explicit": {
+        "year": 2026,
+        "month": 11,
+        "day": 13,
+        "hour": 2,
+        "minute": 14,
+        "offset": -540
+      },
+      "originalMatches": false,
+      "explicitMatches": true
+    },
+    {
+      "name": "new-york-before-spring-forward",
+      "instant": "2026-03-08T06:59:00Z",
+      "processTZ": "UTC",
+      "dagTZ": "Asia/Tokyo",
+      "stepTZ": "America/New_York",
+      "expected": {
+        "day": 8,
+        "hour": 1,
+        "minute": 59,
+        "month": 3,
+        "offset": 300,
+        "year": 2026
+      },
+      "returncode": 0,
+      "original": {
+        "year": 2026,
+        "month": 3,
+        "day": 8,
+        "hour": 6,
+        "minute": 59,
+        "offset": 0
+      },
+      "explicit": {
+        "year": 2026,
+        "month": 3,
+        "day": 8,
+        "hour": 1,
+        "minute": 59,
+        "offset": 300
+      },
+      "originalMatches": false,
+      "explicitMatches": true
+    },
+    {
+      "name": "new-york-after-spring-forward",
+      "instant": "2026-03-08T07:01:00Z",
+      "processTZ": "UTC",
+      "dagTZ": "Asia/Tokyo",
+      "stepTZ": "America/New_York",
+      "expected": {
+        "day": 8,
+        "hour": 3,
+        "minute": 1,
+        "month": 3,
+        "offset": 240,
+        "year": 2026
+      },
+      "returncode": 0,
+      "original": {
+        "year": 2026,
+        "month": 3,
+        "day": 8,
+        "hour": 7,
+        "minute": 1,
+        "offset": 0
+      },
+      "explicit": {
+        "year": 2026,
+        "month": 3,
+        "day": 8,
+        "hour": 3,
+        "minute": 1,
+        "offset": 240
+      },
+      "originalMatches": false,
+      "explicitMatches": true
+    },
+    {
+      "name": "kathmandu-midnight",
+      "instant": "2026-11-12T18:20:00Z",
+      "processTZ": "UTC",
+      "dagTZ": "Asia/Kathmandu",
+      "stepTZ": null,
+      "expected": {
+        "day": 13,
+        "hour": 0,
+        "minute": 5,
+        "month": 11,
+        "offset": -345,
+        "year": 2026
+      },
+      "returncode": 0,
+      "original": {
+        "year": 2026,
+        "month": 11,
+        "day": 12,
+        "hour": 18,
+        "minute": 20,
+        "offset": 0
+      },
+      "explicit": {
+        "year": 2026,
+        "month": 11,
+        "day": 13,
+        "hour": 0,
+        "minute": 5,
+        "offset": -345
+      },
+      "originalMatches": false,
+      "explicitMatches": true
+    },
+    {
+      "name": "inherit-process-zone",
+      "instant": "2026-11-12T17:14:00Z",
+      "processTZ": "Asia/Tokyo",
+      "dagTZ": null,
+      "stepTZ": null,
+      "expected": {
+        "day": 13,
+        "hour": 2,
+        "minute": 14,
+        "month": 11,
+        "offset": -540,
+        "year": 2026
+      },
+      "returncode": 0,
+      "original": {
+        "year": 2026,
+        "month": 11,
+        "day": 13,
+        "hour": 2,
+        "minute": 14,
+        "offset": -540
+      },
+      "explicit": {
+        "year": 2026,
+        "month": 11,
+        "day": 13,
+        "hour": 2,
+        "minute": 14,
+        "offset": -540
+      },
+      "originalMatches": true,
+      "explicitMatches": true
+    }
+  ],
+  "negativeControl": {
+    "expectedHour": 3,
+    "actualHour": 2,
+    "returncode": 1,
+    "resultWritten": false
+  },
+  "contractPassed": true
+}

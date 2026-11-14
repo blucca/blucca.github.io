@@ -1,0 +1,30 @@
+# Linux + GNU date + installed IANA timezone data. No Node.js dependency.
+# Calendar fields come from the formatter's effective TZ; JS Date is unchanged.
+env:
+  - TZ=Asia/Tokyo
+steps:
+  - id: clock
+    # Put the intended step-level TZ override here, on the formatter.
+    run: |
+      date '+{"year":%Y,"month":%-m,"day":%-d,"hour":%-H,"minute":%-M,"offset":"%z","iso":"%Y-%m-%dT%H:%M:%S%:z"}'
+    output: CLOCK
+  - id: today
+    depends: clock
+    action: js.run
+    with:
+      input: ${CLOCK}
+      script: |
+        const c = input;
+        const direction = c.offset[0] === "-" ? -1 : 1;
+        const eastMinutes = direction * (Number(c.offset.slice(1, 3)) * 60 + Number(c.offset.slice(3, 5)));
+        return JSON.stringify({
+          date: `${c.year}-${String(c.month).padStart(2, "0")}-${String(c.day).padStart(2, "0")}`,
+          hour: c.hour,
+          minute: c.minute,
+          timezoneOffset: -eastMinutes,
+          iso: c.iso
+        });
+    output: TODAY
+  - id: print
+    depends: today
+    run: printf '%s\n' "$TODAY"
