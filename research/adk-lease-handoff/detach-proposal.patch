@@ -1,0 +1,65 @@
+--- a/google/adk/runners.py
++++ b/google/adk/runners.py
+@@ -74,6 +74,9 @@
+   from .apps.app import App
+   from .apps.app import ResumabilityConfig
+   from .telemetry.tracing import tracer as tracer
++
++# Proposed public cancellation message: stop this worker, retain resumable calls.
++DETACH_INVOCATION = _CALLER_CLOSED_EARLY_MSG
+ 
+ logger = logging.getLogger('google_adk.' + __name__)
+ 
+@@ -850,6 +853,7 @@
+       self,
+       task: asyncio.Task[None],
+       node_name: str,
++      cancel_message: Any = None,
+   ) -> None:
+     """Cancel the root task if still running, then await it.
+ 
+@@ -867,7 +871,7 @@
+           'Cancelling root node %s (caller stopped early).',
+           node_name,
+       )
+-      task.cancel()
++      task.cancel(cancel_message)
+       cancelled_by_cleanup = True
+     try:
+       await task
+--- a/google/adk/workflow/_node_runner_utils.py
++++ b/google/adk/workflow/_node_runner_utils.py
+@@ -32,6 +32,7 @@
+ from ..events.event import Event
+ from ..sessions.session import Session
+ from ..telemetry import _instrumentation
++from ..utils._runner_utils import _CALLER_CLOSED_EARLY_MSG
+ from ..utils._runner_utils import _run_invocation_lifecycle
+ from ._dynamic_node_scheduler import DynamicNodeScheduler
+ from ._dynamic_node_scheduler import DynamicNodeState
+@@ -288,17 +289,24 @@
+         task = asyncio.create_task(_drive_root_node())
+ 
+         # 4. Main loop: consume events, persist, yield
++        cancel_message = None
+         try:
+           async with aclosing(
+               runner._consume_event_queue(ic, done_sentinel)  # pylint: disable=protected-access
+           ) as agen:
+             async for event in agen:
+               yield event
++        except asyncio.CancelledError as error:
++          cancel_message = error.args[0] if error.args else None
++          raise
++        except GeneratorExit:
++          cancel_message = _CALLER_CLOSED_EARLY_MSG
++          raise
+         finally:
+           # _cleanup_root_task re-raises a root-node Exception (if any) after
+           # the event stream has drained.
+           await runner._cleanup_root_task(  # pylint: disable=protected-access
+-              task, runner.agent.name
++              task, runner.agent.name, cancel_message=cancel_message
+           )
+         if ic.is_aborted:
+           abort_events = await runner._synthesize_abort_events_if_needed(  # pylint: disable=protected-access

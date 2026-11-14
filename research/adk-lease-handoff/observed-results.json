@@ -1,0 +1,351 @@
+{
+  "schema_version": 1,
+  "sdk": "google-adk 2.14.1",
+  "environment": "Python 3.12.3, Linux x86_64",
+  "fixture": "real LlmAgent/FunctionTool/SQLite session and fresh-process resume; deterministic BaseLlm responses; read-only inv-42/12.50 lookup",
+  "live_model_provider_calls": 0,
+  "experimental_api": "DETACH_INVOCATION is added by the two-file source proposal in this lab",
+  "cases": [
+    {
+      "case": "active-close",
+      "method": "stock public aclose while next is active; ordinary cancel for cleanup",
+      "parent_invocation_id": "e-8e21e666-b26b-4855-aca7-4eab129d7092",
+      "child_map": {
+        "parent_call_id": "call-nested_invoice",
+        "session_id": "child-42",
+        "invocation_id": "e-0b225e70-c59a-4e92-bcb5-72f44b6b349b"
+      },
+      "phases": {
+        "A": {
+          "process_id": 30332,
+          "abort_events": {
+            "lease_parent": 1,
+            "lease_child": 1
+          },
+          "original_calls": {
+            "lease_parent": [
+              {
+                "name": "nested_invoice",
+                "id": "call-nested_invoice"
+              }
+            ],
+            "lease_child": [
+              {
+                "name": "fetch_invoice",
+                "id": "call-fetch_invoice"
+              }
+            ]
+          },
+          "finals": [],
+          "close_error": "aclose(): asynchronous generator is already running",
+          "fetch_entries": 1,
+          "fetch_returns": 0
+        },
+        "B": {
+          "process_id": 30334,
+          "abort_events": {
+            "lease_parent": 1,
+            "lease_child": 1
+          },
+          "original_calls": {
+            "lease_parent": [
+              {
+                "name": "nested_invoice",
+                "id": "call-nested_invoice"
+              }
+            ],
+            "lease_child": [
+              {
+                "name": "fetch_invoice",
+                "id": "call-fetch_invoice"
+              }
+            ]
+          },
+          "finals": [
+            {
+              "error": "Invocation was aborted by client."
+            }
+          ],
+          "close_error": null,
+          "fetch_entries": 0,
+          "fetch_returns": 0
+        }
+      },
+      "distinct_worker_processes": true,
+      "original_invocation_ids_preserved": true
+    },
+    {
+      "case": "patched-detach",
+      "method": "source proposal explicit DETACH_INVOCATION",
+      "parent_invocation_id": "e-69112eba-ec58-41b3-a39f-a380b0462368",
+      "child_map": {
+        "parent_call_id": "call-nested_invoice",
+        "session_id": "child-42",
+        "invocation_id": "e-cfc86e61-ecd3-49dd-8a75-5b22593cb416"
+      },
+      "phases": {
+        "A": {
+          "process_id": 30341,
+          "abort_events": {
+            "lease_parent": 0,
+            "lease_child": 0
+          },
+          "original_calls": {
+            "lease_parent": [
+              {
+                "name": "nested_invoice",
+                "id": "call-nested_invoice"
+              }
+            ],
+            "lease_child": [
+              {
+                "name": "fetch_invoice",
+                "id": "call-fetch_invoice"
+              }
+            ]
+          },
+          "finals": [],
+          "close_error": null,
+          "fetch_entries": 1,
+          "fetch_returns": 0
+        },
+        "B": {
+          "process_id": 30343,
+          "abort_events": {
+            "lease_parent": 0,
+            "lease_child": 0
+          },
+          "original_calls": {
+            "lease_parent": [
+              {
+                "name": "nested_invoice",
+                "id": "call-nested_invoice"
+              }
+            ],
+            "lease_child": [
+              {
+                "name": "fetch_invoice",
+                "id": "call-fetch_invoice"
+              }
+            ]
+          },
+          "finals": [
+            {
+              "invoice_id": "inv-42",
+              "total": "12.50"
+            }
+          ],
+          "close_error": null,
+          "fetch_entries": 1,
+          "fetch_returns": 1
+        }
+      },
+      "distinct_worker_processes": true,
+      "original_invocation_ids_preserved": true
+    },
+    {
+      "case": "patched-plain",
+      "method": "source proposal ordinary task cancellation",
+      "parent_invocation_id": "e-93eb58e6-3253-49bc-8afe-dc2b462026da",
+      "child_map": {
+        "parent_call_id": "call-nested_invoice",
+        "session_id": "child-42",
+        "invocation_id": "e-aeef75a1-1586-4187-9318-453694bd3d30"
+      },
+      "phases": {
+        "A": {
+          "process_id": 30337,
+          "abort_events": {
+            "lease_parent": 1,
+            "lease_child": 1
+          },
+          "original_calls": {
+            "lease_parent": [
+              {
+                "name": "nested_invoice",
+                "id": "call-nested_invoice"
+              }
+            ],
+            "lease_child": [
+              {
+                "name": "fetch_invoice",
+                "id": "call-fetch_invoice"
+              }
+            ]
+          },
+          "finals": [],
+          "close_error": null,
+          "fetch_entries": 1,
+          "fetch_returns": 0
+        },
+        "B": {
+          "process_id": 30339,
+          "abort_events": {
+            "lease_parent": 1,
+            "lease_child": 1
+          },
+          "original_calls": {
+            "lease_parent": [
+              {
+                "name": "nested_invoice",
+                "id": "call-nested_invoice"
+              }
+            ],
+            "lease_child": [
+              {
+                "name": "fetch_invoice",
+                "id": "call-fetch_invoice"
+              }
+            ]
+          },
+          "finals": [
+            {
+              "error": "Invocation was aborted by client."
+            }
+          ],
+          "close_error": null,
+          "fetch_entries": 0,
+          "fetch_returns": 0
+        }
+      },
+      "distinct_worker_processes": true,
+      "original_invocation_ids_preserved": true
+    },
+    {
+      "case": "plain",
+      "method": "stock ordinary task cancellation",
+      "parent_invocation_id": "e-8d6a1c40-42b3-4772-bfe6-9f52ce0a9617",
+      "child_map": {
+        "parent_call_id": "call-nested_invoice",
+        "session_id": "child-42",
+        "invocation_id": "e-0e91f758-8afa-41f3-b4e8-d78b6c11c3a2"
+      },
+      "phases": {
+        "A": {
+          "process_id": 30304,
+          "abort_events": {
+            "lease_parent": 1,
+            "lease_child": 1
+          },
+          "original_calls": {
+            "lease_parent": [
+              {
+                "name": "nested_invoice",
+                "id": "call-nested_invoice"
+              }
+            ],
+            "lease_child": [
+              {
+                "name": "fetch_invoice",
+                "id": "call-fetch_invoice"
+              }
+            ]
+          },
+          "finals": [],
+          "close_error": null,
+          "fetch_entries": 1,
+          "fetch_returns": 0
+        },
+        "B": {
+          "process_id": 30325,
+          "abort_events": {
+            "lease_parent": 1,
+            "lease_child": 1
+          },
+          "original_calls": {
+            "lease_parent": [
+              {
+                "name": "nested_invoice",
+                "id": "call-nested_invoice"
+              }
+            ],
+            "lease_child": [
+              {
+                "name": "fetch_invoice",
+                "id": "call-fetch_invoice"
+              }
+            ]
+          },
+          "finals": [
+            {
+              "error": "Invocation was aborted by client."
+            }
+          ],
+          "close_error": null,
+          "fetch_entries": 0,
+          "fetch_returns": 0
+        }
+      },
+      "distinct_worker_processes": true,
+      "original_invocation_ids_preserved": true
+    },
+    {
+      "case": "private",
+      "method": "stock private early-close message",
+      "parent_invocation_id": "e-f8545e7c-b7e7-483c-b71f-fcb9b7e90f94",
+      "child_map": {
+        "parent_call_id": "call-nested_invoice",
+        "session_id": "child-42",
+        "invocation_id": "e-1d79676d-7990-41b2-9f2d-07288328eca6"
+      },
+      "phases": {
+        "A": {
+          "process_id": 30328,
+          "abort_events": {
+            "lease_parent": 0,
+            "lease_child": 1
+          },
+          "original_calls": {
+            "lease_parent": [
+              {
+                "name": "nested_invoice",
+                "id": "call-nested_invoice"
+              }
+            ],
+            "lease_child": [
+              {
+                "name": "fetch_invoice",
+                "id": "call-fetch_invoice"
+              }
+            ]
+          },
+          "finals": [],
+          "close_error": null,
+          "fetch_entries": 1,
+          "fetch_returns": 0
+        },
+        "B": {
+          "process_id": 30330,
+          "abort_events": {
+            "lease_parent": 0,
+            "lease_child": 1
+          },
+          "original_calls": {
+            "lease_parent": [
+              {
+                "name": "nested_invoice",
+                "id": "call-nested_invoice"
+              }
+            ],
+            "lease_child": [
+              {
+                "name": "fetch_invoice",
+                "id": "call-fetch_invoice"
+              }
+            ]
+          },
+          "finals": [
+            {
+              "error": "Invocation was aborted by client."
+            }
+          ],
+          "close_error": null,
+          "fetch_entries": 0,
+          "fetch_returns": 0
+        }
+      },
+      "distinct_worker_processes": true,
+      "original_invocation_ids_preserved": true
+    }
+  ]
+}
