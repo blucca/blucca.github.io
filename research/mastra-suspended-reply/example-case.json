@@ -1,0 +1,9 @@
+{
+  "api": "http://127.0.0.1:4111/api",
+  "agentId": "approval-fixture",
+  "threadId": "YOUR_EXISTING_THREAD_ID",
+  "resourceId": "YOUR_RESOURCE_ID",
+  "pendingSignalId": "SIGNAL_ID_FROM_THE_QUEUED_APPROVAL_RESPONSE",
+  "message": "I approve the fixture",
+  "expectedText": "FIXTURE_FINAL_REPLY"
+}
