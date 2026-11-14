@@ -1,0 +1,111 @@
+{
+  "python": "3.14.8",
+  "platform": "Linux x86_64",
+  "pydantic_ai_slim": "2.68.0",
+  "pydantic": "2.13.5",
+  "scope": "two sequential JSON-mapping tools: stock, content-only helper control, fresh tool return",
+  "stock": {
+    "agent_output": "done",
+    "model_reads": [
+      {
+        "order_ids": [
+          "invoice-42"
+        ]
+      },
+      {
+        "order_ids": [
+          "invoice-42",
+          "invoice-43"
+        ]
+      }
+    ],
+    "persisted_first_return": {
+      "order_ids": [
+        "invoice-42",
+        "invoice-43"
+      ]
+    },
+    "application_state": {
+      "order_ids": [
+        "invoice-42",
+        "invoice-43"
+      ]
+    },
+    "control_helper_calls": [],
+    "direct_envelope_control": null
+  },
+  "snapshot_control": {
+    "agent_output": "done",
+    "model_reads": [
+      {
+        "order_ids": [
+          "invoice-42"
+        ]
+      },
+      {
+        "order_ids": [
+          "invoice-42"
+        ]
+      }
+    ],
+    "persisted_first_return": {
+      "order_ids": [
+        "invoice-42"
+      ]
+    },
+    "application_state": {
+      "order_ids": [
+        "invoice-42",
+        "invoice-43"
+      ]
+    },
+    "control_helper_calls": [
+      {
+        "tool": "read_orders",
+        "call_id": "read-1"
+      },
+      {
+        "tool": "append_order",
+        "call_id": "mutate-2"
+      }
+    ],
+    "direct_envelope_control": {
+      "frozen_json_content": {
+        "order_ids": [
+          "invoice-42"
+        ]
+      },
+      "metadata_same_object": true,
+      "user_content_same_object": true,
+      "tools_same_object": true
+    }
+  },
+  "application_return_copy": {
+    "agent_output": "done",
+    "model_reads": [
+      {
+        "order_ids": [
+          "invoice-42"
+        ]
+      },
+      {
+        "order_ids": [
+          "invoice-42"
+        ]
+      }
+    ],
+    "persisted_first_return": {
+      "order_ids": [
+        "invoice-42"
+      ]
+    },
+    "application_state": {
+      "order_ids": [
+        "invoice-42",
+        "invoice-43"
+      ]
+    },
+    "control_helper_calls": [],
+    "direct_envelope_control": null
+  }
+}

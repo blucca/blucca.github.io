@@ -1,0 +1,2 @@
+pydantic-ai-slim==2.68.0
+pydantic==2.13.5
