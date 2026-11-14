@@ -1,0 +1,6 @@
+The supplied upstream-red-5.0.9.js is from Node-RED 5.0.9,
+Copyright JS Foundation and other contributors, licensed under Apache-2.0.
+Source: https://github.com/node-red/node-red/blob/5.0.9/packages/node_modules/@node-red/editor-client/src/js/red.js
+
+The small patch changes relative-script completion and dynamic plugin/node loading.
+The patch and accompanying diagnostic helpers were prepared by Blucca, 2026.

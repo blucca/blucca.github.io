@@ -1,0 +1,68 @@
+--- a/packages/node_modules/@node-red/editor-client/src/js/red.js
++++ b/packages/node_modules/@node-red/editor-client/src/js/red.js
+@@ -14,6 +14,8 @@
+  * limitations under the License.
+  **/
+ var RED = (function() {
++    // Dynamic node definitions depend on the preceding plugin notification's scripts.
++    var pendingPluginLoads = Promise.resolve();
+ 
+ 
+     function loadPluginList() {
+@@ -116,7 +118,7 @@
+             let hasDeferred = false;
+             scripts.each(function (i, el) {
+                 const srcUrl = $(el).attr("src");
+-                if (srcUrl && !/^\s*(https?:|\/|\.)/.test(srcUrl)) {
++                if (srcUrl && !/^\s*(https?:|\/)/.test(srcUrl)) {
+                     $(el).remove();
+ 
+                     if ($(el).attr("data-sync") === "true") {
+@@ -181,12 +183,14 @@
+     }
+ 
+     function appendNodeConfig(nodeConfig,done) {
+-        appendConfig(
+-            nodeConfig,
+-            /<!-- --- \[red-module:(\S+)\] --- -->/.exec(nodeConfig.trim()),
+-            "#red-ui-editor-node-configs",
+-            done
+-        );
++        pendingPluginLoads.then(function() {
++            appendConfig(
++                nodeConfig,
++                /<!-- --- \[red-module:(\S+)\] --- -->/.exec(nodeConfig.trim()),
++                "#red-ui-editor-node-configs",
++                done
++            );
++        });
+     }
+ 
+     function loadNodeList() {
+@@ -591,6 +595,14 @@
+         })
+         RED.comms.subscribe("notification/plugin/#",function(topic,msg) {
+             if (topic == "notification/plugin/added") {
++                var finishLoading;
++                var pluginsLoaded = new Promise(function(resolve) { finishLoading = resolve; });
++                pendingPluginLoads = Promise.all([pendingPluginLoads, pluginsLoaded]);
++                var remaining = msg.length;
++                function finishPlugin() {
++                    if (--remaining === 0) { finishLoading(); }
++                }
++                if (remaining === 0) { finishLoading(); }
+                 RED.settings.refreshSettings(function(err, data) {
+                     let addedPlugins = [];
+                     msg.forEach(function(m) {
+@@ -611,8 +623,9 @@
+                                 cache: false,
+                                 url: 'plugins/'+id,
+                                 success: function(data) {
+-                                    appendPluginConfig(data);
+-                                }
++                                    appendPluginConfig(data, finishPlugin);
++                                },
++                                error: finishPlugin
+                             });
+                         });
+                     });

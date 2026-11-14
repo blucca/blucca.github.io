@@ -1,0 +1,209 @@
+{
+  "measuredOn": "2026-11-14",
+  "environment": {
+    "nodeRed": "5.0.9",
+    "uibuilder": "7.7.4",
+    "node": "24.21.0",
+    "os": "Linux x86_64",
+    "browser": "Chrome"
+  },
+  "contract": "Complete the editor plugin module before appending dependent node definitions during an online installation.",
+  "sourceIssue": "https://github.com/node-red/node-red/issues/6082",
+  "sourceRevision": "5.0.9",
+  "sourceCheck": {
+    "stockExitCode": 1,
+    "patchedExitCode": 0
+  },
+  "cases": [
+    {
+      "case": "stock",
+      "phase": "complete",
+      "installationHttpStatus": 200,
+      "moduleDelayMs": 0,
+      "sharedNamespaceErrorCount": 11,
+      "sharedNamespaceErrors": [
+        "Cannot read properties of undefined (reading 'log')",
+        "Cannot read properties of undefined (reading 'log')",
+        "Cannot read properties of undefined (reading 'paletteCategory')",
+        "Cannot read properties of undefined (reading 'log')",
+        "Cannot read properties of undefined (reading 'editorUibInstances')",
+        "Cannot read properties of undefined (reading 'paletteCategory')",
+        "Cannot read properties of undefined (reading 'editorUibInstances')",
+        "Cannot read properties of undefined (reading 'log')",
+        "Cannot read properties of undefined (reading 'log')",
+        "Cannot read properties of undefined (reading 'paletteCategory')",
+        "Cannot read properties of undefined (reading 'paletteCategory')"
+      ],
+      "registeredNodeTypes": [],
+      "nodeRegistrationsAfterModuleLoad": false,
+      "remainingErrors": [
+        {
+          "message": "Cannot read properties of undefined (reading 'javascriptDefaults')",
+          "source": "resources/node-red-contrib-uibuilder/editor-common.js:449"
+        }
+      ],
+      "events": [
+        {
+          "kind": "plugin-register-start",
+          "id": "uib-editor-plugin",
+          "atMsAfterNotification": 119
+        },
+        {
+          "kind": "plugin-script-loaded",
+          "id": "<origin>/resources/node-red-contrib-uibuilder/editor-common.js",
+          "atMsAfterNotification": 127
+        }
+      ]
+    },
+    {
+      "case": "patched",
+      "phase": "complete",
+      "installationHttpStatus": 200,
+      "moduleDelayMs": 600,
+      "sharedNamespaceErrorCount": 0,
+      "sharedNamespaceErrors": [],
+      "registeredNodeTypes": [
+        "markweb",
+        "uibuilder",
+        "uib-cache",
+        "uib-element",
+        "uib-file-list",
+        "uib-html",
+        "uib-save",
+        "uib-sender",
+        "uib-sidebar",
+        "uib-tag",
+        "uib-update"
+      ],
+      "nodeRegistrationsAfterModuleLoad": true,
+      "remainingErrors": [
+        {
+          "message": "Cannot read properties of undefined (reading 'javascriptDefaults')",
+          "source": "resources/node-red-contrib-uibuilder/editor-common.js:449"
+        }
+      ],
+      "events": [
+        {
+          "kind": "plugin-register-start",
+          "id": "uib-editor-plugin",
+          "atMsAfterNotification": 688
+        },
+        {
+          "kind": "plugin-script-loaded",
+          "id": "<origin>/resources/node-red-contrib-uibuilder/editor-common.js",
+          "atMsAfterNotification": 714
+        },
+        {
+          "kind": "node-register-start",
+          "id": "uib-html",
+          "atMsAfterNotification": 750
+        },
+        {
+          "kind": "node-register-done",
+          "id": "uib-html",
+          "atMsAfterNotification": 754
+        },
+        {
+          "kind": "node-register-start",
+          "id": "uib-cache",
+          "atMsAfterNotification": 754
+        },
+        {
+          "kind": "node-register-done",
+          "id": "uib-cache",
+          "atMsAfterNotification": 756
+        },
+        {
+          "kind": "node-register-start",
+          "id": "markweb",
+          "atMsAfterNotification": 756
+        },
+        {
+          "kind": "node-register-done",
+          "id": "markweb",
+          "atMsAfterNotification": 758
+        },
+        {
+          "kind": "node-register-start",
+          "id": "uib-file-list",
+          "atMsAfterNotification": 760
+        },
+        {
+          "kind": "node-register-done",
+          "id": "uib-file-list",
+          "atMsAfterNotification": 761
+        },
+        {
+          "kind": "node-register-start",
+          "id": "uibuilder",
+          "atMsAfterNotification": 763
+        },
+        {
+          "kind": "node-register-done",
+          "id": "uibuilder",
+          "atMsAfterNotification": 767
+        },
+        {
+          "kind": "node-register-start",
+          "id": "uib-element",
+          "atMsAfterNotification": 768
+        },
+        {
+          "kind": "node-register-done",
+          "id": "uib-element",
+          "atMsAfterNotification": 771
+        },
+        {
+          "kind": "node-register-start",
+          "id": "uib-save",
+          "atMsAfterNotification": 772
+        },
+        {
+          "kind": "node-register-done",
+          "id": "uib-save",
+          "atMsAfterNotification": 775
+        },
+        {
+          "kind": "node-register-start",
+          "id": "uib-update",
+          "atMsAfterNotification": 776
+        },
+        {
+          "kind": "node-register-done",
+          "id": "uib-update",
+          "atMsAfterNotification": 778
+        },
+        {
+          "kind": "node-register-start",
+          "id": "uib-sender",
+          "atMsAfterNotification": 779
+        },
+        {
+          "kind": "node-register-done",
+          "id": "uib-sender",
+          "atMsAfterNotification": 781
+        },
+        {
+          "kind": "node-register-start",
+          "id": "uib-tag",
+          "atMsAfterNotification": 782
+        },
+        {
+          "kind": "node-register-done",
+          "id": "uib-tag",
+          "atMsAfterNotification": 784
+        },
+        {
+          "kind": "node-register-start",
+          "id": "uib-sidebar",
+          "atMsAfterNotification": 785
+        },
+        {
+          "kind": "node-register-done",
+          "id": "uib-sidebar",
+          "atMsAfterNotification": 787
+        }
+      ]
+    }
+  ]
+}
