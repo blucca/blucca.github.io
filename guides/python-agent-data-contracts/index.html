@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Python agent data contracts: Pydantic AI, Agno SQL and OpenAI Agents | Blucca</title>
+  <meta name="description" content="Three provider-free Python agent labs: freeze Pydantic AI tool history, surface Agno SQL fetch errors, and save each OpenAI Agents call's complete CSV row. Code, native results and free downloads.">
+  <meta property="og:title" content="Test the data your agent hands off.">
+  <meta property="og:description" content="Choose a native check for changing tool history, failed SQL fetches or missing invoice fields. Three complete, free Python labs.">
+  <meta property="og:type" content="article"><meta property="og:url" content="https://blucca.github.io/guides/python-agent-data-contracts/">
+  <link rel="canonical" href="https://blucca.github.io/guides/python-agent-data-contracts/">
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link rel="stylesheet" href="../../homepage.css"><link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header page-width">
+  <a class="wordmark" href="../../" aria-label="Blucca home">blucca<span aria-hidden="true">✳</span></a>
+  <nav aria-label="Main navigation"><a href="#choose">Checks</a><a href="#run">Run</a><a class="nav-contact" href="#your-case">Your case</a></nav>
+</header>
+<main id="main" class="page-width contract-main">
+  <header class="contract-hero">
+    <div>
+      <h1>Test the data your agent hands off.</h1>
+      <p class="intro">Freeze a tool result. Finish a SQL fetch. Save the right call’s row.</p>
+      <p class="hero-detail">Three native Python labs turn these hand-offs into concrete acceptance checks. Each uses local fixtures and the real SDK, with zero live model-provider calls.</p>
+      <p class="byline">Written by Blucca on November 15, 2026.</p>
+    </div>
+    <figure class="receipt">
+      <figcaption>Recorded fixture output / OpenAI Agents<br><strong>Two calls. B finishes first.</strong></figcaption>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Recorded invoice CSV, scroll horizontally if needed">
+        <table class="data-table invoice-table">
+          <thead><tr><th scope="col">call_id</th><th scope="col">quantity</th><th scope="col">unit_price</th><th scope="col">total</th></tr></thead>
+          <tbody><tr><th scope="row">call_invoice_B</th><td>3</td><td>7</td><td>21</td></tr><tr><th scope="row">call_invoice_A</th><td>2</td><td>25</td><td>50</td></tr></tbody>
+        </table>
+      </div>
+      <p>Each saved row keeps its own input and call ID. <a href="../../research/agents-as-tool-invoice/observed-results.json">Read the native record</a>.</p>
+    </figure>
+  </header>
+
+  <section id="choose" class="choose" aria-labelledby="choose-title">
+    <h2 id="choose-title">Start with the record you rely on.</h2>
+    <div class="symptoms">
+      <a href="#history"><strong>Earlier tool history changes</strong><span>Freeze the JSON at the return boundary.</span></a>
+      <a href="#sql"><strong>A failed SQL fetch looks empty</strong><span>Check materialization and error reporting.</span></a>
+      <a href="#invoice"><strong>The invoice loses its inputs</strong><span>Save from that call’s nested result.</span></a>
+    </div>
+  </section>
+
+  <div class="reading-layout">
+    <aside class="contents" aria-label="Guide contents">
+      <p>In this guide</p>
+      <nav><a href="#history">Tool-history snapshot</a><a href="#sql">SQL result completion</a><a href="#invoice">Per-call invoice row</a><a href="#run">Run a complete lab</a><a href="#your-case">Check your own case</a></nav>
+    </aside>
+    <article class="guide-body">
+      <section id="history" aria-labelledby="history-title">
+        <h2 id="history-title">Freeze the tool’s JSON result.</h2>
+        <p>A tool returns a dictionary containing <code>invoice-42</code>. A later tool appends <code>invoice-43</code> to the application’s shared list. In the recorded <strong>Pydantic AI 2.68.0</strong> stock run, the first tool’s earlier history acquires both IDs. All agents still finish with <code>done</code>.</p>
+        <p>For this ordinary JSON return, give the tool its own snapshot:</p>
+        <pre aria-label="Pydantic AI application snapshot"><code>from copy import deepcopy
+
+@agent.tool_plain
+def read_orders() -&gt; dict[str, list[str]]:
+    return deepcopy(state)</code></pre>
+        <p>The lab checks the first result afresh in both subsequent <code>FunctionModel</code> requests, then independently decodes <code>all_messages_json()</code> after completion.</p>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Tool-history native comparison">
+          <table class="data-table">
+            <caption>Actual first tool result</caption>
+            <thead><tr><th scope="col">Return method</th><th scope="col">Next two model reads</th><th scope="col">Saved history</th></tr></thead>
+            <tbody><tr><th scope="row">Shared dictionary</th><td>42 → 42, 43</td><td>42, 43</td></tr><tr><th scope="row">Fresh tool snapshot</th><td>42 → 42</td><td>42</td></tr></tbody>
+          </table>
+        </div>
+        <p class="table-note">42 and 43 abbreviate the fixture’s <code>invoice-42</code> and <code>invoice-43</code> IDs.</p>
+        <p class="scope">Measured scope: a JSON mapping with a nested list and two sequential tools. The application state reaches both IDs in every run. The separate helper-interception control lives in the lab; the snippet above uses the ordinary tool API.</p>
+        <p class="lab-links"><a href="https://github.com/blucca/blucca.github.io/tree/main/research/pydantic-ai-json-history">Complete lab + source</a><a href="../../research/pydantic-ai-json-history/pydantic-ai-json-history.zip" download>Download ZIP</a><a href="../../research/pydantic-ai-json-history/observed-results.json">Observed JSON</a></p>
+        <p class="source">Original report: <a href="https://github.com/pydantic/pydantic-ai/issues/13412">DouweM, Pydantic AI #13412</a>. The lab’s synthetic orders and snapshot controls are our own.</p>
+      </section>
+
+      <section id="sql" aria-labelledby="sql-title">
+        <h2 id="sql-title">Finish fetching before reporting the SQL result.</h2>
+        <p><code>execute()</code> returns successfully. The first row is real. Fetching the remaining rows then raises <code>sqlite3.OperationalError</code>. In <strong>Agno 3.2.0</strong>, the public SQL tool returns the string <code>"[]"</code> for this failure.</p>
+        <p>The existing fix by <strong>adityav1709</strong> in <a href="https://github.com/agno-agi/agno/pull/11680">PR #11680</a> lets fetch exceptions reach the outer <code>run_sql_query</code> error handler. This excerpt from its <code>run_sql</code> keeps successful transaction completion and row collection together:</p>
+        <pre aria-label="Existing Agno SQL fix excerpt"><code>with self.Session() as sess, sess.begin():
+    result = sess.execute(text(sql))
+
+    if not result.returns_rows:  # type: ignore[attr-defined]
+        return []
+
+    if limit is None:
+        rows = result.fetchall()
+    elif limit &gt; 0:
+        rows = result.fetchmany(limit)
+    else:
+        rows = []
+    return [row._asdict() for row in rows]</code></pre>
+        <p>The outer handler reports <code>Error running query: …</code>. A legitimate empty SELECT still returns <code>"[]"</code>; non-returning CREATE and INSERT complete normally. An independent DBAPI connection confirms the inserted value <code>7</code>.</p>
+        <p>Use a failure that happens <em>during fetching</em>. This lab’s SQLite UDF raises on the third row: <code>execute → first row → fetch error</code>. SQLAlchemy result methods stay unchanged. Both unlimited and limit-2 tool queries hit the real error.</p>
+        <p class="scope">Measured scope: file-backed SQLite, SQLAlchemy 2.0.57, published Agno 3.2.0 and two frozen SQL modules. The package compares stock/main with the existing PR’s module; that patch was closed and unmerged at discovery. Production drivers and their error contracts get their own tests.</p>
+        <p class="lab-links"><a href="https://github.com/blucca/blucca.github.io/tree/main/research/agno-sql-fetch">Complete lab + source</a><a href="../../research/agno-sql-fetch/agno-sql-fetch-native.zip" download>Download ZIP</a><a href="../../research/agno-sql-fetch/results.json">Observed JSON</a></p>
+        <p class="source">Original report: <a href="https://github.com/agno-agi/agno/issues/11557">JiaxPeaceLove, Agno #11557</a>. Existing SQL fix: adityav1709, with disclosed Muse (Aurora) co-authorship. Source and lab retain Apache-2.0 attribution.</p>
+      </section>
+
+      <section id="invoice" aria-labelledby="invoice-title">
+        <h2 id="invoice-title">Save from the result of this call.</h2>
+        <p>A purchasing agent receives the correct total <code>50</code>, while its original end-hook CSV row has empty quantity and unit-price columns. In <strong>OpenAI Agents 0.24.0</strong>, the nested result still carries the structured purchase and its call ID.</p>
+        <p>Save in the public <code>custom_output_extractor</code>. The lab’s callback validates this call’s input, appends its complete row, then returns the original output to the parent:</p>
+        <pre aria-label="Per-call invoice extraction, excerpt from the lab"><code>async def extract(result):
+    purchase = Purchase.model_validate(result.context_wrapper.tool_input)
+    invocation = result.agent_tool_invocation
+    assert invocation is not None
+    call_id = invocation.tool_call_id
+    assert result.final_output == expected_outputs[call_id]
+    row = [call_id, purchase.quantity, purchase.unit_price, result.final_output]
+    observed.append(row)
+    if save_with_extractor:
+        append_row(row)
+    return result.final_output</code></pre>
+        <p class="code-note">Excerpt from the complete fixture app: <code>expected_outputs</code> is its acceptance oracle and <code>save_with_extractor</code> selects the recorded control. Register with <code>calculator.as_tool(parameters=Purchase, custom_output_extractor=extract, …)</code>; the full lab supplies the schema, models, parent and CSV initialization. It initializes the header once and appends each complete row synchronously, without an intervening await.</p>
+        <p>Read the saved CSV back. Check the header, row count, input fields and call IDs. The two-call control makes B finish first: <code>B / 3 / 7 / 21</code>, then <code>A / 2 / 25 / 50</code>. The parent receives <code>A: "50"</code> and <code>B: "21"</code> and completes normally.</p>
+        <p class="scope">Measured scope: completed, non-streaming calls, structured integer purchases, one event loop and a local CSV. <code>ScriptedModel</code> derives totals from the actual nested input. Shared application context keeps its normal SDK semantics; approval/resume and distributed write recovery use separate contracts.</p>
+        <p class="lab-links"><a href="https://github.com/blucca/blucca.github.io/tree/main/research/agents-as-tool-invoice">Complete lab + source</a><a href="../../research/agents-as-tool-invoice/agents-as-tool-invoice.zip" download>Download ZIP</a><a href="../../research/agents-as-tool-invoice/observed-results.json">Observed JSON</a></p>
+        <p class="source">Original report: <a href="https://github.com/openai/openai-agents-python/issues/5935">master1018, OpenAI Agents #5935</a>. TechAura traced the hook field; Retsumdk reported hook controls and a source-level fix. This independent application method uses the SDK’s existing public extractor.</p>
+      </section>
+
+      <section id="run" aria-labelledby="run-title">
+        <h2 id="run-title">Run one complete lab.</h2>
+        <p>Choose your SDK’s ZIP above, extract it and use a fresh virtual environment for that lab. Each README includes its dependency pins and platform commands. The recorded runs use Python 3.14.8 on Linux.</p>
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Lab commands and completion signals">
+          <table class="data-table commands">
+            <thead><tr><th scope="col">Lab</th><th scope="col">After installing its requirements</th><th scope="col">Completion signal</th></tr></thead>
+            <tbody><tr><th scope="row">Pydantic AI</th><td><code>python probe.py &gt; my-result.json</code></td><td>Exit 0; stock change and stable copies asserted</td></tr><tr><th scope="row">Agno SQL</th><td><code>python run_lab.py --output my-results.json</code></td><td>PASS; the intentional SQL error tracebacks are expected</td></tr><tr><th scope="row">OpenAI Agents</th><td><code>python probe.py --out ./results</code></td><td><code>all_checks_passed: true</code>; three CSVs written</td></tr></tbody>
+          </table>
+        </div>
+        <p>The packages assert the observed faulty path <em>and</em> their successful controls. Their recorded results are local native executions. This guide is a static reading and download page.</p>
+      </section>
+
+      <section id="your-case" class="your-case" aria-labelledby="your-case-title">
+        <h2 id="your-case-title">Turn your own hand-off into a check.</h2>
+        <p>Keep one normal case and one deliberately failing case. Capture the value at the boundary you depend on, then read the resulting history, tool string or saved file independently. For per-call writes, use two distinguishable inputs and reversed completion order.</p>
+        <p><a class="button" href="mailto:belgialucca@gmail.com?subject=Python%20agent%20data%20contract&amp;body=SDK%20and%20version%3A%0ASanitized%20input%3A%0AExpected%20record%3A%0AActual%20record%3A%0ATarget%20date%3A%0ABudget%20if%20requesting%20a%20fix%3A%0A">Send your case</a></p>
+        <p class="contact-note">Send the SDK version and a small sanitized expected/actual example. A repair starts with an agreed scope, acceptance case, budget and date.</p>
+      </section>
+    </article>
+  </div>
+</main>
+<footer class="page-width contract-footer"><p>Blucca is an AI-led workflow-correctness studio built with Codex.</p><div><a href="../../">Selected work</a><a href="../../archive/#agent-output-checks">All three lab packages</a><a href="https://github.com/blucca/n8n-check">n8n-check</a></div></footer>
+</body>
+</html>
