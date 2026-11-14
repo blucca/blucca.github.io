@@ -1,0 +1,545 @@
+{
+  "all_checks_passed": true,
+  "runtime": {
+    "python": "3.14.8",
+    "platform": "Linux-7.2.11-arch1-1-x86_64-with-glibc2.44",
+    "langgraph": "1.2.19",
+    "langgraph-prebuilt": "1.1.1",
+    "langgraph-checkpoint": "4.3.1",
+    "langchain-core": "1.7.4"
+  },
+  "scope": "Published SDK; BaseChatModel fixture; no live model or HTTP calls; latest complete local tool batch",
+  "stock": {
+    "engine_completed": true,
+    "checkpoint": [
+      {
+        "type": "human",
+        "tool_call_id": null,
+        "tool_calls": [],
+        "content": "show me Paris"
+      },
+      {
+        "type": "ai",
+        "tool_call_id": null,
+        "tool_calls": [
+          "call_1",
+          "call_2"
+        ],
+        "content": ""
+      },
+      {
+        "type": "tool",
+        "tool_call_id": "call_1",
+        "tool_calls": [],
+        "content": "image attached"
+      },
+      {
+        "type": "human",
+        "tool_call_id": null,
+        "tool_calls": [],
+        "content": "[image of Paris]"
+      },
+      {
+        "type": "tool",
+        "tool_call_id": "call_2",
+        "tool_calls": [],
+        "content": "18C in Paris"
+      },
+      {
+        "type": "ai",
+        "tool_call_id": null,
+        "tool_calls": [],
+        "content": "done"
+      }
+    ],
+    "next_turn_local_error": "Local request-boundary contract failed: [{'expected_adjacent_ids': ['call_1', 'call_2'], 'actual_adjacent_ids': ['call_1']}]",
+    "model_requests": [
+      {
+        "messages": [
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "show me Paris"
+          }
+        ],
+        "violations": []
+      },
+      {
+        "messages": [
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "show me Paris"
+          },
+          {
+            "type": "ai",
+            "tool_call_id": null,
+            "tool_calls": [
+              "call_1",
+              "call_2"
+            ],
+            "content": ""
+          },
+          {
+            "type": "tool",
+            "tool_call_id": "call_1",
+            "tool_calls": [],
+            "content": "image attached"
+          },
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "[image of Paris]"
+          },
+          {
+            "type": "tool",
+            "tool_call_id": "call_2",
+            "tool_calls": [],
+            "content": "18C in Paris"
+          }
+        ],
+        "violations": [
+          {
+            "expected_adjacent_ids": [
+              "call_1",
+              "call_2"
+            ],
+            "actual_adjacent_ids": [
+              "call_1"
+            ]
+          }
+        ]
+      },
+      {
+        "messages": [
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "show me Paris"
+          },
+          {
+            "type": "ai",
+            "tool_call_id": null,
+            "tool_calls": [
+              "call_1",
+              "call_2"
+            ],
+            "content": ""
+          },
+          {
+            "type": "tool",
+            "tool_call_id": "call_1",
+            "tool_calls": [],
+            "content": "image attached"
+          },
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "[image of Paris]"
+          },
+          {
+            "type": "tool",
+            "tool_call_id": "call_2",
+            "tool_calls": [],
+            "content": "18C in Paris"
+          },
+          {
+            "type": "ai",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "done"
+          },
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "confirm saved results"
+          }
+        ],
+        "violations": [
+          {
+            "expected_adjacent_ids": [
+              "call_1",
+              "call_2"
+            ],
+            "actual_adjacent_ids": [
+              "call_1"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "fixed": {
+    "checkpoint": [
+      {
+        "type": "human",
+        "tool_call_id": null,
+        "tool_calls": [],
+        "content": "show me Paris"
+      },
+      {
+        "type": "ai",
+        "tool_call_id": null,
+        "tool_calls": [
+          "call_1",
+          "call_2"
+        ],
+        "content": ""
+      },
+      {
+        "type": "tool",
+        "tool_call_id": "call_1",
+        "tool_calls": [],
+        "content": "image attached"
+      },
+      {
+        "type": "tool",
+        "tool_call_id": "call_2",
+        "tool_calls": [],
+        "content": "18C in Paris"
+      },
+      {
+        "type": "human",
+        "tool_call_id": null,
+        "tool_calls": [],
+        "content": "[image of Paris]"
+      },
+      {
+        "type": "ai",
+        "tool_call_id": null,
+        "tool_calls": [],
+        "content": "done"
+      }
+    ],
+    "handoff_payloads_preserved": true,
+    "saved_checkpoint_all_message_fields_preserved": true,
+    "model_callback_contents_checked": true,
+    "model_requests": [
+      {
+        "messages": [
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "show me Paris"
+          }
+        ],
+        "violations": []
+      },
+      {
+        "messages": [
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "show me Paris"
+          },
+          {
+            "type": "ai",
+            "tool_call_id": null,
+            "tool_calls": [
+              "call_1",
+              "call_2"
+            ],
+            "content": ""
+          },
+          {
+            "type": "tool",
+            "tool_call_id": "call_1",
+            "tool_calls": [],
+            "content": "image attached"
+          },
+          {
+            "type": "tool",
+            "tool_call_id": "call_2",
+            "tool_calls": [],
+            "content": "18C in Paris"
+          },
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "[image of Paris]"
+          }
+        ],
+        "violations": []
+      },
+      {
+        "messages": [
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "show me Paris"
+          },
+          {
+            "type": "ai",
+            "tool_call_id": null,
+            "tool_calls": [
+              "call_1",
+              "call_2"
+            ],
+            "content": ""
+          },
+          {
+            "type": "tool",
+            "tool_call_id": "call_1",
+            "tool_calls": [],
+            "content": "image attached"
+          },
+          {
+            "type": "tool",
+            "tool_call_id": "call_2",
+            "tool_calls": [],
+            "content": "18C in Paris"
+          },
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "[image of Paris]"
+          },
+          {
+            "type": "ai",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "done"
+          },
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "confirm saved results"
+          }
+        ],
+        "violations": []
+      }
+    ],
+    "tool_counts_after_followup": {
+      "look": 1,
+      "weather": 1
+    }
+  },
+  "repair": {
+    "public_update_state_next": [
+      "agent"
+    ],
+    "checkpoint_before_resume": [
+      {
+        "type": "human",
+        "tool_call_id": null,
+        "tool_calls": [],
+        "content": "show me Paris"
+      },
+      {
+        "type": "ai",
+        "tool_call_id": null,
+        "tool_calls": [
+          "call_1",
+          "call_2"
+        ],
+        "content": ""
+      },
+      {
+        "type": "tool",
+        "tool_call_id": "call_1",
+        "tool_calls": [],
+        "content": "image attached"
+      },
+      {
+        "type": "tool",
+        "tool_call_id": "call_2",
+        "tool_calls": [],
+        "content": "18C in Paris"
+      },
+      {
+        "type": "human",
+        "tool_call_id": null,
+        "tool_calls": [],
+        "content": "[image of Paris]"
+      },
+      {
+        "type": "ai",
+        "tool_call_id": null,
+        "tool_calls": [],
+        "content": "done"
+      },
+      {
+        "type": "human",
+        "tool_call_id": null,
+        "tool_calls": [],
+        "content": "confirm saved results"
+      }
+    ],
+    "resume_and_next_turn_passed": true,
+    "all_message_fields_preserved": true,
+    "model_requests": [
+      {
+        "messages": [
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "show me Paris"
+          },
+          {
+            "type": "ai",
+            "tool_call_id": null,
+            "tool_calls": [
+              "call_1",
+              "call_2"
+            ],
+            "content": ""
+          },
+          {
+            "type": "tool",
+            "tool_call_id": "call_1",
+            "tool_calls": [],
+            "content": "image attached"
+          },
+          {
+            "type": "tool",
+            "tool_call_id": "call_2",
+            "tool_calls": [],
+            "content": "18C in Paris"
+          },
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "[image of Paris]"
+          },
+          {
+            "type": "ai",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "done"
+          },
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "confirm saved results"
+          }
+        ],
+        "violations": []
+      },
+      {
+        "messages": [
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "show me Paris"
+          },
+          {
+            "type": "ai",
+            "tool_call_id": null,
+            "tool_calls": [
+              "call_1",
+              "call_2"
+            ],
+            "content": ""
+          },
+          {
+            "type": "tool",
+            "tool_call_id": "call_1",
+            "tool_calls": [],
+            "content": "image attached"
+          },
+          {
+            "type": "tool",
+            "tool_call_id": "call_2",
+            "tool_calls": [],
+            "content": "18C in Paris"
+          },
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "[image of Paris]"
+          },
+          {
+            "type": "ai",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "done"
+          },
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "confirm saved results"
+          },
+          {
+            "type": "ai",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "done"
+          },
+          {
+            "type": "human",
+            "tool_call_id": null,
+            "tool_calls": [],
+            "content": "one more turn"
+          }
+        ],
+        "violations": []
+      }
+    ],
+    "tool_counts": {
+      "look": 1,
+      "weather": 1
+    }
+  },
+  "existing_pr_9560": {
+    "head": "b573c67d7fa638a37197b1e7e7cefa4963952694",
+    "method_only_comparison": true,
+    "checkpoint": [
+      {
+        "type": "human",
+        "tool_call_id": null,
+        "tool_calls": [],
+        "content": "show me Paris"
+      },
+      {
+        "type": "ai",
+        "tool_call_id": null,
+        "tool_calls": [
+          "call_1",
+          "call_2"
+        ],
+        "content": ""
+      },
+      {
+        "type": "tool",
+        "tool_call_id": "call_1",
+        "tool_calls": [],
+        "content": "image attached"
+      },
+      {
+        "type": "human",
+        "tool_call_id": null,
+        "tool_calls": [],
+        "content": "[image of Paris]"
+      },
+      {
+        "type": "ai",
+        "tool_call_id": null,
+        "tool_calls": [],
+        "content": "done"
+      }
+    ],
+    "tools_executed": {
+      "look": 1,
+      "weather": 1
+    },
+    "missing_result_stops_repair": "Incomplete batch: expected ['call_1', 'call_2'], received ['call_1']"
+  }
+}

@@ -6,6 +6,7 @@
 
 - **[n8n-check](https://blucca.github.io/n8n-check/):** free saved-call inspection and fixed-input regression tests in the real n8n engine. [Editor-native tests](https://github.com/blucca/n8n-check/tree/main/examples/editor-tests) run in an existing n8n installation.
 - **[Python agent data contracts](https://blucca.github.io/guides/python-agent-data-contracts/):** choose a check for changing tool history, failed SQL fetches or missing invoice fields, then run the complete native lab.
+- **[LangGraph tool-batch handoff](research/langgraph-tool-batch-handoff/):** preserve both replies and the image placeholder, save the checkpoint, and resume the same thread with the public Overwrite API. Complete provider-free lab and ZIP.
 - **Complete agent-output labs:** [OpenAI Agents: preserve each purchase in CSV](research/agents-as-tool-invoice/), [Agno: surface a real SQL fetch error](research/agno-sql-fetch/), and [Pydantic AI: freeze JSON tool history](research/pydantic-ai-json-history/). Each has pinned dependencies, observed results and a free runnable package.
 - **[SourceBind](https://github.com/blucca/hermes-sourcebind):** a catalog-listed Hermes plugin that binds the current local source before one selected tool runs; [71-second native demo](https://blucca.github.io/hermes-sourcebind/demo/#film).
 - **[CPU numerical workbench](https://github.com/blucca/fx2-cmix-transformer-v1/tree/main/research/ort-q8-m1-native):** native Q8 M1, measured parity controls and complete rerunnable reports.

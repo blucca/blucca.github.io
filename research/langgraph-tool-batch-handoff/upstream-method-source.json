@@ -1,0 +1,11 @@
+{
+  "repository": "langchain-ai/langgraph",
+  "pull_request": 9560,
+  "author": "adity982",
+  "commit": "b573c67d7fa638a37197b1e7e7cefa4963952694",
+  "path": "libs/prebuilt/langgraph/prebuilt/tool_node.py",
+  "method": "ToolNode._combine_tool_outputs",
+  "verbatim_body": true,
+  "upstream_line_start": 870,
+  "upstream_line_end": 1023
+}
