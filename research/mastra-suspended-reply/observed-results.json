@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "threadId": "recovery-a86a65c1-efd5-4865-bd6a-d7a0425687a2",
+  "originalAgentRunId": "cc40a9a0-cf83-43d5-ab16-7de9f33e252f",
+  "originalWorkflowRunId": "99567b9d-2379-4281-a55c-e0f19830059b",
+  "originalToolCallId": "ca228f4f-4d87-454c-a4cd-7949f1e7afbb",
+  "before": {
+    "savedApproval": 0,
+    "finalReply": 0
+  },
+  "after": {
+    "savedApproval": 1,
+    "finalReply": 1,
+    "originalWorkflowCompleted": true
+  },
+  "nextOrdinaryTurn": "passed",
+  "repeatedPendingId": "stopped before /stream",
+  "environment": {
+    "core": "1.82.0",
+    "cli": "1.38.0",
+    "node": "24.21.0",
+    "os": "Linux x64",
+    "fixtureRevision": "a6a87404ae2adff1c677df7f264d19ab18da3ea3"
+  }
+}
