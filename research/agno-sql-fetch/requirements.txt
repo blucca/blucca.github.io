@@ -1,0 +1,2 @@
+agno==3.2.0
+sqlalchemy==2.0.57

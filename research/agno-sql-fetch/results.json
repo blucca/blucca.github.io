@@ -1,0 +1,340 @@
+{
+  "status": "PASS",
+  "scope": "Agno SQLTools -> SQLAlchemy -> SQLite real row fetch -> public run_sql_query result",
+  "environment": {
+    "python": "3.14.8",
+    "platform": "Linux-7.2.11-arch1-1-x86_64-with-glibc2.44",
+    "sqlite": "3.54.0",
+    "agno": "3.2.0",
+    "sqlalchemy": "2.0.57",
+    "published_sql_sha256": "61cc69833369354922226eb82efcd5846eb80e4bef75dca80b80a47119724cd9",
+    "exact_source_sha256": {
+      "sql_main.py": "13b24b56154ac21f9e47df2c1c7abd722cfa0ac738e93c89c60d81c0b6ddb6d1",
+      "sql_pr11680.py": "88d30ba131b6dea843c084e0e45c7ec9b3bb06598110c64a0e308864be0be704"
+    },
+    "main_commit": "7c3b729667e66282f0d845adbd507ee07242c5eb",
+    "existing_pr_commit": "09362777966d1a27b87022838e758341edd5feee"
+  },
+  "lazy_fetch_mechanism": {
+    "status": "PASS",
+    "first_row": {
+      "value": 1
+    },
+    "error_type": "OperationalError",
+    "dbapi_error_type": "OperationalError",
+    "error": "(sqlite3.OperationalError) user-defined function raised exception\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+    "trace": [
+      {
+        "event": "udf_return",
+        "value": 1
+      },
+      {
+        "event": "after_cursor_execute"
+      },
+      {
+        "event": "execute_returned",
+        "returns_rows": true
+      },
+      {
+        "event": "udf_return",
+        "value": 2
+      },
+      {
+        "event": "first_row_returned",
+        "row": {
+          "value": 1
+        }
+      },
+      {
+        "event": "fetchall_started"
+      },
+      {
+        "event": "udf_raise",
+        "value": 3
+      },
+      {
+        "event": "fetchall_error",
+        "error_type": "OperationalError"
+      }
+    ]
+  },
+  "tool_results": [
+    {
+      "name": "published_agno_3_2_0",
+      "expected_error_surface": false,
+      "cases": [
+        {
+          "case": "real_fetch_error",
+          "limit": null,
+          "actual": "[]",
+          "trace": [
+            {
+              "event": "udf_return",
+              "value": 1
+            },
+            {
+              "event": "after_cursor_execute"
+            },
+            {
+              "event": "udf_return",
+              "value": 2
+            },
+            {
+              "event": "udf_raise",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "case": "real_fetch_error",
+          "limit": 2,
+          "actual": "[]",
+          "trace": [
+            {
+              "event": "udf_return",
+              "value": 1
+            },
+            {
+              "event": "after_cursor_execute"
+            },
+            {
+              "event": "udf_return",
+              "value": 2
+            },
+            {
+              "event": "udf_raise",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "case": "normal_select",
+          "limit": null,
+          "actual": "[{\"value\": 1}, {\"value\": 2}, {\"value\": 3}]"
+        },
+        {
+          "case": "normal_select",
+          "limit": 2,
+          "actual": "[{\"value\": 1}, {\"value\": 2}]"
+        },
+        {
+          "case": "normal_select",
+          "limit": 0,
+          "actual": "[]"
+        },
+        {
+          "case": "normal_select",
+          "limit": -1,
+          "actual": "[]"
+        },
+        {
+          "case": "legitimate_empty_select",
+          "actual": "[]"
+        },
+        {
+          "case": "successful_non_returning_ddl_and_dml",
+          "ddl_actual": "[]",
+          "dml_actual": "[]",
+          "independent_dbapi_connection_rows": [
+            [
+              7
+            ]
+          ]
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "name": "exact_main_sql",
+      "expected_error_surface": false,
+      "cases": [
+        {
+          "case": "real_fetch_error",
+          "limit": null,
+          "actual": "[]",
+          "trace": [
+            {
+              "event": "udf_return",
+              "value": 1
+            },
+            {
+              "event": "after_cursor_execute"
+            },
+            {
+              "event": "udf_return",
+              "value": 2
+            },
+            {
+              "event": "udf_raise",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "case": "real_fetch_error",
+          "limit": 2,
+          "actual": "[]",
+          "trace": [
+            {
+              "event": "udf_return",
+              "value": 1
+            },
+            {
+              "event": "after_cursor_execute"
+            },
+            {
+              "event": "udf_return",
+              "value": 2
+            },
+            {
+              "event": "udf_raise",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "case": "normal_select",
+          "limit": null,
+          "actual": "[{\"value\": 1}, {\"value\": 2}, {\"value\": 3}]"
+        },
+        {
+          "case": "normal_select",
+          "limit": 2,
+          "actual": "[{\"value\": 1}, {\"value\": 2}]"
+        },
+        {
+          "case": "normal_select",
+          "limit": 0,
+          "actual": "[]"
+        },
+        {
+          "case": "normal_select",
+          "limit": -1,
+          "actual": "[]"
+        },
+        {
+          "case": "legitimate_empty_select",
+          "actual": "[]"
+        },
+        {
+          "case": "successful_non_returning_ddl_and_dml",
+          "ddl_actual": "[]",
+          "dml_actual": "[]",
+          "independent_dbapi_connection_rows": [
+            [
+              7
+            ]
+          ]
+        }
+      ],
+      "status": "PASS"
+    },
+    {
+      "name": "existing_pr_11680_sql",
+      "expected_error_surface": true,
+      "cases": [
+        {
+          "case": "real_fetch_error",
+          "limit": null,
+          "actual": "Error running query: (sqlite3.OperationalError) user-defined function raised exception\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+          "trace": [
+            {
+              "event": "udf_return",
+              "value": 1
+            },
+            {
+              "event": "after_cursor_execute"
+            },
+            {
+              "event": "udf_return",
+              "value": 2
+            },
+            {
+              "event": "udf_raise",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "case": "real_fetch_error",
+          "limit": 2,
+          "actual": "Error running query: (sqlite3.OperationalError) user-defined function raised exception\n(Background on this error at: https://sqlalche.me/e/20/e3q8)",
+          "trace": [
+            {
+              "event": "udf_return",
+              "value": 1
+            },
+            {
+              "event": "after_cursor_execute"
+            },
+            {
+              "event": "udf_return",
+              "value": 2
+            },
+            {
+              "event": "udf_raise",
+              "value": 3
+            }
+          ]
+        },
+        {
+          "case": "normal_select",
+          "limit": null,
+          "actual": "[{\"value\": 1}, {\"value\": 2}, {\"value\": 3}]"
+        },
+        {
+          "case": "normal_select",
+          "limit": 2,
+          "actual": "[{\"value\": 1}, {\"value\": 2}]"
+        },
+        {
+          "case": "normal_select",
+          "limit": 0,
+          "actual": "[]"
+        },
+        {
+          "case": "normal_select",
+          "limit": -1,
+          "actual": "[]"
+        },
+        {
+          "case": "legitimate_empty_select",
+          "actual": "[]"
+        },
+        {
+          "case": "successful_non_returning_ddl_and_dml",
+          "ddl_actual": "[]",
+          "dml_actual": "[]",
+          "independent_dbapi_connection_rows": [
+            [
+              7
+            ]
+          ]
+        }
+      ],
+      "status": "PASS"
+    }
+  ],
+  "counts": {
+    "real_lazy_fetch_gate": 1,
+    "real_tool_fetch_error_cases": 6,
+    "normal_select_cases": 12,
+    "legitimate_empty_select_cases": 3,
+    "ddl_and_committed_dml_cases": 3,
+    "sqlalchemy_result_monkeypatches": 0,
+    "model_or_provider_calls": 0,
+    "business_network_calls": 0
+  },
+  "runtime_seconds": 0.113,
+  "resource_available": true,
+  "resource_limit_bytes": 536870912,
+  "peak_rss_kib": 73528,
+  "attribution": {
+    "original_report_author": "JiaxPeaceLove",
+    "issue": "https://github.com/agno-agi/agno/issues/11557",
+    "existing_fix_author": "adityav1709",
+    "existing_pr": "https://github.com/agno-agi/agno/pull/11680",
+    "pr_disclosed_coauthor": "Muse (Aurora)",
+    "new_fix_authored_by_this_lab": false
+  }
+}

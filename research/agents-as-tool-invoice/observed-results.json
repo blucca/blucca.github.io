@@ -1,0 +1,139 @@
+{
+  "sdk": "0.24.0",
+  "python": "3.14.8",
+  "platform": "Linux",
+  "model": "official ScriptedModel",
+  "live_provider_requests": 0,
+  "all_checks_passed": true,
+  "cases": [
+    {
+      "case": "stock_hook",
+      "csv_rows": [
+        [
+          "",
+          "",
+          "",
+          "50"
+        ]
+      ],
+      "nested_results": [
+        [
+          "call_invoice_A",
+          2,
+          25,
+          "50"
+        ]
+      ],
+      "model_start_inputs": [
+        {
+          "quantity": 2,
+          "unit_price": 25
+        }
+      ],
+      "model_finish_inputs": [
+        {
+          "quantity": 2,
+          "unit_price": 25
+        }
+      ],
+      "parent_tool_outputs": {
+        "call_invoice_A": "50"
+      },
+      "parent_final_output": "invoices complete",
+      "scripted_model_requests": 3
+    },
+    {
+      "case": "extractor_single",
+      "csv_rows": [
+        [
+          "call_invoice_A",
+          "2",
+          "25",
+          "50"
+        ]
+      ],
+      "nested_results": [
+        [
+          "call_invoice_A",
+          2,
+          25,
+          "50"
+        ]
+      ],
+      "model_start_inputs": [
+        {
+          "quantity": 2,
+          "unit_price": 25
+        }
+      ],
+      "model_finish_inputs": [
+        {
+          "quantity": 2,
+          "unit_price": 25
+        }
+      ],
+      "parent_tool_outputs": {
+        "call_invoice_A": "50"
+      },
+      "parent_final_output": "invoices complete",
+      "scripted_model_requests": 3
+    },
+    {
+      "case": "extractor_two_calls",
+      "csv_rows": [
+        [
+          "call_invoice_B",
+          "3",
+          "7",
+          "21"
+        ],
+        [
+          "call_invoice_A",
+          "2",
+          "25",
+          "50"
+        ]
+      ],
+      "nested_results": [
+        [
+          "call_invoice_B",
+          3,
+          7,
+          "21"
+        ],
+        [
+          "call_invoice_A",
+          2,
+          25,
+          "50"
+        ]
+      ],
+      "model_start_inputs": [
+        {
+          "quantity": 2,
+          "unit_price": 25
+        },
+        {
+          "quantity": 3,
+          "unit_price": 7
+        }
+      ],
+      "model_finish_inputs": [
+        {
+          "quantity": 3,
+          "unit_price": 7
+        },
+        {
+          "quantity": 2,
+          "unit_price": 25
+        }
+      ],
+      "parent_tool_outputs": {
+        "call_invoice_A": "50",
+        "call_invoice_B": "21"
+      },
+      "parent_final_output": "invoices complete",
+      "scripted_model_requests": 4
+    }
+  ]
+}

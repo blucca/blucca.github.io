@@ -1,0 +1,47 @@
+{
+  "generated_at": "2026-11-14T17:11:55.714815+00:00",
+  "report_author": "JiaxPeaceLove",
+  "report_url": "https://github.com/agno-agi/agno/issues/11557",
+  "existing_fix_author": "adityav1709",
+  "pr_url": "https://github.com/agno-agi/agno/pull/11680",
+  "pr_disclosed_coauthor": "Muse (Aurora)",
+  "pr_observed_state": "closed_unmerged_issue_not_ready_template_not_followed",
+  "public_test_ci_evidence_at_discovery": 0,
+  "source_files": {
+    "sql_main.py": {
+      "upstream_path": "libs/agno/agno/tools/sql.py",
+      "commit": "7c3b729667e66282f0d845adbd507ee07242c5eb",
+      "url": "https://raw.githubusercontent.com/agno-agi/agno/7c3b729667e66282f0d845adbd507ee07242c5eb/libs/agno/agno/tools/sql.py",
+      "sha256": "13b24b56154ac21f9e47df2c1c7abd722cfa0ac738e93c89c60d81c0b6ddb6d1"
+    },
+    "sql_pr11680.py": {
+      "upstream_path": "libs/agno/agno/tools/sql.py",
+      "commit": "09362777966d1a27b87022838e758341edd5feee",
+      "url": "https://raw.githubusercontent.com/adityav1709/agno/09362777966d1a27b87022838e758341edd5feee/libs/agno/agno/tools/sql.py",
+      "sha256": "88d30ba131b6dea843c084e0e45c7ec9b3bb06598110c64a0e308864be0be704"
+    },
+    "LICENSE": {
+      "url": "https://raw.githubusercontent.com/agno-agi/agno/7c3b729667e66282f0d845adbd507ee07242c5eb/LICENSE",
+      "http_status": 200,
+      "sha256": "7504bf0fe32a486487ec309d5ef30597ca87d2508450be380f6ef4772c3371ca"
+    }
+  },
+  "published_environment": {
+    "python": "3.14.8",
+    "platform": "Linux-7.2.11-arch1-1-x86_64-with-glibc2.44",
+    "sqlite": "3.54.0",
+    "agno": "3.2.0",
+    "sqlalchemy": "2.0.57",
+    "published_sql_sha256": "61cc69833369354922226eb82efcd5846eb80e4bef75dca80b80a47119724cd9",
+    "exact_source_sha256": {
+      "sql_main.py": "13b24b56154ac21f9e47df2c1c7abd722cfa0ac738e93c89c60d81c0b6ddb6d1",
+      "sql_pr11680.py": "88d30ba131b6dea843c084e0e45c7ec9b3bb06598110c64a0e308864be0be704"
+    },
+    "main_commit": "7c3b729667e66282f0d845adbd507ee07242c5eb",
+    "existing_pr_commit": "09362777966d1a27b87022838e758341edd5feee"
+  },
+  "native_boundary": "Published Agno3.2.0 SQLTools tested directly; frozen main and existing PR SQLTools modules separately use the installed Agno3.2.0 Toolkit. Full repository checkout or full repository CI not run.",
+  "main_release_difference": "Published 3.2.0 and pinned main SQLTools differ only in constructor db_engine precedence. Both public query implementations were tested with db_engine only.",
+  "result_methods_replaced": 0,
+  "new_fix_written": false
+}
