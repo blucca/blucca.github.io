@@ -1,0 +1,491 @@
+{
+  "summary": {
+    "cases": [
+      "direct",
+      "stock-enabled",
+      "fixed-enabled",
+      "fixed-default"
+    ],
+    "source_parent": "eba880e108109fec9a9a131c6e26c71b9c2b5828",
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-142-generic-x86_64-with-glibc2.39",
+    "litellm": "1.110.0",
+    "mcp": "2.3.0",
+    "mapped_test_exit": 0,
+    "status": "passed",
+    "sdk_resume": "Added exact-parent tests/_support and pytest-socket dev dependency; resumed only the existing SDK target after the four live controls.",
+    "completed_utc": "2026-11-15T02:41:17.249383+00:00"
+  },
+  "cases": {
+    "direct": {
+      "status": "passed",
+      "endpoint": "http://127.0.0.1:8765/mcp",
+      "expectation": "preserved",
+      "tool_name": "capture_meta",
+      "observed": {
+        "record": "INV-42",
+        "meta": {
+          "progress_token": "fixture-progress",
+          "route_note": "synthetic/客户-A",
+          "nullable": null,
+          "batch": {
+            "invoice_ids": [
+              "INV-41",
+              "INV-42",
+              "INV-42"
+            ],
+            "nil": null
+          },
+          "sequence": [
+            null,
+            false,
+            7
+          ],
+          "active": false,
+          "scale": 1.25
+        }
+      },
+      "custom_fields": [
+        "active",
+        "batch",
+        "nullable",
+        "route_note",
+        "scale",
+        "sequence"
+      ],
+      "wire": [
+        {
+          "body": {
+            "jsonrpc": "2.0",
+            "method": "initialize",
+            "params": {
+              "protocolVersion": "2025-11-25",
+              "capabilities": {},
+              "clientInfo": {
+                "name": "metadata-contract-lab",
+                "version": "1"
+              }
+            },
+            "id": 1
+          },
+          "status": 200,
+          "response": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"capabilities\":{\"prompts\":{\"listChanged\":false},\"resources\":{\"listChanged\":false,\"subscribe\":false},\"tools\":{\"listChanged\":false}},\"protocolVersion\":\"2025-11-25\",\"serverInfo\":{\"name\":\"meta-echo\",\"version\":\"\"}}}\r\n\r\n",
+          "content_type": "text/event-stream",
+          "session_id": "797d278b09f648e3a42a9f190568eb12"
+        },
+        {
+          "body": {
+            "jsonrpc": "2.0",
+            "method": "notifications/initialized"
+          },
+          "status": 202,
+          "response": "",
+          "content_type": "application/json",
+          "session_id": "797d278b09f648e3a42a9f190568eb12"
+        },
+        {
+          "body": {
+            "jsonrpc": "2.0",
+            "method": "tools/list",
+            "params": {},
+            "id": 2
+          },
+          "status": 200,
+          "response": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":2,\"result\":{\"tools\":[{\"description\":\"Return the record and the metadata received by this tool.\",\"inputSchema\":{\"properties\":{\"record\":{\"title\":\"Record\",\"type\":\"string\"}},\"required\":[\"record\"],\"type\":\"object\",\"title\":\"capture_metaArguments\"},\"name\":\"capture_meta\",\"outputSchema\":{\"properties\":{\"result\":{\"title\":\"Result\",\"type\":\"string\"}},\"required\":[\"result\"],\"type\":\"object\",\"title\":\"capture_metaOutput\"}}]}}\r\n\r\n",
+          "content_type": "text/event-stream",
+          "session_id": "797d278b09f648e3a42a9f190568eb12"
+        },
+        {
+          "body": {
+            "jsonrpc": "2.0",
+            "method": "tools/call",
+            "params": {
+              "name": "capture_meta",
+              "arguments": {
+                "record": "INV-42"
+              },
+              "_meta": {
+                "progressToken": "fixture-progress",
+                "route_note": "synthetic/客户-A",
+                "nullable": null,
+                "batch": {
+                  "invoice_ids": [
+                    "INV-41",
+                    "INV-42",
+                    "INV-42"
+                  ],
+                  "nil": null
+                },
+                "sequence": [
+                  null,
+                  false,
+                  7
+                ],
+                "active": false,
+                "scale": 1.25
+              }
+            },
+            "id": 3
+          },
+          "status": 200,
+          "response": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"method\":\"notifications/progress\",\"params\":{\"progressToken\":\"fixture-progress\",\"progress\":0.5,\"total\":1.0,\"message\":\"metadata received\"}}\r\n\r\nevent: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":3,\"result\":{\"content\":[{\"text\":\"{\\\"record\\\": \\\"INV-42\\\", \\\"meta\\\": {\\\"progress_token\\\": \\\"fixture-progress\\\", \\\"route_note\\\": \\\"synthetic/客户-A\\\", \\\"nullable\\\": null, \\\"batch\\\": {\\\"invoice_ids\\\": [\\\"INV-41\\\", \\\"INV-42\\\", \\\"INV-42\\\"], \\\"nil\\\": null}, \\\"sequence\\\": [null, false, 7], \\\"active\\\": false, \\\"scale\\\": 1.25}}\",\"type\":\"text\"}],\"isError\":false,\"structuredContent\":{\"result\":\"{\\\"record\\\": \\\"INV-42\\\", \\\"meta\\\": {\\\"progress_token\\\": \\\"fixture-progress\\\", \\\"route_note\\\": \\\"synthetic/客户-A\\\", \\\"nullable\\\": null, \\\"batch\\\": {\\\"invoice_ids\\\": [\\\"INV-41\\\", \\\"INV-42\\\", \\\"INV-42\\\"], \\\"nil\\\": null}, \\\"sequence\\\": [null, false, 7], \\\"active\\\": false, \\\"scale\\\": 1.25}}\"}}}\r\n\r\n",
+          "content_type": "text/event-stream",
+          "session_id": "797d278b09f648e3a42a9f190568eb12"
+        }
+      ],
+      "progress": [
+        {
+          "progressToken": "fixture-progress",
+          "progress": 0.5,
+          "total": 1.0,
+          "message": "metadata received"
+        }
+      ],
+      "provider_visible_token": "fixture-progress"
+    },
+    "stock-enabled": {
+      "status": "passed",
+      "endpoint": "http://127.0.0.1:4000/mcp",
+      "expectation": "dropped",
+      "tool_name": "echo-capture_meta",
+      "observed": {
+        "record": "INV-42",
+        "meta": {
+          "progress_token": 2
+        }
+      },
+      "custom_fields": [
+        "active",
+        "batch",
+        "nullable",
+        "route_note",
+        "scale",
+        "sequence"
+      ],
+      "wire": [
+        {
+          "body": {
+            "jsonrpc": "2.0",
+            "method": "initialize",
+            "params": {
+              "protocolVersion": "2025-11-25",
+              "capabilities": {},
+              "clientInfo": {
+                "name": "metadata-contract-lab",
+                "version": "1"
+              }
+            },
+            "id": 1
+          },
+          "status": 200,
+          "response": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-11-25\",\"capabilities\":{\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":true,\"listChanged\":true},\"tools\":{\"listChanged\":true}},\"serverInfo\":{\"name\":\"litellm-mcp-server\",\"version\":\"1.0.0\"}}}\r\n\r\n",
+          "content_type": "text/event-stream",
+          "session_id": "573054a0373d48808af123750be388c5"
+        },
+        {
+          "body": {
+            "jsonrpc": "2.0",
+            "method": "notifications/initialized"
+          },
+          "status": 202,
+          "response": "",
+          "content_type": "application/json",
+          "session_id": "573054a0373d48808af123750be388c5"
+        },
+        {
+          "body": {
+            "jsonrpc": "2.0",
+            "method": "tools/list",
+            "params": {},
+            "id": 2
+          },
+          "status": 200,
+          "response": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":2,\"result\":{\"_meta\":{\"litellm.ai/server_outcomes\":{\"echo\":{\"status\":\"ok\",\"tool_count\":1}}},\"tools\":[{\"description\":\"Return the record and the metadata received by this tool.\",\"inputSchema\":{\"properties\":{\"record\":{\"title\":\"Record\",\"type\":\"string\"}},\"required\":[\"record\"],\"type\":\"object\",\"title\":\"capture_metaArguments\"},\"name\":\"echo-capture_meta\",\"outputSchema\":{\"properties\":{\"result\":{\"title\":\"Result\",\"type\":\"string\"}},\"required\":[\"result\"],\"type\":\"object\",\"title\":\"capture_metaOutput\"}}]}}\r\n\r\n",
+          "content_type": "text/event-stream",
+          "session_id": "573054a0373d48808af123750be388c5"
+        },
+        {
+          "body": {
+            "jsonrpc": "2.0",
+            "method": "tools/call",
+            "params": {
+              "name": "echo-capture_meta",
+              "arguments": {
+                "record": "INV-42"
+              },
+              "_meta": {
+                "progressToken": "fixture-progress",
+                "route_note": "synthetic/客户-A",
+                "nullable": null,
+                "batch": {
+                  "invoice_ids": [
+                    "INV-41",
+                    "INV-42",
+                    "INV-42"
+                  ],
+                  "nil": null
+                },
+                "sequence": [
+                  null,
+                  false,
+                  7
+                ],
+                "active": false,
+                "scale": 1.25
+              }
+            },
+            "id": 3
+          },
+          "status": 200,
+          "response": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"method\":\"notifications/progress\",\"params\":{\"progressToken\":\"fixture-progress\",\"progress\":0.5,\"total\":1.0,\"message\":\"metadata received\"}}\r\n\r\nevent: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":3,\"result\":{\"content\":[{\"text\":\"{\\\"record\\\": \\\"INV-42\\\", \\\"meta\\\": {\\\"progress_token\\\": 2}}\",\"type\":\"text\"}],\"isError\":false,\"structuredContent\":{\"result\":\"{\\\"record\\\": \\\"INV-42\\\", \\\"meta\\\": {\\\"progress_token\\\": 2}}\"}}}\r\n\r\n",
+          "content_type": "text/event-stream",
+          "session_id": "573054a0373d48808af123750be388c5"
+        }
+      ],
+      "progress": [
+        {
+          "progressToken": "fixture-progress",
+          "progress": 0.5,
+          "total": 1.0,
+          "message": "metadata received"
+        }
+      ],
+      "provider_visible_token": 2
+    },
+    "fixed-enabled": {
+      "status": "passed",
+      "endpoint": "http://127.0.0.1:4000/mcp",
+      "expectation": "preserved",
+      "tool_name": "echo-capture_meta",
+      "observed": {
+        "record": "INV-42",
+        "meta": {
+          "progress_token": 2,
+          "route_note": "synthetic/客户-A",
+          "nullable": null,
+          "batch": {
+            "invoice_ids": [
+              "INV-41",
+              "INV-42",
+              "INV-42"
+            ],
+            "nil": null
+          },
+          "sequence": [
+            null,
+            false,
+            7
+          ],
+          "active": false,
+          "scale": 1.25
+        }
+      },
+      "custom_fields": [
+        "active",
+        "batch",
+        "nullable",
+        "route_note",
+        "scale",
+        "sequence"
+      ],
+      "wire": [
+        {
+          "body": {
+            "jsonrpc": "2.0",
+            "method": "initialize",
+            "params": {
+              "protocolVersion": "2025-11-25",
+              "capabilities": {},
+              "clientInfo": {
+                "name": "metadata-contract-lab",
+                "version": "1"
+              }
+            },
+            "id": 1
+          },
+          "status": 200,
+          "response": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-11-25\",\"capabilities\":{\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":true,\"listChanged\":true},\"tools\":{\"listChanged\":true}},\"serverInfo\":{\"name\":\"litellm-mcp-server\",\"version\":\"1.0.0\"}}}\r\n\r\n",
+          "content_type": "text/event-stream",
+          "session_id": "b645bfa81d9048aa951b65ea516bf4c0"
+        },
+        {
+          "body": {
+            "jsonrpc": "2.0",
+            "method": "notifications/initialized"
+          },
+          "status": 202,
+          "response": "",
+          "content_type": "application/json",
+          "session_id": "b645bfa81d9048aa951b65ea516bf4c0"
+        },
+        {
+          "body": {
+            "jsonrpc": "2.0",
+            "method": "tools/list",
+            "params": {},
+            "id": 2
+          },
+          "status": 200,
+          "response": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":2,\"result\":{\"_meta\":{\"litellm.ai/server_outcomes\":{\"echo\":{\"status\":\"ok\",\"tool_count\":1}}},\"tools\":[{\"description\":\"Return the record and the metadata received by this tool.\",\"inputSchema\":{\"properties\":{\"record\":{\"title\":\"Record\",\"type\":\"string\"}},\"required\":[\"record\"],\"type\":\"object\",\"title\":\"capture_metaArguments\"},\"name\":\"echo-capture_meta\",\"outputSchema\":{\"properties\":{\"result\":{\"title\":\"Result\",\"type\":\"string\"}},\"required\":[\"result\"],\"type\":\"object\",\"title\":\"capture_metaOutput\"}}]}}\r\n\r\n",
+          "content_type": "text/event-stream",
+          "session_id": "b645bfa81d9048aa951b65ea516bf4c0"
+        },
+        {
+          "body": {
+            "jsonrpc": "2.0",
+            "method": "tools/call",
+            "params": {
+              "name": "echo-capture_meta",
+              "arguments": {
+                "record": "INV-42"
+              },
+              "_meta": {
+                "progressToken": "fixture-progress",
+                "route_note": "synthetic/客户-A",
+                "nullable": null,
+                "batch": {
+                  "invoice_ids": [
+                    "INV-41",
+                    "INV-42",
+                    "INV-42"
+                  ],
+                  "nil": null
+                },
+                "sequence": [
+                  null,
+                  false,
+                  7
+                ],
+                "active": false,
+                "scale": 1.25
+              }
+            },
+            "id": 3
+          },
+          "status": 200,
+          "response": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"method\":\"notifications/progress\",\"params\":{\"progressToken\":\"fixture-progress\",\"progress\":0.5,\"total\":1.0,\"message\":\"metadata received\"}}\r\n\r\nevent: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":3,\"result\":{\"content\":[{\"text\":\"{\\\"record\\\": \\\"INV-42\\\", \\\"meta\\\": {\\\"progress_token\\\": 2, \\\"route_note\\\": \\\"synthetic/客户-A\\\", \\\"nullable\\\": null, \\\"batch\\\": {\\\"invoice_ids\\\": [\\\"INV-41\\\", \\\"INV-42\\\", \\\"INV-42\\\"], \\\"nil\\\": null}, \\\"sequence\\\": [null, false, 7], \\\"active\\\": false, \\\"scale\\\": 1.25}}\",\"type\":\"text\"}],\"isError\":false,\"structuredContent\":{\"result\":\"{\\\"record\\\": \\\"INV-42\\\", \\\"meta\\\": {\\\"progress_token\\\": 2, \\\"route_note\\\": \\\"synthetic/客户-A\\\", \\\"nullable\\\": null, \\\"batch\\\": {\\\"invoice_ids\\\": [\\\"INV-41\\\", \\\"INV-42\\\", \\\"INV-42\\\"], \\\"nil\\\": null}, \\\"sequence\\\": [null, false, 7], \\\"active\\\": false, \\\"scale\\\": 1.25}}\"}}}\r\n\r\n",
+          "content_type": "text/event-stream",
+          "session_id": "b645bfa81d9048aa951b65ea516bf4c0"
+        }
+      ],
+      "progress": [
+        {
+          "progressToken": "fixture-progress",
+          "progress": 0.5,
+          "total": 1.0,
+          "message": "metadata received"
+        }
+      ],
+      "provider_visible_token": 2
+    },
+    "fixed-default": {
+      "status": "passed",
+      "endpoint": "http://127.0.0.1:4000/mcp",
+      "expectation": "dropped",
+      "tool_name": "echo-capture_meta",
+      "observed": {
+        "record": "INV-42",
+        "meta": {
+          "progress_token": 2
+        }
+      },
+      "custom_fields": [
+        "active",
+        "batch",
+        "nullable",
+        "route_note",
+        "scale",
+        "sequence"
+      ],
+      "wire": [
+        {
+          "body": {
+            "jsonrpc": "2.0",
+            "method": "initialize",
+            "params": {
+              "protocolVersion": "2025-11-25",
+              "capabilities": {},
+              "clientInfo": {
+                "name": "metadata-contract-lab",
+                "version": "1"
+              }
+            },
+            "id": 1
+          },
+          "status": 200,
+          "response": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":1,\"result\":{\"protocolVersion\":\"2025-11-25\",\"capabilities\":{\"prompts\":{\"listChanged\":true},\"resources\":{\"subscribe\":true,\"listChanged\":true},\"tools\":{\"listChanged\":true}},\"serverInfo\":{\"name\":\"litellm-mcp-server\",\"version\":\"1.0.0\"}}}\r\n\r\n",
+          "content_type": "text/event-stream",
+          "session_id": "6441d4d1fd1a4cb3a31ce0eed22ae2e6"
+        },
+        {
+          "body": {
+            "jsonrpc": "2.0",
+            "method": "notifications/initialized"
+          },
+          "status": 202,
+          "response": "",
+          "content_type": "application/json",
+          "session_id": "6441d4d1fd1a4cb3a31ce0eed22ae2e6"
+        },
+        {
+          "body": {
+            "jsonrpc": "2.0",
+            "method": "tools/list",
+            "params": {},
+            "id": 2
+          },
+          "status": 200,
+          "response": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":2,\"result\":{\"_meta\":{\"litellm.ai/server_outcomes\":{\"echo\":{\"status\":\"ok\",\"tool_count\":1}}},\"tools\":[{\"description\":\"Return the record and the metadata received by this tool.\",\"inputSchema\":{\"properties\":{\"record\":{\"title\":\"Record\",\"type\":\"string\"}},\"required\":[\"record\"],\"type\":\"object\",\"title\":\"capture_metaArguments\"},\"name\":\"echo-capture_meta\",\"outputSchema\":{\"properties\":{\"result\":{\"title\":\"Result\",\"type\":\"string\"}},\"required\":[\"result\"],\"type\":\"object\",\"title\":\"capture_metaOutput\"}}]}}\r\n\r\n",
+          "content_type": "text/event-stream",
+          "session_id": "6441d4d1fd1a4cb3a31ce0eed22ae2e6"
+        },
+        {
+          "body": {
+            "jsonrpc": "2.0",
+            "method": "tools/call",
+            "params": {
+              "name": "echo-capture_meta",
+              "arguments": {
+                "record": "INV-42"
+              },
+              "_meta": {
+                "progressToken": "fixture-progress",
+                "route_note": "synthetic/客户-A",
+                "nullable": null,
+                "batch": {
+                  "invoice_ids": [
+                    "INV-41",
+                    "INV-42",
+                    "INV-42"
+                  ],
+                  "nil": null
+                },
+                "sequence": [
+                  null,
+                  false,
+                  7
+                ],
+                "active": false,
+                "scale": 1.25
+              }
+            },
+            "id": 3
+          },
+          "status": 200,
+          "response": "event: message\r\ndata: {\"jsonrpc\":\"2.0\",\"method\":\"notifications/progress\",\"params\":{\"progressToken\":\"fixture-progress\",\"progress\":0.5,\"total\":1.0,\"message\":\"metadata received\"}}\r\n\r\nevent: message\r\ndata: {\"jsonrpc\":\"2.0\",\"id\":3,\"result\":{\"content\":[{\"text\":\"{\\\"record\\\": \\\"INV-42\\\", \\\"meta\\\": {\\\"progress_token\\\": 2}}\",\"type\":\"text\"}],\"isError\":false,\"structuredContent\":{\"result\":\"{\\\"record\\\": \\\"INV-42\\\", \\\"meta\\\": {\\\"progress_token\\\": 2}}\"}}}\r\n\r\n",
+          "content_type": "text/event-stream",
+          "session_id": "6441d4d1fd1a4cb3a31ce0eed22ae2e6"
+        }
+      ],
+      "progress": [
+        {
+          "progressToken": "fixture-progress",
+          "progress": 0.5,
+          "total": 1.0,
+          "message": "metadata received"
+        }
+      ],
+      "provider_visible_token": 2
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "python": "3.12.3",
+  "platform": "Linux-6.8.0-142-generic-x86_64-with-glibc2.39",
+  "versions": {
+    "litellm": "1.110.0",
+    "mcp": "2.3.0",
+    "mcp-types": "2.3.0",
+    "pydantic": "2.14.3",
+    "httpx": "0.28.1",
+    "httpx2": "2.16.0",
+    "pytest": "9.2.0",
+    "pytest-asyncio": "1.5.0",
+    "pytest-socket": "0.8.1",
+    "fastapi": "0.163.0",
+    "uvicorn": "0.54.0"
+  },
+  "source_parent": "eba880e108109fec9a9a131c6e26c71b9c2b5828",
+  "source_status": " M litellm/mcp_client/client.py\n M litellm/proxy/mcp_server/contracts.py\n M litellm/proxy/mcp_server/mcp_server_manager.py\n M litellm/proxy/mcp_server/operations.py\n M litellm/types/mcp_server/mcp_server_manager.py\n M tests/unit/mcp_client/test_mcp_client.py\n"
+}

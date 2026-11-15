@@ -6,6 +6,7 @@
 
 - **[n8n-check](https://blucca.github.io/n8n-check/):** free saved-call inspection and fixed-input regression tests in the real n8n engine. [Editor-native tests](https://github.com/blucca/n8n-check/tree/main/examples/editor-tests) run in an existing n8n installation.
 - **[Python agent data contracts](https://blucca.github.io/guides/python-agent-data-contracts/):** choose a check for changing tool history, failed SQL fetches or missing invoice fields, then run the complete native lab.
+- **[LiteLLM MCP client metadata](research/litellm-mcp-client-meta/):** keep routing fields and top-level JSON nulls through a real gateway. Four HTTP controls, host progress-token relay, a source proposal and a complete free lab.
 - **[LangGraph tool-batch handoff](research/langgraph-tool-batch-handoff/):** preserve both replies and the image placeholder, save the checkpoint, and resume the same thread with the public Overwrite API. Complete provider-free lab and ZIP.
 - **[CrewAI flow budgets](research/crewai-flow-state-isolation/):** each department owns its initial state on the released SDK. Three complete Flow → Agent → tool → final-answer controls, with a one-line caller snapshot and free ZIP.
 - **[LlamaIndex journal process restarts](research/llama-workflows-journal-restarts/):** three cold Python processes, two saved journals and all four answers in the correct branches. Complete application fixture with pinned PR893 build and main negative control.

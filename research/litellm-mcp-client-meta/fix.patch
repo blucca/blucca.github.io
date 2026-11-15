@@ -1,0 +1,311 @@
+diff --git a/litellm/mcp_client/client.py b/litellm/mcp_client/client.py
+--- a/litellm/mcp_client/client.py
++++ b/litellm/mcp_client/client.py
+@@ -82,15 +82,17 @@
+     LoggingMessageNotificationParams,
+     PaginatedRequestParams,
+     Prompt,
++    RequestParams,
+     ResourceTemplate,
+     SamplingCapability,
+     ServerNotification,
+     UrlElicitationCapability,
+ )
++from mcp.types import CallToolRequest as MCPCallToolRequest
+ from mcp.types import CallToolRequestParams as MCPCallToolRequestParams
+ from mcp.types import CallToolResult as MCPCallToolResult
+ from mcp.types import Tool as MCPTool
+-from pydantic import AnyUrl, TypeAdapter
++from pydantic import AnyUrl, ConfigDict, JsonValue, SerializerFunctionWrapHandler, TypeAdapter, field_serializer
+ 
+ from litellm._logging import verbose_logger
+ from litellm.constants import (
+@@ -476,6 +478,22 @@
+ def _notify_cleanup(callback: Callable[[], None] | None) -> None:
+     if callback is not None:
+         callback()
++
++
++class _MetaPreservingCallToolRequest(MCPCallToolRequest):
++    model_config = ConfigDict(frozen=True)
++
++    @field_serializer("params", mode="wrap")
++    def _serialize_params(
++        self,
++        params: MCPCallToolRequestParams,
++        handler: SerializerFunctionWrapHandler,
++    ) -> dict[str, JsonValue]:
++        dumped: Final = TypeAdapter(dict[str, JsonValue]).validate_python(handler(params))
++        meta: Final = TypeAdapter(dict[str, JsonValue] | None).validate_python(
++            RequestParams(_meta=params.meta).model_dump(by_alias=True)["_meta"]
++        )
++        return {**dumped, "_meta": meta} if meta is not None else dumped
+ 
+ 
+ class _UnvalidatedClientSession(ClientSession):
+@@ -1209,14 +1227,18 @@
+             async def request(
+                 responses: InputResponses | None, state: str | None
+             ) -> MCPCallToolResult | InputRequiredResult:
+-                return await session.call_tool(
+-                    name=call_tool_request_params.name,
+-                    arguments=call_tool_request_params.arguments,
+-                    input_responses=responses,
+-                    request_state=state,
++                result: Final = await session.send_request(
++                    _MetaPreservingCallToolRequest(
++                        params=call_tool_request_params.model_copy(
++                            update={"input_responses": responses, "request_state": state}
++                        )
++                    ),
++                    TypeAdapter(MCPCallToolResult | InputRequiredResult),
+                     progress_callback=on_progress,
+-                    allow_input_required=True,
+-                )
++                )
++                if isinstance(result, MCPCallToolResult) and not result.is_error:
++                    await session.validate_tool_result(call_tool_request_params.name, result)
++                return result
+ 
+             return await self._request_with_interaction(
+                 session,
+diff --git a/litellm/proxy/mcp_server/contracts.py b/litellm/proxy/mcp_server/contracts.py
+--- a/litellm/proxy/mcp_server/contracts.py
++++ b/litellm/proxy/mcp_server/contracts.py
+@@ -141,3 +141,4 @@
+     guardrail_auth: UserAPIKeyAuth | None = None
+     input_responses: InputResponses | None = None
+     request_state: str | None = None
++    client_meta: Mapping[str, object] | None = None
+diff --git a/litellm/proxy/mcp_server/mcp_server_manager.py b/litellm/proxy/mcp_server/mcp_server_manager.py
+--- a/litellm/proxy/mcp_server/mcp_server_manager.py
++++ b/litellm/proxy/mcp_server/mcp_server_manager.py
+@@ -439,6 +439,7 @@
+     env_vars: _EnvVarList
+     allow_all_keys: bool
+     available_on_public_internet: bool
++    forward_client_meta: ReadOnly[bool]
+     delegate_auth_to_upstream: bool
+     oauth_passthrough: bool
+     allow_sampling: bool
+@@ -2826,6 +2827,12 @@
+                 env_vars=server_config.get("env_vars", None),
+                 allow_all_keys=bool(server_config.get("allow_all_keys", False)),
+                 available_on_public_internet=bool(server_config.get("available_on_public_internet", True)),
++                forward_client_meta=TypeAdapter(bool).validate_python(
++                    _mapping_value(
++                        server_config, "forward_client_meta", _mapping_value(mcp_info, "forward_client_meta", False)
++                    ),
++                    strict=True,
++                ),
+                 delegate_auth_to_upstream=bool(server_config.get("delegate_auth_to_upstream", False)),
+                 oauth_passthrough=bool(server_config.get("oauth_passthrough", False)),
+                 dcr_bridge=config_dcr_bridge,
+@@ -3369,6 +3376,7 @@
+             auth_type=auth_type,
+             authentication_token=auth_value,
+             mcp_info=mcp_info,
++            forward_client_meta=TypeAdapter(bool).validate_python(mcp_info.get("forward_client_meta", False), strict=True),
+             extra_headers=getattr(mcp_server, "extra_headers", None),
+             static_headers=static_headers_dict,
+             env_vars=env_vars_list,
+@@ -6607,6 +6615,7 @@
+         allow_input_required: bool = False,
+         input_responses: InputResponses | None = None,
+         request_state: str | None = None,
++        client_meta: Mapping[str, object] | None = None,
+     ) -> CallToolResult | InputRequiredResult:
+         """
+         Call a regular MCP tool using the MCP client.
+@@ -6738,11 +6747,13 @@
+         )
+         persistent_session: Final = await self._upstream_session_for(client, mcp_server, raw_headers)
+ 
++        forwarded_meta: Final = dict(client_meta) if mcp_server.forward_client_meta and client_meta else None
+         call_tool_params: Final = MCPCallToolRequestParams(
+             name=original_tool_name,
+             arguments=arguments,
+             input_responses=input_responses,
+             request_state=request_state,
++            _meta=forwarded_meta,
+         )
+ 
+         if _obo_retry_applies(mcp_server, subject_token):
+@@ -7081,6 +7092,7 @@
+         catalog_auth_header: str | None | EllipsisType = ...,
+         listed_tool: MCPTool | None | EllipsisType = ...,
+         incoming_bearer_token: SecretStr | None | EllipsisType = ...,
++        client_meta: Mapping[str, object] | None = None,
+     ) -> CallToolResult | InputRequiredResult:
+         """
+         Call a tool with the given name and arguments
+@@ -7243,6 +7255,7 @@
+                 allow_input_required=wire_compat is WireCompat.MODERN,
+                 input_responses=input_responses,
+                 request_state=request_state,
++                client_meta=client_meta,
+             )
+ 
+         return await self._gather_openapi_tool_tasks(tasks, proxy_logging_obj)
+diff --git a/litellm/proxy/mcp_server/operations.py b/litellm/proxy/mcp_server/operations.py
+--- a/litellm/proxy/mcp_server/operations.py
++++ b/litellm/proxy/mcp_server/operations.py
+@@ -2096,6 +2096,7 @@
+     input_responses: InputResponses | None = None,
+     request_state: str | None = None,
+     incoming_bearer_token: SecretStr | None | EllipsisType = ...,
++    client_meta: Mapping[str, object] | None = None,
+     **kwargs: object,  # kwargs-ok: preserves the existing REST and decorated logging call contract
+ ) -> CallToolResult | InputRequiredResult:
+     context: Final = prepare_context(
+@@ -2119,6 +2120,7 @@
+         logging_data=types.MappingProxyType(kwargs),
+         input_responses=input_responses,
+         request_state=request_state,
++        client_meta=client_meta,
+     )
+     return await GatewayOperations().execute(operation, context)
+ 
+@@ -2141,6 +2143,7 @@
+     input_responses: InputResponses | None = None,
+     request_state: str | None = None,
+     incoming_bearer_token: SecretStr | None | EllipsisType = ...,
++    client_meta: Mapping[str, object] | None = None,
+     **kwargs: Any,
+ ) -> CallToolResult | InputRequiredResult:
+     """
+@@ -2460,6 +2463,7 @@
+             input_responses=input_responses,
+             request_state=request_state,
+             incoming_bearer_token=incoming_bearer_token,
++            client_meta=client_meta,
+         )
+ 
+     # Fall back to local tool registry with original name (legacy support)
+@@ -2947,6 +2951,7 @@
+     request_state: str | None = None,
+     incoming_bearer_token: SecretStr | None | EllipsisType = ...,
+     guardrail_auth: UserAPIKeyAuth | None = None,
++    client_meta: Mapping[str, object] | None = None,
+     **kwargs: Unpack[_CallMcpToolOptions],
+ ) -> CallToolResult | InputRequiredResult:
+     """
+@@ -3011,6 +3016,7 @@
+             incoming_bearer_token=incoming_bearer_token,
+             requested_server_id=scoped_server.server_id if scoped_server is not None else None,
+             guardrail_auth=guardrail_auth,
++            client_meta=client_meta,
+             **kwargs,
+         )
+     except Exception as e:
+@@ -3207,6 +3213,7 @@
+     *,
+     catalog_auth_header: str | None,
+     incoming_bearer_token: SecretStr | None | EllipsisType = ...,
++    client_meta: Mapping[str, object] | None = None,
+ ) -> CallToolResult | InputRequiredResult:
+     """Handle tool execution for managed server tools. ``catalog_auth_header`` is the header the client
+     supplied, which keys the caller's catalog slot; ``mcp_auth_header`` may already be the resolved
+@@ -3234,6 +3241,7 @@
+         input_responses=input_responses,
+         request_state=request_state,
+         incoming_bearer_token=incoming_bearer_token,
++        client_meta=client_meta,
+     )
+     verbose_logger.debug("CALL TOOL RESULT: %s", call_tool_result)
+     return call_tool_result
+@@ -3466,6 +3474,9 @@
+         else:
+             data = body_data
+ 
++        # The SDK already owns each hop's progress token. Preserve custom fields here.
++        client_meta: Final = params.meta
++
+         response: Final = await call_mcp_tool(
+             user_api_key_auth=user_api_key_auth,
+             mcp_auth_header=mcp_auth_header,
+@@ -3480,6 +3491,7 @@
+             request_state=params.request_state,
+             incoming_bearer_token=context.incoming_bearer_token,
+             guardrail_auth=guardrail_auth,
++            client_meta=client_meta,
+             **data,  # for logging
+         )
+     except MCPMissingUserEnvVarsError as e:
+@@ -3939,6 +3951,7 @@
+                     input_responses=operation.input_responses,
+                     request_state=operation.request_state,
+                     incoming_bearer_token=context.incoming_bearer_token,
++                    client_meta=operation.client_meta,
+                     **operation.logging_data,
+                 )
+             case ListToolsRequest(params=params):
+diff --git a/litellm/types/mcp_server/mcp_server_manager.py b/litellm/types/mcp_server/mcp_server_manager.py
+--- a/litellm/types/mcp_server/mcp_server_manager.py
++++ b/litellm/types/mcp_server/mcp_server_manager.py
+@@ -25,6 +25,8 @@
+         TypeAdapter[MCPUpstreamProtocol](MCPUpstreamProtocol).validate_python(value["protocol_version"])
+     if "skip_tool_output_validation" in value:
+         TypeAdapter[bool](bool).validate_python(value["skip_tool_output_validation"], strict=True)
++    if "forward_client_meta" in value:
++        TypeAdapter[bool](bool).validate_python(value["forward_client_meta"], strict=True)
+     return value
+ 
+ 
+@@ -206,6 +208,7 @@
+     access_groups: list[str] | None = None
+     allow_all_keys: bool = False
+     available_on_public_internet: bool = True
++    forward_client_meta: bool = False
+     # Deprecated opt-in to upstream-delegated authentication for ``oauth2``
+     # servers. A bare ``Authorization`` that is not a LiteLLM credential is the
+     # upstream token and is forwarded; see
+diff --git a/tests/unit/mcp_client/test_mcp_client.py b/tests/unit/mcp_client/test_mcp_client.py
+--- a/tests/unit/mcp_client/test_mcp_client.py
++++ b/tests/unit/mcp_client/test_mcp_client.py
+@@ -42,7 +42,7 @@
+     ServerCapabilities,
+ )
+ from mcp_types.version import LATEST_HANDSHAKE_VERSION
+-from pydantic import BaseModel, ConfigDict, TypeAdapter, ValidationError
++from pydantic import BaseModel, ConfigDict, JsonValue, TypeAdapter, ValidationError
+ from starlette.applications import Starlette
+ from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
+ from starlette.requests import Request
+@@ -5304,3 +5304,36 @@
+ 
+     assert isinstance(result, CallToolResult)
+     assert result.structured_content == {"n": "not-an-integer"}
++
++
++@pytest.mark.asyncio
++async def test_call_tool_preserves_custom_meta_values_in_upstream_request() -> None:
++    from mcp.types import TextContent
++
++    custom_meta: Final[dict[str, JsonValue]] = {
++        "correlation": "request-1",
++        "nullable": None,
++        "nested": {"nil": None, "enabled": False},
++        "array": [None, {"enabled": False}, "tail"],
++        "zero": 0,
++        "disabled": False,
++    }
++    service: Final = UpstreamServer("metadata")
++
++    @service.tool()
++    def inspect_meta(query: str, ctx: Context) -> str:
++        metadata: Final = TypeAdapter(dict[str, JsonValue]).validate_python(ctx.request_context.meta or {})
++        return json.dumps({"arguments": {"query": query}, "meta": metadata})
++
++    client: Final = _InProcessUpstreamClient(service)
++    result: Final = await client.call_tool(
++        CallToolRequestParams(name="inspect_meta", arguments={"query": "hello"}, _meta=custom_meta),
++        raise_on_error=True,
++    )
++    assert isinstance(result, CallToolResult)
++    assert result.is_error is False
++    assert isinstance(result.content[0], TextContent)
++    observed: Final = TypeAdapter(dict[str, JsonValue]).validate_json(result.content[0].text)
++    observed_meta: Final = TypeAdapter(dict[str, JsonValue]).validate_python(observed["meta"])
++    assert {key: observed_meta[key] for key in custom_meta} == custom_meta
++    assert observed["arguments"] == {"query": "hello"}

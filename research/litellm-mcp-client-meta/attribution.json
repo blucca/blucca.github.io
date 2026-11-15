@@ -1,0 +1,22 @@
+{
+  "base": "eba880e108109fec9a9a131c6e26c71b9c2b5828",
+  "derived_from": {
+    "repository": "thinhnx128/litellm",
+    "author": "thinhnx128",
+    "pr": 51189,
+    "commit": "9812191dc0b0f44bcbd0a77a134d8f783f786e6d"
+  },
+  "license": "MIT",
+  "license_notice": "LICENSE.litellm",
+  "changed_files": [
+    "litellm/mcp_client/client.py",
+    "litellm/proxy/mcp_server/contracts.py",
+    "litellm/proxy/mcp_server/mcp_server_manager.py",
+    "litellm/proxy/mcp_server/operations.py",
+    "litellm/types/mcp_server/mcp_server_manager.py",
+    "tests/unit/mcp_client/test_mcp_client.py"
+  ],
+  "syntax_checks": "6 passed",
+  "progress_note": "Preserve all metadata; existing SDK dispatcher updates the hop-local progressToken.",
+  "native": "Four real HTTP controls and one native SDK target passed; see observed-results.json."
+}

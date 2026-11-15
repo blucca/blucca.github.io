@@ -1,0 +1,3 @@
+# Single HTTP lab uses the recorded dependency set; other proxy services select their own extras.
+-r requirements.lock.txt
+-e ./repo
