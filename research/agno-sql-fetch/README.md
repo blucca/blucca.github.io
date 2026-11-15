@@ -4,7 +4,7 @@ A provider-free reproduction of [Agno issue #11557](https://github.com/agno-agi/
 
 The lab uses real SQLAlchemy sessions, a file-backed SQLite database, and a SQLite UDF that raises on the third row. SQLAlchemy `Connection.execute()` succeeds, `fetchone()` actually returns `{"value": 1}`, and the subsequent `fetchall()` raises a real `sqlite3.OperationalError`. SQLAlchemy `Result` methods are unchanged. No model or provider is called.
 
-[Download the complete free lab](https://blucca.github.io/research/agno-sql-fetch/agno-sql-fetch-native.zip) · [Actual native results](results.json) · [Runnable source](run_lab.py)
+[Download the complete free lab](https://blucca.github.io/research/agno-sql-fetch/agno-sql-fetch-native.zip) · [Actual native results](results.json) · [Runnable source](run_lab.py) · [Python agent data-contract guide](https://blucca.github.io/guides/python-agent-data-contracts/)
 
 ## Reproduce
 
@@ -18,7 +18,7 @@ python -m venv .venv
 .venv/bin/python run_lab.py --output my-results.json
 ```
 
-Windows uses `.venv\Scripts\python` for the last two commands. The original reporter's Windows/Python 3.13 result can be recorded by rerunning this package there. `requirements.txt` contains the two core package pins; `requirements.lock` records the complete measured environment.
+Windows uses `.venv\Scripts\python` for the last two commands. `requirements.txt` contains the two core package pins; `requirements.lock` records the complete measured environment. The original reporter's independent Windows run and the resulting cleanup fix are recorded below.
 
 The **512 MiB ceiling applies to our measured Linux run**. Windows uses ordinary Python: when its `resource` module is unavailable, the lab still runs and reports `resource_available=false`, `resource_limit_bytes=null`, and `peak_rss_kib=null`. On Linux these fields report the process's actual active limit and RSS; an unset limit is also recorded as `null`.
 
@@ -34,7 +34,13 @@ Expected SQL error tracebacks appear before the final `PASS`; they demonstrate t
 
 Both `limit=None` and `limit=2` reach the real SQLite fetch error. All three sources retain correct ordinary SELECT results, legitimate empty SELECT results, zero/negative limits, and non-returning CREATE/INSERT results. A separate SQLite DBAPI connection reads the committed inserted value `7`.
 
-The supplied `results.json` records the successful full native run after the optional-resource import fix: six real tool-fetch-error cases, twelve normal SELECT/limit cases, three legitimate empty SELECT cases, and three DDL/DML commit checks. Native peak RSS was **73,528 KiB** under a **512 MiB address-space ceiling**. Model/provider and business-network calls: **0**.
+The supplied `results.json` records the successful full native run after the optional-resource import and explicit-connection-close fixes: six real tool-fetch-error cases, twelve normal SELECT/limit cases, three legitimate empty SELECT cases, and three DDL/DML commit checks. The JSON records the measured RSS under a **512 MiB address-space ceiling**. Model/provider and business-network calls: **0**.
+
+## Independent Windows follow-up
+
+On 2026-11-15, original reporter **JiaxPeaceLove** [reported an independent run](https://github.com/agno-agi/agno/issues/11557#issuecomment-6892771690) on **Windows 11, Python 3.13.14, Agno 3.2.0, SQLAlchemy 2.0.57, SQLite 3.50.4**, using the exact dependency lock and verified frozen-source hashes. Every case and assertion passed: published/main returned `"[]"` for both real fetch failures, and the existing PR source returned the explicit error. Their own separate native script also reproduced the published-package fault.
+
+That pre-update runner raised `WinError 32` while removing its temporary SQLite files. A SQLite connection's transaction context leaves the connection open; the reporter disclosed a `TemporaryDirectory(ignore_cleanup_errors=True)` shim to obtain the final PASS JSON. The current runner uses `contextlib.closing` to close each independent DBAPI connection before normal temporary-directory cleanup. A Linux native rerun and a real connection-lifecycle check passed; an updated Windows run without the cleanup shim is the next check in the same thread. The SQL fixtures, source hashes and test assertions are unchanged.
 
 ## Frozen sources and scope
 

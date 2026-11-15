@@ -2,6 +2,7 @@
 """Reproduce Agno #11557 with real SQLite fetch errors and PR #11680."""
 
 import argparse
+from contextlib import closing
 import hashlib
 import importlib.metadata
 import importlib.util
@@ -158,7 +159,7 @@ def exercise_tools(name, tools_class, directory, patched):
         ddl = tools.run_sql_query("CREATE TABLE committed_values (value INTEGER)")
         dml = tools.run_sql_query("INSERT INTO committed_values VALUES (7)")
         assert ddl == dml == "[]", (ddl, dml)
-        with sqlite3.connect(directory / (name + ".sqlite")) as independent_connection:
+        with closing(sqlite3.connect(directory / (name + ".sqlite"))) as independent_connection:
             persisted_rows = independent_connection.execute("SELECT value FROM committed_values").fetchall()
         assert persisted_rows == [(7,)], persisted_rows
         results["cases"].append(

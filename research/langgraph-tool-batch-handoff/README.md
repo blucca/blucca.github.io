@@ -21,6 +21,10 @@ The fixed and repaired paths preserve every original message field and ID in the
 
 The provider 400/200 results are the original author’s measurements. This lab checks the real SDK’s message order, contents and persistence using a local request-boundary oracle.
 
+## Independent Windows rerun
+
+[adity982, author of the closed Python PR #9560, reported a complete rerun](https://github.com/langchain-ai/langgraph/issues/9556#issuecomment-6889188475) on **Windows 11 / Python 3.14.7**, using the same four pinned LangGraph packages above. The probe exited **0** with `all_checks_passed: true`: it caught the missing `call_2` in that helper and passed both the public handoff and same-thread recovery controls, including payload preservation. This was a local fixture-only run with zero provider or HTTP calls.
+
 ## Run it
 
 Extract the ZIP into a new directory. Create a virtual environment with your Python 3.12+ interpreter:

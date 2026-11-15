@@ -325,10 +325,10 @@
     "model_or_provider_calls": 0,
     "business_network_calls": 0
   },
-  "runtime_seconds": 0.113,
+  "runtime_seconds": 0.116,
   "resource_available": true,
   "resource_limit_bytes": 536870912,
-  "peak_rss_kib": 73528,
+  "peak_rss_kib": 76880,
   "attribution": {
     "original_report_author": "JiaxPeaceLove",
     "issue": "https://github.com/agno-agi/agno/issues/11557",
