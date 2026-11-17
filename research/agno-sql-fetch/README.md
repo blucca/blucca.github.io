@@ -29,7 +29,7 @@ Expected SQL error tracebacks appear before the final `PASS`; they demonstrate t
 | SQLTools source | Actual `run_sql_query` result after the real fetch failure |
 |---|---|
 | Published Agno 3.2.0 | String `"[]"` |
-| Frozen current-main SQL module | String `"[]"` |
+| Frozen main SQL module at discovery | String `"[]"` |
 | Existing PR 11680 SQL module | String starting `"Error running query: "` |
 
 Both `limit=None` and `limit=2` reach the real SQLite fetch error. All three sources retain correct ordinary SELECT results, legitimate empty SELECT results, zero/negative limits, and non-returning CREATE/INSERT results. A separate SQLite DBAPI connection reads the committed inserted value `7`.
@@ -43,6 +43,12 @@ On 2026-11-15, original reporter **JiaxPeaceLove** [reported an independent run]
 That pre-update runner raised `WinError 32` while removing its temporary SQLite files. A SQLite connection's transaction context leaves the connection open; the reporter disclosed a `TemporaryDirectory(ignore_cleanup_errors=True)` shim to obtain the final PASS JSON. The current runner uses `contextlib.closing` to close each independent DBAPI connection before normal temporary-directory cleanup. A Linux native rerun and a real connection-lifecycle check passed. The SQL fixtures, source hashes and test assertions are unchanged.
 
 In a [same-environment follow-up](https://github.com/agno-agi/agno/issues/11557#issuecomment-6896798100), the reporter completed the updated runner **without the cleanup shim** and obtained native **PASS**. Ordinary cleanup removed the temporary directory completely, and the runner itself wrote `results.json`. The reporter verified byte-identical runnable source and complete-ZIP runner, with the same dependency pins and unchanged frozen-source hashes. The Windows SQL results remain consistent with the supplied Linux results; the supplied `results.json` remains the measured Linux run.
+
+## Upstream status — 2026-11-17
+
+Maintainer **sannya-singal** approved the existing [PR #11680](https://github.com/agno-agi/agno/pull/11680) and merged it into Agno in commit [`8a252e1`](https://github.com/agno-agi/agno/commit/8a252e15b58de6dc923f533bd356089c033d8040), closing issue #11557. The original report and independent Windows verification are by **JiaxPeaceLove**; the upstream fix is by **adityav1709**, with the disclosed Muse (Aurora) co-authorship.
+
+This lab retains its measured Agno 3.2.0 and frozen-module comparison. The merge is an upstream status update; the supplied results and runnable sources remain the original measured versions. Keep those source pins when comparing a deployed version.
 
 ## Frozen sources and scope
 
