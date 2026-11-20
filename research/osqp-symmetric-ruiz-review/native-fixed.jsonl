@@ -1,0 +1,11 @@
+{"kind":"norm","case":"issue798_original","symmetric":1,"actual":[10,101],"expected":[10,101],"pass":true}
+{"kind":"norm","case":"issue798_permuted","symmetric":1,"actual":[101,10],"expected":[101,10],"pass":true}
+{"kind":"norm","case":"rectangular_nonsymmetric","symmetric":0,"actual":[4,8],"expected":[4,8],"pass":true}
+{"kind":"norm","case":"symmetric_diagonal","symmetric":1,"actual":[1,101],"expected":[1,101],"pass":true}
+{"kind":"solve","scaling":0,"swapped":false,"D":[1,1],"c":1,"iter":25,"status":1,"x_original_order":[-1.0000325472357923,0.089111937600556967],"pass":true}
+{"kind":"solve","scaling":0,"swapped":true,"D":[1,1],"c":1,"iter":25,"status":1,"x_original_order":[-1.0000325472357916,0.089111937600556912],"pass":true}
+{"kind":"solve","scaling":1,"swapped":false,"D":[0.31622776601683794,0.099503719020998915],"c":1.5213077546342548,"iter":25,"status":1,"x_original_order":[-1.0001071644482349,0.089119380590746131],"pass":true}
+{"kind":"solve","scaling":1,"swapped":true,"D":[0.099503719020998915,0.31622776601683794],"c":1.5213077546342548,"iter":25,"status":1,"x_original_order":[-1.0001071644482433,0.089119380590746949],"pass":true}
+{"kind":"solve","scaling":10,"swapped":false,"D":[0.50697425064977419,0.070848761712089092],"c":1.9724867657841185,"iter":25,"status":1,"x_original_order":[-1.000087886576142,0.089122617969289303],"pass":true}
+{"kind":"solve","scaling":10,"swapped":true,"D":[0.070848761712089092,0.50697425064977419],"c":1.9724867657841185,"iter":25,"status":1,"x_original_order":[-1.0000878865761411,0.089122617969289303],"pass":true}
+{"kind":"summary","failed_checks":0}

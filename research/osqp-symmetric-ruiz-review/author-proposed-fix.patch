@@ -1,0 +1,28 @@
+diff --git a/algebra/builtin/matrix.c b/algebra/builtin/matrix.c
+index b3dafc6..529e96e 100644
+--- a/algebra/builtin/matrix.c
++++ b/algebra/builtin/matrix.c
+@@ -193,7 +193,8 @@ void OSQPMatrix_Atxpy(const OSQPMatrix*  A,
+ 
+ void OSQPMatrix_col_norm_inf(const OSQPMatrix*  M,
+                                    OSQPVectorf* E) {
+-   csc_col_norm_inf(M->csc, OSQPVectorf_data(E));
++   if(M->symmetry == NONE) csc_col_norm_inf(M->csc, OSQPVectorf_data(E));
++   else                    csc_row_norm_inf_sym_triu(M->csc, OSQPVectorf_data(E));
+ }
+ 
+ void OSQPMatrix_row_norm_inf(const OSQPMatrix*  M,
+diff --git a/algebra/mkl/matrix.c b/algebra/mkl/matrix.c
+index 3c4e6d1..d5489fa 100644
+--- a/algebra/mkl/matrix.c
++++ b/algebra/mkl/matrix.c
+@@ -262,7 +262,8 @@ void OSQPMatrix_col_norm_inf(const OSQPMatrix*  M,
+                                    OSQPVectorf* E) {
+   /* This operates on the assumption that the stored shadow csc matrix is the backing memory for
+      the actual MKL matrix handle, which seems to be the case in all the testing done. */
+-   csc_col_norm_inf(M->csc, OSQPVectorf_data(E));
++   if(M->symmetry == NONE) csc_col_norm_inf(M->csc, OSQPVectorf_data(E));
++   else                    csc_row_norm_inf_sym_triu(M->csc, OSQPVectorf_data(E));
+ }
+ 
+ void OSQPMatrix_row_norm_inf(const OSQPMatrix*  M,
