@@ -75,5 +75,5 @@ The original report, input and proposed fix are by **JALin2000**. OSQP source
 is Apache-2.0, copyright the OSQP developers. This independent harness,
 paired check and replay script are by Blucca and licensed Apache-2.0. The patch
 contains the original author's proposed two-backend change; it is included
-for reproducibility. This is an independent review, with the original report
-as the upstream contribution thread.
+for reproducibility. Upstream attributions are preserved in [NOTICE](NOTICE). This is an independent
+review, with the original report as the upstream contribution thread.
