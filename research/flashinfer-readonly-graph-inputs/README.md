@@ -22,6 +22,10 @@ The relevant condition is a later operation writing values this call consumed, b
 
 This is a documentation/follow-up control within the agreed opt-in design. A broader snapshot strategy should start from an actual affected graph and its state-buffer cost.
 
+## Author validation
+
+The [PR author independently reproduced all three CPU controls](https://github.com/flashinfer-ai/flashinfer/pull/8483#issuecomment-7032425669) and the offline replay mismatch. Their [documentation update](https://github.com/flashinfer-ai/flashinfer/commit/7f15fef22bba41dc3d4c5c5b9aa70b43679fffa8) records the deferred-input lifetime in both the logging guide and environment-variable reference. Runtime behavior and the opt-in scope remain unchanged.
+
 ## Reproduce
 
 Use an environment with PyTorch installed. Fetch the exact upstream module, then run the control:
