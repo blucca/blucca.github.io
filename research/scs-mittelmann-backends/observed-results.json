@@ -1,0 +1,751 @@
+{
+  "source": "https://raw.githubusercontent.com/bodono/solver_benchmarks_results/3186dfa179c07e7d032bed9ff2cdf930c6f29f3f/scs332_2026-11/merged/mittelmann/results.jsonl",
+  "scope": "Published residuals and solver-call wall time, 37 LPs; no new LP solves.",
+  "contract": {
+    "requested_tol": 0.0001,
+    "kkt_threshold": 0.001,
+    "limit_seconds": 1800,
+    "grace_seconds": 60,
+    "failure_seconds": 5400,
+    "shift_seconds": 10,
+    "time_floor_seconds": 0.01
+  },
+  "all_tasks": {
+    "cpu": {
+      "verified": 24,
+      "shifted_gm_seconds": 361.14122073691345
+    },
+    "gpu": {
+      "verified": 29,
+      "shifted_gm_seconds": 151.90211478369127
+    }
+  },
+  "groups": {
+    "both": [
+      "bdry2",
+      "chromaticindex1024-7",
+      "ex10",
+      "fhnw-binschedule1",
+      "graph40-40",
+      "neos-3025225",
+      "neos-5251015",
+      "qap15",
+      "scpm1",
+      "supportcase19",
+      "bharat",
+      "datt256_lp",
+      "irish-electricity",
+      "neos-5052403-cygnet",
+      "s100",
+      "supportcase10",
+      "tpl-tub-ws1617",
+      "brazil3",
+      "rmine15",
+      "s250r10",
+      "savsched1",
+      "set-cover-model",
+      "square41",
+      "woodlands09"
+    ],
+    "cpu_only": [],
+    "gpu_only": [
+      "Dual2_5000",
+      "a2864",
+      "Primal2_1000",
+      "L1_sixm250obs",
+      "Linf_520c"
+    ],
+    "neither": [
+      "thk_48",
+      "dlr1",
+      "dlr2",
+      "physiciansched3-3",
+      "thk_63",
+      "L1_sixm1000obs",
+      "L2CTA3D",
+      "s82"
+    ]
+  },
+  "common_success": {
+    "count": 24,
+    "geometric_mean_cpu_over_gpu": 2.701807564256386,
+    "shifted_gm_seconds": {
+      "cpu": 76.94095416465156,
+      "gpu": 28.434963545800883
+    },
+    "gpu_slower": [
+      "chromaticindex1024-7",
+      "datt256_lp",
+      "irish-electricity",
+      "brazil3"
+    ]
+  },
+  "per_problem": [
+    {
+      "dataset": "mittelmann0",
+      "problem": "Dual2_5000",
+      "cpu": {
+        "verified": false,
+        "seconds": 1890.0,
+        "max_relative_kkt": null,
+        "reported_status": "time_limit",
+        "scored_seconds": 5400
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 1384.228793917,
+        "max_relative_kkt": 0.0006752600224829893,
+        "reported_status": "optimal",
+        "scored_seconds": 1384.228793917
+      }
+    },
+    {
+      "dataset": "mittelmann0",
+      "problem": "a2864",
+      "cpu": {
+        "verified": false,
+        "seconds": 1890.0,
+        "max_relative_kkt": null,
+        "reported_status": "time_limit",
+        "scored_seconds": 5400
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 111.42636262799988,
+        "max_relative_kkt": 4.5182876544502016e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 111.42636262799988
+      }
+    },
+    {
+      "dataset": "mittelmann0",
+      "problem": "bdry2",
+      "cpu": {
+        "verified": true,
+        "seconds": 180.79162996599916,
+        "max_relative_kkt": 7.283755213339428e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 180.79162996599916
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 45.78787953599931,
+        "max_relative_kkt": 1.995396045253153e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 45.78787953599931
+      }
+    },
+    {
+      "dataset": "mittelmann0",
+      "problem": "chromaticindex1024-7",
+      "cpu": {
+        "verified": true,
+        "seconds": 1.5046209049999995,
+        "max_relative_kkt": 6.286911337864536e-06,
+        "reported_status": "optimal",
+        "scored_seconds": 1.5046209049999995
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 1.8671284399997603,
+        "max_relative_kkt": 6.2859535243506284e-06,
+        "reported_status": "optimal",
+        "scored_seconds": 1.8671284399997603
+      }
+    },
+    {
+      "dataset": "mittelmann0",
+      "problem": "ex10",
+      "cpu": {
+        "verified": true,
+        "seconds": 15.002352055,
+        "max_relative_kkt": 1.7683610128641901e-10,
+        "reported_status": "optimal",
+        "scored_seconds": 15.002352055
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 2.947127444999751,
+        "max_relative_kkt": 2.2399027077212682e-11,
+        "reported_status": "optimal",
+        "scored_seconds": 2.947127444999751
+      }
+    },
+    {
+      "dataset": "mittelmann0",
+      "problem": "fhnw-binschedule1",
+      "cpu": {
+        "verified": true,
+        "seconds": 862.162237805,
+        "max_relative_kkt": 3.912873722124947e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 862.162237805
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 185.47785681599998,
+        "max_relative_kkt": 4.260962456864855e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 185.47785681599998
+      }
+    },
+    {
+      "dataset": "mittelmann0",
+      "problem": "graph40-40",
+      "cpu": {
+        "verified": true,
+        "seconds": 5.054706101000079,
+        "max_relative_kkt": 7.856827831688284e-06,
+        "reported_status": "optimal",
+        "scored_seconds": 5.054706101000079
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 3.9063250079998397,
+        "max_relative_kkt": 7.856827808855578e-06,
+        "reported_status": "optimal",
+        "scored_seconds": 3.9063250079998397
+      }
+    },
+    {
+      "dataset": "mittelmann0",
+      "problem": "neos-3025225",
+      "cpu": {
+        "verified": true,
+        "seconds": 43.51560231799999,
+        "max_relative_kkt": 7.756811320829268e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 43.51560231799999
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 11.21203441399939,
+        "max_relative_kkt": 4.694031594709713e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 11.21203441399939
+      }
+    },
+    {
+      "dataset": "mittelmann0",
+      "problem": "neos-5251015",
+      "cpu": {
+        "verified": true,
+        "seconds": 7.729607434999934,
+        "max_relative_kkt": 4.088110518735944e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 7.729607434999934
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 5.053399702000206,
+        "max_relative_kkt": 4.0881101520367976e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 5.053399702000206
+      }
+    },
+    {
+      "dataset": "mittelmann0",
+      "problem": "qap15",
+      "cpu": {
+        "verified": true,
+        "seconds": 44.07150507999995,
+        "max_relative_kkt": 4.5603234731933764e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 44.07150507999995
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 6.477657241999623,
+        "max_relative_kkt": 2.7143355435681224e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 6.477657241999623
+      }
+    },
+    {
+      "dataset": "mittelmann0",
+      "problem": "scpm1",
+      "cpu": {
+        "verified": true,
+        "seconds": 87.52216744900011,
+        "max_relative_kkt": 9.285387080074952e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 87.52216744900011
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 45.029141473999516,
+        "max_relative_kkt": 8.934354718672754e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 45.029141473999516
+      }
+    },
+    {
+      "dataset": "mittelmann0",
+      "problem": "supportcase19",
+      "cpu": {
+        "verified": true,
+        "seconds": 422.0718264500001,
+        "max_relative_kkt": 8.874793849905081e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 422.0718264500001
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 120.71910035600013,
+        "max_relative_kkt": 7.161529507566389e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 120.71910035600013
+      }
+    },
+    {
+      "dataset": "mittelmann0",
+      "problem": "thk_48",
+      "cpu": {
+        "verified": false,
+        "seconds": 1890.0,
+        "max_relative_kkt": null,
+        "reported_status": "time_limit",
+        "scored_seconds": 5400
+      },
+      "gpu": {
+        "verified": false,
+        "seconds": null,
+        "max_relative_kkt": null,
+        "reported_status": "worker_error",
+        "scored_seconds": 5400
+      }
+    },
+    {
+      "dataset": "mittelmann1",
+      "problem": "Primal2_1000",
+      "cpu": {
+        "verified": false,
+        "seconds": 1831.175083346001,
+        "max_relative_kkt": 0.008072129702877821,
+        "reported_status": "optimal_inaccurate",
+        "scored_seconds": 5400
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 835.3214756450006,
+        "max_relative_kkt": 5.795812918986117e-06,
+        "reported_status": "optimal",
+        "scored_seconds": 835.3214756450006
+      }
+    },
+    {
+      "dataset": "mittelmann1",
+      "problem": "bharat",
+      "cpu": {
+        "verified": true,
+        "seconds": 1339.2494931280016,
+        "max_relative_kkt": 8.549904586690958e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 1339.2494931280016
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 891.6714285130001,
+        "max_relative_kkt": 5.6126182967933885e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 891.6714285130001
+      }
+    },
+    {
+      "dataset": "mittelmann1",
+      "problem": "datt256_lp",
+      "cpu": {
+        "verified": true,
+        "seconds": 5.261657256000035,
+        "max_relative_kkt": 7.574787650844341e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 5.261657256000035
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 7.79849232000015,
+        "max_relative_kkt": 7.574787300637728e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 7.79849232000015
+      }
+    },
+    {
+      "dataset": "mittelmann1",
+      "problem": "dlr1",
+      "cpu": {
+        "verified": false,
+        "seconds": 1890.0,
+        "max_relative_kkt": null,
+        "reported_status": "time_limit",
+        "scored_seconds": 5400
+      },
+      "gpu": {
+        "verified": false,
+        "seconds": 1890.0,
+        "max_relative_kkt": null,
+        "reported_status": "time_limit",
+        "scored_seconds": 5400
+      }
+    },
+    {
+      "dataset": "mittelmann1",
+      "problem": "dlr2",
+      "cpu": {
+        "verified": false,
+        "seconds": 1890.0,
+        "max_relative_kkt": null,
+        "reported_status": "time_limit",
+        "scored_seconds": 5400
+      },
+      "gpu": {
+        "verified": false,
+        "seconds": 1890.0,
+        "max_relative_kkt": null,
+        "reported_status": "time_limit",
+        "scored_seconds": 5400
+      }
+    },
+    {
+      "dataset": "mittelmann1",
+      "problem": "irish-electricity",
+      "cpu": {
+        "verified": true,
+        "seconds": 33.01267187799999,
+        "max_relative_kkt": 5.608551924021141e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 33.01267187799999
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 51.08122593100052,
+        "max_relative_kkt": 9.99618749041045e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 51.08122593100052
+      }
+    },
+    {
+      "dataset": "mittelmann1",
+      "problem": "neos-5052403-cygnet",
+      "cpu": {
+        "verified": true,
+        "seconds": 96.82829732900001,
+        "max_relative_kkt": 5.8225963740075386e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 96.82829732900001
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 12.232222015000843,
+        "max_relative_kkt": 1.8989689663216894e-06,
+        "reported_status": "optimal",
+        "scored_seconds": 12.232222015000843
+      }
+    },
+    {
+      "dataset": "mittelmann1",
+      "problem": "physiciansched3-3",
+      "cpu": {
+        "verified": false,
+        "seconds": 1816.4375876350005,
+        "max_relative_kkt": null,
+        "reported_status": "primal_infeasible_inaccurate",
+        "scored_seconds": 5400
+      },
+      "gpu": {
+        "verified": false,
+        "seconds": 1803.9710385059998,
+        "max_relative_kkt": 0.002195348494343889,
+        "reported_status": "optimal_inaccurate",
+        "scored_seconds": 5400
+      }
+    },
+    {
+      "dataset": "mittelmann1",
+      "problem": "s100",
+      "cpu": {
+        "verified": true,
+        "seconds": 18.839182644001994,
+        "max_relative_kkt": 0.000141013416830788,
+        "reported_status": "optimal",
+        "scored_seconds": 18.839182644001994
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 15.591253589000189,
+        "max_relative_kkt": 0.0003181316726274977,
+        "reported_status": "optimal",
+        "scored_seconds": 15.591253589000189
+      }
+    },
+    {
+      "dataset": "mittelmann1",
+      "problem": "supportcase10",
+      "cpu": {
+        "verified": true,
+        "seconds": 423.596347087,
+        "max_relative_kkt": 9.275495511399192e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 423.596347087
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 38.92416160199991,
+        "max_relative_kkt": 9.370872778109871e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 38.92416160199991
+      }
+    },
+    {
+      "dataset": "mittelmann1",
+      "problem": "thk_63",
+      "cpu": {
+        "verified": false,
+        "seconds": 1890.0,
+        "max_relative_kkt": null,
+        "reported_status": "time_limit",
+        "scored_seconds": 5400
+      },
+      "gpu": {
+        "verified": false,
+        "seconds": 1890.0,
+        "max_relative_kkt": null,
+        "reported_status": "time_limit",
+        "scored_seconds": 5400
+      }
+    },
+    {
+      "dataset": "mittelmann1",
+      "problem": "tpl-tub-ws1617",
+      "cpu": {
+        "verified": true,
+        "seconds": 224.71917077100034,
+        "max_relative_kkt": 9.98953017954487e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 224.71917077100034
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 105.79748738099988,
+        "max_relative_kkt": 9.630771131323006e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 105.79748738099988
+      }
+    },
+    {
+      "dataset": "mittelmann2",
+      "problem": "L1_sixm1000obs",
+      "cpu": {
+        "verified": false,
+        "seconds": 1890.0,
+        "max_relative_kkt": null,
+        "reported_status": "time_limit",
+        "scored_seconds": 5400
+      },
+      "gpu": {
+        "verified": false,
+        "seconds": null,
+        "max_relative_kkt": null,
+        "reported_status": "worker_error",
+        "scored_seconds": 5400
+      }
+    },
+    {
+      "dataset": "mittelmann2",
+      "problem": "L1_sixm250obs",
+      "cpu": {
+        "verified": false,
+        "seconds": 1890.0,
+        "max_relative_kkt": null,
+        "reported_status": "time_limit",
+        "scored_seconds": 5400
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 1846.603466263,
+        "max_relative_kkt": 7.978959079908127e-05,
+        "reported_status": "optimal_inaccurate",
+        "scored_seconds": 1846.603466263
+      }
+    },
+    {
+      "dataset": "mittelmann2",
+      "problem": "L2CTA3D",
+      "cpu": {
+        "verified": false,
+        "seconds": 1890.0,
+        "max_relative_kkt": null,
+        "reported_status": "time_limit",
+        "scored_seconds": 5400
+      },
+      "gpu": {
+        "verified": false,
+        "seconds": 1890.0,
+        "max_relative_kkt": null,
+        "reported_status": "time_limit",
+        "scored_seconds": 5400
+      }
+    },
+    {
+      "dataset": "mittelmann2",
+      "problem": "Linf_520c",
+      "cpu": {
+        "verified": false,
+        "seconds": 1810.8405136449992,
+        "max_relative_kkt": null,
+        "reported_status": "primal_infeasible_inaccurate",
+        "scored_seconds": 5400
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 252.38664197599974,
+        "max_relative_kkt": 5.296230905197092e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 252.38664197599974
+      }
+    },
+    {
+      "dataset": "mittelmann2",
+      "problem": "brazil3",
+      "cpu": {
+        "verified": true,
+        "seconds": 1.248961433999284,
+        "max_relative_kkt": 8.209016660792679e-08,
+        "reported_status": "optimal",
+        "scored_seconds": 1.248961433999284
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 1.3399857880003765,
+        "max_relative_kkt": 6.297189198377009e-07,
+        "reported_status": "optimal",
+        "scored_seconds": 1.3399857880003765
+      }
+    },
+    {
+      "dataset": "mittelmann2",
+      "problem": "rmine15",
+      "cpu": {
+        "verified": true,
+        "seconds": 1566.4041335810002,
+        "max_relative_kkt": 9.13351246153902e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 1566.4041335810002
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 33.50864446200012,
+        "max_relative_kkt": 9.718143713845376e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 33.50864446200012
+      }
+    },
+    {
+      "dataset": "mittelmann2",
+      "problem": "s250r10",
+      "cpu": {
+        "verified": true,
+        "seconds": 17.693499708000672,
+        "max_relative_kkt": 5.2621973691317586e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 17.693499708000672
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 10.406002305000584,
+        "max_relative_kkt": 8.256733316005949e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 10.406002305000584
+      }
+    },
+    {
+      "dataset": "mittelmann2",
+      "problem": "s82",
+      "cpu": {
+        "verified": false,
+        "seconds": 1821.3449722509995,
+        "max_relative_kkt": 0.05362846440460287,
+        "reported_status": "optimal_inaccurate",
+        "scored_seconds": 5400
+      },
+      "gpu": {
+        "verified": false,
+        "seconds": 1833.6459635009996,
+        "max_relative_kkt": 0.008536704630855865,
+        "reported_status": "optimal_inaccurate",
+        "scored_seconds": 5400
+      }
+    },
+    {
+      "dataset": "mittelmann2",
+      "problem": "savsched1",
+      "cpu": {
+        "verified": true,
+        "seconds": 54.643602844998895,
+        "max_relative_kkt": 3.68833965393303e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 54.643602844998895
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 18.68058734999977,
+        "max_relative_kkt": 3.856569313058854e-06,
+        "reported_status": "optimal",
+        "scored_seconds": 18.68058734999977
+      }
+    },
+    {
+      "dataset": "mittelmann2",
+      "problem": "set-cover-model",
+      "cpu": {
+        "verified": true,
+        "seconds": 400.8414277280008,
+        "max_relative_kkt": 8.929088950329881e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 400.8414277280008
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 162.30415318700034,
+        "max_relative_kkt": 5.198992578345915e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 162.30415318700034
+      }
+    },
+    {
+      "dataset": "mittelmann2",
+      "problem": "square41",
+      "cpu": {
+        "verified": true,
+        "seconds": 276.08870518099866,
+        "max_relative_kkt": 8.428260121193355e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 276.08870518099866
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 29.1286239150013,
+        "max_relative_kkt": 9.01412017315496e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 29.1286239150013
+      }
+    },
+    {
+      "dataset": "mittelmann2",
+      "problem": "woodlands09",
+      "cpu": {
+        "verified": true,
+        "seconds": 11.549845641000502,
+        "max_relative_kkt": 7.909007582942822e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 11.549845641000502
+      },
+      "gpu": {
+        "verified": true,
+        "seconds": 9.909563887000331,
+        "max_relative_kkt": 7.909007578068617e-05,
+        "reported_status": "optimal",
+        "scored_seconds": 9.909563887000331
+      }
+    }
+  ]
+}
