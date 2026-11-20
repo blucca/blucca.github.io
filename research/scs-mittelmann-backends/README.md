@@ -41,7 +41,7 @@ The script reads the pinned public source. To use an already downloaded copy:
 python replay.py path/to/results.jsonl > replayed.json
 ```
 
-The six small controls and the fixed-campaign assertions run with the replay.
+The small boundary controls and the fixed-campaign assertions run with the replay.
 The full partition, counts and geometric means were also checked independently
 with Decimal arithmetic against the original records.
 
