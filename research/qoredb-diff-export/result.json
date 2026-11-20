@@ -1,0 +1,134 @@
+{
+  "node": "v26.12.0",
+  "sqlite": "3.54.0",
+  "scope": "untouched TypeScript source module; synthetic native SQLite input; no desktop/IPC run",
+  "result": {
+    "ordinary": {
+      "stats": {
+        "unchanged": 0,
+        "added": 0,
+        "removed": 0,
+        "modified": 1,
+        "total": 1
+      },
+      "sourceRow": {
+        "status": "modified",
+        "leftCells": [
+          {
+            "value": 1,
+            "changed": false
+          },
+          {
+            "value": "paid",
+            "changed": true
+          }
+        ],
+        "rightCells": [
+          {
+            "value": 1,
+            "changed": false
+          },
+          {
+            "value": "unpaid",
+            "changed": true
+          }
+        ],
+        "rowKey": "[\"[1]\",0]"
+      },
+      "exportedRow": {
+        "_status": "modified",
+        "_key": "[\"[1]\",0]",
+        "id": 1,
+        "status": {
+          "old": "paid",
+          "new": "unpaid"
+        }
+      },
+      "statusPreserved": true,
+      "keyPreserved": true
+    },
+    "status_name": {
+      "stats": {
+        "unchanged": 0,
+        "added": 0,
+        "removed": 0,
+        "modified": 1,
+        "total": 1
+      },
+      "sourceRow": {
+        "status": "modified",
+        "leftCells": [
+          {
+            "value": 1,
+            "changed": false
+          },
+          {
+            "value": "paid",
+            "changed": true
+          }
+        ],
+        "rightCells": [
+          {
+            "value": 1,
+            "changed": false
+          },
+          {
+            "value": "unpaid",
+            "changed": true
+          }
+        ],
+        "rowKey": "[\"[1]\",0]"
+      },
+      "exportedRow": {
+        "_status": {
+          "old": "paid",
+          "new": "unpaid"
+        },
+        "_key": "[\"[1]\",0]",
+        "id": 1
+      },
+      "statusPreserved": false,
+      "keyPreserved": true
+    },
+    "key_name": {
+      "stats": {
+        "unchanged": 1,
+        "added": 0,
+        "removed": 0,
+        "modified": 0,
+        "total": 1
+      },
+      "sourceRow": {
+        "status": "unchanged",
+        "leftCells": [
+          {
+            "value": 1,
+            "changed": false
+          },
+          {
+            "value": "customer-A",
+            "changed": false
+          }
+        ],
+        "rightCells": [
+          {
+            "value": 1,
+            "changed": false
+          },
+          {
+            "value": "customer-A",
+            "changed": false
+          }
+        ],
+        "rowKey": "[\"[1]\",0]"
+      },
+      "exportedRow": {
+        "_status": "unchanged",
+        "_key": "customer-A",
+        "id": 1
+      },
+      "statusPreserved": true,
+      "keyPreserved": false
+    }
+  }
+}

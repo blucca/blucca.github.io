@@ -1,0 +1,149 @@
+{
+  "sqlite": "3.54.0",
+  "fixtures": {
+    "ordinary": {
+      "left": {
+        "columns": [
+          {
+            "name": "id",
+            "data_type": "text",
+            "nullable": false
+          },
+          {
+            "name": "status",
+            "data_type": "text",
+            "nullable": false
+          }
+        ],
+        "rows": [
+          {
+            "values": [
+              1,
+              "paid"
+            ]
+          }
+        ],
+        "execution_time_ms": 0
+      },
+      "right": {
+        "columns": [
+          {
+            "name": "id",
+            "data_type": "text",
+            "nullable": false
+          },
+          {
+            "name": "status",
+            "data_type": "text",
+            "nullable": false
+          }
+        ],
+        "rows": [
+          {
+            "values": [
+              1,
+              "unpaid"
+            ]
+          }
+        ],
+        "execution_time_ms": 0
+      }
+    },
+    "status_name": {
+      "left": {
+        "columns": [
+          {
+            "name": "id",
+            "data_type": "text",
+            "nullable": false
+          },
+          {
+            "name": "_status",
+            "data_type": "text",
+            "nullable": false
+          }
+        ],
+        "rows": [
+          {
+            "values": [
+              1,
+              "paid"
+            ]
+          }
+        ],
+        "execution_time_ms": 0
+      },
+      "right": {
+        "columns": [
+          {
+            "name": "id",
+            "data_type": "text",
+            "nullable": false
+          },
+          {
+            "name": "_status",
+            "data_type": "text",
+            "nullable": false
+          }
+        ],
+        "rows": [
+          {
+            "values": [
+              1,
+              "unpaid"
+            ]
+          }
+        ],
+        "execution_time_ms": 0
+      }
+    },
+    "key_name": {
+      "left": {
+        "columns": [
+          {
+            "name": "id",
+            "data_type": "text",
+            "nullable": false
+          },
+          {
+            "name": "_key",
+            "data_type": "text",
+            "nullable": false
+          }
+        ],
+        "rows": [
+          {
+            "values": [
+              1,
+              "customer-A"
+            ]
+          }
+        ],
+        "execution_time_ms": 0
+      },
+      "right": {
+        "columns": [
+          {
+            "name": "id",
+            "data_type": "text",
+            "nullable": false
+          },
+          {
+            "name": "_key",
+            "data_type": "text",
+            "nullable": false
+          }
+        ],
+        "rows": [
+          {
+            "values": [
+              1,
+              "customer-A"
+            ]
+          }
+        ],
+        "execution_time_ms": 0
+      }
+    }
+  }
+}
