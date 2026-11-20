@@ -1,0 +1,82 @@
+{
+  "torch": "2.15.0+cpu",
+  "scope": "CPU instrumented-capture source module",
+  "cases": [
+    {
+      "captured_predicate": false,
+      "later_write": true,
+      "original_state": [
+        3.0,
+        4.0
+      ],
+      "saved_state": [
+        3.0,
+        4.0
+      ],
+      "correct_post_x": [
+        4.0,
+        6.0
+      ],
+      "replayed_post_x": [
+        4.0,
+        6.0
+      ],
+      "comparison_match": true,
+      "saved_post_x": [
+        4.0,
+        6.0
+      ]
+    },
+    {
+      "captured_predicate": true,
+      "later_write": false,
+      "original_state": [
+        3.0,
+        4.0
+      ],
+      "saved_state": [
+        3.0,
+        4.0
+      ],
+      "correct_post_x": [
+        4.0,
+        6.0
+      ],
+      "replayed_post_x": [
+        4.0,
+        6.0
+      ],
+      "comparison_match": true,
+      "saved_post_x": [
+        4.0,
+        6.0
+      ]
+    },
+    {
+      "captured_predicate": true,
+      "later_write": true,
+      "original_state": [
+        3.0,
+        4.0
+      ],
+      "saved_state": [
+        13.0,
+        14.0
+      ],
+      "correct_post_x": [
+        4.0,
+        6.0
+      ],
+      "replayed_post_x": [
+        14.0,
+        16.0
+      ],
+      "comparison_match": false,
+      "saved_post_x": [
+        4.0,
+        6.0
+      ]
+    }
+  ],
+  "source_head": "ede36bde8426cb9f4ca813d4cfa4658108c50132"
+}
