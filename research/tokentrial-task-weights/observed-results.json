@@ -1,0 +1,2861 @@
+{
+  "synthetic_zero_effect": {
+    "arm": "caveman",
+    "control": "baseline",
+    "common_tasks": [
+      "high",
+      "low"
+    ],
+    "outside_common_support": [],
+    "missing_from_arm": [],
+    "missing_from_control": [],
+    "runs_by_task": {
+      "low": [
+        1,
+        2
+      ],
+      "high": [
+        2,
+        1
+      ]
+    },
+    "pooled_all_available_ratio": 1.4000000000000001,
+    "pooled_common_support_ratio": 1.4000000000000001,
+    "equal_task_common_support_ratio": 1.0,
+    "equal_task_cps": {
+      "arm": 2.0,
+      "control": 2.0
+    }
+  },
+  "balanced_control": {
+    "arm": "caveman",
+    "control": "baseline",
+    "common_tasks": [
+      "high",
+      "low"
+    ],
+    "outside_common_support": [],
+    "missing_from_arm": [],
+    "missing_from_control": [],
+    "runs_by_task": {
+      "low": [
+        2,
+        2
+      ],
+      "high": [
+        2,
+        2
+      ]
+    },
+    "pooled_all_available_ratio": 1.0,
+    "pooled_common_support_ratio": 1.0,
+    "equal_task_common_support_ratio": 1.0,
+    "equal_task_cps": {
+      "arm": 2.0,
+      "control": 2.0
+    }
+  },
+  "failed_run_cost_counted": true,
+  "full_balanced_runs": 810,
+  "full_balanced_tasks": 18,
+  "full_balanced_point_equivalence": true,
+  "versions": {
+    "2.1.252": {
+      "n_records": 447,
+      "comparisons": [
+        {
+          "arm": "noop",
+          "control": "baseline",
+          "common_tasks": [
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "log-link-failure",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-audit-writer",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [
+            "c-ring-buffer"
+          ],
+          "missing_from_arm": [
+            "c-ring-buffer"
+          ],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              0,
+              3
+            ],
+            "git-config-forensics": [
+              4,
+              4
+            ],
+            "git-regression-hunt": [
+              4,
+              4
+            ],
+            "js-chunk-remainder": [
+              2,
+              3
+            ],
+            "js-csv-quoted-fields": [
+              2,
+              2
+            ],
+            "js-lru-ttl-cache": [
+              1,
+              3
+            ],
+            "log-link-failure": [
+              5,
+              2
+            ],
+            "py-cli-json-output": [
+              2,
+              3
+            ],
+            "py-cron-next": [
+              3,
+              3
+            ],
+            "py-cron-tz": [
+              3,
+              2
+            ],
+            "py-duration-spec": [
+              4,
+              4
+            ],
+            "py-ledger-parens": [
+              4,
+              1
+            ],
+            "py-perf-dedupe": [
+              4,
+              2
+            ],
+            "py-pytest-cart-pricing": [
+              3,
+              3
+            ],
+            "read-audit-writer": [
+              4,
+              4
+            ],
+            "read-config-precedence": [
+              2,
+              3
+            ],
+            "sh-backup-rotate": [
+              3,
+              4
+            ],
+            "sql-monthly-revenue": [
+              2,
+              4
+            ]
+          },
+          "pooled_all_available_ratio": 0.9303825205441231,
+          "pooled_common_support_ratio": 0.9282025308729482,
+          "equal_task_common_support_ratio": 1.0412879756847655,
+          "equal_task_cps": {
+            "arm": 0.011452717892156863,
+            "control": 0.010998607647058824
+          }
+        },
+        {
+          "arm": "rtk",
+          "control": "baseline",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "log-link-failure",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-audit-writer",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [],
+          "missing_from_arm": [],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              3,
+              3
+            ],
+            "git-config-forensics": [
+              1,
+              4
+            ],
+            "git-regression-hunt": [
+              3,
+              4
+            ],
+            "js-chunk-remainder": [
+              2,
+              3
+            ],
+            "js-csv-quoted-fields": [
+              1,
+              2
+            ],
+            "js-lru-ttl-cache": [
+              4,
+              3
+            ],
+            "log-link-failure": [
+              4,
+              2
+            ],
+            "py-cli-json-output": [
+              1,
+              3
+            ],
+            "py-cron-next": [
+              3,
+              3
+            ],
+            "py-cron-tz": [
+              3,
+              2
+            ],
+            "py-duration-spec": [
+              4,
+              4
+            ],
+            "py-ledger-parens": [
+              3,
+              1
+            ],
+            "py-perf-dedupe": [
+              4,
+              2
+            ],
+            "py-pytest-cart-pricing": [
+              2,
+              3
+            ],
+            "read-audit-writer": [
+              5,
+              4
+            ],
+            "read-config-precedence": [
+              3,
+              3
+            ],
+            "sh-backup-rotate": [
+              4,
+              4
+            ],
+            "sql-monthly-revenue": [
+              2,
+              4
+            ]
+          },
+          "pooled_all_available_ratio": 1.0662878697045035,
+          "pooled_common_support_ratio": 1.0662878697045035,
+          "equal_task_common_support_ratio": 1.1272599179589189,
+          "equal_task_cps": {
+            "arm": 0.01236703475,
+            "control": 0.010970881296296297
+          }
+        },
+        {
+          "arm": "rtk-v1.2.0",
+          "control": "baseline",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "log-link-failure",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "read-audit-writer",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [
+            "py-pytest-cart-pricing"
+          ],
+          "missing_from_arm": [
+            "py-pytest-cart-pricing"
+          ],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              3,
+              3
+            ],
+            "git-config-forensics": [
+              4,
+              4
+            ],
+            "git-regression-hunt": [
+              2,
+              4
+            ],
+            "js-chunk-remainder": [
+              3,
+              3
+            ],
+            "js-csv-quoted-fields": [
+              3,
+              2
+            ],
+            "js-lru-ttl-cache": [
+              2,
+              3
+            ],
+            "log-link-failure": [
+              4,
+              2
+            ],
+            "py-cli-json-output": [
+              1,
+              3
+            ],
+            "py-cron-next": [
+              3,
+              3
+            ],
+            "py-cron-tz": [
+              2,
+              2
+            ],
+            "py-duration-spec": [
+              3,
+              4
+            ],
+            "py-ledger-parens": [
+              1,
+              1
+            ],
+            "py-perf-dedupe": [
+              2,
+              2
+            ],
+            "py-pytest-cart-pricing": [
+              0,
+              3
+            ],
+            "read-audit-writer": [
+              1,
+              4
+            ],
+            "read-config-precedence": [
+              5,
+              3
+            ],
+            "sh-backup-rotate": [
+              4,
+              4
+            ],
+            "sql-monthly-revenue": [
+              3,
+              4
+            ]
+          },
+          "pooled_all_available_ratio": 1.0524300139798843,
+          "pooled_common_support_ratio": 1.0341286225603334,
+          "equal_task_common_support_ratio": 1.0886545112229422,
+          "equal_task_cps": {
+            "arm": 0.012156422176470588,
+            "control": 0.011166464705882354
+          }
+        },
+        {
+          "arm": "caveman",
+          "control": "noop-hook",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "log-link-failure",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-audit-writer",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [],
+          "missing_from_arm": [],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              2,
+              3
+            ],
+            "git-config-forensics": [
+              2,
+              1
+            ],
+            "git-regression-hunt": [
+              3,
+              2
+            ],
+            "js-chunk-remainder": [
+              1,
+              1
+            ],
+            "js-csv-quoted-fields": [
+              2,
+              4
+            ],
+            "js-lru-ttl-cache": [
+              3,
+              4
+            ],
+            "log-link-failure": [
+              3,
+              3
+            ],
+            "py-cli-json-output": [
+              4,
+              3
+            ],
+            "py-cron-next": [
+              3,
+              4
+            ],
+            "py-cron-tz": [
+              3,
+              2
+            ],
+            "py-duration-spec": [
+              1,
+              3
+            ],
+            "py-ledger-parens": [
+              3,
+              2
+            ],
+            "py-perf-dedupe": [
+              2,
+              4
+            ],
+            "py-pytest-cart-pricing": [
+              1,
+              3
+            ],
+            "read-audit-writer": [
+              3,
+              1
+            ],
+            "read-config-precedence": [
+              3,
+              1
+            ],
+            "sh-backup-rotate": [
+              4,
+              3
+            ],
+            "sql-monthly-revenue": [
+              2,
+              2
+            ]
+          },
+          "pooled_all_available_ratio": 0.9577412310185301,
+          "pooled_common_support_ratio": 0.9577412310185301,
+          "equal_task_common_support_ratio": 0.8990619193062959,
+          "equal_task_cps": {
+            "arm": 0.009492172358490565,
+            "control": 0.010557862761904763
+          }
+        },
+        {
+          "arm": "caveman-v4.1.0",
+          "control": "noop-hook",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "log-link-failure",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-audit-writer",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [],
+          "missing_from_arm": [],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              2,
+              3
+            ],
+            "git-config-forensics": [
+              3,
+              1
+            ],
+            "git-regression-hunt": [
+              2,
+              2
+            ],
+            "js-chunk-remainder": [
+              3,
+              1
+            ],
+            "js-csv-quoted-fields": [
+              3,
+              4
+            ],
+            "js-lru-ttl-cache": [
+              3,
+              4
+            ],
+            "log-link-failure": [
+              2,
+              3
+            ],
+            "py-cli-json-output": [
+              4,
+              3
+            ],
+            "py-cron-next": [
+              3,
+              4
+            ],
+            "py-cron-tz": [
+              3,
+              2
+            ],
+            "py-duration-spec": [
+              3,
+              3
+            ],
+            "py-ledger-parens": [
+              4,
+              2
+            ],
+            "py-perf-dedupe": [
+              4,
+              4
+            ],
+            "py-pytest-cart-pricing": [
+              2,
+              3
+            ],
+            "read-audit-writer": [
+              2,
+              1
+            ],
+            "read-config-precedence": [
+              3,
+              1
+            ],
+            "sh-backup-rotate": [
+              3,
+              3
+            ],
+            "sql-monthly-revenue": [
+              1,
+              2
+            ]
+          },
+          "pooled_all_available_ratio": 0.8736325631561954,
+          "pooled_common_support_ratio": 0.8736325631561954,
+          "equal_task_common_support_ratio": 0.8936878354361424,
+          "equal_task_cps": {
+            "arm": 0.00943543351851852,
+            "control": 0.010557862761904763
+          }
+        },
+        {
+          "arm": "headroom",
+          "control": "headroom-passthrough",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "log-link-failure",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-audit-writer",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [],
+          "missing_from_arm": [],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              3,
+              3
+            ],
+            "git-config-forensics": [
+              3,
+              5
+            ],
+            "git-regression-hunt": [
+              3,
+              4
+            ],
+            "js-chunk-remainder": [
+              1,
+              3
+            ],
+            "js-csv-quoted-fields": [
+              2,
+              4
+            ],
+            "js-lru-ttl-cache": [
+              5,
+              4
+            ],
+            "log-link-failure": [
+              2,
+              3
+            ],
+            "py-cli-json-output": [
+              3,
+              5
+            ],
+            "py-cron-next": [
+              1,
+              1
+            ],
+            "py-cron-tz": [
+              4,
+              5
+            ],
+            "py-duration-spec": [
+              4,
+              4
+            ],
+            "py-ledger-parens": [
+              1,
+              3
+            ],
+            "py-perf-dedupe": [
+              2,
+              3
+            ],
+            "py-pytest-cart-pricing": [
+              2,
+              2
+            ],
+            "read-audit-writer": [
+              2,
+              2
+            ],
+            "read-config-precedence": [
+              2,
+              1
+            ],
+            "sh-backup-rotate": [
+              4,
+              1
+            ],
+            "sql-monthly-revenue": [
+              1,
+              4
+            ]
+          },
+          "pooled_all_available_ratio": 1.0604030100380377,
+          "pooled_common_support_ratio": 1.0604030100380377,
+          "equal_task_common_support_ratio": 0.9563771827531137,
+          "equal_task_cps": {
+            "arm": 0.011672669943661972,
+            "control": 0.01220509037037037
+          }
+        }
+      ]
+    },
+    "2.1.322": {
+      "n_records": 363,
+      "comparisons": [
+        {
+          "arm": "noop",
+          "control": "baseline",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-audit-writer",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [
+            "log-link-failure"
+          ],
+          "missing_from_arm": [
+            "log-link-failure"
+          ],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              5,
+              2
+            ],
+            "git-config-forensics": [
+              1,
+              1
+            ],
+            "git-regression-hunt": [
+              1,
+              1
+            ],
+            "js-chunk-remainder": [
+              3,
+              2
+            ],
+            "js-csv-quoted-fields": [
+              3,
+              3
+            ],
+            "js-lru-ttl-cache": [
+              4,
+              2
+            ],
+            "log-link-failure": [
+              0,
+              3
+            ],
+            "py-cli-json-output": [
+              3,
+              2
+            ],
+            "py-cron-next": [
+              2,
+              2
+            ],
+            "py-cron-tz": [
+              2,
+              3
+            ],
+            "py-duration-spec": [
+              1,
+              1
+            ],
+            "py-ledger-parens": [
+              1,
+              4
+            ],
+            "py-perf-dedupe": [
+              1,
+              3
+            ],
+            "py-pytest-cart-pricing": [
+              2,
+              2
+            ],
+            "read-audit-writer": [
+              1,
+              1
+            ],
+            "read-config-precedence": [
+              3,
+              2
+            ],
+            "sh-backup-rotate": [
+              2,
+              1
+            ],
+            "sql-monthly-revenue": [
+              3,
+              1
+            ]
+          },
+          "pooled_all_available_ratio": 1.2265513967833728,
+          "pooled_common_support_ratio": 1.1599993168960223,
+          "equal_task_common_support_ratio": 1.0062422173093615,
+          "equal_task_cps": {
+            "arm": 0.00813528384920635,
+            "control": 0.008084816666666668
+          }
+        },
+        {
+          "arm": "rtk",
+          "control": "baseline",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "log-link-failure",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [
+            "read-audit-writer"
+          ],
+          "missing_from_arm": [
+            "read-audit-writer"
+          ],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              2,
+              2
+            ],
+            "git-config-forensics": [
+              4,
+              1
+            ],
+            "git-regression-hunt": [
+              2,
+              1
+            ],
+            "js-chunk-remainder": [
+              3,
+              2
+            ],
+            "js-csv-quoted-fields": [
+              4,
+              3
+            ],
+            "js-lru-ttl-cache": [
+              1,
+              2
+            ],
+            "log-link-failure": [
+              1,
+              3
+            ],
+            "py-cli-json-output": [
+              4,
+              2
+            ],
+            "py-cron-next": [
+              2,
+              2
+            ],
+            "py-cron-tz": [
+              2,
+              3
+            ],
+            "py-duration-spec": [
+              1,
+              1
+            ],
+            "py-ledger-parens": [
+              2,
+              4
+            ],
+            "py-perf-dedupe": [
+              1,
+              3
+            ],
+            "py-pytest-cart-pricing": [
+              3,
+              2
+            ],
+            "read-audit-writer": [
+              0,
+              1
+            ],
+            "read-config-precedence": [
+              2,
+              2
+            ],
+            "sh-backup-rotate": [
+              1,
+              1
+            ],
+            "sql-monthly-revenue": [
+              3,
+              1
+            ]
+          },
+          "pooled_all_available_ratio": 1.0044951470630055,
+          "pooled_common_support_ratio": 0.9911748927236332,
+          "equal_task_common_support_ratio": 0.9515889171173534,
+          "equal_task_cps": {
+            "arm": 0.007622778774509805,
+            "control": 0.008010579607843137
+          }
+        },
+        {
+          "arm": "rtk-v1.2.0",
+          "control": "baseline",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "log-link-failure",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-audit-writer",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [
+            "read-config-precedence"
+          ],
+          "missing_from_arm": [
+            "read-config-precedence"
+          ],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              2,
+              2
+            ],
+            "git-config-forensics": [
+              1,
+              1
+            ],
+            "git-regression-hunt": [
+              3,
+              1
+            ],
+            "js-chunk-remainder": [
+              2,
+              2
+            ],
+            "js-csv-quoted-fields": [
+              2,
+              3
+            ],
+            "js-lru-ttl-cache": [
+              3,
+              2
+            ],
+            "log-link-failure": [
+              1,
+              3
+            ],
+            "py-cli-json-output": [
+              4,
+              2
+            ],
+            "py-cron-next": [
+              2,
+              2
+            ],
+            "py-cron-tz": [
+              3,
+              3
+            ],
+            "py-duration-spec": [
+              2,
+              1
+            ],
+            "py-ledger-parens": [
+              4,
+              4
+            ],
+            "py-perf-dedupe": [
+              3,
+              3
+            ],
+            "py-pytest-cart-pricing": [
+              5,
+              2
+            ],
+            "read-audit-writer": [
+              4,
+              1
+            ],
+            "read-config-precedence": [
+              0,
+              2
+            ],
+            "sh-backup-rotate": [
+              1,
+              1
+            ],
+            "sql-monthly-revenue": [
+              2,
+              1
+            ]
+          },
+          "pooled_all_available_ratio": 1.1107026995893485,
+          "pooled_common_support_ratio": 1.1003661794479698,
+          "equal_task_common_support_ratio": 1.06036461612054,
+          "equal_task_cps": {
+            "arm": 0.00834199187254902,
+            "control": 0.00786709754901961
+          }
+        },
+        {
+          "arm": "caveman",
+          "control": "noop-hook",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "log-link-failure",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-audit-writer",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [],
+          "missing_from_arm": [],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              3,
+              2
+            ],
+            "git-config-forensics": [
+              3,
+              4
+            ],
+            "git-regression-hunt": [
+              2,
+              3
+            ],
+            "js-chunk-remainder": [
+              4,
+              4
+            ],
+            "js-csv-quoted-fields": [
+              3,
+              1
+            ],
+            "js-lru-ttl-cache": [
+              2,
+              1
+            ],
+            "log-link-failure": [
+              2,
+              2
+            ],
+            "py-cli-json-output": [
+              1,
+              2
+            ],
+            "py-cron-next": [
+              2,
+              1
+            ],
+            "py-cron-tz": [
+              2,
+              3
+            ],
+            "py-duration-spec": [
+              4,
+              2
+            ],
+            "py-ledger-parens": [
+              2,
+              3
+            ],
+            "py-perf-dedupe": [
+              3,
+              1
+            ],
+            "py-pytest-cart-pricing": [
+              4,
+              2
+            ],
+            "read-audit-writer": [
+              2,
+              4
+            ],
+            "read-config-precedence": [
+              2,
+              4
+            ],
+            "sh-backup-rotate": [
+              1,
+              2
+            ],
+            "sql-monthly-revenue": [
+              3,
+              3
+            ]
+          },
+          "pooled_all_available_ratio": 0.8324847232073987,
+          "pooled_common_support_ratio": 0.8324847232073987,
+          "equal_task_common_support_ratio": 0.8348293583905438,
+          "equal_task_cps": {
+            "arm": 0.006688707083333333,
+            "control": 0.008012065
+          }
+        },
+        {
+          "arm": "caveman-v4.1.0",
+          "control": "noop-hook",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "log-link-failure",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-audit-writer",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [],
+          "missing_from_arm": [],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              3,
+              2
+            ],
+            "git-config-forensics": [
+              2,
+              4
+            ],
+            "git-regression-hunt": [
+              3,
+              3
+            ],
+            "js-chunk-remainder": [
+              2,
+              4
+            ],
+            "js-csv-quoted-fields": [
+              2,
+              1
+            ],
+            "js-lru-ttl-cache": [
+              2,
+              1
+            ],
+            "log-link-failure": [
+              3,
+              2
+            ],
+            "py-cli-json-output": [
+              1,
+              2
+            ],
+            "py-cron-next": [
+              2,
+              1
+            ],
+            "py-cron-tz": [
+              2,
+              3
+            ],
+            "py-duration-spec": [
+              2,
+              2
+            ],
+            "py-ledger-parens": [
+              1,
+              3
+            ],
+            "py-perf-dedupe": [
+              1,
+              1
+            ],
+            "py-pytest-cart-pricing": [
+              3,
+              2
+            ],
+            "read-audit-writer": [
+              3,
+              4
+            ],
+            "read-config-precedence": [
+              2,
+              4
+            ],
+            "sh-backup-rotate": [
+              2,
+              2
+            ],
+            "sql-monthly-revenue": [
+              4,
+              3
+            ]
+          },
+          "pooled_all_available_ratio": 0.9518631669770173,
+          "pooled_common_support_ratio": 0.9518631669770173,
+          "equal_task_common_support_ratio": 0.90497270539978,
+          "equal_task_cps": {
+            "arm": 0.007250700138888889,
+            "control": 0.008012065
+          }
+        },
+        {
+          "arm": "headroom",
+          "control": "headroom-passthrough",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "log-link-failure",
+            "py-cron-next",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-audit-writer",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [
+            "git-config-forensics",
+            "js-lru-ttl-cache",
+            "py-cli-json-output",
+            "py-cron-tz"
+          ],
+          "missing_from_arm": [
+            "js-lru-ttl-cache"
+          ],
+          "missing_from_control": [
+            "git-config-forensics",
+            "py-cli-json-output",
+            "py-cron-tz"
+          ],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              2,
+              2
+            ],
+            "git-config-forensics": [
+              2,
+              0
+            ],
+            "git-regression-hunt": [
+              2,
+              1
+            ],
+            "js-chunk-remainder": [
+              4,
+              2
+            ],
+            "js-csv-quoted-fields": [
+              3,
+              1
+            ],
+            "js-lru-ttl-cache": [
+              0,
+              1
+            ],
+            "log-link-failure": [
+              3,
+              2
+            ],
+            "py-cli-json-output": [
+              2,
+              0
+            ],
+            "py-cron-next": [
+              4,
+              4
+            ],
+            "py-cron-tz": [
+              1,
+              0
+            ],
+            "py-duration-spec": [
+              1,
+              1
+            ],
+            "py-ledger-parens": [
+              4,
+              2
+            ],
+            "py-perf-dedupe": [
+              3,
+              2
+            ],
+            "py-pytest-cart-pricing": [
+              3,
+              3
+            ],
+            "read-audit-writer": [
+              3,
+              3
+            ],
+            "read-config-precedence": [
+              3,
+              4
+            ],
+            "sh-backup-rotate": [
+              1,
+              4
+            ],
+            "sql-monthly-revenue": [
+              4,
+              1
+            ]
+          },
+          "pooled_all_available_ratio": 0.9452194976369912,
+          "pooled_common_support_ratio": 0.8655975532331962,
+          "equal_task_common_support_ratio": 1.0930510648315699,
+          "equal_task_cps": {
+            "arm": 0.006480859166666667,
+            "control": 0.005929145833333334
+          }
+        }
+      ]
+    }
+  },
+  "cross_version_same_task_support": [
+    {
+      "arm": "noop",
+      "control": "baseline",
+      "common_tasks": [
+        "git-config-forensics",
+        "git-regression-hunt",
+        "js-chunk-remainder",
+        "js-csv-quoted-fields",
+        "js-lru-ttl-cache",
+        "py-cli-json-output",
+        "py-cron-next",
+        "py-cron-tz",
+        "py-duration-spec",
+        "py-ledger-parens",
+        "py-perf-dedupe",
+        "py-pytest-cart-pricing",
+        "read-audit-writer",
+        "read-config-precedence",
+        "sh-backup-rotate",
+        "sql-monthly-revenue"
+      ],
+      "versions": {
+        "2.1.252": {
+          "arm": "noop",
+          "control": "baseline",
+          "common_tasks": [
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-audit-writer",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [
+            "c-ring-buffer",
+            "log-link-failure"
+          ],
+          "missing_from_arm": [
+            "c-ring-buffer"
+          ],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              0,
+              3
+            ],
+            "git-config-forensics": [
+              4,
+              4
+            ],
+            "git-regression-hunt": [
+              4,
+              4
+            ],
+            "js-chunk-remainder": [
+              2,
+              3
+            ],
+            "js-csv-quoted-fields": [
+              2,
+              2
+            ],
+            "js-lru-ttl-cache": [
+              1,
+              3
+            ],
+            "log-link-failure": [
+              5,
+              2
+            ],
+            "py-cli-json-output": [
+              2,
+              3
+            ],
+            "py-cron-next": [
+              3,
+              3
+            ],
+            "py-cron-tz": [
+              3,
+              2
+            ],
+            "py-duration-spec": [
+              4,
+              4
+            ],
+            "py-ledger-parens": [
+              4,
+              1
+            ],
+            "py-perf-dedupe": [
+              4,
+              2
+            ],
+            "py-pytest-cart-pricing": [
+              3,
+              3
+            ],
+            "read-audit-writer": [
+              4,
+              4
+            ],
+            "read-config-precedence": [
+              2,
+              3
+            ],
+            "sh-backup-rotate": [
+              3,
+              4
+            ],
+            "sql-monthly-revenue": [
+              2,
+              4
+            ]
+          },
+          "pooled_all_available_ratio": 0.9303825205441231,
+          "pooled_common_support_ratio": 0.9460469911207445,
+          "equal_task_common_support_ratio": 1.0499527930755823,
+          "equal_task_cps": {
+            "arm": 0.011698797135416666,
+            "control": 0.0111422125
+          }
+        },
+        "2.1.322": {
+          "arm": "noop",
+          "control": "baseline",
+          "common_tasks": [
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-audit-writer",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [
+            "c-ring-buffer",
+            "log-link-failure"
+          ],
+          "missing_from_arm": [
+            "log-link-failure"
+          ],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              5,
+              2
+            ],
+            "git-config-forensics": [
+              1,
+              1
+            ],
+            "git-regression-hunt": [
+              1,
+              1
+            ],
+            "js-chunk-remainder": [
+              3,
+              2
+            ],
+            "js-csv-quoted-fields": [
+              3,
+              3
+            ],
+            "js-lru-ttl-cache": [
+              4,
+              2
+            ],
+            "log-link-failure": [
+              0,
+              3
+            ],
+            "py-cli-json-output": [
+              3,
+              2
+            ],
+            "py-cron-next": [
+              2,
+              2
+            ],
+            "py-cron-tz": [
+              2,
+              3
+            ],
+            "py-duration-spec": [
+              1,
+              1
+            ],
+            "py-ledger-parens": [
+              1,
+              4
+            ],
+            "py-perf-dedupe": [
+              1,
+              3
+            ],
+            "py-pytest-cart-pricing": [
+              2,
+              2
+            ],
+            "read-audit-writer": [
+              1,
+              1
+            ],
+            "read-config-precedence": [
+              3,
+              2
+            ],
+            "sh-backup-rotate": [
+              2,
+              1
+            ],
+            "sql-monthly-revenue": [
+              3,
+              1
+            ]
+          },
+          "pooled_all_available_ratio": 1.2265513967833728,
+          "pooled_common_support_ratio": 1.1362810525906248,
+          "equal_task_common_support_ratio": 0.9819989940922278,
+          "equal_task_cps": {
+            "arm": 0.008031132291666666,
+            "control": 0.008178350833333334
+          }
+        }
+      }
+    },
+    {
+      "arm": "rtk",
+      "control": "baseline",
+      "common_tasks": [
+        "c-ring-buffer",
+        "git-config-forensics",
+        "git-regression-hunt",
+        "js-chunk-remainder",
+        "js-csv-quoted-fields",
+        "js-lru-ttl-cache",
+        "log-link-failure",
+        "py-cli-json-output",
+        "py-cron-next",
+        "py-cron-tz",
+        "py-duration-spec",
+        "py-ledger-parens",
+        "py-perf-dedupe",
+        "py-pytest-cart-pricing",
+        "read-config-precedence",
+        "sh-backup-rotate",
+        "sql-monthly-revenue"
+      ],
+      "versions": {
+        "2.1.252": {
+          "arm": "rtk",
+          "control": "baseline",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "log-link-failure",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [
+            "read-audit-writer"
+          ],
+          "missing_from_arm": [],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              3,
+              3
+            ],
+            "git-config-forensics": [
+              1,
+              4
+            ],
+            "git-regression-hunt": [
+              3,
+              4
+            ],
+            "js-chunk-remainder": [
+              2,
+              3
+            ],
+            "js-csv-quoted-fields": [
+              1,
+              2
+            ],
+            "js-lru-ttl-cache": [
+              4,
+              3
+            ],
+            "log-link-failure": [
+              4,
+              2
+            ],
+            "py-cli-json-output": [
+              1,
+              3
+            ],
+            "py-cron-next": [
+              3,
+              3
+            ],
+            "py-cron-tz": [
+              3,
+              2
+            ],
+            "py-duration-spec": [
+              4,
+              4
+            ],
+            "py-ledger-parens": [
+              3,
+              1
+            ],
+            "py-perf-dedupe": [
+              4,
+              2
+            ],
+            "py-pytest-cart-pricing": [
+              2,
+              3
+            ],
+            "read-audit-writer": [
+              5,
+              4
+            ],
+            "read-config-precedence": [
+              3,
+              3
+            ],
+            "sh-backup-rotate": [
+              4,
+              4
+            ],
+            "sql-monthly-revenue": [
+              2,
+              4
+            ]
+          },
+          "pooled_all_available_ratio": 1.0662878697045035,
+          "pooled_common_support_ratio": 1.0871118428993523,
+          "equal_task_common_support_ratio": 1.1331707773366717,
+          "equal_task_cps": {
+            "arm": 0.012794211029411764,
+            "control": 0.011290629166666667
+          }
+        },
+        "2.1.322": {
+          "arm": "rtk",
+          "control": "baseline",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "log-link-failure",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [
+            "read-audit-writer"
+          ],
+          "missing_from_arm": [
+            "read-audit-writer"
+          ],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              2,
+              2
+            ],
+            "git-config-forensics": [
+              4,
+              1
+            ],
+            "git-regression-hunt": [
+              2,
+              1
+            ],
+            "js-chunk-remainder": [
+              3,
+              2
+            ],
+            "js-csv-quoted-fields": [
+              4,
+              3
+            ],
+            "js-lru-ttl-cache": [
+              1,
+              2
+            ],
+            "log-link-failure": [
+              1,
+              3
+            ],
+            "py-cli-json-output": [
+              4,
+              2
+            ],
+            "py-cron-next": [
+              2,
+              2
+            ],
+            "py-cron-tz": [
+              2,
+              3
+            ],
+            "py-duration-spec": [
+              1,
+              1
+            ],
+            "py-ledger-parens": [
+              2,
+              4
+            ],
+            "py-perf-dedupe": [
+              1,
+              3
+            ],
+            "py-pytest-cart-pricing": [
+              3,
+              2
+            ],
+            "read-audit-writer": [
+              0,
+              1
+            ],
+            "read-config-precedence": [
+              2,
+              2
+            ],
+            "sh-backup-rotate": [
+              1,
+              1
+            ],
+            "sql-monthly-revenue": [
+              3,
+              1
+            ]
+          },
+          "pooled_all_available_ratio": 1.0044951470630055,
+          "pooled_common_support_ratio": 0.9911748927236332,
+          "equal_task_common_support_ratio": 0.9515889171173534,
+          "equal_task_cps": {
+            "arm": 0.007622778774509805,
+            "control": 0.008010579607843137
+          }
+        }
+      }
+    },
+    {
+      "arm": "rtk-v1.2.0",
+      "control": "baseline",
+      "common_tasks": [
+        "c-ring-buffer",
+        "git-config-forensics",
+        "git-regression-hunt",
+        "js-chunk-remainder",
+        "js-csv-quoted-fields",
+        "js-lru-ttl-cache",
+        "log-link-failure",
+        "py-cli-json-output",
+        "py-cron-next",
+        "py-cron-tz",
+        "py-duration-spec",
+        "py-ledger-parens",
+        "py-perf-dedupe",
+        "read-audit-writer",
+        "sh-backup-rotate",
+        "sql-monthly-revenue"
+      ],
+      "versions": {
+        "2.1.252": {
+          "arm": "rtk-v1.2.0",
+          "control": "baseline",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "log-link-failure",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "read-audit-writer",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [
+            "py-pytest-cart-pricing",
+            "read-config-precedence"
+          ],
+          "missing_from_arm": [
+            "py-pytest-cart-pricing"
+          ],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              3,
+              3
+            ],
+            "git-config-forensics": [
+              4,
+              4
+            ],
+            "git-regression-hunt": [
+              2,
+              4
+            ],
+            "js-chunk-remainder": [
+              3,
+              3
+            ],
+            "js-csv-quoted-fields": [
+              3,
+              2
+            ],
+            "js-lru-ttl-cache": [
+              2,
+              3
+            ],
+            "log-link-failure": [
+              4,
+              2
+            ],
+            "py-cli-json-output": [
+              1,
+              3
+            ],
+            "py-cron-next": [
+              3,
+              3
+            ],
+            "py-cron-tz": [
+              2,
+              2
+            ],
+            "py-duration-spec": [
+              3,
+              4
+            ],
+            "py-ledger-parens": [
+              1,
+              1
+            ],
+            "py-perf-dedupe": [
+              2,
+              2
+            ],
+            "py-pytest-cart-pricing": [
+              0,
+              3
+            ],
+            "read-audit-writer": [
+              1,
+              4
+            ],
+            "read-config-precedence": [
+              5,
+              3
+            ],
+            "sh-backup-rotate": [
+              4,
+              4
+            ],
+            "sql-monthly-revenue": [
+              3,
+              4
+            ]
+          },
+          "pooled_all_available_ratio": 1.0524300139798843,
+          "pooled_common_support_ratio": 1.0468776822491062,
+          "equal_task_common_support_ratio": 1.095136325964861,
+          "equal_task_cps": {
+            "arm": 0.012306314062499999,
+            "control": 0.011237243958333334
+          }
+        },
+        "2.1.322": {
+          "arm": "rtk-v1.2.0",
+          "control": "baseline",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "log-link-failure",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "read-audit-writer",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [
+            "py-pytest-cart-pricing",
+            "read-config-precedence"
+          ],
+          "missing_from_arm": [
+            "read-config-precedence"
+          ],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              2,
+              2
+            ],
+            "git-config-forensics": [
+              1,
+              1
+            ],
+            "git-regression-hunt": [
+              3,
+              1
+            ],
+            "js-chunk-remainder": [
+              2,
+              2
+            ],
+            "js-csv-quoted-fields": [
+              2,
+              3
+            ],
+            "js-lru-ttl-cache": [
+              3,
+              2
+            ],
+            "log-link-failure": [
+              1,
+              3
+            ],
+            "py-cli-json-output": [
+              4,
+              2
+            ],
+            "py-cron-next": [
+              2,
+              2
+            ],
+            "py-cron-tz": [
+              3,
+              3
+            ],
+            "py-duration-spec": [
+              2,
+              1
+            ],
+            "py-ledger-parens": [
+              4,
+              4
+            ],
+            "py-perf-dedupe": [
+              3,
+              3
+            ],
+            "py-pytest-cart-pricing": [
+              5,
+              2
+            ],
+            "read-audit-writer": [
+              4,
+              1
+            ],
+            "read-config-precedence": [
+              0,
+              2
+            ],
+            "sh-backup-rotate": [
+              1,
+              1
+            ],
+            "sql-monthly-revenue": [
+              2,
+              1
+            ]
+          },
+          "pooled_all_available_ratio": 1.1107026995893485,
+          "pooled_common_support_ratio": 1.0885615194034646,
+          "equal_task_common_support_ratio": 1.0403636080946967,
+          "equal_task_cps": {
+            "arm": 0.008368354114583334,
+            "control": 0.008043682083333333
+          }
+        }
+      }
+    },
+    {
+      "arm": "caveman",
+      "control": "noop-hook",
+      "common_tasks": [
+        "c-ring-buffer",
+        "git-config-forensics",
+        "git-regression-hunt",
+        "js-chunk-remainder",
+        "js-csv-quoted-fields",
+        "js-lru-ttl-cache",
+        "log-link-failure",
+        "py-cli-json-output",
+        "py-cron-next",
+        "py-cron-tz",
+        "py-duration-spec",
+        "py-ledger-parens",
+        "py-perf-dedupe",
+        "py-pytest-cart-pricing",
+        "read-audit-writer",
+        "read-config-precedence",
+        "sh-backup-rotate",
+        "sql-monthly-revenue"
+      ],
+      "versions": {
+        "2.1.252": {
+          "arm": "caveman",
+          "control": "noop-hook",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "log-link-failure",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-audit-writer",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [],
+          "missing_from_arm": [],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              2,
+              3
+            ],
+            "git-config-forensics": [
+              2,
+              1
+            ],
+            "git-regression-hunt": [
+              3,
+              2
+            ],
+            "js-chunk-remainder": [
+              1,
+              1
+            ],
+            "js-csv-quoted-fields": [
+              2,
+              4
+            ],
+            "js-lru-ttl-cache": [
+              3,
+              4
+            ],
+            "log-link-failure": [
+              3,
+              3
+            ],
+            "py-cli-json-output": [
+              4,
+              3
+            ],
+            "py-cron-next": [
+              3,
+              4
+            ],
+            "py-cron-tz": [
+              3,
+              2
+            ],
+            "py-duration-spec": [
+              1,
+              3
+            ],
+            "py-ledger-parens": [
+              3,
+              2
+            ],
+            "py-perf-dedupe": [
+              2,
+              4
+            ],
+            "py-pytest-cart-pricing": [
+              1,
+              3
+            ],
+            "read-audit-writer": [
+              3,
+              1
+            ],
+            "read-config-precedence": [
+              3,
+              1
+            ],
+            "sh-backup-rotate": [
+              4,
+              3
+            ],
+            "sql-monthly-revenue": [
+              2,
+              2
+            ]
+          },
+          "pooled_all_available_ratio": 0.9577412310185301,
+          "pooled_common_support_ratio": 0.9577412310185301,
+          "equal_task_common_support_ratio": 0.8990619193062959,
+          "equal_task_cps": {
+            "arm": 0.009492172358490565,
+            "control": 0.010557862761904763
+          }
+        },
+        "2.1.322": {
+          "arm": "caveman",
+          "control": "noop-hook",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "log-link-failure",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-audit-writer",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [],
+          "missing_from_arm": [],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              3,
+              2
+            ],
+            "git-config-forensics": [
+              3,
+              4
+            ],
+            "git-regression-hunt": [
+              2,
+              3
+            ],
+            "js-chunk-remainder": [
+              4,
+              4
+            ],
+            "js-csv-quoted-fields": [
+              3,
+              1
+            ],
+            "js-lru-ttl-cache": [
+              2,
+              1
+            ],
+            "log-link-failure": [
+              2,
+              2
+            ],
+            "py-cli-json-output": [
+              1,
+              2
+            ],
+            "py-cron-next": [
+              2,
+              1
+            ],
+            "py-cron-tz": [
+              2,
+              3
+            ],
+            "py-duration-spec": [
+              4,
+              2
+            ],
+            "py-ledger-parens": [
+              2,
+              3
+            ],
+            "py-perf-dedupe": [
+              3,
+              1
+            ],
+            "py-pytest-cart-pricing": [
+              4,
+              2
+            ],
+            "read-audit-writer": [
+              2,
+              4
+            ],
+            "read-config-precedence": [
+              2,
+              4
+            ],
+            "sh-backup-rotate": [
+              1,
+              2
+            ],
+            "sql-monthly-revenue": [
+              3,
+              3
+            ]
+          },
+          "pooled_all_available_ratio": 0.8324847232073987,
+          "pooled_common_support_ratio": 0.8324847232073987,
+          "equal_task_common_support_ratio": 0.8348293583905438,
+          "equal_task_cps": {
+            "arm": 0.006688707083333333,
+            "control": 0.008012065
+          }
+        }
+      }
+    },
+    {
+      "arm": "caveman-v4.1.0",
+      "control": "noop-hook",
+      "common_tasks": [
+        "c-ring-buffer",
+        "git-config-forensics",
+        "git-regression-hunt",
+        "js-chunk-remainder",
+        "js-csv-quoted-fields",
+        "js-lru-ttl-cache",
+        "log-link-failure",
+        "py-cli-json-output",
+        "py-cron-next",
+        "py-cron-tz",
+        "py-duration-spec",
+        "py-ledger-parens",
+        "py-perf-dedupe",
+        "py-pytest-cart-pricing",
+        "read-audit-writer",
+        "read-config-precedence",
+        "sh-backup-rotate",
+        "sql-monthly-revenue"
+      ],
+      "versions": {
+        "2.1.252": {
+          "arm": "caveman-v4.1.0",
+          "control": "noop-hook",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "log-link-failure",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-audit-writer",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [],
+          "missing_from_arm": [],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              2,
+              3
+            ],
+            "git-config-forensics": [
+              3,
+              1
+            ],
+            "git-regression-hunt": [
+              2,
+              2
+            ],
+            "js-chunk-remainder": [
+              3,
+              1
+            ],
+            "js-csv-quoted-fields": [
+              3,
+              4
+            ],
+            "js-lru-ttl-cache": [
+              3,
+              4
+            ],
+            "log-link-failure": [
+              2,
+              3
+            ],
+            "py-cli-json-output": [
+              4,
+              3
+            ],
+            "py-cron-next": [
+              3,
+              4
+            ],
+            "py-cron-tz": [
+              3,
+              2
+            ],
+            "py-duration-spec": [
+              3,
+              3
+            ],
+            "py-ledger-parens": [
+              4,
+              2
+            ],
+            "py-perf-dedupe": [
+              4,
+              4
+            ],
+            "py-pytest-cart-pricing": [
+              2,
+              3
+            ],
+            "read-audit-writer": [
+              2,
+              1
+            ],
+            "read-config-precedence": [
+              3,
+              1
+            ],
+            "sh-backup-rotate": [
+              3,
+              3
+            ],
+            "sql-monthly-revenue": [
+              1,
+              2
+            ]
+          },
+          "pooled_all_available_ratio": 0.8736325631561954,
+          "pooled_common_support_ratio": 0.8736325631561954,
+          "equal_task_common_support_ratio": 0.8936878354361424,
+          "equal_task_cps": {
+            "arm": 0.00943543351851852,
+            "control": 0.010557862761904763
+          }
+        },
+        "2.1.322": {
+          "arm": "caveman-v4.1.0",
+          "control": "noop-hook",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-config-forensics",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "js-lru-ttl-cache",
+            "log-link-failure",
+            "py-cli-json-output",
+            "py-cron-next",
+            "py-cron-tz",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-audit-writer",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [],
+          "missing_from_arm": [],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              3,
+              2
+            ],
+            "git-config-forensics": [
+              2,
+              4
+            ],
+            "git-regression-hunt": [
+              3,
+              3
+            ],
+            "js-chunk-remainder": [
+              2,
+              4
+            ],
+            "js-csv-quoted-fields": [
+              2,
+              1
+            ],
+            "js-lru-ttl-cache": [
+              2,
+              1
+            ],
+            "log-link-failure": [
+              3,
+              2
+            ],
+            "py-cli-json-output": [
+              1,
+              2
+            ],
+            "py-cron-next": [
+              2,
+              1
+            ],
+            "py-cron-tz": [
+              2,
+              3
+            ],
+            "py-duration-spec": [
+              2,
+              2
+            ],
+            "py-ledger-parens": [
+              1,
+              3
+            ],
+            "py-perf-dedupe": [
+              1,
+              1
+            ],
+            "py-pytest-cart-pricing": [
+              3,
+              2
+            ],
+            "read-audit-writer": [
+              3,
+              4
+            ],
+            "read-config-precedence": [
+              2,
+              4
+            ],
+            "sh-backup-rotate": [
+              2,
+              2
+            ],
+            "sql-monthly-revenue": [
+              4,
+              3
+            ]
+          },
+          "pooled_all_available_ratio": 0.9518631669770173,
+          "pooled_common_support_ratio": 0.9518631669770173,
+          "equal_task_common_support_ratio": 0.90497270539978,
+          "equal_task_cps": {
+            "arm": 0.007250700138888889,
+            "control": 0.008012065
+          }
+        }
+      }
+    },
+    {
+      "arm": "headroom",
+      "control": "headroom-passthrough",
+      "common_tasks": [
+        "c-ring-buffer",
+        "git-regression-hunt",
+        "js-chunk-remainder",
+        "js-csv-quoted-fields",
+        "log-link-failure",
+        "py-cron-next",
+        "py-duration-spec",
+        "py-ledger-parens",
+        "py-perf-dedupe",
+        "py-pytest-cart-pricing",
+        "read-audit-writer",
+        "read-config-precedence",
+        "sh-backup-rotate",
+        "sql-monthly-revenue"
+      ],
+      "versions": {
+        "2.1.252": {
+          "arm": "headroom",
+          "control": "headroom-passthrough",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "log-link-failure",
+            "py-cron-next",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-audit-writer",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [
+            "git-config-forensics",
+            "js-lru-ttl-cache",
+            "py-cli-json-output",
+            "py-cron-tz"
+          ],
+          "missing_from_arm": [],
+          "missing_from_control": [],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              3,
+              3
+            ],
+            "git-config-forensics": [
+              3,
+              5
+            ],
+            "git-regression-hunt": [
+              3,
+              4
+            ],
+            "js-chunk-remainder": [
+              1,
+              3
+            ],
+            "js-csv-quoted-fields": [
+              2,
+              4
+            ],
+            "js-lru-ttl-cache": [
+              5,
+              4
+            ],
+            "log-link-failure": [
+              2,
+              3
+            ],
+            "py-cli-json-output": [
+              3,
+              5
+            ],
+            "py-cron-next": [
+              1,
+              1
+            ],
+            "py-cron-tz": [
+              4,
+              5
+            ],
+            "py-duration-spec": [
+              4,
+              4
+            ],
+            "py-ledger-parens": [
+              1,
+              3
+            ],
+            "py-perf-dedupe": [
+              2,
+              3
+            ],
+            "py-pytest-cart-pricing": [
+              2,
+              2
+            ],
+            "read-audit-writer": [
+              2,
+              2
+            ],
+            "read-config-precedence": [
+              2,
+              1
+            ],
+            "sh-backup-rotate": [
+              4,
+              1
+            ],
+            "sql-monthly-revenue": [
+              1,
+              4
+            ]
+          },
+          "pooled_all_available_ratio": 1.0604030100380377,
+          "pooled_common_support_ratio": 1.1066006250747276,
+          "equal_task_common_support_ratio": 0.9199074384806099,
+          "equal_task_cps": {
+            "arm": 0.008549808095238096,
+            "control": 0.009294204761904762
+          }
+        },
+        "2.1.322": {
+          "arm": "headroom",
+          "control": "headroom-passthrough",
+          "common_tasks": [
+            "c-ring-buffer",
+            "git-regression-hunt",
+            "js-chunk-remainder",
+            "js-csv-quoted-fields",
+            "log-link-failure",
+            "py-cron-next",
+            "py-duration-spec",
+            "py-ledger-parens",
+            "py-perf-dedupe",
+            "py-pytest-cart-pricing",
+            "read-audit-writer",
+            "read-config-precedence",
+            "sh-backup-rotate",
+            "sql-monthly-revenue"
+          ],
+          "outside_common_support": [
+            "git-config-forensics",
+            "js-lru-ttl-cache",
+            "py-cli-json-output",
+            "py-cron-tz"
+          ],
+          "missing_from_arm": [
+            "js-lru-ttl-cache"
+          ],
+          "missing_from_control": [
+            "git-config-forensics",
+            "py-cli-json-output",
+            "py-cron-tz"
+          ],
+          "runs_by_task": {
+            "c-ring-buffer": [
+              2,
+              2
+            ],
+            "git-config-forensics": [
+              2,
+              0
+            ],
+            "git-regression-hunt": [
+              2,
+              1
+            ],
+            "js-chunk-remainder": [
+              4,
+              2
+            ],
+            "js-csv-quoted-fields": [
+              3,
+              1
+            ],
+            "js-lru-ttl-cache": [
+              0,
+              1
+            ],
+            "log-link-failure": [
+              3,
+              2
+            ],
+            "py-cli-json-output": [
+              2,
+              0
+            ],
+            "py-cron-next": [
+              4,
+              4
+            ],
+            "py-cron-tz": [
+              1,
+              0
+            ],
+            "py-duration-spec": [
+              1,
+              1
+            ],
+            "py-ledger-parens": [
+              4,
+              2
+            ],
+            "py-perf-dedupe": [
+              3,
+              2
+            ],
+            "py-pytest-cart-pricing": [
+              3,
+              3
+            ],
+            "read-audit-writer": [
+              3,
+              3
+            ],
+            "read-config-precedence": [
+              3,
+              4
+            ],
+            "sh-backup-rotate": [
+              1,
+              4
+            ],
+            "sql-monthly-revenue": [
+              4,
+              1
+            ]
+          },
+          "pooled_all_available_ratio": 0.9452194976369912,
+          "pooled_common_support_ratio": 0.8655975532331962,
+          "equal_task_common_support_ratio": 1.0930510648315699,
+          "equal_task_cps": {
+            "arm": 0.006480859166666667,
+            "control": 0.005929145833333334
+          }
+        }
+      }
+    }
+  ]
+}
