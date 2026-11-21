@@ -1,0 +1,23 @@
+{
+  "mode": "false",
+  "version": "1.16.0",
+  "threads": 2,
+  "model_load_wall_seconds": 0.19159050799999999,
+  "run_wall_seconds": 9.0361199320000001,
+  "run_process_cpu_seconds": 9.0417379999999987,
+  "peak_rss_kib": 390816,
+  "columns": 51291, "rows": 98911,
+  "integer_columns": 19740,
+  "model_status": "Optimal",
+  "primal": 59.184142067571983,
+  "dual_bound": 59.178991841594382,
+  "gap": 8.7020370620923576e-05,
+  "lp_iterations": 4020,
+  "nodes": 1,
+  "mip_feasibility_tolerance": 9.9999999999999995e-07,
+  "max_bound_violation": 0,
+  "max_row_violation": 2.8199664825478976e-14,
+  "max_integrality_violation": 0,
+  "recomputed_objective": 59.184142067571981,
+  "objective_delta": 2.1024848528838902e-15
+}

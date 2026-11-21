@@ -1,0 +1,48 @@
+diff --git a/highs/lp_data/HighsOptions.h b/highs/lp_data/HighsOptions.h
+index a841dfc..b179afb 100644
+--- a/highs/lp_data/HighsOptions.h
++++ b/highs/lp_data/HighsOptions.h
+@@ -501,6 +501,7 @@ struct HighsOptionsStruct {
+   // Options for MIP solver
+   bool mip_detect_symmetry;
+   bool mip_allow_restart;
++  bool mip_compute_analytic_centre;
+   HighsInt mip_max_nodes;
+   HighsInt mip_max_stall_nodes;
+   HighsInt mip_max_start_nodes;
+@@ -677,6 +678,7 @@ struct HighsOptionsStruct {
+         icrash_breakpoints(false),
+         mip_detect_symmetry(false),
+         mip_allow_restart(false),
++        mip_compute_analytic_centre(false),
+         mip_max_nodes(0),
+         mip_max_stall_nodes(0),
+         mip_max_start_nodes(0),
+@@ -1154,6 +1156,12 @@ class HighsOptions : public HighsOptionsStruct {
+                                        advanced, &mip_allow_restart, true);
+     records.push_back(record_bool);
+ 
++    record_bool = new OptionRecordBool(
++        "mip_compute_analytic_centre",
++        "Whether to compute the MIP analytic centre (including its fixings and rounding)",
++        advanced, &mip_compute_analytic_centre, true);
++    records.push_back(record_bool);
++
+     record_int = new OptionRecordInt("mip_max_nodes",
+                                      "MIP solver max number of nodes", advanced,
+                                      &mip_max_nodes, 0, kHighsIInf, kHighsIInf);
+diff --git a/highs/mip/HighsMipSolverData.cpp b/highs/mip/HighsMipSolverData.cpp
+index 5f2caee..73ff6d7 100644
+--- a/highs/mip/HighsMipSolverData.cpp
++++ b/highs/mip/HighsMipSolverData.cpp
+@@ -2050,8 +2050,8 @@ static void clockOff(HighsProfiling* profiling) {
+ }
+ 
+ void HighsMipSolverData::evaluateRootNode(HighsMipWorker& worker) {
+-  const bool compute_analytic_centre = true;
+-  if (!compute_analytic_centre) printf("NOT COMPUTING ANALYTIC CENTRE!\n");
++  const bool compute_analytic_centre =
++      mipsolver.options_mip_->mip_compute_analytic_centre;
+   HighsInt maxSepaRounds = mipsolver.submip ? 5 : kHighsIInf;
+   if (numRestarts == 0)
+     maxSepaRounds =
