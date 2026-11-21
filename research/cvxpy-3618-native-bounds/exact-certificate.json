@@ -1,0 +1,55 @@
+{
+  "status": "PASS",
+  "feasible_integer_points": 20,
+  "objective_counts": {
+    "1/180": 6,
+    "37/180": 6,
+    "1/4": 4,
+    "17/20": 4
+  },
+  "exact_optimum": "1/180",
+  "optimal_points": [
+    [
+      0,
+      0,
+      1,
+      2
+    ],
+    [
+      0,
+      1,
+      1,
+      1
+    ],
+    [
+      0,
+      2,
+      1,
+      0
+    ],
+    [
+      1,
+      0,
+      0,
+      2
+    ],
+    [
+      1,
+      1,
+      0,
+      1
+    ],
+    [
+      1,
+      2,
+      0,
+      0
+    ]
+  ],
+  "original_returned_point_objective": "1/4",
+  "base_path": "NaN -> [0, 0] -> d -> d^2 fixed auxiliary bounds",
+  "head_path": "[-inf, inf] -> square [0, inf] -> auxiliary bounds omitted",
+  "same_model_right_operand": "PASS",
+  "base_nan_input_through_head_division": "PASS",
+  "scope": "20-point exact certificate plus exact bounds.py utility execution; solver runs 0"
+}
