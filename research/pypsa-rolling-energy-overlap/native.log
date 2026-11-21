@@ -1,0 +1,438 @@
+/data/workspace/temp/round717-pypsa/replay.py:36: PyPSA2Warning: pandas reads strings as `str` dtype since 3.0. PyPSA converts them back to object dtype on import, but keeps `str` from PyPSA 2.0 on. Set `pypsa.options.future.string_dtype` to True to opt in now or to False to keep the current behaviour.
+  n = pypsa.Network()
+/data/workspace/temp/round717-pypsa/replay.py:89: PyPSA2Warning: From PyPSA 2.0 on, the objective leaves out the capital costs of existing capacity on extendable assets, which improves LP conditioning. Pass `include_objective_constant` to `n.optimize` to choose per call. Set `pypsa.options.future.exclude_objective_constant` to True to opt in now or to False to keep the current behaviour.
+  status, condition = n.optimize(**options)
+WARNING:pypsa.consistency:The following buses have carriers which are not defined. Run n.sanitize() to add them. Components with undefined carriers:
+Index(['bus'], dtype='object', name='name')
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.io: Writing time: 0.02s
+Running HiGHS 1.16.0 (git hash: f3f113d): Copyright (c) 2026 under MIT licence terms
+Includes third-party software components, see THIRD_PARTY_NOTICES.md for full details
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 12 primals, 31 duals
+Objective: 1.05e+01
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper were not assigned to the network.
+original full_horizon complete_feasible 10.5
+WARNING:pypsa.consistency:The following buses have carriers which are not defined. Run n.sanitize() to add them. Components with undefined carriers:
+Index(['bus'], dtype='object', name='name')
+WARNING:pypsa.optimization.abstract:Volume limits Generator-e_sum_min are tracked across the rolling horizon without foresight: each window only sees what previous windows left open. The dispatch pattern depends on the window order.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [0:2] (1/2).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 6 primals, 16 duals
+Objective: 1.50e+00
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper were not assigned to the network.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [3:5] (2/2).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 6 primals, 16 duals
+Objective: 9.00e+00
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper were not assigned to the network.
+original stock_overlap0 complete_feasible 10.5
+WARNING:pypsa.consistency:The following buses have carriers which are not defined. Run n.sanitize() to add them. Components with undefined carriers:
+Index(['bus'], dtype='object', name='name')
+WARNING:pypsa.optimization.abstract:Volume limits Generator-e_sum_min are tracked across the rolling horizon without foresight: each window only sees what previous windows left open. The dispatch pattern depends on the window order.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [0:2] (1/3).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 6 primals, 16 duals
+Objective: 1.50e+00
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper were not assigned to the network.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [2:4] (2/3).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 6 primals, 16 duals
+Objective: 4.00e+00
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper were not assigned to the network.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [4:5] (3/3).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+WARNING:linopy.constants:Optimization potentially failed: 
+Status: warning
+Termination condition: infeasible
+Solution: 0 primals, 0 duals
+Objective: nan
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Infeasible
+
+original stock_overlap1 native_infeasible None
+WARNING:pypsa.consistency:The following buses have carriers which are not defined. Run n.sanitize() to add them. Components with undefined carriers:
+Index(['bus'], dtype='object', name='name')
+WARNING:pypsa.optimization.abstract:Volume limits Generator-e_sum_min are tracked across the rolling horizon without foresight: each window only sees what previous windows left open. The dispatch pattern depends on the window order.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [0:2] (1/3).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 6 primals, 17 duals
+Objective: 1.50e+00
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper, study-retained-energy-min were not assigned to the network.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [2:4] (2/3).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 6 primals, 17 duals
+Objective: 4.50e+00
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper, study-retained-energy-min were not assigned to the network.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [4:5] (3/3).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 4 primals, 12 duals
+Objective: 5.50e+00
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper, study-retained-energy-min were not assigned to the network.
+original prefix_end_bound complete_feasible 10.5
+WARNING:pypsa.consistency:The following buses have carriers which are not defined. Run n.sanitize() to add them. Components with undefined carriers:
+Index(['bus'], dtype='object', name='name')
+WARNING:pypsa.optimization.abstract:Volume limits Generator-e_sum_min are tracked across the rolling horizon without foresight: each window only sees what previous windows left open. The dispatch pattern depends on the window order.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [0:2] (1/3).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 6 primals, 17 duals
+Objective: 1.50e+00
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper, study-retained-energy-min were not assigned to the network.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [2:4] (2/3).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 6 primals, 17 duals
+Objective: 1.50e+00
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper, study-retained-energy-min were not assigned to the network.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [4:5] (3/3).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+WARNING:linopy.constants:Optimization potentially failed: 
+Status: warning
+Termination condition: infeasible
+Solution: 0 primals, 0 duals
+Objective: nan
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Infeasible
+
+original prefix_cutoff_bound native_infeasible None
+WARNING:pypsa.consistency:The following buses have carriers which are not defined. Run n.sanitize() to add them. Components with undefined carriers:
+Index(['bus'], dtype='object', name='name')
+WARNING:pypsa.optimization.abstract:Volume limits Generator-e_sum_min are tracked across the rolling horizon without foresight: each window only sees what previous windows left open. The dispatch pattern depends on the window order.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [0:2] (1/3).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 6 primals, 17 duals
+Objective: 1.50e+00
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper, study-retained-energy-min were not assigned to the network.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [2:4] (2/3).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 6 primals, 17 duals
+Objective: 4.50e+00
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper, study-retained-energy-min were not assigned to the network.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [4:5] (3/3).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 4 primals, 12 duals
+Objective: 5.50e+00
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper, study-retained-energy-min were not assigned to the network.
+original prefix_actual_cap complete_feasible 10.5
+WARNING:pypsa.consistency:The following buses have carriers which are not defined. Run n.sanitize() to add them. Components with undefined carriers:
+Index(['bus'], dtype='object', name='name')
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.io: Writing time: 0.01s
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 12 primals, 31 duals
+Objective: 2.25e+01
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper were not assigned to the network.
+exact_cap_E3 full_horizon complete_feasible 22.5
+WARNING:pypsa.consistency:The following buses have carriers which are not defined. Run n.sanitize() to add them. Components with undefined carriers:
+Index(['bus'], dtype='object', name='name')
+WARNING:pypsa.optimization.abstract:Volume limits Generator-e_sum_min are tracked across the rolling horizon without foresight: each window only sees what previous windows left open. The dispatch pattern depends on the window order.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [0:2] (1/2).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 6 primals, 16 duals
+Objective: 1.35e+01
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper were not assigned to the network.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [3:5] (2/2).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 6 primals, 16 duals
+Objective: 9.00e+00
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper were not assigned to the network.
+exact_cap_E3 stock_overlap0 complete_feasible 22.5
+WARNING:pypsa.consistency:The following buses have carriers which are not defined. Run n.sanitize() to add them. Components with undefined carriers:
+Index(['bus'], dtype='object', name='name')
+WARNING:pypsa.optimization.abstract:Volume limits Generator-e_sum_min are tracked across the rolling horizon without foresight: each window only sees what previous windows left open. The dispatch pattern depends on the window order.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [0:2] (1/3).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+WARNING:linopy.constants:Optimization potentially failed: 
+Status: warning
+Termination condition: infeasible
+Solution: 0 primals, 0 duals
+Objective: nan
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Infeasible
+
+exact_cap_E3 prefix_end_bound native_infeasible None
+WARNING:pypsa.consistency:The following buses have carriers which are not defined. Run n.sanitize() to add them. Components with undefined carriers:
+Index(['bus'], dtype='object', name='name')
+WARNING:pypsa.optimization.abstract:Volume limits Generator-e_sum_min are tracked across the rolling horizon without foresight: each window only sees what previous windows left open. The dispatch pattern depends on the window order.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [0:2] (1/3).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 6 primals, 17 duals
+Objective: 1.00e+01
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper, study-retained-energy-min were not assigned to the network.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [2:4] (2/3).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 6 primals, 17 duals
+Objective: 8.00e+00
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper, study-retained-energy-min were not assigned to the network.
+INFO:pypsa.optimization.abstract:Optimizing network for snapshot horizon [4:5] (3/3).
+INFO:linopy.model: Solve problem using Highs solver
+INFO:linopy.model:Solver options:
+ - threads: 1
+ - log_to_console: False
+INFO:linopy.constants: Optimization successful: 
+Status: ok
+Termination condition: optimal
+Solution: 4 primals, 12 duals
+Objective: 5.50e+00
+Solver: highs
+Runtime: 0.00s
+MIP gap: inf
+Dual bound: 0.00e+00
+Solver model: available
+Solver message: Optimal
+
+INFO:pypsa.optimization.optimize:The shadow-prices of the constraints Generator-fix-p-lower, Generator-fix-p-upper, study-retained-energy-min were not assigned to the network.
+exact_cap_E3 prefix_cutoff_bound complete_feasible 22.5
+{"status": "PASS", "native_runs": 10, "complete_witnesses": 7, "expected_native_failures": 3, "process_peak_rss_KiB": 440276}

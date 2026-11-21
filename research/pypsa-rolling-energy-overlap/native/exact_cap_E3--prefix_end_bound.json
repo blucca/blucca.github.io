@@ -1,0 +1,47 @@
+{
+  "case": "exact_cap_E3",
+  "mode": "prefix_end_bound",
+  "p_nom": 0.5,
+  "e_sum_min": 3.0,
+  "trace": [
+    {
+      "start": 0,
+      "end": 3,
+      "kept": [
+        0,
+        1
+      ],
+      "committed_energy": 0.0,
+      "stock_target": 1.5,
+      "target": 1.5,
+      "future_start": 3,
+      "future_cap": 0.5
+    }
+  ],
+  "status": "native_infeasible",
+  "failure": "Optimization of window [0:2] failed with status warning and condition infeasible. The volume limits of later windows cannot be tracked.",
+  "elapsed_seconds": 0.22664131698547862,
+  "stored_dispatch": {
+    "gen": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "backup": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "original_limit_restored": true,
+  "whole_witness_valid": false,
+  "total_energy": null,
+  "whole_cost": null,
+  "committed_stop_before_failure": 0
+}

@@ -1,0 +1,12 @@
+{
+  "pypsa": "1.4.0.post1.dev77+g7dee89a06",
+  "linopy": "0.10.1",
+  "highspy": "1.16.0",
+  "numpy": "2.5.5",
+  "scipy": "1.18.1",
+  "pandas": "3.1.1",
+  "xarray": "2026.9.0",
+  "python": "3.13.5",
+  "source_sha": "7dee89a06b945d3c65acbce0b587110672a695b3",
+  "source_module": "pinned-source/pypsa/__init__.py"
+}

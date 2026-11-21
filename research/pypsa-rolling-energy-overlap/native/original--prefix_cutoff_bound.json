@@ -1,0 +1,73 @@
+{
+  "case": "original",
+  "mode": "prefix_cutoff_bound",
+  "p_nom": 1.0,
+  "e_sum_min": 1.5,
+  "trace": [
+    {
+      "start": 0,
+      "end": 3,
+      "kept": [
+        0,
+        1
+      ],
+      "committed_energy": 0.0,
+      "stock_target": -1.5,
+      "target": -2.5,
+      "future_start": 2,
+      "future_cap": 1.0
+    },
+    {
+      "start": 2,
+      "end": 5,
+      "kept": [
+        2,
+        3
+      ],
+      "committed_energy": 0.0,
+      "stock_target": 0.5,
+      "target": -0.5,
+      "future_start": 4,
+      "future_cap": 1.0
+    },
+    {
+      "start": 4,
+      "end": 6,
+      "kept": [
+        4,
+        5
+      ],
+      "committed_energy": 0.0,
+      "stock_target": 1.5,
+      "target": 1.5,
+      "future_start": 6,
+      "future_cap": 1.0
+    }
+  ],
+  "status": "native_infeasible",
+  "failure": "Optimization of window [4:5] failed with status warning and condition infeasible. The volume limits of later windows cannot be tracked.",
+  "elapsed_seconds": 0.6915485890058335,
+  "stored_dispatch": {
+    "gen": [
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      0.0
+    ],
+    "backup": [
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.0
+    ]
+  },
+  "original_limit_restored": true,
+  "whole_witness_valid": false,
+  "total_energy": null,
+  "whole_cost": null,
+  "committed_stop_before_failure": 4
+}

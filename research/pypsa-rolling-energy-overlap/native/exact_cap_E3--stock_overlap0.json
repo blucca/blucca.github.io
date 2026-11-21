@@ -1,0 +1,56 @@
+{
+  "case": "exact_cap_E3",
+  "mode": "stock_overlap0",
+  "p_nom": 0.5,
+  "e_sum_min": 3.0,
+  "trace": [
+    {
+      "start": 0,
+      "end": 3,
+      "kept": [
+        0,
+        1,
+        2
+      ],
+      "committed_energy": 0.0,
+      "stock_target": 1.5
+    },
+    {
+      "start": 3,
+      "end": 6,
+      "kept": [
+        3,
+        4,
+        5
+      ],
+      "committed_energy": 1.5,
+      "stock_target": 1.5
+    }
+  ],
+  "status": "complete_feasible",
+  "elapsed_seconds": 0.4580724220140837,
+  "stored_dispatch": {
+    "gen": [
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5,
+      0.5
+    ],
+    "backup": [
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0,
+      -0.0
+    ]
+  },
+  "original_limit_restored": true,
+  "whole_witness_valid": true,
+  "total_energy": 3.0,
+  "whole_cost": 22.5,
+  "native_objective": 9.0,
+  "native_objective_scope": "last_window_only"
+}
