@@ -1,0 +1,11 @@
+{
+  "scope": "Two individual native HiGHS 1.16.0 prototype runs from the published analytic-centre experiment; reported solve times, not whole process timings.",
+  "study": "https://github.com/blucca/blucca.github.io/tree/main/research/highs-analytic-centre-option",
+  "original_model": "https://github.com/ERGO-Code/HiGHS/issues/3761",
+  "original_discovery": "Analytic-centre cost and constant-off observation: Lynth-KR.",
+  "our_scope": "Independent explicit-option prototype and full native/primal validation; these logs are default-1 and false-1 of the existing study.",
+  "change": "mip_compute_analytic_centre=true / false in a research prototype, not a recommendation that this option exists in every released build.",
+  "time_scope": "HiGHS Solving report Timing; 11.14 / 7.64 s for this pair. The published three-pair whole-call result has a different denominator.",
+  "redaction": "One absolute local model path replaced in each log. Numerical output preserved.",
+  "cut_off": "A literal prefix of default.log ending before Solving report; shows an unfinished log excerpt, not a separately executed failure."
+}

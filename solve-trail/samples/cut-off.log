@@ -1,0 +1,87 @@
+Running HiGHS 1.16.0 (git hash: 725b40f): Copyright (c) 2026 under MIT licence terms
+Includes third-party software components, see THIRD_PARTY_NOTICES.md for full details
+readMPS: Trying to open file [local model path omitted]
+readMPS: Read NAME    OK
+readMPS: Read ROWS    OK
+readMPS: Read COLUMNS OK
+readMPS: Read RHS     OK
+Number of BV entries in BOUNDS section is 19740
+readMPS: Read BOUNDS  OK
+MIP       : master
+Rows      : 98911
+Cols      : 51291
+Nonzeros  : 224253
+Integer   : 19740 (19740 binary)
+Coefficient ranges:
+  Matrix  [1e-06, 1e+04]
+  Cost    [4e-02, 2e+01]
+  Bound   [8e-01, 1e+02] (continuous)
+  Bound   [1e+00, 1e+00] (non-continuous)
+  RHS     [3e-02, 1e+04]
+Scheduler initialized: 2 threads (physical cores: 4)
+Permitted suppression of presolve rules via presolve_rule_off option:
+ * Rule  0 (set bit  0 =       1): Empty row
+ * Rule  1 (set bit  1 =       2): Singleton row
+ * Rule  2 (set bit  2 =       4): Redundant row
+ * Rule  3 (set bit  3 =       8): Empty column
+ * Rule  4 (set bit  4 =      16): Fixed column
+   Rule  5 (set bit  5 =      32): Dominated column
+   Rule  6 (set bit  6 =      64): Forcing row
+   Rule  7 (set bit  7 =     128): Forcing column
+   Rule  8 (set bit  8 =     256): Free column substitution
+   Rule  9 (set bit  9 =     512): Doubleton equation
+   Rule 10 (set bit 10 =    1024): Dependent equations
+   Rule 11 (set bit 11 =    2048): Dependent free columns
+   Rule 12 (set bit 12 =    4096): Aggregator
+   Rule 13 (set bit 13 =    8192): Parallel rows and columns
+   Rule 14 (set bit 14 =   16384): Sparsify
+   Rule 15 (set bit 15 =   32768): Probing
+   Rule 16 (set bit 16 =   65536): Enumeration
+   Rule 17 (set bit 17 =  131072): Dual fixing
+   Rule 18 (set bit 18 =  262144): Zero cost singleton
+   Rule 19 (set bit 19 =  524288): Column stuffing
+   Rule 20 (set bit 20 = 1048576): Dual-fixing probing
+   Rule 21 (set bit 21 = 2097152): Initial sweep
+   Rule 22 (set bit 22 = 4194304): Fourier-Motzkin
+   Rule 23 (set bit 23 = 8388608): Weakly dominated column
+ * Only in initial sweep
+Presolving model
+98911 rows, 51291 cols, 224253 nonzeros 0s
+Dominated columns: fixed 0 columns, strengthened 0 bounds, used 278631 of 10000000 work units
+1001 probing evaluations: 0 deleted rows, 2 deleted columns, 0 lifted nonzeros
+Dominated columns: fixed 0 columns, strengthened 0 bounds, used 279037 of 10000000 work units
+98159 rows, 50912 cols, 222770 nonzeros 0s
+Presolve reductions: rows 98159(-752); columns 50912(-379); nonzeros 222770(-1483) 
+MIP-Timing:         4.9 - completed presolve
+MIP-Timing:         4.9 - starting  setup
+
+Solving MIP model with:
+   98159 rows
+   50912 cols (19737 binary, 0 integer, 31136 implied int., 39 continuous, 0 domain fixed)
+   222770 nonzeros
+   Thread count: 4 available cores, 4 logical processors, using up to 2 workers across 2 threads.
+MIP-Timing:           5 - completed setup
+Feasibility Jump: starting solve. weightUpdateDecay=1, relaxContinuous=0  
+
+Src: B => Branching; C => Central rounding; F => Feasibility pump; H => Heuristic;
+     I => Shifting; J => Feasibility jump; L => Sub-MIP; P => Empty MIP; R => Randomized rounding;
+     S => Solve LP; T => Evaluate node; U => Unbounded; X => User solution; Y => HiGHS solution;
+     Z => ZI Round; l => Trivial lower; p => Trivial point; u => Trivial upper; z => Trivial zero
+
+        Nodes      |    B&B Tree     |            Objective Bounds              |  Dynamic Constraints |       Work      
+Src  Proc. InQueue |  Leaves   Expl. | BestBound       BestSol              Gap |   Cuts   InLp Confl. | LpIters     Time
+
+ J       0       0         0   0.00%   -inf            6550.513511        Large        0      0      0         0     5.1s
+MIP-Timing:         5.1 - starting evaluate root node
+MIP-Timing:         5.2 - starting analytic centre calculation
+MIP-Timing:         5.2 - start first LP solve (without basis)
+MIP-Timing:         5.5 - finish first LP solve
+ R       0       0         0   0.00%   58.91288578     240.1091891       75.46%        0      0      0      3876     5.6s
+MIP-Timing:         5.6 - starting  separation
+MIP-Timing:           7 - starting  analytic centre synch
+MIP-Timing:           9 - completed analytic centre synch
+MIP-Timing:          10 - completed separation
+ L       0       0         0   0.00%   59.17749263     59.18414207        0.01%      183     20      0      3923    11.1s
+MIP-Timing:          11 - completed evaluate root node
+         1       0         1 100.00%   59.17899184     59.18414207        0.01%      183     20      0      4020    11.1s
+

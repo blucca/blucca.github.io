@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f8fc">
+  <meta name="description" content="Compare two original HiGHS logs, trace solver progress to exact source lines, and make a diagnostic brief. Local processing, with no upload.">
+  <title>SolveTrail — compare HiGHS runs</title>
+  <meta property="og:title" content="SolveTrail — compare your HiGHS logs">
+  <meta property="og:description" content="Your original A/B logs, source-backed observations, a private saved comparison and an editable engineering brief. All local.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://blucca.github.io/solve-trail/">
+  <meta property="og:image" content="https://blucca.github.io/solve-trail/preview.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://blucca.github.io/solve-trail/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='7' fill='%23f3f8fc'/%3E%3Cpath d='M7 9v23h27' fill='none' stroke='%23d4e5ef' stroke-width='2'/%3E%3Cpath d='M10 13h8v6h7v5h9' fill='none' stroke='%23147e9a' stroke-width='2.5'/%3E%3Cpath d='M10 29h8v-4h7v-9h9' fill='none' stroke='%23bd642c' stroke-width='2.5'/%3E%3C/svg%3E">
+  <link rel="preload" href="fonts/plex-sans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <script src="parser.js" defer></script>
+  <script src="samples.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#workspace">Skip to the comparison</a>
+
+  <header class="site-header">
+    <div class="page-shell header-inner">
+      <div class="brand-block">
+        <h1 class="wordmark">
+          <svg class="wordmark-symbol" viewBox="0 0 42 34" width="42" height="34" aria-hidden="true">
+            <path class="wordmark-axis" d="M3 3v27h36"/>
+            <path class="wordmark-a" d="M7 9h9v6h10v6h12"/>
+            <path class="wordmark-b" d="M7 26h9v-4h10v-10h12"/>
+            <circle class="wordmark-node-a" cx="26" cy="21" r="2.25"/>
+            <circle class="wordmark-node-b" cx="26" cy="12" r="2.25"/>
+          </svg>
+          <span>SolveTrail</span>
+        </h1>
+        <p class="brand-description">HiGHS run comparison</p>
+      </div>
+
+      <div class="header-actions">
+        <p class="local-note">
+          <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><rect x="3" y="3" width="14" height="10" rx="1.5"/><path d="M7 17h6M10 13v4"/></svg>
+          <span>Local processing</span>
+        </p>
+
+        <details class="workspace-menu">
+          <summary>
+            <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M3 4h6l2 2h6v10H3z"/></svg>
+            <span>Workspace</span>
+            <svg class="chevron" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+          </summary>
+          <div class="workspace-menu-panel">
+            <p>Keep this comparison for another run or a colleague.</p>
+            <button id="saveWorkspace" class="button button-secondary" type="button">
+              <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M10 3v9m-4-4 4 4 4-4M4 13v4h12v-4"/></svg>
+              Save workspace
+            </button>
+            <button id="restoreWorkspace" class="button button-quiet" type="button">
+              <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M10 13V4m-4 4 4-4 4 4M4 13v4h12v-4"/></svg>
+              Restore workspace
+            </button>
+            <input id="workspaceFile" type="file" accept=".json,application/json" hidden>
+            <p class="workspace-file-note">The saved private file includes the original logs.</p>
+          </div>
+        </details>
+
+        <button id="makeBrief" class="button button-primary" type="button">
+          <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M5 2h7l3 3v13H5zM12 2v4h3M8 9h4M8 12h4M8 15h3"/></svg>
+          Make brief
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main id="workspace" class="page-shell workspace" tabindex="-1">
+    <section class="import-section" aria-label="Select the original logs">
+      <div class="run-band">
+        <section class="run-strip run-a" aria-label="Run A">
+          <div class="run-controls">
+            <span class="run-marker" aria-hidden="true">A</span>
+            <button id="loadA" class="button button-log" type="button">
+              <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M5 2h7l3 3v13H5zM12 2v4h3M8 10h4M8 13h4"/></svg>
+              Open log A
+            </button>
+            <input id="fileA" type="file" accept=".log,.txt,.out,text/plain" hidden>
+            <div class="run-picker">
+              <label for="runA">Run in this file</label>
+              <select id="runA" disabled><option value="">Choose a log first</option></select>
+            </div>
+          </div>
+          <div id="runSummaryA" class="run-summary">
+            <p class="empty-summary">Load the original HiGHS output for your first run.</p>
+          </div>
+        </section>
+
+        <section class="run-strip run-b" aria-label="Run B">
+          <div class="run-controls">
+            <span class="run-marker" aria-hidden="true">B</span>
+            <button id="loadB" class="button button-log" type="button">
+              <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M5 2h7l3 3v13H5zM12 2v4h3M8 10h4M8 13h4"/></svg>
+              Open log B
+            </button>
+            <input id="fileB" type="file" accept=".log,.txt,.out,text/plain" hidden>
+            <div class="run-picker">
+              <label for="runB">Run in this file</label>
+              <select id="runB" disabled><option value="">Choose a log first</option></select>
+            </div>
+          </div>
+          <div id="runSummaryB" class="run-summary">
+            <p class="empty-summary">Add a second run to compare a change.</p>
+          </div>
+        </section>
+      </div>
+
+      <div class="import-secondary">
+        <div id="status" class="status-strip" role="status" aria-live="polite" aria-atomic="true">Choose your logs, or try the native example pair.</div>
+        <button id="loadExample" class="button button-quiet example-button" type="button">
+          <svg viewBox="0 0 20 20" width="17" height="17" aria-hidden="true"><path d="M3 5h6v10H3zM11 5h6v10h-6M5 8h2M13 8h2M5 11h2M13 11h2"/></svg>
+          Try native examples
+        </button>
+        <details id="pastePane" class="paste-pane">
+          <summary>
+            <span>Paste a log</span>
+            <svg class="chevron" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+          </summary>
+          <div class="paste-content">
+            <div class="paste-heading">
+              <label for="pasteText">Original HiGHS output</label>
+              <p id="pasteHint">Paste the complete output, or the observations captured so far.</p>
+            </div>
+            <textarea id="pasteText" rows="7" spellcheck="false" aria-describedby="pasteHint" placeholder="Paste your original HiGHS output here."></textarea>
+            <div class="paste-actions">
+              <div class="inline-field">
+                <label for="pasteTarget">Load into</label>
+                <select id="pasteTarget"><option value="A">Run A</option><option value="B">Run B</option></select>
+              </div>
+              <button id="pasteApply" class="button button-primary" type="button">Load pasted log</button>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <div class="inspection-grid">
+      <div class="timeline-column">
+        <section class="plot-panel" aria-labelledby="timelineTitle">
+          <div class="plot-heading">
+            <div>
+              <h2 id="timelineTitle">Progress over solver time</h2>
+              <p class="section-description">Follow the recorded observations back to their source.</p>
+            </div>
+            <div class="metric-picker">
+              <label for="plotMetric">Plot</label>
+              <select id="plotMetric"><option value="gap">Relative gap</option><option value="bounds">Primal / dual bounds</option></select>
+            </div>
+          </div>
+
+          <div class="chart-legend" aria-label="Run colors">
+            <span class="legend-item"><span class="legend-stroke legend-a" aria-hidden="true"></span><span>Run A</span></span>
+            <span class="legend-item"><span class="legend-stroke legend-b" aria-hidden="true"></span><span>Run B</span></span>
+            <span class="chart-hint">Pick a point to inspect its lines.</span>
+          </div>
+
+          <div class="chart-frame">
+            <svg id="chart" viewBox="0 0 1000 370" role="img" aria-labelledby="timelineTitle" aria-describedby="chartDescription" tabindex="0">
+              <g class="chart-grid" aria-hidden="true">
+                <path d="M75 38H955M75 109H955M75 180H955M75 251H955M75 322H955M75 38V322M251 38V322M427 38V322M603 38V322M779 38V322M955 38V322"/>
+              </g>
+              <path class="chart-axis" d="M75 38V322H955" aria-hidden="true"/>
+            </svg>
+            <div id="plotEmpty" class="plot-empty">
+              <div>
+                <h3>Load a HiGHS log to start</h3>
+                <p>Inspect one run in A. Add B to compare the timelines.</p>
+              </div>
+            </div>
+          </div>
+
+          <div id="chartReadout" class="chart-readout">No observation selected.</div>
+          <p id="chartDescription" class="chart-description">The horizontal axis uses time reported by the solver. Each point is an observation recorded in the log.</p>
+        </section>
+
+        <section class="findings-section" aria-labelledby="findingsTitle">
+          <h2 id="findingsTitle">Run notes</h2>
+          <div id="findings" class="findings">
+            <p class="empty-message">Termination, first incumbent and capture notes appear here after loading a run.</p>
+          </div>
+        </section>
+      </div>
+
+      <details id="evidencePane" class="evidence-pane" open>
+        <summary>
+          <span>
+            <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path d="M4 3h12v14H4zM7 7h6M7 10h6M7 13h4"/></svg>
+            Original evidence
+          </span>
+          <svg class="chevron" viewBox="0 0 16 16" width="15" height="15" aria-hidden="true"><path d="m4 6 4 4 4-4"/></svg>
+        </summary>
+        <div class="source-controls">
+          <label for="rawRun">Show</label>
+          <select id="rawRun"><option value="A">Run A</option><option value="B">Run B</option></select>
+        </div>
+        <p id="sourceTitle" class="source-title">No source loaded.</p>
+        <pre id="rawLines" class="raw-lines" tabindex="0" aria-label="Original log source lines"><span class="line">Load a log to inspect its original lines.</span></pre>
+        <div class="source-navigation" aria-label="Browse original source lines">
+          <button id="sourcePrev" class="button button-source" type="button" disabled>
+            <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="m10 4-4 4 4 4"/></svg>
+            Earlier lines
+          </button>
+          <button id="sourceNext" class="button button-source" type="button" disabled>
+            Later lines
+            <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="m6 4 4 4-4 4"/></svg>
+          </button>
+        </div>
+      </details>
+    </div>
+
+    <section class="phase-section" aria-labelledby="phaseTitle">
+      <div class="section-heading">
+        <h2 id="phaseTitle">Where the time went</h2>
+        <p class="section-description">Native phase timings, when logged.</p>
+      </div>
+      <div id="phaseComparison" class="phase-comparison">
+        <p class="empty-message">Load a run to inspect its reported phase timings.</p>
+      </div>
+    </section>
+
+    <section class="comparison-section" aria-labelledby="comparisonTitle">
+      <div class="comparison-context">
+        <h2 id="comparisonTitle">What changed between the runs?</h2>
+        <p class="section-description">Add the context you know before interpreting a speed change.</p>
+        <div class="context-fields">
+          <div class="field">
+            <label for="relationship">Relationship between A and B</label>
+            <select id="relationship">
+              <option value="unspecified">Not specified</option>
+              <option value="same">Same model</option>
+              <option value="reformulation">Reformulated model</option>
+              <option value="different">Different models</option>
+            </select>
+          </div>
+          <label class="checkbox-field" for="hardware">
+            <input id="hardware" type="checkbox">
+            <span>Same hardware and resource budget</span>
+          </label>
+          <div class="field notes-field">
+            <label for="notes">Change and capture notes <span class="optional">(optional)</span></label>
+            <textarea id="notes" rows="3" placeholder="Version, options, formulation, or run limits you changed."></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="comparison-result-panel">
+        <h3>Comparison result</h3>
+        <div id="comparisonResult" class="comparison-result" aria-live="polite">
+          <p class="empty-message">Select two runs to compare their reported outcomes.</p>
+        </div>
+      </div>
+    </section>
+
+    <noscript><p class="noscript-note">Enable JavaScript to parse logs locally. You can also download the offline ZIP and open it on your device.</p></noscript>
+  </main>
+
+  <footer class="site-footer page-shell">
+    <div class="footer-links">
+      <a href="https://github.com/blucca/blucca.github.io/tree/main/solve-trail" target="_blank" rel="noopener noreferrer">Source</a>
+      <a href="solve-trail-offline.zip" download="solve-trail-offline.zip">Offline ZIP</a>
+      <a href="mailto:belgialucca@gmail.com">Contact Blucca</a>
+    </div>
+    <p>AI-led, built with Codex.</p>
+  </footer>
+
+  <dialog id="briefDialog" class="brief-dialog" aria-labelledby="briefTitle" aria-describedby="briefHint">
+    <div class="dialog-heading">
+      <h2 id="briefTitle">Diagnostic brief</h2>
+      <button id="closeBrief" class="button button-quiet" type="button">Close</button>
+    </div>
+    <p id="briefHint" class="brief-hint">Review before sharing. The brief contains selected facts and your context; original logs stay in the workspace.</p>
+    <label for="briefText">Review and edit</label>
+    <textarea id="briefText" rows="16" spellcheck="false"></textarea>
+    <p class="brief-hint">For a production fix, <a href="mailto:belgialucca@gmail.com?subject=HiGHS%20model%20engineering">email the edited brief</a> with the target result and deadline.</p>
+    <div class="dialog-actions">
+      <button id="downloadBrief" class="button button-secondary" type="button">Download .md</button>
+      <button id="copyBrief" class="button button-primary" type="button">Copy brief</button>
+    </div>
+  </dialog>
+</body>
+</html>
