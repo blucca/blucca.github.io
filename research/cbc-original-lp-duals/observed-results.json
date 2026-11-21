@@ -1,0 +1,777 @@
+{
+  "source_issue": "https://github.com/coin-or/Cbc/issues/861",
+  "pulp": "4.3.1",
+  "cbc_master": "87e3a7d5066937c6f16f6e19afac571c8e1a4903",
+  "case_count": 11,
+  "cases": [
+    {
+      "case": "bab-oneinteger-candidate-lp-only",
+      "objective": 2.0,
+      "pi": null,
+      "dj": null,
+      "original_model_checks": null,
+      "native_exit_codes": [
+        0
+      ],
+      "solver_options": null
+    },
+    {
+      "case": "bab-oneinteger-old-release",
+      "objective": 2.0,
+      "pi": null,
+      "dj": null,
+      "original_model_checks": null,
+      "native_exit_codes": [
+        0
+      ],
+      "solver_options": null
+    },
+    {
+      "case": "bab-oneinteger-stock-master",
+      "objective": 2.0,
+      "pi": null,
+      "dj": null,
+      "original_model_checks": null,
+      "native_exit_codes": [
+        0
+      ],
+      "solver_options": null
+    },
+    {
+      "case": "candidate-lp-only-default",
+      "objective": 244.8714285714286,
+      "pi": [
+        0.5,
+        0.5,
+        0.333333333333333,
+        0.142857142857143,
+        0.1
+      ],
+      "dj": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.714285714285714
+      ],
+      "original_model_checks": {
+        "activity": [
+          310.0,
+          120.0,
+          45.0,
+          31.999999999999993,
+          103.0
+        ],
+        "coverage_slack_Ax_minus_b": [
+          0.0,
+          0.0,
+          0.0,
+          -7.105427357601002e-15,
+          0.0
+        ],
+        "reduced_cost_c_minus_AT_pi": [
+          0.0,
+          0.0,
+          1.1102230246251565e-15,
+          -8.881784197001252e-16,
+          0.0,
+          0.714285714285714
+        ],
+        "stationarity_c_minus_AT_pi_minus_dj": [
+          0.0,
+          0.0,
+          1.1102230246251565e-15,
+          -8.881784197001252e-16,
+          0.0,
+          0.0
+        ],
+        "row_complementarity_pi_times_slack": [
+          0.0,
+          0.0,
+          0.0,
+          -1.0150610510858583e-15,
+          0.0
+        ],
+        "variable_complementarity_x_times_dj": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "primal_objective_sum_x": 244.87142857142857,
+        "dual_objective_bT_pi": 244.87142857142857,
+        "primal_dual_gap": 0.0,
+        "gap_decomposition": -1.0150610510858583e-15,
+        "primal_feasible": true,
+        "dual_feasible": true,
+        "stationarity_ok": true,
+        "row_complementarity_ok": true,
+        "variable_complementarity_ok": true,
+        "gap_ok": true,
+        "expected_x_error": 8.881784197001252e-16,
+        "expected_pi_error": 3.3306690738754696e-16,
+        "expected_dj_error": 3.3306690738754696e-16,
+        "expected_objective": 244.87142857142857,
+        "expected_objective_error": 2.842170943040401e-14,
+        "full_original_dual_contract_ok": true
+      },
+      "native_exit_codes": [
+        0
+      ],
+      "solver_options": {
+        "presolve": null,
+        "options": [],
+        "keepFiles": true,
+        "msg": false
+      }
+    },
+    {
+      "case": "candidate-lp-only-default-rhs0-plus-one",
+      "objective": 245.3714285714286,
+      "pi": [
+        0.5,
+        0.5,
+        0.333333333333333,
+        0.142857142857143,
+        0.1
+      ],
+      "dj": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.714285714285714
+      ],
+      "original_model_checks": {
+        "activity": [
+          311.0,
+          120.0,
+          45.0,
+          31.999999999999993,
+          103.0
+        ],
+        "coverage_slack_Ax_minus_b": [
+          0.0,
+          0.0,
+          0.0,
+          -7.105427357601002e-15,
+          0.0
+        ],
+        "reduced_cost_c_minus_AT_pi": [
+          0.0,
+          0.0,
+          1.1102230246251565e-15,
+          -8.881784197001252e-16,
+          0.0,
+          0.714285714285714
+        ],
+        "stationarity_c_minus_AT_pi_minus_dj": [
+          0.0,
+          0.0,
+          1.1102230246251565e-15,
+          -8.881784197001252e-16,
+          0.0,
+          0.0
+        ],
+        "row_complementarity_pi_times_slack": [
+          0.0,
+          0.0,
+          0.0,
+          -1.0150610510858583e-15,
+          0.0
+        ],
+        "variable_complementarity_x_times_dj": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "primal_objective_sum_x": 245.37142857142857,
+        "dual_objective_bT_pi": 245.37142857142857,
+        "primal_dual_gap": 0.0,
+        "gap_decomposition": -1.0150610510858583e-15,
+        "primal_feasible": true,
+        "dual_feasible": true,
+        "stationarity_ok": true,
+        "row_complementarity_ok": true,
+        "variable_complementarity_ok": true,
+        "gap_ok": true,
+        "expected_x_error": 8.881784197001252e-16,
+        "expected_pi_error": 3.3306690738754696e-16,
+        "expected_dj_error": 3.3306690738754696e-16,
+        "expected_objective": 245.37142857142857,
+        "expected_objective_error": 2.842170943040401e-14,
+        "full_original_dual_contract_ok": true
+      },
+      "native_exit_codes": [
+        0
+      ],
+      "solver_options": {
+        "presolve": null,
+        "options": [],
+        "keepFiles": true,
+        "msg": false
+      }
+    },
+    {
+      "case": "master-author-presolve-off-preprocess-off",
+      "objective": 244.8714285714286,
+      "pi": [
+        0.0,
+        0.0,
+        0.0,
+        0.142857142857143,
+        0.0
+      ],
+      "dj": [
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        1.0,
+        0.714285714285714
+      ],
+      "original_model_checks": {
+        "activity": [
+          310.0,
+          120.0,
+          45.0,
+          31.999999999999993,
+          103.0
+        ],
+        "coverage_slack_Ax_minus_b": [
+          0.0,
+          0.0,
+          0.0,
+          -7.105427357601002e-15,
+          0.0
+        ],
+        "reduced_cost_c_minus_AT_pi": [
+          1.0,
+          1.0,
+          1.0,
+          -8.881784197001252e-16,
+          1.0,
+          0.714285714285714
+        ],
+        "stationarity_c_minus_AT_pi_minus_dj": [
+          0.0,
+          0.0,
+          0.0,
+          -8.881784197001252e-16,
+          0.0,
+          0.0
+        ],
+        "row_complementarity_pi_times_slack": [
+          0.0,
+          0.0,
+          0.0,
+          -1.0150610510858583e-15,
+          0.0
+        ],
+        "variable_complementarity_x_times_dj": [
+          155.0,
+          60.0,
+          15.0,
+          0.0,
+          10.3,
+          0.0
+        ],
+        "primal_objective_sum_x": 244.87142857142857,
+        "dual_objective_bT_pi": 4.571428571428576,
+        "primal_dual_gap": 240.29999999999998,
+        "gap_decomposition": 240.3,
+        "primal_feasible": true,
+        "dual_feasible": true,
+        "stationarity_ok": true,
+        "row_complementarity_ok": true,
+        "variable_complementarity_ok": false,
+        "gap_ok": false,
+        "expected_x_error": 8.881784197001252e-16,
+        "expected_pi_error": 0.5,
+        "expected_dj_error": 1.0,
+        "expected_objective": 244.87142857142857,
+        "expected_objective_error": 2.842170943040401e-14,
+        "full_original_dual_contract_ok": false
+      },
+      "native_exit_codes": [
+        0
+      ],
+      "solver_options": {
+        "presolve": false,
+        "options": [
+          "preprocess off"
+        ],
+        "keepFiles": true,
+        "msg": false
+      }
+    },
+    {
+      "case": "master-bound-propagation-and-singleton-off",
+      "objective": 244.8714285714286,
+      "pi": [
+        0.5,
+        0.5,
+        0.333333333333333,
+        0.142857142857143,
+        0.1
+      ],
+      "dj": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.714285714285714
+      ],
+      "original_model_checks": {
+        "activity": [
+          310.0,
+          120.0,
+          45.0,
+          31.999999999999993,
+          103.0
+        ],
+        "coverage_slack_Ax_minus_b": [
+          0.0,
+          0.0,
+          0.0,
+          -7.105427357601002e-15,
+          0.0
+        ],
+        "reduced_cost_c_minus_AT_pi": [
+          0.0,
+          0.0,
+          1.1102230246251565e-15,
+          -8.881784197001252e-16,
+          0.0,
+          0.714285714285714
+        ],
+        "stationarity_c_minus_AT_pi_minus_dj": [
+          0.0,
+          0.0,
+          1.1102230246251565e-15,
+          -8.881784197001252e-16,
+          0.0,
+          0.0
+        ],
+        "row_complementarity_pi_times_slack": [
+          0.0,
+          0.0,
+          0.0,
+          -1.0150610510858583e-15,
+          0.0
+        ],
+        "variable_complementarity_x_times_dj": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "primal_objective_sum_x": 244.87142857142857,
+        "dual_objective_bT_pi": 244.87142857142857,
+        "primal_dual_gap": 0.0,
+        "gap_decomposition": -1.0150610510858583e-15,
+        "primal_feasible": true,
+        "dual_feasible": true,
+        "stationarity_ok": true,
+        "row_complementarity_ok": true,
+        "variable_complementarity_ok": true,
+        "gap_ok": true,
+        "expected_x_error": 8.881784197001252e-16,
+        "expected_pi_error": 3.3306690738754696e-16,
+        "expected_dj_error": 3.3306690738754696e-16,
+        "expected_objective": 244.87142857142857,
+        "expected_objective_error": 2.842170943040401e-14,
+        "full_original_dual_contract_ok": true
+      },
+      "native_exit_codes": [
+        0
+      ],
+      "solver_options": {
+        "presolve": null,
+        "options": [
+          "boundPropLevel off",
+          "singletonBounds off"
+        ],
+        "keepFiles": true,
+        "msg": false
+      }
+    },
+    {
+      "case": "master-bounds-off-rhs0-plus-one",
+      "objective": 245.3714285714286,
+      "pi": [
+        0.5,
+        0.5,
+        0.333333333333333,
+        0.142857142857143,
+        0.1
+      ],
+      "dj": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.714285714285714
+      ],
+      "original_model_checks": {
+        "activity": [
+          311.0,
+          120.0,
+          45.0,
+          31.999999999999993,
+          103.0
+        ],
+        "coverage_slack_Ax_minus_b": [
+          0.0,
+          0.0,
+          0.0,
+          -7.105427357601002e-15,
+          0.0
+        ],
+        "reduced_cost_c_minus_AT_pi": [
+          0.0,
+          0.0,
+          1.1102230246251565e-15,
+          -8.881784197001252e-16,
+          0.0,
+          0.714285714285714
+        ],
+        "stationarity_c_minus_AT_pi_minus_dj": [
+          0.0,
+          0.0,
+          1.1102230246251565e-15,
+          -8.881784197001252e-16,
+          0.0,
+          0.0
+        ],
+        "row_complementarity_pi_times_slack": [
+          0.0,
+          0.0,
+          0.0,
+          -1.0150610510858583e-15,
+          0.0
+        ],
+        "variable_complementarity_x_times_dj": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "primal_objective_sum_x": 245.37142857142857,
+        "dual_objective_bT_pi": 245.37142857142857,
+        "primal_dual_gap": 0.0,
+        "gap_decomposition": -1.0150610510858583e-15,
+        "primal_feasible": true,
+        "dual_feasible": true,
+        "stationarity_ok": true,
+        "row_complementarity_ok": true,
+        "variable_complementarity_ok": true,
+        "gap_ok": true,
+        "expected_x_error": 8.881784197001252e-16,
+        "expected_pi_error": 3.3306690738754696e-16,
+        "expected_dj_error": 3.3306690738754696e-16,
+        "expected_objective": 245.37142857142857,
+        "expected_objective_error": 2.842170943040401e-14,
+        "full_original_dual_contract_ok": true
+      },
+      "native_exit_codes": [
+        0
+      ],
+      "solver_options": {
+        "presolve": null,
+        "options": [
+          "boundPropLevel off",
+          "singletonBounds off"
+        ],
+        "keepFiles": true,
+        "msg": false
+      }
+    },
+    {
+      "case": "master-default",
+      "objective": 244.8714285714286,
+      "pi": [
+        0.0,
+        0.0,
+        0.0,
+        0.142857142857143,
+        0.0
+      ],
+      "dj": [
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        1.0,
+        0.714285714285714
+      ],
+      "original_model_checks": {
+        "activity": [
+          310.0,
+          120.0,
+          45.0,
+          31.999999999999993,
+          103.0
+        ],
+        "coverage_slack_Ax_minus_b": [
+          0.0,
+          0.0,
+          0.0,
+          -7.105427357601002e-15,
+          0.0
+        ],
+        "reduced_cost_c_minus_AT_pi": [
+          1.0,
+          1.0,
+          1.0,
+          -8.881784197001252e-16,
+          1.0,
+          0.714285714285714
+        ],
+        "stationarity_c_minus_AT_pi_minus_dj": [
+          0.0,
+          0.0,
+          0.0,
+          -8.881784197001252e-16,
+          0.0,
+          0.0
+        ],
+        "row_complementarity_pi_times_slack": [
+          0.0,
+          0.0,
+          0.0,
+          -1.0150610510858583e-15,
+          0.0
+        ],
+        "variable_complementarity_x_times_dj": [
+          155.0,
+          60.0,
+          15.0,
+          0.0,
+          10.3,
+          0.0
+        ],
+        "primal_objective_sum_x": 244.87142857142857,
+        "dual_objective_bT_pi": 4.571428571428576,
+        "primal_dual_gap": 240.29999999999998,
+        "gap_decomposition": 240.3,
+        "primal_feasible": true,
+        "dual_feasible": true,
+        "stationarity_ok": true,
+        "row_complementarity_ok": true,
+        "variable_complementarity_ok": false,
+        "gap_ok": false,
+        "expected_x_error": 8.881784197001252e-16,
+        "expected_pi_error": 0.5,
+        "expected_dj_error": 1.0,
+        "expected_objective": 244.87142857142857,
+        "expected_objective_error": 2.842170943040401e-14,
+        "full_original_dual_contract_ok": false
+      },
+      "native_exit_codes": [
+        0
+      ],
+      "solver_options": {
+        "presolve": null,
+        "options": [],
+        "keepFiles": true,
+        "msg": false
+      }
+    },
+    {
+      "case": "master-default-rhs0-plus-one",
+      "objective": 245.3714285714286,
+      "pi": [
+        0.0,
+        0.0,
+        0.0,
+        0.142857142857143,
+        0.0
+      ],
+      "dj": [
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        1.0,
+        0.714285714285714
+      ],
+      "original_model_checks": {
+        "activity": [
+          311.0,
+          120.0,
+          45.0,
+          31.999999999999993,
+          103.0
+        ],
+        "coverage_slack_Ax_minus_b": [
+          0.0,
+          0.0,
+          0.0,
+          -7.105427357601002e-15,
+          0.0
+        ],
+        "reduced_cost_c_minus_AT_pi": [
+          1.0,
+          1.0,
+          1.0,
+          -8.881784197001252e-16,
+          1.0,
+          0.714285714285714
+        ],
+        "stationarity_c_minus_AT_pi_minus_dj": [
+          0.0,
+          0.0,
+          0.0,
+          -8.881784197001252e-16,
+          0.0,
+          0.0
+        ],
+        "row_complementarity_pi_times_slack": [
+          0.0,
+          0.0,
+          0.0,
+          -1.0150610510858583e-15,
+          0.0
+        ],
+        "variable_complementarity_x_times_dj": [
+          155.5,
+          60.0,
+          15.0,
+          0.0,
+          10.3,
+          0.0
+        ],
+        "primal_objective_sum_x": 245.37142857142857,
+        "dual_objective_bT_pi": 4.571428571428576,
+        "primal_dual_gap": 240.79999999999998,
+        "gap_decomposition": 240.8,
+        "primal_feasible": true,
+        "dual_feasible": true,
+        "stationarity_ok": true,
+        "row_complementarity_ok": true,
+        "variable_complementarity_ok": false,
+        "gap_ok": false,
+        "expected_x_error": 8.881784197001252e-16,
+        "expected_pi_error": 0.5,
+        "expected_dj_error": 1.0,
+        "expected_objective": 245.37142857142857,
+        "expected_objective_error": 2.842170943040401e-14,
+        "full_original_dual_contract_ok": false
+      },
+      "native_exit_codes": [
+        0
+      ],
+      "solver_options": {
+        "presolve": null,
+        "options": [],
+        "keepFiles": true,
+        "msg": false
+      }
+    },
+    {
+      "case": "old-release-default",
+      "objective": 244.8714286,
+      "pi": [
+        0.5,
+        0.5,
+        0.33333333,
+        0.14285714,
+        0.1
+      ],
+      "dj": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.71428571
+      ],
+      "original_model_checks": {
+        "activity": [
+          310.0,
+          120.0,
+          45.0,
+          32.0000002,
+          103.0
+        ],
+        "coverage_slack_Ax_minus_b": [
+          0.0,
+          0.0,
+          0.0,
+          2.0000000233721948e-07,
+          0.0
+        ],
+        "reduced_cost_c_minus_AT_pi": [
+          0.0,
+          0.0,
+          1.0000000050247593e-08,
+          2.0000000100495186e-08,
+          0.0,
+          0.71428572
+        ],
+        "stationarity_c_minus_AT_pi_minus_dj": [
+          0.0,
+          0.0,
+          1.0000000050247593e-08,
+          2.0000000100495186e-08,
+          0.0,
+          1.0000000050247593e-08
+        ],
+        "row_complementarity_pi_times_slack": [
+          0.0,
+          0.0,
+          0.0,
+          2.857142833388849e-08,
+          0.0
+        ],
+        "variable_complementarity_x_times_dj": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "primal_objective_sum_x": 244.8714286,
+        "dual_objective_bT_pi": 244.87142833000001,
+        "primal_dual_gap": 2.699999868127634e-07,
+        "gap_decomposition": 2.857142833388849e-08,
+        "primal_feasible": true,
+        "dual_feasible": true,
+        "stationarity_ok": true,
+        "row_complementarity_ok": true,
+        "variable_complementarity_ok": true,
+        "gap_ok": true,
+        "expected_x_error": 2.8571428778434438e-08,
+        "expected_pi_error": 3.333333331578814e-09,
+        "expected_dj_error": 4.285714338969626e-09,
+        "expected_objective": 244.87142857142857,
+        "expected_objective_error": 2.8571434995683376e-08,
+        "full_original_dual_contract_ok": true
+      },
+      "native_exit_codes": [
+        0
+      ],
+      "solver_options": {
+        "presolve": null,
+        "options": [],
+        "keepFiles": true,
+        "msg": false
+      }
+    }
+  ]
+}

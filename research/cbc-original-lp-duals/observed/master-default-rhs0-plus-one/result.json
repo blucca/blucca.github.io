@@ -1,0 +1,229 @@
+{
+  "case": "master-default-rhs0-plus-one",
+  "source": "https://github.com/coin-or/Cbc/issues/861",
+  "cbc_path": "/data/workspace/temp/round714/cbc-dual/master-prefix/bin/cbc",
+  "python_version": "3.13.5 (main, Aug 10 2026, 12:06:59) [GCC 14.2.0]",
+  "pulp_version": "4.3.1",
+  "pulp_source": "/data/workspace/temp/round714/cbc-dual/pulp4-env/lib/python3.13/site-packages/pulp/__init__.py",
+  "started_at_utc": "2026-11-21T12:14:06.631491+00:00",
+  "A": [
+    [
+      2,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      2,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      3,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      7,
+      0,
+      2
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      10,
+      0
+    ]
+  ],
+  "b": [
+    311,
+    120,
+    45,
+    32,
+    103
+  ],
+  "c": [
+    1,
+    1,
+    1,
+    1,
+    1,
+    1
+  ],
+  "lower_bounds": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "upper_bounds": [
+    null,
+    null,
+    null,
+    null,
+    null,
+    null
+  ],
+  "row_senses": [
+    ">=",
+    ">=",
+    ">=",
+    ">=",
+    ">="
+  ],
+  "category": "Continuous",
+  "api": "LpProblem.add_variable_dicts + COIN_CMD(mip=False)",
+  "solver_options": {
+    "presolve": null,
+    "options": [],
+    "keepFiles": true,
+    "msg": false
+  },
+  "cwd": "/data/workspace/temp/round714/cbc-dual/native-results/master-default-rhs0-plus-one",
+  "tolerance": 1e-06,
+  "native_commands": [
+    [
+      "/data/workspace/temp/round714/cbc-dual/master-prefix/bin/cbc",
+      "Problema_Maestro-pulp.mps",
+      "-timeMode",
+      "elapsed",
+      "-initialSolve",
+      "-printingOptions",
+      "all",
+      "-solution",
+      "Problema_Maestro-pulp.sol"
+    ]
+  ],
+  "solve_return": "solver: COIN_CMD\nstatus: Optimal (1)\nhas solution: True\nobjective: 245.3714285714286\ntime: 0.0061s (cpu 0.0100s)",
+  "objective": 245.3714285714286,
+  "x": [
+    155.5,
+    60.0,
+    15.0,
+    4.57142857142857,
+    10.3,
+    0.0
+  ],
+  "pi": [
+    0.0,
+    0.0,
+    0.0,
+    0.142857142857143,
+    0.0
+  ],
+  "dj": [
+    1.0,
+    1.0,
+    1.0,
+    0.0,
+    1.0,
+    0.714285714285714
+  ],
+  "row_names": [
+    "_C1",
+    "_C2",
+    "_C3",
+    "_C4",
+    "_C5"
+  ],
+  "column_names": [
+    "x_i_0",
+    "x_i_1",
+    "x_i_2",
+    "x_i_3",
+    "x_i_4",
+    "x_i_5"
+  ],
+  "pulp_reported_slack": [
+    -0.0,
+    -0.0,
+    -0.0,
+    -0.0,
+    -0.0
+  ],
+  "original_model_checks": {
+    "activity": [
+      311.0,
+      120.0,
+      45.0,
+      31.999999999999993,
+      103.0
+    ],
+    "coverage_slack_Ax_minus_b": [
+      0.0,
+      0.0,
+      0.0,
+      -7.105427357601002e-15,
+      0.0
+    ],
+    "reduced_cost_c_minus_AT_pi": [
+      1.0,
+      1.0,
+      1.0,
+      -8.881784197001252e-16,
+      1.0,
+      0.714285714285714
+    ],
+    "stationarity_c_minus_AT_pi_minus_dj": [
+      0.0,
+      0.0,
+      0.0,
+      -8.881784197001252e-16,
+      0.0,
+      0.0
+    ],
+    "row_complementarity_pi_times_slack": [
+      0.0,
+      0.0,
+      0.0,
+      -1.0150610510858583e-15,
+      0.0
+    ],
+    "variable_complementarity_x_times_dj": [
+      155.5,
+      60.0,
+      15.0,
+      0.0,
+      10.3,
+      0.0
+    ],
+    "primal_objective_sum_x": 245.37142857142857,
+    "dual_objective_bT_pi": 4.571428571428576,
+    "primal_dual_gap": 240.79999999999998,
+    "gap_decomposition": 240.8,
+    "primal_feasible": true,
+    "dual_feasible": true,
+    "stationarity_ok": true,
+    "row_complementarity_ok": true,
+    "variable_complementarity_ok": false,
+    "gap_ok": false,
+    "expected_x_error": 8.881784197001252e-16,
+    "expected_pi_error": 0.5,
+    "expected_dj_error": 1.0,
+    "expected_objective": 245.37142857142857,
+    "expected_objective_error": 2.842170943040401e-14,
+    "full_original_dual_contract_ok": false
+  },
+  "wall_seconds": 0.006338759005302563,
+  "cpu_user_seconds": 0.005824,
+  "cpu_system_seconds": 0.0,
+  "native_exit_codes": [
+    0
+  ],
+  "completed_at_utc": "2026-11-21T12:14:06.637839+00:00"
+}

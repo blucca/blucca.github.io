@@ -1,0 +1,22 @@
+Welcome to the CBC MILP Solver 
+Version: 2.10.13 
+Build Date: Mar 12 2026 
+
+command line - /data/workspace/temp/round714/cbc-dual/official-release/bin/cbc Problema_Maestro-pulp.mps -timeMode elapsed -initialSolve -printingOptions all -solution Problema_Maestro-pulp.sol (default strategy 1)
+At line 2 NAME          MODEL
+At line 3 ROWS
+At line 10 COLUMNS
+At line 23 RHS
+At line 29 BOUNDS
+At line 30 ENDATA
+Problem MODEL has 5 rows, 6 columns and 6 elements
+Coin0008I MODEL read with 0 errors
+Option for timeMode changed from cpu to elapsed
+Presolve 0 (-5) rows, 0 (-6) columns and 0 (-6) elements
+Empty problem - 0 rows, 0 columns and 0 elements
+Optimal - objective value 244.87143
+After Postsolve, objective 244.87143, infeasibilities - dual 0 (0), primal 0 (0)
+Optimal objective 244.8714286 - 0 iterations time 0.002, Presolve 0.00
+Option for printingOptions changed from normal to all
+Total time (CPU seconds):       0.00   (Wallclock seconds):       0.00
+

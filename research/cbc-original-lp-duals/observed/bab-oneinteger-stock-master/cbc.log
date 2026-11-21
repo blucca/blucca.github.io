@@ -1,0 +1,45 @@
+CBC devel — COIN-OR Branch and Cut
+  args: Tiny_Integer_BAB-pulp.mps -timeMode elapsed -solve -printingOptions all -solution Tiny_Integer_BAB-pulp.sol
+  default strategy 1
+
+▶ Problem loading
+
+  Problem: MODEL
+  |Rows| = 1   |Cols| = 1   |NZ| = 1
+  Variables: 0 binary, 1 integer, 0 continuous
+
+  Coefficient ranges:
+    Matrix  ∈ [  1,   1]   κ ≈ 1
+    Cost    ∈ [  1,   1]   κ ≈ 1
+    Bounds  ∈ [  -,   -]   κ ≈ -
+    RHS     ∈ [1.2, 1.2]   κ ≈ 1
+
+✔ Problem loaded — 1 rows, 1 cols, 1 NZ, 1 integer
+
+▶ Root LP relaxation
+
+  Bound tightening: 2 bounds tightened (0 fixed) in 0.000 s.
+  Clique strengthening: no changes (0.00s)
+  Coefficient strengthening: no changes (0.00s)
+  Row reductions: no changes (0.00s)
+Empty problem - 0 rows, 0 columns and 0 elements
+✔ LP Optimal — Frac: 0/1 (0.0%)   Obj: 2   Time: 0.000s
+
+▶ Preprocessing
+
+
+  Processed model: 0 rows, 0 cols, 0 NZ
+
+  Conflict graph: built in 0.00s, density 0.000%
+  Clique strengthening: extended 0, dominated 0
+
+✔ Preprocessing complete — Time: 0.000s
+
+▶ Postprocessing ... ✔ done in 3.39e-05s
+
+Result - Optimal solution found
+Objective value:                2
+Enumerated nodes:               0
+Total iterations:               0
+Total time (CPU seconds):       0.001815
+Total time (Wallclock seconds): 0.00196099

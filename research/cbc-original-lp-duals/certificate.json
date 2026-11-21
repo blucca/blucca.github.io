@@ -1,0 +1,701 @@
+{
+  "source": "https://github.com/coin-or/Cbc/issues/861",
+  "model": {
+    "sense": "minimize",
+    "objective": "sum(x[j])",
+    "A": [
+      [
+        2,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        2,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        3,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        7,
+        0,
+        2
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        10,
+        0
+      ]
+    ],
+    "b": [
+      310,
+      120,
+      45,
+      32,
+      103
+    ],
+    "c": [
+      1,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "row_senses": [
+      ">=",
+      ">=",
+      ">=",
+      ">=",
+      ">="
+    ],
+    "lower_bounds": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "upper_bounds": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "variables": "continuous",
+    "column_order_zero_based": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "dual_convention": "pi >= 0, A^T*pi <= c; dj = c - A^T*pi"
+  },
+  "original_optimal_certificate": {
+    "b": {
+      "exact": [
+        "310",
+        "120",
+        "45",
+        "32",
+        "103"
+      ],
+      "float": [
+        310.0,
+        120.0,
+        45.0,
+        32.0,
+        103.0
+      ]
+    },
+    "x": {
+      "exact": [
+        "155",
+        "60",
+        "15",
+        "32/7",
+        "103/10",
+        "0"
+      ],
+      "float": [
+        155.0,
+        60.0,
+        15.0,
+        4.571428571428571,
+        10.3,
+        0.0
+      ]
+    },
+    "pi": {
+      "exact": [
+        "1/2",
+        "1/2",
+        "1/3",
+        "1/7",
+        "1/10"
+      ],
+      "float": [
+        0.5,
+        0.5,
+        0.3333333333333333,
+        0.14285714285714285,
+        0.1
+      ]
+    },
+    "activity": {
+      "exact": [
+        "310",
+        "120",
+        "45",
+        "32",
+        "103"
+      ],
+      "float": [
+        310.0,
+        120.0,
+        45.0,
+        32.0,
+        103.0
+      ]
+    },
+    "coverage_slack_Ax_minus_b": {
+      "exact": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "float": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "dj_c_minus_AT_pi": {
+      "exact": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "5/7"
+      ],
+      "float": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.7142857142857143
+      ]
+    },
+    "variable_complementarity_x_times_dj": {
+      "exact": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "float": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "row_complementarity_pi_times_slack": {
+      "exact": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "float": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "primal_feasible": true,
+    "dual_feasible": true,
+    "complementary": true,
+    "primal_objective_exact": "17141/70",
+    "primal_objective_float": 244.87142857142857,
+    "dual_objective_exact": "17141/70",
+    "dual_objective_float": 244.87142857142857,
+    "gap_exact": "0",
+    "gap_float": 0.0
+  },
+  "reported_pi_on_original_lp": {
+    "b": {
+      "exact": [
+        "310",
+        "120",
+        "45",
+        "32",
+        "103"
+      ],
+      "float": [
+        310.0,
+        120.0,
+        45.0,
+        32.0,
+        103.0
+      ]
+    },
+    "x": {
+      "exact": [
+        "155",
+        "60",
+        "15",
+        "32/7",
+        "103/10",
+        "0"
+      ],
+      "float": [
+        155.0,
+        60.0,
+        15.0,
+        4.571428571428571,
+        10.3,
+        0.0
+      ]
+    },
+    "pi": {
+      "exact": [
+        "0",
+        "0",
+        "0",
+        "1/7",
+        "1/10"
+      ],
+      "float": [
+        0.0,
+        0.0,
+        0.0,
+        0.14285714285714285,
+        0.1
+      ]
+    },
+    "activity": {
+      "exact": [
+        "310",
+        "120",
+        "45",
+        "32",
+        "103"
+      ],
+      "float": [
+        310.0,
+        120.0,
+        45.0,
+        32.0,
+        103.0
+      ]
+    },
+    "coverage_slack_Ax_minus_b": {
+      "exact": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "float": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "dj_c_minus_AT_pi": {
+      "exact": [
+        "1",
+        "1",
+        "1",
+        "0",
+        "0",
+        "5/7"
+      ],
+      "float": [
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        0.0,
+        0.7142857142857143
+      ]
+    },
+    "variable_complementarity_x_times_dj": {
+      "exact": [
+        "155",
+        "60",
+        "15",
+        "0",
+        "0",
+        "0"
+      ],
+      "float": [
+        155.0,
+        60.0,
+        15.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "row_complementarity_pi_times_slack": {
+      "exact": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "float": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "primal_feasible": true,
+    "dual_feasible": true,
+    "complementary": false,
+    "primal_objective_exact": "17141/70",
+    "primal_objective_float": 244.87142857142857,
+    "dual_objective_exact": "1041/70",
+    "dual_objective_float": 14.871428571428572,
+    "gap_exact": "230",
+    "gap_float": 230.0,
+    "reported_dj_values_in_issue": null,
+    "stationarity_note": "The issue supplies pi but no numerical dj. Given that pi, stationarity forces dj[0:3]=1; positive original x[0:3] then violates x*dj=0. If returned dj[0:3]=0 instead, c-A^T*pi-dj has residual (1,1,1)."
+  },
+  "pinned_master_pi_on_original_lp": {
+    "b": {
+      "exact": [
+        "310",
+        "120",
+        "45",
+        "32",
+        "103"
+      ],
+      "float": [
+        310.0,
+        120.0,
+        45.0,
+        32.0,
+        103.0
+      ]
+    },
+    "x": {
+      "exact": [
+        "155",
+        "60",
+        "15",
+        "32/7",
+        "103/10",
+        "0"
+      ],
+      "float": [
+        155.0,
+        60.0,
+        15.0,
+        4.571428571428571,
+        10.3,
+        0.0
+      ]
+    },
+    "pi": {
+      "exact": [
+        "0",
+        "0",
+        "0",
+        "1/7",
+        "0"
+      ],
+      "float": [
+        0.0,
+        0.0,
+        0.0,
+        0.14285714285714285,
+        0.0
+      ]
+    },
+    "activity": {
+      "exact": [
+        "310",
+        "120",
+        "45",
+        "32",
+        "103"
+      ],
+      "float": [
+        310.0,
+        120.0,
+        45.0,
+        32.0,
+        103.0
+      ]
+    },
+    "coverage_slack_Ax_minus_b": {
+      "exact": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "float": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "dj_c_minus_AT_pi": {
+      "exact": [
+        "1",
+        "1",
+        "1",
+        "0",
+        "1",
+        "5/7"
+      ],
+      "float": [
+        1.0,
+        1.0,
+        1.0,
+        0.0,
+        1.0,
+        0.7142857142857143
+      ]
+    },
+    "variable_complementarity_x_times_dj": {
+      "exact": [
+        "155",
+        "60",
+        "15",
+        "0",
+        "103/10",
+        "0"
+      ],
+      "float": [
+        155.0,
+        60.0,
+        15.0,
+        0.0,
+        10.3,
+        0.0
+      ]
+    },
+    "row_complementarity_pi_times_slack": {
+      "exact": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "float": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "primal_feasible": true,
+    "dual_feasible": true,
+    "complementary": false,
+    "primal_objective_exact": "17141/70",
+    "primal_objective_float": 244.87142857142857,
+    "dual_objective_exact": "32/7",
+    "dual_objective_float": 4.571428571428571,
+    "gap_exact": "2403/10",
+    "gap_float": 240.3
+  },
+  "finite_rhs_plus_one_certificate": {
+    "b": {
+      "exact": [
+        "311",
+        "120",
+        "45",
+        "32",
+        "103"
+      ],
+      "float": [
+        311.0,
+        120.0,
+        45.0,
+        32.0,
+        103.0
+      ]
+    },
+    "x": {
+      "exact": [
+        "311/2",
+        "60",
+        "15",
+        "32/7",
+        "103/10",
+        "0"
+      ],
+      "float": [
+        155.5,
+        60.0,
+        15.0,
+        4.571428571428571,
+        10.3,
+        0.0
+      ]
+    },
+    "pi": {
+      "exact": [
+        "1/2",
+        "1/2",
+        "1/3",
+        "1/7",
+        "1/10"
+      ],
+      "float": [
+        0.5,
+        0.5,
+        0.3333333333333333,
+        0.14285714285714285,
+        0.1
+      ]
+    },
+    "activity": {
+      "exact": [
+        "311",
+        "120",
+        "45",
+        "32",
+        "103"
+      ],
+      "float": [
+        311.0,
+        120.0,
+        45.0,
+        32.0,
+        103.0
+      ]
+    },
+    "coverage_slack_Ax_minus_b": {
+      "exact": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "float": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "dj_c_minus_AT_pi": {
+      "exact": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "5/7"
+      ],
+      "float": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.7142857142857143
+      ]
+    },
+    "variable_complementarity_x_times_dj": {
+      "exact": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "float": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "row_complementarity_pi_times_slack": {
+      "exact": [
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "float": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "primal_feasible": true,
+    "dual_feasible": true,
+    "complementary": true,
+    "primal_objective_exact": "8588/35",
+    "primal_objective_float": 245.37142857142857,
+    "dual_objective_exact": "8588/35",
+    "dual_objective_float": 245.37142857142857,
+    "gap_exact": "0",
+    "gap_float": 0.0,
+    "changed_row_zero_based": 0,
+    "old_rhs": 310,
+    "new_rhs": 311,
+    "delta_objective_exact": "1/2",
+    "delta_objective_float": 0.5
+  },
+  "exact_assertions": "PASS; all feasibility, gap and KKT checks use Fraction",
+  "native_comparison": {
+    "absolute_tolerance": 1e-06,
+    "applies_to": [
+      "pi",
+      "dj",
+      "Ax-b",
+      "c-A^T*pi-dj",
+      "x*dj",
+      "pi*(Ax-b)",
+      "primal_dual_gap",
+      "RHS+1 objective delta"
+    ],
+    "reason": "Allow CBC/PuLP solution-text decimal serialization; this rational certificate uses exact equality.",
+    "slack_convention": "This file uses Ax-b >= 0; check PuLP's reported slack sign before comparing."
+  },
+  "scope": "Author original six columns and five covering rows, with one RHS+1 sensitivity check."
+}

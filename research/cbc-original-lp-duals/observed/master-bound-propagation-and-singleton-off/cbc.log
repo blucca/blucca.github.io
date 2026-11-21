@@ -1,0 +1,30 @@
+CBC devel — COIN-OR Branch and Cut
+  args: Problema_Maestro-pulp.mps -boundPropLevel off -singletonBounds off -timeMode elapsed -initialSolve -printingOptions all -solution Problema_Maestro-pulp.sol
+  default strategy 1
+
+▶ Problem loading
+
+  Problem: MODEL
+  |Rows| = 5   |Cols| = 6   |NZ| = 6
+  Variables: 6 continuous
+
+  Coefficient ranges:
+    Matrix  ∈ [ 2,  10]   κ ≈      5
+    Cost    ∈ [ 1,   1]   κ ≈      1
+    Bounds  ∈ [ -,   -]   κ ≈      -
+    RHS     ∈ [32, 310]   κ ≈ 9.6875
+
+✔ Problem loaded — 5 rows, 6 cols, 6 NZ
+
+▶ Non-default parameters
+
+  boundPropLevel  milpbt → off
+  singletonBounds  on → off
+  Clique strengthening: no changes (0.00s)
+  Coefficient strengthening: no changes (0.00s)
+Empty problem - 0 rows, 0 columns and 0 elements
+
+▶ LP solve
+✔ Optimal — Obj: 244.871   Time: 0.000s
+Total time (CPU seconds):       0.001079
+Total time (Wallclock seconds): 0.00109005

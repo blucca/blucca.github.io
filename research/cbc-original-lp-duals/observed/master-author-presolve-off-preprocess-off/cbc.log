@@ -1,0 +1,37 @@
+CBC devel — COIN-OR Branch and Cut
+  args: Problema_Maestro-pulp.mps -presolve off -preprocess off -timeMode elapsed -initialSolve -printingOptions all -solution Problema_Maestro-pulp.sol
+  default strategy 1
+
+▶ Problem loading
+
+  Problem: MODEL
+  |Rows| = 5   |Cols| = 6   |NZ| = 6
+  Variables: 6 continuous
+
+  Coefficient ranges:
+    Matrix  ∈ [ 2,  10]   κ ≈      5
+    Cost    ∈ [ 1,   1]   κ ≈      1
+    Bounds  ∈ [ -,   -]   κ ≈      -
+    RHS     ∈ [32, 310]   κ ≈ 9.6875
+
+✔ Problem loaded — 5 rows, 6 cols, 6 NZ
+
+▶ Non-default parameters
+
+  preprocess  sos → off
+  Bound tightening: 4 bounds tightened (0 fixed) in 0.000 s.
+  Clique strengthening: no changes (0.00s)
+  Coefficient strengthening: no changes (0.00s)
+
+▶ LP solve
+
+  ──────── ──────── ─────────────── ──────────────────── ──────────────────── ────────
+  Phase        Iter       Objective  Primal inf    (num)    Dual inf    (num)     Time
+  ──────── ──────── ─────────────── ──────────────────── ──────────────────── ────────
+  Dual            0    2.403002e+02  4.5714e+00      (1)  0.0000e+00             0.000
+  Dual            1    2.448714e+02  0.0000e+00           0.0000e+00             0.000
+  ──────── ──────── ─────────────── ──────────────────── ──────────────────── ────────
+
+✔ Optimal — Obj: 244.871   Iters: 1   Time: 0.000s
+Total time (CPU seconds):       0
+Total time (Wallclock seconds): 0.00118208

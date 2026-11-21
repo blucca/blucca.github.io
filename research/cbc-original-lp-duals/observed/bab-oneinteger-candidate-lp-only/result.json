@@ -1,0 +1,35 @@
+{
+  "case": "bab-oneinteger-candidate-lp-only",
+  "cbc_path": "/data/workspace/temp/round714/cbc-dual/candidate-prefix/bin/cbc",
+  "pulp_version": "4.3.1",
+  "model": "min x; x >= 1.2; x integer >= 0",
+  "expected_x": 2,
+  "expected_objective": 2,
+  "scope": "BAB primal/integrality control only; integer-model dual contract not evaluated",
+  "cwd": "/data/workspace/temp/round714/cbc-dual/native-results/bab-oneinteger-candidate-lp-only",
+  "native_commands": [
+    [
+      "/data/workspace/temp/round714/cbc-dual/candidate-prefix/bin/cbc",
+      "Tiny_Integer_BAB-pulp.mps",
+      "-timeMode",
+      "elapsed",
+      "-solve",
+      "-printingOptions",
+      "all",
+      "-solution",
+      "Tiny_Integer_BAB-pulp.sol"
+    ]
+  ],
+  "started_at_utc": "2026-11-21T12:28:41.815871+00:00",
+  "solve_return": "solver: COIN_CMD\nstatus: Optimal (1)\nhas solution: True\nobjective: 2.0\ntime: 0.0069s (cpu 0.0100s)\nnodes: 0",
+  "x": 2.0,
+  "objective": 2.0,
+  "expected_primal_and_integer_pass": true,
+  "native_exit_codes": [
+    0
+  ],
+  "wall_seconds": 0.00709146898589097,
+  "cpu_user_seconds": 0.0,
+  "cpu_system_seconds": 0.0065060000000000005,
+  "completed_at_utc": "2026-11-21T12:28:41.822977+00:00"
+}
