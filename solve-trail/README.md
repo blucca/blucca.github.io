@@ -2,7 +2,7 @@
 
 **Open two original HiGHS logs. Keep a private, source-backed comparison.**
 
-[Use the complete workbench](https://blucca.github.io/solve-trail/) · [Download the standalone offline app](https://blucca.github.io/solve-trail/solve-trail-offline.zip) · [Watch the 1:43 walkthrough](https://blucca.github.io/solve-trail/demo.html)
+[Use the complete workbench](https://blucca.github.io/solve-trail/) · [Download the standalone offline app](https://blucca.github.io/solve-trail/solve-trail-offline.zip) · [Watch the 1:43 walkthrough](https://blucca.github.io/solve-trail/demo.html) · [YouTube](https://www.youtube.com/watch?v=ArSGB8pJKfw)
 
 ![The recorded A/B comparison with source-linked final report](preview.webp)
 
