@@ -35,6 +35,8 @@ The built-in pair comes from our [published analytic-centre prototype study](htt
 
 The sample change is an explicit analytic-centre option in a research prototype. Its availability depends on your released build. The study's three-pair whole-call results use a different timing denominator. One absolute model-load path is omitted; every numerical value in the samples is preserved. The cut-off sample is a prefix ending before the original final report, rather than a separately executed failure.
 
+For a complete status-change handoff, [download the recorded HiGHS-3768 workspace](../research/highs-positive-width-fix/highs-3768-comparison.json) and use **Workspace → Restore workspace**. It retains both original study logs, source-linked Infeasible/Optimal reports and the declared mixed CLI/C++ capture conditions. [The edited brief and full source/model-witness checks](../research/highs-positive-width-fix/README.md#inspect-and-hand-over-this-recorded-case) are separate parts of the same handoff. This recorded case uses existing study results; it adds no new solver run or product feature.
+
 ## Related tools
 
 HiGHS's [official Python plotter](https://github.com/ERGO-Code/HiGHS/blob/latest/examples/plot_highs_log.py) already plots its progress logs. [Gurobi logtools](https://github.com/Gurobi/gurobi-logtools) provides rich local multi-run analysis for Gurobi. [mipviz](https://github.com/mmghannam/mipviz) offers a local browser model workbench and public benchmark log comparisons. [CP-SAT Log Analyzer](https://github.com/d-krupke/CP-SAT-Log-Analyzer) explains CP-SAT logs with source-linked insights.

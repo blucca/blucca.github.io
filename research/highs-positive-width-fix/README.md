@@ -48,6 +48,12 @@ The presolve-off witness has a maximum original-row residual of approximately **
 
 Primal = dual lower bound = **158999841 / 1250000 = 127.1998728**, exact gap zero. The only integer column is fixed to zero, so this instance's LP and MIP feasible sets coincide.
 
+## Inspect and hand over this recorded case
+
+Download the [complete saved comparison](highs-3768-comparison.json), open [SolveTrail](https://blucca.github.io/solve-trail/), then choose **Workspace → Restore workspace**. Inspect the actual Infeasible/Optimal final reports and their source lines, save/reopen the comparison, and use **Make brief** to edit a handoff. The [prepared engineering brief](highs-3768-brief.md) includes the receiving operator's next replay and full-witness check.
+
+This packet contains two existing native logs from the study: instrumented stock CLI and candidate C++ API, both on pinned source 725b40f and the same original model. Driver/logging differences and rounded native times are declared in its notes; it is a status/repair handoff, not a speed benchmark. Model and exact-witness acceptance remain with the separate checks above. Your own comparisons can stay private in the browser or standalone offline app.
+
 ## Reproduce
 
 Prerequisites: Linux, Git, curl, Python 3, CMake, and a C++17 compiler. Our measured build used Clang 17/CMake 3.31.6. The script uses two build workers, per-stage timeouts and fresh output under your workspace temp directory.
