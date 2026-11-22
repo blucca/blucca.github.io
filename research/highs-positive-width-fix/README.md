@@ -29,7 +29,7 @@ The reporter's description says seven rows; the supplied MPS contains thirteen c
 
 ## Exact optimality
 
-[The certificate](exact-optimality-certificate.json) and [59-line checker](exact_optimality_check.py) use rational arithmetic, the original MPS and no solver. Row multipliers are **r11=5.4, r12=5.2**, all others zero. All 364 reduced-cost/bound directions and complementary slackness conditions pass. The sparse primal is x158=11.999988 and x354=-11.999988, all other columns zero.
+[The certificate](exact-optimality-certificate.json) and [source-specific checker](exact_optimality_check.py) use rational arithmetic, the original MPS and no solver. Row multipliers are **r11=5.4, r12=5.2**, all others zero. All 364 reduced-cost/bound directions and complementary slackness conditions pass. The sparse primal is x158=11.999988 and x354=-11.999988, all other columns zero.
 
 Primal = dual lower bound = **158999841 / 1250000 = 127.1998728**, exact gap zero. The only integer column is fixed to zero, so this instance's LP and MIP feasible sets coincide.
 
@@ -45,7 +45,7 @@ The script downloads the pinned HiGHS source and the [reporter's original MPS](h
 
 The tiny pair has three x in [-t,0], `-sum(x) <= 1.5t`, and minimizes `-sum(x)`. The exact optimum is all zero. The MIP adds a fixed zero integer. Each variant uses its solver's default feasibility tolerance. Stock outcomes are retained as observations.
 
-**Local publication preparation:** the full candidate model and exact certificate have passed; the completed report will include the actual tiny and existing-presolve-test results before release.
+**Observed tiny results:** the stock MIP is Infeasible; the candidate MIP is Optimal with all-zero primal/objective0. The pure tiny LP is Infeasible in **both** builds. The initially proposed all-tiny-success gate failed; the unchanged LP counterexample remains in the records. New generic LP repair is outside this work. Existing presolve tests have not run yet because `ALL_TESTS=OFF` omitted the `unit_tests` target; the standard test build requires `-DALL_TESTS=ON`. This local study is awaiting a clearly scoped MIP acceptance and completed standard-test report before public release.
 
 ## Scope and attribution
 
