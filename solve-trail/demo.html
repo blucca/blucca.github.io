@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f3f8fc">
+  <meta name="description" content="Watch a silent HiGHS log comparison walkthrough in SolveTrail. Restore a real study workspace, inspect source lines, declare run conditions, edit a brief, and save and reopen your comparison locally.">
+  <title>HiGHS log comparison walkthrough | SolveTrail</title>
+  <meta property="og:title" content="HiGHS log comparison walkthrough | SolveTrail">
+  <meta property="og:description" content="An actual SolveTrail recording: two native HiGHS logs, source-backed observations, an editable brief, and a saved workspace you can reopen. Download the recorded case and try your own logs.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://blucca.github.io/solve-trail/demo.html">
+  <meta property="og:image" content="https://blucca.github.io/solve-trail/media/solve-trail-first-use.webp">
+  <meta property="og:image:alt" content="SolveTrail comparing the native Infeasible and Optimal reports from the HiGHS 3768 study">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="canonical" href="https://blucca.github.io/solve-trail/demo.html">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='7' fill='%23f3f8fc'/%3E%3Cpath d='M7 9v23h27' fill='none' stroke='%23d4e5ef' stroke-width='2'/%3E%3Cpath d='M10 13h8v6h7v5h9' fill='none' stroke='%23147e9a' stroke-width='2.5'/%3E%3Cpath d='M10 29h8v-4h7v-9h9' fill='none' stroke='%23bd642c' stroke-width='2.5'/%3E%3C/svg%3E">
+  <link rel="preload" href="fonts/plex-sans.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .film-shell {
+      width: min(calc(100% - 72px), 1120px);
+      margin-inline: auto;
+    }
+
+    .film-header {
+      display: flex;
+      align-items: center;
+      min-height: 68px;
+      padding-block: 16px;
+    }
+
+    .film-brand {
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .film-main {
+      padding-block: 28px 32px;
+    }
+
+    .film-main h1 {
+      font-size: clamp(28px, 3vw, 40px);
+      font-weight: 600;
+      line-height: 1.15;
+      letter-spacing: -0.04em;
+    }
+
+    .film-intro {
+      max-width: 68ch;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .film-player {
+      margin: 22px 0 0;
+    }
+
+    .film-player video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 1px solid var(--mist);
+      border-radius: var(--control-radius);
+      background: var(--frost);
+    }
+
+    .film-player video:focus-visible {
+      outline: 2px solid var(--tide);
+      outline-offset: 3px;
+    }
+
+    .film-player figcaption {
+      max-width: 80ch;
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .film-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .film-actions .button {
+      min-height: 44px;
+      padding: 11px 16px;
+      white-space: normal;
+    }
+
+    .film-guide {
+      max-width: 76ch;
+      margin-top: 24px;
+      line-height: 1.65;
+    }
+
+    .film-guide p + p {
+      margin-top: 10px;
+    }
+
+    .film-links {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0 24px;
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    .film-links a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+
+    .film-credit {
+      max-width: 76ch;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 600px) {
+      .film-shell {
+        width: calc(100% - 32px);
+      }
+
+      .film-main {
+        padding-block: 22px 24px;
+      }
+
+      .film-player {
+        margin-top: 18px;
+      }
+
+      .film-actions {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .film-actions .button {
+        width: 100%;
+      }
+
+      .film-links {
+        gap: 0 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#walkthrough">Skip to the walkthrough</a>
+
+  <header class="site-header">
+    <div class="film-shell film-header">
+      <a class="wordmark film-brand" href="./" aria-label="SolveTrail workbench">
+        <svg class="wordmark-symbol" viewBox="0 0 42 34" width="42" height="34" aria-hidden="true">
+          <path class="wordmark-axis" d="M3 3v27h36"/>
+          <path class="wordmark-a" d="M7 9h9v6h10v6h12"/>
+          <path class="wordmark-b" d="M7 26h9v-4h10v-10h12"/>
+          <circle class="wordmark-node-a" cx="26" cy="21" r="2.25"/>
+          <circle class="wordmark-node-b" cx="26" cy="12" r="2.25"/>
+        </svg>
+        <span>SolveTrail</span>
+      </a>
+    </div>
+  </header>
+
+  <main id="walkthrough" class="film-shell film-main" tabindex="-1">
+    <h1>HiGHS log comparison walkthrough</h1>
+    <p class="film-intro">A silent walkthrough: compare native logs, check their source, and keep an editable engineering handoff.</p>
+
+    <figure class="film-player">
+      <video controls playsinline muted preload="metadata" poster="media/solve-trail-first-use.webp" aria-label="SolveTrail first-use walkthrough" aria-describedby="recordingContext">
+        <source src="media/solve-trail-first-use.mp4" type="video/mp4">
+        <track kind="captions" src="media/solve-trail-first-use.vtt" srclang="en" label="English">
+        <p><a href="media/solve-trail-first-use.mp4" download>Download the MP4 walkthrough</a>.</p>
+      </video>
+      <figcaption id="recordingContext">Actual UI recording of the existing HiGHS 3768 study material. A reports Infeasible; B reports Optimal (127.1998728). This handoff documents the status change and declared capture conditions.</figcaption>
+    </figure>
+
+    <div class="film-actions" aria-label="Try the recorded comparison">
+      <a class="button button-primary" href="./">Use SolveTrail</a>
+      <a class="button button-secondary" href="../research/highs-positive-width-fix/highs-3768-comparison.json" download="highs-3768-comparison.json">Download recorded workspace</a>
+    </div>
+
+    <div class="film-guide">
+      <p>Download the packet, then choose <strong>Workspace → Restore workspace</strong>. For your own comparison, open log A and log B, inspect the source lines, declare the run conditions and next check, then use <strong>Make brief</strong> to edit the handoff.</p>
+      <p><strong>Save workspace</strong> keeps raw logs and notes in a private JSON file. Download the edited Markdown separately with <strong>Download .md</strong>. Reopen the JSON for your next run or a colleague.</p>
+    </div>
+
+    <nav class="film-links" aria-label="Offline app and study material">
+      <a href="solve-trail-offline.zip" download="solve-trail-offline.zip">Offline ZIP</a>
+      <a href="../research/highs-positive-width-fix/highs-3768-brief.md" download="highs-3768-brief.md">Edited study brief (.md)</a>
+      <a href="../research/highs-positive-width-fix/">Full study and witness checks</a>
+    </nav>
+    <p class="film-credit">Original model reporter and HiGHS attribution accompany the full study, source patch, and full-model witness checks.</p>
+  </main>
+</body>
+</html>

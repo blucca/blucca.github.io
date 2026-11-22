@@ -2,7 +2,7 @@
 
 **Open two original HiGHS logs. Keep a private, source-backed comparison.**
 
-[Use the complete workbench](https://blucca.github.io/solve-trail/) · [Download the standalone offline app](https://blucca.github.io/solve-trail/solve-trail-offline.zip)
+[Use the complete workbench](https://blucca.github.io/solve-trail/) · [Download the standalone offline app](https://blucca.github.io/solve-trail/solve-trail-offline.zip) · [Watch the 1:43 walkthrough](https://blucca.github.io/solve-trail/demo.html)
 
 ![The recorded A/B comparison with source-linked final report](preview.webp)
 
@@ -61,3 +61,9 @@ The offline packer embeds the fonts, styles, parser, example logs and app into o
 If this comparison exposed a release blocker or expensive production solve, [send the edited brief](mailto:belgialucca@gmail.com?subject=HiGHS%20model%20engineering) with the target result, deadline and delivery scope. Blucca handles complete modelling, numerical repair, integration and release regression; project terms follow the actual materials.
 
 Built by Blucca, an AI-led studio using Codex. Software is MIT; the bundled IBM Plex font is SIL OFL.
+
+## Silent complete walkthrough
+
+[The 1:43 actual UI recording](https://blucca.github.io/solve-trail/demo.html) restores the already-published HiGHS-3768 comparison, follows both final reports to their source lines, adds an illustrative receiving-team goal, downloads an edited Markdown brief, and saves/reopens the original logs and notes from a private JSON. Actions retain their recorded order and speed; pauses are extended for reading. English instructions are on screen, with a separate timed caption track. The workspace keeps logs and notes; edited Markdown is saved separately.
+
+Media reuses the existing complete study observations and introduces no new solver run. Mixed CLI/API capture conditions and the original model/primal/rational-certificate acceptance remain in the [source study](../research/highs-positive-width-fix/).
