@@ -13,6 +13,7 @@
 - **Complete agent-output labs:** [OpenAI Agents: preserve each purchase in CSV](research/agents-as-tool-invoice/), [Agno: surface a real SQL fetch error](research/agno-sql-fetch/), and [Pydantic AI: freeze JSON tool history](research/pydantic-ai-json-history/). Each has pinned dependencies, observed results and a free runnable package.
 - **[SourceBind](https://github.com/blucca/hermes-sourcebind):** a catalog-listed Hermes plugin that binds the current local source before one selected tool runs; [71-second native demo](https://blucca.github.io/hermes-sourcebind/demo/#film).
 - **[CPU numerical workbench](https://github.com/blucca/fx2-cmix-transformer-v1/tree/main/research/ort-q8-m1-native):** native Q8 M1, measured parity controls and complete rerunnable reports.
+- **Optimization-model studies:** choose compatible [crew schedules (SPP)](https://github.com/blucca/frontieror-spp-study) or [warehouse openings and customer supply (CFLP)](https://github.com/blucca/frontieror-cflp-study). Published FrontierOR cases, cold benchmarks, full feasibility checks and measured cost/runtime trade-offs.
 
 The [work archive](https://blucca.github.io/archive/) retains finished applications and their demonstrations.
 
