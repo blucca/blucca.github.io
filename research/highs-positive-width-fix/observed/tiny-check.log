@@ -1,0 +1,11 @@
+Traceback (most recent call last):
+  File "/data/workspace/temp/round731-highs-default/tiny_result_assert.py", line 35, in <module>
+    main()
+    ~~~~^^
+  File "/data/workspace/temp/round731-highs-default/tiny_result_assert.py", line 31, in main
+    print(path, json.dumps(check(record, model, candidate), sort_keys=True))
+                           ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/data/workspace/temp/round731-highs-default/tiny_result_assert.py", line 21, in check
+    assert record["model_status"] == "Optimal" and record["value_valid"]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError
