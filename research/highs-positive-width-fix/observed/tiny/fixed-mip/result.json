@@ -1,0 +1,24 @@
+{
+  "mode": "default",
+  "model": "--tiny-mip",
+  "version": "1.16.0",
+  "run_status": 0,
+  "model_status": "Optimal",
+  "objective": 0,
+  "value_valid": true,
+  "dual_valid": false,
+  "rows": 1,
+  "cols": 4,
+  "threads": 1,
+  "wall_seconds": 0.00063528,
+  "rss_kib": 8260,
+  "primal_feasibility_tolerance": 9.9999999999999995e-08,
+  "mip_feasibility_tolerance": 9.9999999999999995e-07,
+  "tiny_rhs": 1.5e-06,
+  "primal": {
+    "x0": 0,
+    "x1": 0,
+    "x2": 0,
+    "z": -0
+  }
+}

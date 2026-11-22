@@ -1,0 +1,11 @@
+{
+  "pass": true,
+  "scope": "original 3768 MPS only; LP=MIP since x363=0",
+  "rows": 13,
+  "columns": 364,
+  "matrix_entries": 786,
+  "primal": "158999841/1250000",
+  "dual_lower_bound": "158999841/1250000",
+  "gap": "0",
+  "exact_decimal_objective": "127.1998728"
+}

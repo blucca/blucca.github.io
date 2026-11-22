@@ -1,0 +1,70 @@
+diff --git a/highs/presolve/HPresolve.cpp b/highs/presolve/HPresolve.cpp
+index a5e7a53..5313d3b 100644
+--- a/highs/presolve/HPresolve.cpp
++++ b/highs/presolve/HPresolve.cpp
+@@ -1,3 +1,4 @@
++#include <cstdio>
+ /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ /*                                                                       */
+ /*    This file is part of the HiGHS linear optimization suite           */
+@@ -1549,6 +1550,10 @@ HPresolve::Result HPresolve::checkColBounds(HighsInt col, bool* isFixed) {
+   assert(!colDeleted[col]);
+   double boundDiff = model->col_upper_[col] - model->col_lower_[col];
+   if (isFixed != nullptr) *isFixed = false;
++  if (boundDiff > 0 && boundDiff <= primal_feastol)
++    std::fprintf(stderr, "TRACE_NEAR col=%lld lb=%.17g ub=%.17g maxa=%.17g fixed_query=%d\n",
++      (long long)col, model->col_lower_[col], model->col_upper_[col],
++      getMaxAbsColVal(col), isFixed != nullptr);
+   if (boundDiff <= primal_feastol &&
+       (boundDiff <= options->small_matrix_value ||
+        getMaxAbsColVal(col) * boundDiff <= primal_feastol)) {
+@@ -3521,6 +3526,9 @@ HPresolve::Result HPresolve::colPresolve(HighsPostsolveStack& postsolve_stack,
+   bool isFixed;
+   HPRESOLVE_CHECKED_CALL(checkColBounds(col, &isFixed));
+   if (isFixed) {
++    std::fprintf(stderr, "TRACE_FIX col=%lld lb=%.17g ub=%.17g name=%s\n",
++      (long long)col, model->col_lower_[col], model->col_upper_[col],
++      model->col_names_.empty() ? "?" : model->col_names_[col].c_str());
+     // remove fixed column
+     PresolveTimerScope timer(analysis_, kPresolveClockInitialColIsFixed,
+                              timing);
+@@ -4200,14 +4208,20 @@ HPresolve::Result HPresolve::presolve(HighsPostsolveStack& postsolve_stack) {
+       // enumerate solutions
+       if (mipsolver != nullptr && this->allow_rule_[kPresolveRuleEnumeration]) {
+         storeCurrentProblemSize();
++        std::fprintf(stderr,"TRACE_BEGIN_ENUM cols=%lld rows=%lld\n",(long long)model->num_col_,(long long)model->num_row_);
+         HPRESOLVE_CHECKED_CALL(enumerateSolutions(postsolve_stack));
++        std::fprintf(stderr,"TRACE_END_ENUM cols=%lld rows=%lld\n",(long long)model->num_col_,(long long)model->num_row_);
+         if (problemSizeReduction() > 0.05) continue;
+       }
+ 
+       if (tryProbing && this->allow_rule_[kPresolveRuleProbing]) {
++        std::fprintf(stderr,"TRACE_BEGIN_IMPLIED_INT cols=%lld rows=%lld\n",(long long)model->num_col_,(long long)model->num_row_);
+         HPRESOLVE_CHECKED_CALL(detectImpliedIntegers());
++        std::fprintf(stderr,"TRACE_END_IMPLIED_INT cols=%lld rows=%lld\n",(long long)model->num_col_,(long long)model->num_row_);
+         storeCurrentProblemSize();
++        std::fprintf(stderr,"TRACE_BEGIN_PROBE cols=%lld rows=%lld\n",(long long)model->num_col_,(long long)model->num_row_);
+         HPRESOLVE_CHECKED_CALL(runProbing(postsolve_stack));
++        std::fprintf(stderr,"TRACE_END_PROBE cols=%lld rows=%lld\n",(long long)model->num_col_,(long long)model->num_row_);
+         tryProbing = probingContingent > numProbed &&
+                      (problemSizeReduction() > 1.0 || probingEarlyAbort);
+         trySparsify = true;
+diff --git a/highs/presolve/HPresolveProbingUtil.cpp b/highs/presolve/HPresolveProbingUtil.cpp
+index d9402b5..585be0c 100644
+--- a/highs/presolve/HPresolveProbingUtil.cpp
++++ b/highs/presolve/HPresolveProbingUtil.cpp
+@@ -1,3 +1,4 @@
++#include <cstdio>
+ /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+ /*                                                                       */
+ /*    This file is part of the HiGHS linear optimization suite           */
+@@ -217,7 +218,9 @@ HPresolve::Result HPresolve::prepareProbing(
+   // prepare for domain propagation
+   mipsolver->mipdata_->setupDomainPropagation();
+ 
++  std::fprintf(stderr,"TRACE_PREP_PROPAGATE cols=%lld rows=%lld first=%d\n",(long long)model->num_col_,(long long)model->num_row_,firstCall);
+   domain.propagate();
++  std::fprintf(stderr,"TRACE_PREP_PROPAGATED infeasible=%d\n",domain.infeasible());
+   if (domain.infeasible()) return Result::kPrimalInfeasible;
+ 
+   // extract cliques that are part of the formulation every time before probing

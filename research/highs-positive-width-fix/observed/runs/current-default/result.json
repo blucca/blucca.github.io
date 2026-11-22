@@ -1,0 +1,28 @@
+{
+  "mode": "default",
+  "version": "1.16.0",
+  "githash": "f3f113d",
+  "model": "original.mps",
+  "rows": 13,
+  "cols": 364,
+  "options": {
+    "threads": 1,
+    "time_limit": 60.0,
+    "log_file": "runs/current-default/native.log"
+  },
+  "run_status": "HighsStatus.kOk",
+  "model_status": "HighsModelStatus.kInfeasible",
+  "objective": "inf",
+  "value_valid": false,
+  "dual_valid": false,
+  "wall_seconds": 0.025884418981149793,
+  "rss_kib": 34640,
+  "info": {
+    "simplex_iteration_count": 0,
+    "mip_node_count": 0,
+    "objective_function_value": "inf",
+    "max_primal_infeasibility": "inf",
+    "max_integrality_violation": "inf",
+    "mip_gap": "inf"
+  }
+}

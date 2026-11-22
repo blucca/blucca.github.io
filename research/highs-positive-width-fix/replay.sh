@@ -28,7 +28,7 @@ EOF
 stage=stock-build
 cmake -S "$OUT/source" -B "$OUT/build" -DCMAKE_BUILD_TYPE=Release \
   -DBUILD_SHARED_LIBS=OFF -DBUILD_SHARED_EXTRAS_LIB=OFF \
-  -DBUILD_TESTING=ON -DBUILD_EXAMPLES=OFF > "$OUT/configure.log" 2>&1
+  -DBUILD_TESTING=ON -DALL_TESTS=ON -DBUILD_EXAMPLES=OFF > "$OUT/configure.log" 2>&1
 timeout 600 cmake --build "$OUT/build" --parallel 2 --target native_result_probe > "$OUT/stock-build.log" 2>&1
 mkdir -p "$OUT/bin"
 cp "$OUT/build/bin/native_result_probe" "$OUT/bin/stock"
@@ -49,9 +49,9 @@ for type in lp mip; do
   timeout 90 "$OUT/build/bin/native_result_probe" "--tiny-$type" "$OUT/tiny/fixed-$type" default > "$OUT/fixed-$type.stdout" 2>&1
 done
 python3 "$HERE/check_original.py" "$OUT/original.mps" "$OUT/runs" "$OUT/full-primal-check.json" > "$OUT/full-primal-check.stdout"
-python3 "$HERE/tiny_result_assert.py" \
+python3 "$HERE/tiny_result_assert.py" --mip-scope \
   "$OUT/tiny/fixed-lp/result.json" "$OUT/tiny/fixed-mip/result.json" \
   "$OUT/tiny/stock-lp/result.json" "$OUT/tiny/stock-mip/result.json" > "$OUT/tiny-check.stdout"
 stage=standard-presolve-tests
 timeout 300 "$OUT/build/bin/unit_tests" '[highs_test_presolve],[highs_test_presolve_rules]' > "$OUT/standard-tests.log" 2>&1
-stage=complete
+stage=complete-mip-scope

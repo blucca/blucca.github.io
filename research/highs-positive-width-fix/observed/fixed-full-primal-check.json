@@ -1,0 +1,210 @@
+{
+  "current-default": {
+    "value_valid": false,
+    "full_primal_pass": null,
+    "model_status": "HighsModelStatus.kInfeasible"
+  },
+  "current-lp": {
+    "checked_columns": 364,
+    "checked_rows": 13,
+    "integer_columns": [
+      "x363"
+    ],
+    "max_primal_violation": "0",
+    "max_integrality_violation": "0.0",
+    "independent_objective": "127.1998728",
+    "native_objective_delta": "1E-14",
+    "expected_exact_objective": "127.1998728",
+    "expected_delta": "0E-7",
+    "row_activities": {
+      "r0": "0.00",
+      "r1": "0.00",
+      "r2": "0.00",
+      "r3": "0.00",
+      "r4": "11.9999880",
+      "r5": "11.9999880",
+      "r6": "0.00",
+      "r7": "0.00",
+      "r8": "0.00",
+      "r9": "0.00",
+      "r10": "0.00",
+      "r11": "11.9999880",
+      "r12": "11.9999880"
+    },
+    "full_primal_pass": true
+  },
+  "current-no-enumeration": {
+    "checked_columns": 364,
+    "checked_rows": 13,
+    "integer_columns": [
+      "x363"
+    ],
+    "max_primal_violation": "0",
+    "max_integrality_violation": "0.0",
+    "independent_objective": "127.1998728",
+    "native_objective_delta": "1E-14",
+    "expected_exact_objective": "127.1998728",
+    "expected_delta": "0E-7",
+    "row_activities": {
+      "r0": "0.00",
+      "r1": "0.00",
+      "r2": "0.00",
+      "r3": "0.00",
+      "r4": "11.9999880",
+      "r5": "11.9999880",
+      "r6": "0.00",
+      "r7": "0.00",
+      "r8": "0.00",
+      "r9": "0.00",
+      "r10": "0.00",
+      "r11": "11.9999880",
+      "r12": "11.9999880"
+    },
+    "full_primal_pass": true
+  },
+  "current-no-probing": {
+    "checked_columns": 364,
+    "checked_rows": 13,
+    "integer_columns": [
+      "x363"
+    ],
+    "max_primal_violation": "0",
+    "max_integrality_violation": "0.0",
+    "independent_objective": "127.1998728",
+    "native_objective_delta": "1E-14",
+    "expected_exact_objective": "127.1998728",
+    "expected_delta": "0E-7",
+    "row_activities": {
+      "r0": "0.00",
+      "r1": "0.00",
+      "r2": "0.00",
+      "r3": "0.00",
+      "r4": "11.9999880",
+      "r5": "11.9999880",
+      "r6": "0.00",
+      "r7": "0.00",
+      "r8": "0.00",
+      "r9": "0.00",
+      "r10": "0.00",
+      "r11": "11.9999880",
+      "r12": "11.9999880"
+    },
+    "full_primal_pass": true
+  },
+  "current-off": {
+    "checked_columns": 364,
+    "checked_rows": 13,
+    "integer_columns": [
+      "x363"
+    ],
+    "max_primal_violation": "9.9999999994556627531302390E-7",
+    "max_integrality_violation": "0.0",
+    "independent_objective": "127.19992600200000059686846243320402",
+    "native_objective_delta": "9.40313153756679598E-15",
+    "expected_exact_objective": "127.1998728",
+    "expected_delta": "0.00005320200000059686846243320402",
+    "row_activities": {
+      "r0": "0.00",
+      "r1": "-0.0000010",
+      "r2": "-1.0000000025247572468697610E-7",
+      "r3": "-0.0000010",
+      "r4": "11.9999880",
+      "r5": "11.99998700000000005443372468697610",
+      "r6": "0.00000100000000252475724686976100",
+      "r7": "0.00",
+      "r8": "-0.0000010",
+      "r9": "-1.0000000025247572468697610E-7",
+      "r10": "-0.0000010",
+      "r11": "11.9999880",
+      "r12": "11.99998700000000005443372468697610"
+    },
+    "full_primal_pass": true
+  },
+  "fixed-default": {
+    "checked_columns": 364,
+    "checked_rows": 13,
+    "integer_columns": [
+      "x363"
+    ],
+    "max_primal_violation": "0",
+    "max_integrality_violation": "0",
+    "independent_objective": "127.1998728",
+    "native_objective_delta": "1E-14",
+    "expected_exact_objective": "127.1998728",
+    "expected_delta": "0E-7",
+    "row_activities": {
+      "r0": "0.0",
+      "r1": "0.0",
+      "r2": "0.0",
+      "r3": "0.0",
+      "r4": "11.9999880",
+      "r5": "11.9999880",
+      "r6": "0.0",
+      "r7": "0.0",
+      "r8": "0.0",
+      "r9": "0.0",
+      "r10": "0.0",
+      "r11": "11.9999880",
+      "r12": "11.9999880"
+    },
+    "full_primal_pass": true
+  },
+  "fixed-lp": {
+    "checked_columns": 364,
+    "checked_rows": 13,
+    "integer_columns": [
+      "x363"
+    ],
+    "max_primal_violation": "0",
+    "max_integrality_violation": "0",
+    "independent_objective": "127.1998728",
+    "native_objective_delta": "1E-14",
+    "expected_exact_objective": "127.1998728",
+    "expected_delta": "0E-7",
+    "row_activities": {
+      "r0": "0.0",
+      "r1": "0.0",
+      "r2": "0.0",
+      "r3": "0.0",
+      "r4": "11.9999880",
+      "r5": "11.9999880",
+      "r6": "0.0",
+      "r7": "0.0",
+      "r8": "0.0",
+      "r9": "0.0",
+      "r10": "0.0",
+      "r11": "11.9999880",
+      "r12": "11.9999880"
+    },
+    "full_primal_pass": true
+  },
+  "old-default": {
+    "checked_columns": 364,
+    "checked_rows": 13,
+    "integer_columns": [
+      "x363"
+    ],
+    "max_primal_violation": "0",
+    "max_integrality_violation": "0.0",
+    "independent_objective": "127.1998728",
+    "native_objective_delta": "1E-14",
+    "expected_exact_objective": "127.1998728",
+    "expected_delta": "0E-7",
+    "row_activities": {
+      "r0": "0.00",
+      "r1": "0.00",
+      "r2": "0.00",
+      "r3": "0.00",
+      "r4": "11.9999880",
+      "r5": "11.9999880",
+      "r6": "0.00",
+      "r7": "0.00",
+      "r8": "0.00",
+      "r9": "0.00",
+      "r10": "0.00",
+      "r11": "11.9999880",
+      "r12": "11.9999880"
+    },
+    "full_primal_pass": true
+  }
+}

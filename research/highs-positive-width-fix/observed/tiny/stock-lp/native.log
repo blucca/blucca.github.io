@@ -1,0 +1,18 @@
+Running HiGHS 1.16.0 (git hash: 725b40f): Copyright (c) 2026 under MIT licence terms
+Includes third-party software components, see THIRD_PARTY_NOTICES.md for full details
+LP has 1 row; 3 cols; 3 nonzeros
+Coefficient ranges:
+  Matrix  [1e+00, 1e+00]
+  Cost    [1e+00, 1e+00]
+  Bound   [1e-07, 1e-07]
+  RHS     [1e-07, 1e-07]
+WARNING: Problem has some excessively small bounds on variables
+WARNING: Problem has some excessively small bounds on constraints
+WARNING:    Consider scaling the    bounds by 1e+3, or setting the user_bound_scale option to 10
+WARNING: Problem is badly scaled, which may compromise the speed, accuracy and reliability of solvers in HiGHS
+Presolving model
+1 rows, 3 cols, 3 nonzeros 0s
+Problem status detected on presolve: Infeasible
+Model status        : Infeasible
+Objective value     :  0.0000000000e+00
+HiGHS run time      :          0.00

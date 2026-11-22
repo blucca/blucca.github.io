@@ -1,0 +1,18 @@
+{
+  "mode": "default",
+  "model": "--tiny-mip",
+  "version": "1.16.0",
+  "run_status": 0,
+  "model_status": "Infeasible",
+  "objective": "inf",
+  "value_valid": false,
+  "dual_valid": false,
+  "rows": 1,
+  "cols": 4,
+  "threads": 1,
+  "wall_seconds": 0.00085716000000000004,
+  "rss_kib": 7888,
+  "primal_feasibility_tolerance": 9.9999999999999995e-08,
+  "mip_feasibility_tolerance": 9.9999999999999995e-07,
+  "tiny_rhs": 1.5e-06
+}

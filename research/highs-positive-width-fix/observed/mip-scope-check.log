@@ -1,0 +1,5 @@
+products/blucca-site/research/highs-positive-width-fix/observed/tiny/fixed-lp/result.json {"dual_valid": false, "mode": "default", "model": "--tiny-lp", "model_status": "Infeasible", "objective": 0, "value_valid": false}
+products/blucca-site/research/highs-positive-width-fix/observed/tiny/fixed-mip/result.json {"dual_valid": false, "mode": "default", "model": "--tiny-mip", "model_status": "Optimal", "objective": 0, "value_valid": true}
+products/blucca-site/research/highs-positive-width-fix/observed/tiny/stock-lp/result.json {"dual_valid": false, "mode": "default", "model": "--tiny-lp", "model_status": "Infeasible", "objective": 0, "value_valid": false}
+products/blucca-site/research/highs-positive-width-fix/observed/tiny/stock-mip/result.json {"dual_valid": false, "mode": "default", "model": "--tiny-mip", "model_status": "Infeasible", "objective": "inf", "value_valid": false}
+{"mip_scope_passed": true, "initial_all_tiny_gate": "FAILED", "lp_observations": ["Infeasible", "Infeasible"]}

@@ -1,4 +1,4 @@
-"""Only the declared tiny LP/MIP regression; stock outcomes stay observations."""
+"""Original all-tiny gate, or explicit MIP scope with LP outcomes retained."""
 import json
 import math
 from pathlib import Path
@@ -25,10 +25,26 @@ def check(record, model, candidate):
 
 
 def main():
-    assert len(sys.argv) == 5, "candidate-lp.json candidate-mip.json stock-lp.json stock-mip.json"
-    for path, model, candidate in zip(sys.argv[1:], ("--tiny-lp", "--tiny-mip") * 2, (True, True, False, False)):
+    mip_scope = sys.argv[1:2] == ["--mip-scope"]
+    paths = sys.argv[2:] if mip_scope else sys.argv[1:]
+    assert len(paths) == 4, "[--mip-scope] candidate-lp.json candidate-mip.json stock-lp.json stock-mip.json"
+    records = []
+    for path, model, candidate in zip(paths, ("--tiny-lp", "--tiny-mip") * 2, (True, True, False, False)):
         record = json.loads(Path(path).read_text())
-        print(path, json.dumps(check(record, model, candidate), sort_keys=True))
+        assert record["mode"] == "default"
+        required = candidate and (not mip_scope or model == "--tiny-mip")
+        print(path, json.dumps(check(record, model, required), sort_keys=True))
+        records.append(record)
+    if mip_scope:
+        assert records[0]["tiny_rhs"] == records[2]["tiny_rhs"]
+        assert records[1]["tiny_rhs"] == records[3]["tiny_rhs"]
+        all_tiny = all(r["model_status"] == "Optimal" and r["value_valid"]
+                       and float(r["objective"]) == 0
+                       and all(float(x) == 0 for x in r["primal"].values())
+                       for r in records[:2])
+        print(json.dumps({"mip_scope_passed": True,
+                          "initial_all_tiny_gate": "PASS" if all_tiny else "FAILED",
+                          "lp_observations": [r["model_status"] for r in records[::2]]}))
 
 
 if __name__ == "__main__":

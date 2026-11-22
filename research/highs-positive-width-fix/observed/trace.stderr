@@ -1,0 +1,23 @@
+TRACE_FIX col=363 lb=-0 ub=0 name=x363
+TRACE_BEGIN_ENUM cols=16 rows=7
+TRACE_NEAR col=2 lb=-1.6666666666666665e-07 ub=-0 maxa=6 fixed_query=0
+TRACE_NEAR col=3 lb=-1.6666666666666665e-07 ub=-0 maxa=6 fixed_query=0
+TRACE_NEAR col=8 lb=0 ub=9.9999999999999995e-08 maxa=10 fixed_query=0
+TRACE_NEAR col=9 lb=-9.9999999999999995e-08 ub=-0 maxa=10 fixed_query=0
+TRACE_PREP_PROPAGATE cols=12 rows=7 first=1
+TRACE_PREP_PROPAGATED infeasible=0
+TRACE_END_ENUM cols=12 rows=7
+TRACE_BEGIN_IMPLIED_INT cols=12 rows=7
+TRACE_END_IMPLIED_INT cols=12 rows=7
+TRACE_BEGIN_PROBE cols=12 rows=7
+TRACE_PREP_PROPAGATE cols=12 rows=7 first=0
+TRACE_PREP_PROPAGATED infeasible=0
+TRACE_END_PROBE cols=12 rows=7
+TRACE_NEAR col=3 lb=-1.6666666666666665e-07 ub=-0 maxa=6 fixed_query=1
+TRACE_FIX col=3 lb=-1.6666666666666665e-07 ub=-0 name=x116
+TRACE_NEAR col=8 lb=0 ub=9.9999999999999995e-08 maxa=10 fixed_query=1
+TRACE_FIX col=8 lb=0 ub=9.9999999999999995e-08 name=x319
+TRACE_NEAR col=2 lb=-1.6666666666666665e-07 ub=-0 maxa=6 fixed_query=1
+TRACE_FIX col=2 lb=-1.6666666666666665e-07 ub=-0 name=x108
+TRACE_NEAR col=9 lb=-9.9999999999999995e-08 ub=-0 maxa=10 fixed_query=1
+TRACE_FIX col=9 lb=-9.9999999999999995e-08 ub=-0 name=x323

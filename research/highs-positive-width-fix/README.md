@@ -2,7 +2,7 @@
 
 HiGHS issue [3768](https://github.com/ERGO-Code/HiGHS/issues/3768) supplies a complete feasible model that HiGHS 1.16/latest declares infeasible with default presolve. The reporter supplied the model, cross-solver objective and rule-15/16 workarounds. This study identifies a shared presolve reduction that excludes its feasible point.
 
-One row allows total activity **1e-6**. After enumeration/probing tighten bounds, `checkColBounds` treats three positive-width continuous intervals as fixed, and `colPresolve` chooses each lower bound:
+One row allows total activity **1e-6**. After enumeration/probing tighten bounds, the stock shared `checkColBounds` treats three positive-width continuous intervals as fixed, and `colPresolve` chooses each lower bound:
 
 | Column | Interval | Row coefficient | Activity added by choosing lower |
 |---|---:|---:|---:|
@@ -25,7 +25,22 @@ On pinned source **725b40f68247d0e2a00fa4f29d6ca6bde01bd151**, Linux/Clang 17 Re
 - Candidate LP control, only fixed x363 made continuous: **Optimal, same objective**.
 - Independent original-input checks cover **13 rows, 364 bounds, the fixed integer and the full objective**. The candidate's expected-objective difference is 1e-14.
 
-The reporter's description says seven rows; the supplied MPS contains thirteen constraints (seven L and six G). Published observations use the full supplied input. Earlier release controls and the separate presolve-off tolerance result will accompany the completed report.
+The reporter's description says seven rows; the supplied MPS contains thirteen constraints (seven L and six G). All complete-model checks use the full supplied input.
+
+The existing `[highs_test_presolve],[highs_test_presolve_rules]` tests pass: **744 assertions in 80 test cases**, including LP/MIP/postsolve paths. [The complete observations](observed-results.json) and [raw results/logs](observed/) retain all eight full-model runs and four tiny runs. The explicitly scoped **issue-3768 MIP repair gate passes**. The initially proposed **all-tiny-success gate failed**; its original failure log remains [here](observed/tiny-check.log).
+
+### Earlier release controls
+
+| Full original model / mode | Native result | Objective |
+|---|---|---:|
+| 1.16.0 default | Infeasible / invalid | — |
+| 1.15.1 default | Optimal | 127.19987280000001 |
+| 1.16.0 rule 15 disabled | Optimal | 127.19987280000001 |
+| 1.16.0 rule 16 disabled | Optimal | 127.19987280000001 |
+| 1.16.0 LP control | Optimal | 127.19987280000001 |
+| 1.16.0 presolve off | Optimal within native tolerance | 127.19992600200001 |
+
+The presolve-off witness has a maximum original-row residual of approximately **1e-6** and objective difference **0.000053202** from the exact optimum. It remains a separate tolerance-level control. Release controls use Python bindings; the candidate uses the C++ probe. Their wall/RSS values are recorded separately, with no cross-driver speedup claim. Candidate original MIP/LP whole calls take 14.422/0.812 ms on this host; these are single observations, not a broad performance benchmark.
 
 ## Exact optimality
 
@@ -41,11 +56,19 @@ Prerequisites: Linux, Git, curl, Python 3, CMake, and a C++17 compiler. Our meas
 CC=clang-17 CXX=clang++-17 bash replay.sh "$PWD/temp/highs-width-replay"
 ```
 
-The script downloads the pinned HiGHS source and the [reporter's original MPS](https://github.com/user-attachments/files/35226594/highs_presolve_infeasible.mps.txt), builds an instrumented stock probe, retains its executable, applies the shared fix, then checks the full original model, one tiny LP/MIP pair and the repository's existing presolve test tags. Each result includes native status and validity; invalid solutions have no exported primal. See `state.txt`, logs and JSON results in the requested directory.
+The script downloads the pinned HiGHS source and the [reporter's original MPS](https://github.com/user-attachments/files/35226594/highs_presolve_infeasible.mps.txt), checks the rational certificate, builds an instrumented stock probe, retains its executable, applies the shared fix, then checks the full original MIP, its LP control, the declared tiny LP/MIP pair and existing presolve test tags. `-DALL_TESTS=ON` enables the canonical `unit_tests` target. Each result includes native status and validity; invalid solutions have no exported primal. See `state.txt`, logs and JSON results in the requested directory. The script reproduces the pinned repair and scoped tests; the earlier release-control observations are retained separately.
 
 The tiny pair has three x in [-t,0], `-sum(x) <= 1.5t`, and minimizes `-sum(x)`. The exact optimum is all zero. The MIP adds a fixed zero integer. Each variant uses its solver's default feasibility tolerance. Stock outcomes are retained as observations.
 
-**Observed tiny results:** the stock MIP is Infeasible; the candidate MIP is Optimal with all-zero primal/objective0. The pure tiny LP is Infeasible in **both** builds. The initially proposed all-tiny-success gate failed; the unchanged LP counterexample remains in the records. New generic LP repair is outside this work. Existing presolve tests have not run yet because `ALL_TESTS=OFF` omitted the `unit_tests` target; the standard test build requires `-DALL_TESTS=ON`. This local study is awaiting a clearly scoped MIP acceptance and completed standard-test report before public release.
+**Observed tiny results:** the stock MIP is Infeasible; the candidate MIP is Optimal with all-zero primal/objective0. The pure tiny LP is Infeasible in **both** builds. The inputs and tolerances remain unchanged. `tiny_result_assert.py --mip-scope` requires the candidate MIP optimum and records both LP outcomes plus the failed original all-tiny gate. Invoking the checker without that flag retains the original all-tiny requirement and exits 1 on these observations.
+
+### Why the pure LP still fails
+
+Default LP presolve first runs a separate [`HPresolveInitialSweep`](https://github.com/ERGO-Code/HiGHS/blob/725b40f68247d0e2a00fa4f29d6ca6bde01bd151/highs/presolve/HPresolveInitialSweep.cpp#L34-L55). Its own near-fixed test remains unchanged. With three `[-t,0]` intervals at `t=1e-7`, it also chooses each lower bound: row upper becomes `1.5t - 3t = -1.5t`. Its empty-row check detects infeasibility before execution reaches the modified shared check.
+
+MIP presolve skips that LP-only initial sweep and reaches the shared `checkColBounds`. A fixed integer still classifies the model as MIP. This route explanation is source analysis; the LP/MIP statuses above are the recorded native executions.
+
+The patch changes a shared LP/MIP function; its acceptance scope here is the original issue-3768 default MIP, original LP control, unchanged tiny MIP and existing presolve regressions. **Generic LP repair remains open.** Leaving narrow continuous columns live can increase subsequent reduced-model/LP work; broad corpus performance tuning is outside this study.
 
 ## Scope and attribution
 
