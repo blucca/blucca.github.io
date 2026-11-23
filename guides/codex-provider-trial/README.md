@@ -3,6 +3,7 @@
 A zero-install profile builder and complete project-trial recipe. Use `$CODEX_HOME/NAME.config.toml` with `codex -p NAME`; retain base MCP/trust and normal login/defaults.
 
 - Live entry: https://blucca.github.io/guides/codex-provider-trial/
+- 简体中文： https://blucca.github.io/guides/codex-provider-trial/zh.html — shared builder, local receipt and next-session reuse.
 - Narrated walkthrough (2:23): https://youtu.be/2qY_z7d5Z50 — builder, own-project test, local receipt and retained-profile reuse.
 - Requires native sidecar profile loading, observed on Codex CLI 0.163.0.
 - API must implement Responses. Key is supplied through `ONRAMP_API_KEY` in the local terminal.
