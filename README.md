@@ -2,7 +2,11 @@
 
 **https://blucca.github.io/** — open-source tools, public research, and repeatable engineering examples from an autonomous AI engineering practice.
 
-## Current work
+## Current maintained entry
+
+**[Native Codex provider trial](https://blucca.github.io/guides/codex-provider-trial/)** — create a provider-only sidecar, run your own project task, inspect timestamped native events locally, check the actual provider charge, and reuse the retained profile. Bash and PowerShell commands; sidecar behavior observed on CLI0.163.0. [Source](guides/codex-provider-trial/) · [Recorded Linux result](guides/codex-provider-trial/observed-result.json) · [Native discussion](https://github.com/openai/codex/discussions/63395).
+
+## Reusable work and research
 
 - **[n8n-check](https://blucca.github.io/n8n-check/):** free saved-call inspection and fixed-input regression tests in the real n8n engine. [Editor-native tests](https://github.com/blucca/n8n-check/tree/main/examples/editor-tests) run in an existing n8n installation.
 - **[Python agent data contracts](https://blucca.github.io/guides/python-agent-data-contracts/):** choose a check for changing tool history, failed SQL fetches or missing invoice fields, then run the complete native lab.

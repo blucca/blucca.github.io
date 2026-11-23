@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#ffffff">
-  <title>Blucca — Follow the right thread.</title>
-  <meta name="description" content="Python, SQL and automation engineering with native regression checks and reproducible handoffs. Explore shipped fixes, run the free tools, or send a complete project brief.">
-  <meta property="og:title" content="Blucca — Follow the right thread.">
-  <meta property="og:description" content="From production fault to verified fix. Python, SQL and automation engineering by Blucca.">
+  <title>Blucca — Native Codex provider trials</title>
+  <meta name="description" content="Try a Responses API in native Codex without replacing config.toml. Run your own project task, inspect local receipts and reuse the same profile.">
+  <meta property="og:title" content="Blucca — Native Codex provider trials">
+  <meta property="og:description" content="Try a Responses API. Keep your Codex setup. Complete your own task, read its local receipt and reuse the same profile.">
   <meta property="og:type" content="website"><meta property="og:url" content="https://blucca.github.io/">
-  <meta property="og:image" content="https://blucca.github.io/assets/studio/social.png">
+  <meta property="og:image" content="https://blucca.github.io/guides/codex-provider-trial/cover.png">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://blucca.github.io/"><link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="preload" href="assets/studio/fonts/bricolage-grotesque-latin.woff" as="font" type="font/woff" crossorigin>
@@ -18,35 +18,24 @@
 <a class="skip-link" href="#main">Skip to content</a>
 <header class="site-header page-width">
   <a class="wordmark" href="./" aria-label="Blucca home">blucca<span aria-hidden="true">✳</span></a>
-  <nav aria-label="Main navigation"><a href="#work">Work</a><a href="archive/">Archive</a><a class="nav-contact" href="#contact">Contact</a></nav>
+  <nav aria-label="Main navigation"><a href="guides/codex-provider-trial/">Try a provider</a><a href="#work">Work</a><a class="nav-contact" href="#contact">Contact</a></nav>
 </header>
 <main id="main">
   <section class="hero page-width" id="focus" aria-labelledby="hero-title">
     <div class="hero-copy">
-      <h1 id="hero-title">Follow the<br>right thread.</h1>
-      <p class="hero-intro">Python, SQL and automation engineering.</p>
-      <p class="hero-detail">Reproduce the fault. Implement the fix. Hand over checks your team can run.</p>
-      <div class="hero-actions"><a class="button" href="mailto:belgialucca@gmail.com?subject=A%20project%20for%20Blucca&amp;body=Complete%20project%20scope%3A%0ACurrent%20systems%20and%20versions%3A%0AAcceptance%20criteria%3A%0ABudget%3A%0ATarget%20date%3A%0ASynthetic%20repro%20or%20permitted%20source%20link%3A%0A">Send a project brief</a><a class="text-link" href="guides/codex-provider-trial/">Try a Codex API</a></div>
+      <p class="hero-eyebrow">Native Codex / Provider trial</p>
+      <h1 id="hero-title">Try the API.<br>Keep your setup.</h1>
+      <p class="hero-intro">One provider trial. Your existing project.</p>
+      <p class="hero-detail">Keep MCP, trust and normal defaults. Run a real task, inspect its local receipt, and bring your next task to the same profile.</p>
+      <div class="hero-actions"><a class="button" href="guides/codex-provider-trial/#build">Build my trial profile</a><a class="text-link" href="guides/codex-provider-trial/#verify">Read my run receipt</a></div>
     </div>
-    <div class="route-stage"><svg id="route-animation" viewBox="0 0 540 340" role="img" aria-labelledby="route-title route-desc">
-  <title id="route-title">From the caller to the right customer</title>
-  <desc id="route-desc">An illustrative route carries source items D and C through a child workflow to their matching HTTP recipients.</desc>
-  <defs>
-    <path id="route-d" d="M72 208 H150 Q178 208 178 180 V140 Q178 122 196 122 H292 Q312 122 312 142 V190 Q312 208 332 208 H464"/>
-    <path id="route-c" d="M72 270 H122 Q144 270 144 248 V184 Q144 166 162 166 H246 Q268 166 268 144 V98 Q268 78 288 78 H464"/>
-  </defs>
-  <path class="route-field" d="M116 318 V118 Q116 24 224 24 H348 Q416 24 416 100 V238 Q416 318 330 318Z"/>
-  <text class="route-label" x="22" y="160">Source item</text><text class="route-label" x="416" y="32">HTTP recipient</text>
-  <use href="#route-d" class="thread thread-d"/><use href="#route-c" class="thread thread-c"/>
-  <g class="route-node"><circle cx="46" cy="208" r="27"/><circle cx="46" cy="270" r="27"/><circle cx="490" cy="208" r="27"/><circle cx="490" cy="78" r="27"/></g>
-  <g class="node-letter"><text x="46" y="209">D</text><text x="46" y="271">C</text><text x="490" y="209">D</text><text x="490" y="79">C</text></g>
-  <path class="child-boundary" d="M206 98 H242 M224 98 V196 M206 196 H242"/>
-  <text class="child-label" x="224" y="239" text-anchor="middle">Child workflow</text>
-  <circle class="packet packet-d" r="7"><animateMotion dur="7s" repeatCount="indefinite"><mpath href="#route-d"/></animateMotion></circle>
-  <circle class="packet packet-c" r="7"><animateMotion dur="7s" begin="-2s" repeatCount="indefinite"><mpath href="#route-c"/></animateMotion></circle>
-</svg>
-      <div class="route-caption"><span>A route illustration, built by Blucca.</span><button id="motion-toggle" type="button" aria-pressed="false" hidden>Pause motion</button></div>
-    </div>
+    <div class="trial-stage"><a href="guides/codex-provider-trial/"><img src="guides/codex-provider-trial/diagram.svg" width="600" height="440" alt="config.toml plus a provider-only trial.config.toml. codex -p trial starts the trial; codex returns to normal defaults."></a><p>Sidecar format observed on Codex CLI 0.163.0 · Responses API</p></div>
+  </section>
+
+  <section class="trial-path page-width" aria-labelledby="trial-path-title">
+    <h2 id="trial-path-title">A completed task. A profile you can keep.</h2>
+    <div class="trial-checks"><article><h3>01 / Your project</h3><p>Use your installed Codex and the exact model enabled for your provider key. The builder supplies Bash or PowerShell commands.</p></article><article><h3>02 / Your result</h3><p>Open native events locally. Read the test command, output and exit; match task time and model in your provider’s usage console.</p></article><article><h3>03 / Your next session</h3><p>Keep the sidecar. Enter the key in a new terminal and launch <code>codex -p trial</code>. Omit <code>-p</code> for your normal defaults.</p></article></div>
+    <p class="trial-links"><a class="text-link" href="guides/codex-provider-trial/">Open the free builder &amp; local receipt</a><a class="text-link" href="guides/codex-provider-trial/observed-result.json">Recorded Linux task result</a><a class="text-link" href="https://github.com/openai/codex/discussions/63395">Native discussion &amp; feedback</a></p>
   </section>
 
   <section class="delivery page-width" id="n8n-repair" aria-labelledby="n8n-repair-title">
