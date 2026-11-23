@@ -1,0 +1,17 @@
+{
+  "date_utc": "2026-11-23",
+  "codex_version": "codex-cli 0.163.0",
+  "task": "Fix stable-order dedupe and run three assertions",
+  "elapsed_seconds": 130.05,
+  "codex_exit": 0,
+  "tests_exit": 0,
+  "tests_output": "PASS: stable-order dedupe, empty list, numeric list",
+  "base_config_unchanged": true,
+  "auth_unchanged": true,
+  "mcp_inherited": true,
+  "existing_project_trust_preserved": true,
+  "provider": "Existing authorized Responses provider",
+  "key_on_command_line": false,
+  "scope": "Linux native Codex CLI with separate onramp.config.toml provider overlay; disabled stdio MCP fixture",
+  "native_turn_completed": true
+}
