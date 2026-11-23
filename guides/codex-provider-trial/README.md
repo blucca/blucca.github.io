@@ -35,3 +35,16 @@ Check actual local tests, native command exit, base config/auth comparisons, and
 ## Existing workflows
 
 CC Switch already preserves unrelated configuration; All API Hub exports to it. This recipe uses Codex's built-in profile mechanism for one new CLI task, without another installed manager or changed defaults. Source comparison links are on the page.
+
+## Local task and usage receipt
+
+The generated native task saves `NAME.events.jsonl` plus `NAME.run.json` (UTC time, model, profile and native process exit). Select these on the page to read the native turn state, command exits/output, final answer and usage. Parsing uses the browser File API; there are no file POSTs or analytics.
+
+`receipt.js` also works without a browser:
+```js
+const {summarizeEvents, shareReceipt} = require('./receipt.js');
+const fs = require('node:fs');
+const result = summarizeEvents(fs.readFileSync('trial.events.jsonl', 'utf8'));
+console.log(JSON.stringify(shareReceipt(result), null, 2));
+```
+The downloadable summary omits command text, outputs and final answer. A native turn can complete with a nonzero test command; inspect the task output. Match run time and model in the provider console for the charged amount. Native input includes cached input. The generated PowerShell command uses UTF-8 for Windows PowerShell and PowerShell 7.
