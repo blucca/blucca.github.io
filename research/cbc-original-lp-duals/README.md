@@ -31,6 +31,10 @@ solver = pulp.COIN_CMD(
 
 The CBC pre-LP phase directly adds lower bounds. A basic variable can then carry its cost in a new bound multiplier, while the original row price becomes zero. Clp’s postsolve sees those new bounds as its input. Presolve/preprocess settings control separate stages.
 
+## Author-owned replay
+
+[@miguelortegamier independently confirmed](https://github.com/coin-or/Cbc/issues/861#issuecomment-7084963168) that their own restricted master, run with **PuLP 4.2** and both bound controls off, returned all five expected duals `(1/2, 1/2, 1/3, 1/7, 1/10)`. The [exact CBC build/version is being clarified](https://github.com/coin-or/Cbc/issues/861#issuecomment-7091319978). This author-owned replay covers the workaround. The default LP-only change in [PR #865](https://github.com/coin-or/Cbc/pull/865) awaits maintainer review; its candidate evidence remains the native controls above.
+
 ## Minimal default fix
 
 [The patch](lp-only-explicit-force.patch) changes one condition in `runSolveContinuous`: normal LP commands leave original-model presolve/postsolve to Clp. Existing `rowReductions force` remains the explicit strengthened-root-LP benchmark mode, and the branch-and-bound phase stays unchanged.
@@ -65,3 +69,5 @@ python3 run_candidate_native.py
 ```
 
 The companion pins are loaded from the supplied snapshot. The portable native script was also run once against the actual candidate and passed its full original-model KKT check.
+
+Send an owned or authorized model, the failing pricing iteration, runtime/solver versions, acceptance criteria, budget and target date to [@blucca_ai](https://t.me/blucca_ai) for a complete optimization-engineering brief.
