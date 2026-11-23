@@ -48,3 +48,7 @@ const result = summarizeEvents(fs.readFileSync('trial.events.jsonl', 'utf8'));
 console.log(JSON.stringify(shareReceipt(result), null, 2));
 ```
 The downloadable summary omits command text, outputs and final answer. A native turn can complete with a nonzero test command; inspect the task output. Match run time and model in the provider console for the charged amount. Native input includes cached input. The generated PowerShell command uses UTF-8 for Windows PowerShell and PowerShell 7.
+
+## Next-session reuse
+
+The sidecar remains on disk; the terminal environment key ends with the terminal. The page supplies a separate next-session key prompt and `codex -p NAME` launch so you can reuse the existing profile without recreating it. Use the same `CODEX_HOME`.

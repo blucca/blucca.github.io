@@ -31,6 +31,13 @@ cat ${quote(name+'.run.json')}`;
   document.getElementById('check-code').textContent=check;
   document.getElementById('run-code').textContent=run;
   document.getElementById('reuse-code').textContent=`codex -p ${name}`;
+  document.getElementById('return-code').textContent=powershell ? `$secret = Read-Host 'Provider API key' -AsSecureString
+$env:ONRAMP_API_KEY = [System.Net.NetworkCredential]::new('', $secret).Password
+codex -p ${name}` : `printf 'Provider API key: '
+read -rs ONRAMP_API_KEY
+printf '\\n'
+export ONRAMP_API_KEY
+codex -p ${name}`;
   document.getElementById('clear-code').textContent=powershell?'Remove-Item Env:ONRAMP_API_KEY':'unset ONRAMP_API_KEY';
   document.getElementById('error').textContent='';
   return {name,profile};
