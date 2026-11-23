@@ -63,3 +63,7 @@ The sidecar remains on disk; the terminal environment key ends with the terminal
 ## Provider-funded pilot
 
 [Public offer](https://blucca.github.io/guides/codex-provider-trial/#providers): CNY 1,000 cash for a non-exclusive 14-day Sponsored provider example in both language views, verification of one agreed Linux / Codex CLI task and local result/usage/provider charge, retained-profile reuse instructions, and up to two bounded onboarding documentation revisions. Agree scope, acceptance, test access/usage cap and cash payment method by email; payment precedes provider-specific work and the placement term starts at publication. The inquiry asks for the provider's Codex-docs or new-user-onboarding link placement.
+
+## Optional affiliate account link
+
+The entry links to [CometAPI signup](https://www.cometapi.com/?ref=blu) using the assigned affiliate link. CometAPI publishes 20% on referred top-ups. Its [official Codex documentation](https://apidoc.cometapi.com/integrations/codex) owns endpoint/model/access instructions; the recorded native task runs here used a separate provider. The builder stays provider-neutral.
