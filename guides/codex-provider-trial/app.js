@@ -17,15 +17,17 @@ function build() {
   const task='Inspect this project, explain how its tests run, then run the smallest relevant existing test command. Do not edit files.';
   const native=`codex exec -p ${name} -s read-only --json ${powershell?psQuote(task):quote(task)}`;
   const run=powershell ? `$started = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
+$receiptBase = '${name}-' + (Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmssZ')
 $version = (codex --version | Out-String).Trim()
-${native} | Out-File -FilePath '${name}.events.jsonl' -Encoding utf8
+${native} | Out-File -FilePath ($receiptBase + '.events.jsonl') -Encoding utf8
 $codexExit = $LASTEXITCODE
-@{ started_utc=$started; finished_utc=(Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ'); codex_exit=$codexExit; profile='${name}'; model=${psQuote(model)}; codex_version=$version } | ConvertTo-Json | Set-Content '${name}.run.json' -Encoding utf8
-Get-Content '${name}.run.json'` : `started=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-${native} > ${quote(name+'.events.jsonl')}
+@{ started_utc=$started; finished_utc=(Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ'); codex_exit=$codexExit; profile='${name}'; model=${psQuote(model)}; codex_version=$version } | ConvertTo-Json | Set-Content ($receiptBase + '.run.json') -Encoding utf8
+Get-Content ($receiptBase + '.run.json')` : `started=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+receipt_base="${name}-$(date -u +%Y%m%dT%H%M%SZ)"
+${native} > "$receipt_base.events.jsonl"
 codex_exit=$?
-printf '{"started_utc":"%s","finished_utc":"%s","codex_exit":%s,"profile":%s,"model":%s}\\n' "$started" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$codex_exit" ${quote(JSON.stringify(name))} ${quote(JSON.stringify(model))} > ${quote(name+'.run.json')}
-cat ${quote(name+'.run.json')}`;
+printf '{"started_utc":"%s","finished_utc":"%s","codex_exit":%s,"profile":%s,"model":%s}\\n' "$started" "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$codex_exit" ${quote(JSON.stringify(name))} ${quote(JSON.stringify(model))} > "$receipt_base.run.json"
+cat "$receipt_base.run.json"`;
   document.getElementById('profile-code').textContent=profile;
   document.getElementById('setup-code').textContent=setup;
   document.getElementById('check-code').textContent=check;
@@ -76,7 +78,8 @@ function renderReceipt() {
   document.getElementById('receipt-download').disabled=false;
 }
 document.getElementById('events-file').addEventListener('change',async e=>{
-  loadedSummary=null;
+  loadedSummary=null; loadedRun=null;
+  document.getElementById('run-file').value='';
   document.getElementById('receipt-output').hidden=true;
   document.getElementById('receipt-download').disabled=true;
   const f=e.target.files[0]; if(!f) return;

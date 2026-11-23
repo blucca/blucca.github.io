@@ -38,7 +38,7 @@ CC Switch already preserves unrelated configuration; All API Hub exports to it. 
 
 ## Local task and usage receipt
 
-The generated native task saves `NAME.events.jsonl` plus `NAME.run.json` (UTC time, model, profile and native process exit). Select these on the page to read the native turn state, command exits/output, final answer and usage. Parsing uses the browser File API; there are no file POSTs or analytics.
+The generated native task saves `NAME-UTC-TIME.events.jsonl` plus `NAME-UTC-TIME.run.json` (UTC time, model, profile and native process exit). Each run keeps a timestamped pair. Select the events, then the matching timing file on the page to read the native turn state, command exits/output, final answer and usage. Parsing uses the browser File API; there are no file POSTs or analytics.
 
 `receipt.js` also works without a browser:
 ```js
