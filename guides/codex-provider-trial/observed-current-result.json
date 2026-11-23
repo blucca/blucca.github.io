@@ -1,0 +1,30 @@
+{
+  "date_utc": "2026-11-23",
+  "started_utc": "2026-11-23T22:24:53Z",
+  "finished_utc": "2026-11-23T22:26:26Z",
+  "codex_version": "codex-cli 0.171.0",
+  "task": "Inspect maintained receipt parser/tests and run the existing receipt.test.cjs without edits",
+  "elapsed_seconds": 92.75,
+  "codex_exit": 0,
+  "turn_status": "completed",
+  "parsed_events": 10,
+  "malformed_lines": 0,
+  "commands": {
+    "total": 2,
+    "exit_zero": 2,
+    "exit_nonzero": 0,
+    "unfinished": 0
+  },
+  "test_command_observed": true,
+  "test_command_exit_zero": true,
+  "test_pass_observed": true,
+  "final_answer_observed": true,
+  "base_config_unchanged": true,
+  "auth_unchanged": true,
+  "retained_0_163_sidecar_unchanged": true,
+  "disabled_mcp_inherited": true,
+  "task_source_unchanged": true,
+  "scope": "Linux 0.171.0 read-only task on the maintained owned site repository; isolated verification CODEX_HOME with prior provider sidecar, sentinel base/auth and disabled stdio MCP",
+  "source_repository": "https://github.com/blucca/blucca.github.io",
+  "test_command": "node guides/codex-provider-trial/receipt.test.cjs"
+}

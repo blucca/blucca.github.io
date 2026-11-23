@@ -22,6 +22,7 @@
       }
       const item = event.item;
       if (!item || !['item.started', 'item.updated', 'item.completed'].includes(event.type)) continue;
+      if (item.type === 'error' && event.type === 'item.completed' && typeof item.message === 'string') errors.push(item.message);
       if (item.type === 'command_execution') {
         const id = item.id || 'anonymous-' + lines;
         const prior = commands.get(id) || {};

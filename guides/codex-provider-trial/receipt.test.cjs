@@ -21,4 +21,13 @@ assert.equal(nonzero.status,'completed');
 assert.equal(nonzero.commands.exit_nonzero,1);
 assert.equal(nonzero.malformed_lines,1);
 assert.equal(summarizeEvents(encode([turn,turn])).usage.input_tokens,200);
-console.log('PASS: completion, command exits, usage, summary fields, partial/failed runs, BOM');
+// Native non-fatal ErrorItem was observed during a blocked 0.171.0 tool-host startup.
+const message = 'Code Mode unavailable: host executable was not found.';
+const itemError = {type:'item.completed',item:{id:'item_0',type:'error',message}};
+const blocked = summarizeEvents(encode([itemError,{type:'item.completed',item:{type:'agent_message',text:'The test command did not run.'}},turn]));
+assert.equal(blocked.status,'completed');
+assert.equal(blocked.commands.total,0);
+assert.deepEqual(blocked.details.errors,[message]);
+assert.equal(blocked.details.final_answer,'The test command did not run.');
+assert.ok(!JSON.stringify(shareReceipt(blocked)).includes(message));
+console.log('PASS: completion, command exits, usage, summary fields, partial/failed runs, BOM, native messages');

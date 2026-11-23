@@ -76,7 +76,7 @@ function renderReceipt() {
     if(c.aggregated_output) { const output=document.createElement('pre'); output.textContent=c.aggregated_output; item.append(output); }
     commands.append(item);
   }
-  document.getElementById('receipt-answer').textContent=s.details.final_answer || s.details.errors.join('\n') || localText('No final answer recorded.','未记录最终答复。');
+  document.getElementById('receipt-answer').textContent=[s.details.final_answer, s.details.errors.length ? localText('Native messages:\n','原生消息：\n') + s.details.errors.join('\n') : ''].filter(Boolean).join('\n\n') || localText('No final answer recorded.','未记录最终答复。');
   document.getElementById('receipt-download').disabled=false;
 }
 document.getElementById('events-file').addEventListener('change',async e=>{

@@ -5,7 +5,7 @@ A zero-install profile builder and complete project-trial recipe. Use `$CODEX_HO
 - Live entry: https://blucca.github.io/guides/codex-provider-trial/
 - 简体中文： https://blucca.github.io/guides/codex-provider-trial/zh.html — shared builder, local receipt and next-session reuse.
 - Narrated walkthrough (2:23): https://youtu.be/2qY_z7d5Z50 — builder, own-project test, local receipt and retained-profile reuse.
-- Requires native sidecar profile loading, observed on Codex CLI 0.163.0.
+- Requires native sidecar profile loading, observed on Codex CLI 0.163.0 and 0.171.0 (Linux).
 - API must implement Responses. Key is supplied through `ONRAMP_API_KEY` in the local terminal.
 - Site source is dependency-free static HTML/CSS/JS. It handles no keys or provider requests.
 - Bash and PowerShell commands create one sidecar, keeping an existing same-name file.
@@ -34,13 +34,17 @@ codex exec -p trial -s workspace-write --json 'Fix dedupe.py so dedupe returns e
 ```
 Check actual local tests, native command exit, base config/auth comparisons, and inherited MCP/trust. `observed-result.json` records the run scope and result. Provider cost is read from the provider's usage console after your task, not inferred from an HTTP status.
 
+## Current stable CLI check
+
+On 2026-11-23, the complete official CLI 0.171.0 Linux package inspected this maintained receipt parser and ran `node guides/codex-provider-trial/receipt.test.cjs` without edits: 92.75s, native and test exits 0. The prior 0.163.0 provider sidecar, verification base config and auth stayed byte-equal; the disabled stdio MCP entry was inherited. `observed-current-result.json` records the exact scope and task result.
+
 ## Existing workflows
 
 CC Switch already preserves unrelated configuration; All API Hub exports to it. This recipe uses Codex's built-in profile mechanism for one new CLI task, without another installed manager or changed defaults. Source comparison links are on the page.
 
 ## Local task and usage receipt
 
-The generated native task saves `NAME-UTC-TIME.events.jsonl` plus `NAME-UTC-TIME.run.json` (UTC time, model, profile and native process exit). Each run keeps a timestamped pair. Select the events, then the matching timing file on the page to read the native turn state, command exits/output, final answer and usage. Parsing uses the browser File API; there are no file POSTs or analytics.
+The generated native task saves `NAME-UTC-TIME.events.jsonl` plus `NAME-UTC-TIME.run.json` (UTC time, model, profile and native process exit). Each run keeps a timestamped pair. Select the events, then the matching timing file on the page to read the native turn state, command exits/output, final answer, native messages and usage. Parsing uses the browser File API; there are no file POSTs or analytics.
 
 `receipt.js` also works without a browser:
 ```js
