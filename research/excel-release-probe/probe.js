@@ -9,30 +9,40 @@ function a1(row, col) {
 }
 async function capture(outputs) {
   return Excel.run(async context => {
-    const sheet=context.workbook.worksheets.getActiveWorksheet(), used=sheet.getUsedRangeOrNullObject(), names=context.workbook.names;
-    names.load('items/name,type,value');
-    sheet.load('name');used.load('address,rowIndex,columnIndex,rowCount,columnCount,values,formulas,text,valueTypes');
+    const worksheets=context.workbook.worksheets,names=context.workbook.names;
+    worksheets.load('items/name');names.load('items/name,type,value');
     const selected=outputs ? null : context.workbook.getSelectedRange();
-    if(selected) selected.load('address,rowIndex,columnIndex,rowCount,columnCount');
+    const active=selected ? worksheets.getActiveWorksheet() : null;
+    if(selected) {selected.load('rowIndex,columnIndex,rowCount,columnCount');active.load('name');}
     await context.sync();
-    const cells={};
-    if(!used.isNullObject) for(let r=0;r<used.rowCount;r++) for(let c=0;c<used.columnCount;c++) {
-      const formula=used.formulas[r][c], address=a1(used.rowIndex+r,used.columnIndex+c);
-      cells[address]={value:used.values[r][c],text:used.text[r][c],valueType:used.valueTypes[r][c],formula:typeof formula==='string'&&formula.startsWith('=')?formula:null};
+    const ranges=worksheets.items.map(sheet=>{
+      const used=sheet.getUsedRangeOrNullObject();
+      used.load('address,rowIndex,columnIndex,rowCount,columnCount,values,formulas,text,valueTypes');
+      return {sheet:sheet.name,used};
+    });
+    await context.sync();
+    const cells={},sheets=[];
+    for(const {sheet,used} of ranges) {
+      sheets.push({name:sheet,range:used.isNullObject?null:used.address});
+      if(!used.isNullObject) for(let r=0;r<used.rowCount;r++) for(let c=0;c<used.columnCount;c++) {
+        const formula=used.formulas[r][c],address=sheet+'!'+a1(used.rowIndex+r,used.columnIndex+c);
+        cells[address]={value:used.values[r][c],text:used.text[r][c],valueType:used.valueTypes[r][c],formula:typeof formula==='string'&&formula.startsWith('=')?formula:null};
+      }
     }
     const selectedOutputs=outputs || [];
-    if(selected) for(let r=0;r<selected.rowCount;r++) for(let c=0;c<selected.columnCount;c++) selectedOutputs.push(a1(selected.rowIndex+r,selected.columnIndex+c));
-    return {schema:1,capturedAt:new Date().toISOString(),sheet:sheet.name,range:used.isNullObject?null:used.address,outputs:selectedOutputs,names:names.items.map(n=>({name:n.name,type:n.type,value:n.value})),cells};
+    if(selected) for(let r=0;r<selected.rowCount;r++) for(let c=0;c<selected.columnCount;c++) selectedOutputs.push(active.name+'!'+a1(selected.rowIndex+r,selected.columnIndex+c));
+    return {schema:2,capturedAt:new Date().toISOString(),sheets,outputs:selectedOutputs,names:names.items.map(n=>({name:n.name,type:n.type,value:n.value})),cells};
   });
 }
 async function fixture() {
   await Excel.run(async context=>{
     const sheet=context.workbook.worksheets.add('ReleaseProbe');sheet.activate();
-    sheet.getRange('A1:C4').values=[['Product','UnitPrice','Quantity'],['A',10,5],['A',20,5],['B',30,2]];
+    const inputs=context.workbook.worksheets.add('ProbeInputs');
+    inputs.getRange('A1:C4').values=[['Product','UnitPrice','Quantity'],['A',10,5],['A',20,5],['B',30,2]];
     sheet.getRange('E1:F5').values=[['Metric','Value'],['Revenue',0],['EBITDA',0],['Review',null],['Active SKUs',null]];
-    sheet.getRange('F2').formulas=[['=XLOOKUP("A",A2:A4,B2:B4)*5+XLOOKUP("B",A2:A4,B2:B4)*2']];
+    sheet.getRange('F2').formulas=[['=XLOOKUP("A",ProbeInputs!A2:A4,ProbeInputs!B2:B4)*5+XLOOKUP("B",ProbeInputs!A2:A4,ProbeInputs!B2:B4)*2']];
     sheet.getRange('F3').formulas=[['=F2*0.2']];sheet.getRange('F4').formulas=[['=IF(F3>=30,"Pass","Review")']];
-    sheet.getRange('H2').formulas=[['=FILTER(A2:A4,B2:B4>=20)']];sheet.getRange('F5').formulas=[['=COUNTA(H2#)']];
+    sheet.getRange('H2').formulas=[['=FILTER(ProbeInputs!A2:A4,ProbeInputs!B2:B4>=20)']];sheet.getRange('F5').formulas=[['=COUNTA(H2#)']];
     for(const [name,cell] of Object.entries({ProbeRevenue:'F2',ProbeEBITDA:'F3',ProbeDecision:'F4'})) context.workbook.names.add(name,sheet.getRange(cell));
     sheet.getRange('F2:F4').select();await context.sync();
   });
@@ -41,20 +51,19 @@ async function fixture() {
 async function revision() {
   await Excel.run(async context=>{
     const sheet=context.workbook.worksheets.getItem('ReleaseProbe');
-    sheet.getRange('F2').formulas=[['=XLOOKUP("A",A2:A4,B2:B4,0,0,-1)*5+XLOOKUP("B",A2:A4,B2:B4)*2']];
+    sheet.getRange('F2').formulas=[['=XLOOKUP("A",ProbeInputs!A2:A4,ProbeInputs!B2:B4,0,0,-1)*5+XLOOKUP("B",ProbeInputs!A2:A4,ProbeInputs!B2:B4)*2']];
     await context.sync();
   });display({revision:'last-match lookup',action:'Compare release'});
 }
 async function compare() {
   if(!baseline) throw new Error('Capture baseline first');
   const now=await capture(baseline.outputs);
-  if(now.sheet!==baseline.sheet) throw new Error('Select the baseline worksheet');
   const changed=[];
   for(const address of new Set([...Object.keys(baseline.cells),...Object.keys(now.cells)])){
     const before=baseline.cells[address]||null,after=now.cells[address]||null;
     if(JSON.stringify(before)!==JSON.stringify(after))changed.push({address,before,after});
   }
-  review={schema:1,name:baseline.name,baselineAt:baseline.capturedAt,currentAt:now.capturedAt,sheet:now.sheet,changedCells:changed,
+  review={schema:2,name:baseline.name,baselineAt:baseline.capturedAt,currentAt:now.capturedAt,sheets:now.sheets,changedCells:changed,
     outputs:baseline.outputs.map(address=>{
       const before=baseline.cells[address]||null,after=now.cells[address]||null;
       return {address,before,after,delta:typeof before?.value==='number'&&typeof after?.value==='number'?after.value-before.value:null};
@@ -100,7 +109,7 @@ function downloadReport() {
   if(!review) throw new Error('Compare the release first');
   const rows=review.outputs.map(o=>`<tr><td>${esc(o.address)}</td><td>${esc(o.before?.value)}</td><td>${esc(o.after?.value)}</td><td>${esc(o.delta)}</td></tr>`).join('');
   const changes=review.changedCells.map(o=>`<tr><td>${esc(o.address)}</td><td>${esc(o.before?.formula||o.before?.value)}</td><td>${esc(o.after?.formula||o.after?.value)}</td></tr>`).join('');
-  download(`<!doctype html><meta charset="utf-8"><title>Release review</title><style>body{font:15px system-ui;margin:32px}td,th{padding:8px;border:1px solid #ccc}table{border-collapse:collapse}code{white-space:pre-wrap}</style><h1>${esc(review.name)}</h1><p>${esc(review.sheet)}: ${esc(review.baselineAt)} → ${esc(review.currentAt)}</p><h2>Selected financial outputs</h2><table><tr><th>Cell</th><th>Approved value</th><th>Current value</th><th>Delta</th></tr>${rows}</table><h2>Changed formulas and cell results</h2><table><tr><th>Cell</th><th>Before</th><th>After</th></tr>${changes}</table>`,'text/html','excel-release-review.html');
+  download(`<!doctype html><meta charset="utf-8"><title>Release review</title><style>body{font:15px system-ui;margin:32px}td,th{padding:8px;border:1px solid #ccc}table{border-collapse:collapse}code{white-space:pre-wrap}</style><h1>${esc(review.name)}</h1><p>${esc(review.sheets.map(s=>s.name).join(", "))}: ${esc(review.baselineAt)} → ${esc(review.currentAt)}</p><h2>Selected financial outputs</h2><table><tr><th>Cell</th><th>Approved value</th><th>Current value</th><th>Delta</th></tr>${rows}</table><h2>Changed formulas and cell results</h2><table><tr><th>Cell</th><th>Before</th><th>After</th></tr>${changes}</table>`,'text/html','excel-release-review.html');
 }
 Office.onReady(async info=>{
   display({host:info.host,platform:info.platform,ready:true});
