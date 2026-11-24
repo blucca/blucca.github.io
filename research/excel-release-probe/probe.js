@@ -63,7 +63,7 @@ async function compare() {
 async function saveBaseline() {
   const name=document.getElementById('name').value.trim();
   if(!name) throw new Error('Give this approved baseline a name');
-  baseline={...await capture(),name};
+  baseline={...await capture(),name};review=null;
   await Excel.run(async context=>{
     context.workbook.settings.add(keyPrefix+name,JSON.stringify(baseline));
     context.workbook.settings.add('ReleaseReviewProbeLatest',name);await context.sync();
@@ -84,7 +84,7 @@ async function listBaselines() {
 async function loadBaseline() {
   const key=namedBaselines.value;if(!key) throw new Error('No saved baseline in this workbook');
   await Excel.run(async context=>{
-    const setting=context.workbook.settings.getItem(key);setting.load('value');await context.sync();baseline=JSON.parse(setting.value);
+    const setting=context.workbook.settings.getItem(key);setting.load('value');await context.sync();baseline=JSON.parse(setting.value);review=null;
   });
   document.getElementById('name').value=baseline.name;display({restored:true,baseline});
 }
