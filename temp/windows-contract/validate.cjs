@@ -1,0 +1,15 @@
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
+const {summarizeEvents,shareReceipt}=require(path.resolve('guides/codex-provider-trial/receipt.js'));
+const dir=process.argv[2], read=f=>fs.readFileSync(path.join(dir,f),'utf8').replace(/^\uFEFF/,'');
+const events=fs.readdirSync(dir).filter(f=>f.endsWith('.events.jsonl')); assert.equal(events.length,1);
+const summary=summarizeEvents(read(events[0]));
+const meta=JSON.parse(read(events[0].replace('.events.jsonl','.run.json')));
+fs.writeFileSync(path.join(dir,'parsed-result.json'),JSON.stringify({summary,meta},null,2)+'\n');
+assert.equal(meta.codex_exit,0); assert.equal(meta.profile,'windows-trial'); assert.equal(meta.model,'fixture-model'); assert.match(meta.codex_version,/0\.171\.0/);
+assert.equal(summary.status,'completed'); assert.equal(summary.malformed_lines,0); assert.equal(summary.details.final_answer,'Windows fixture: café · 中文 · ✓');
+assert.equal(summary.usage.input_tokens,42); assert.equal(summary.usage.cached_input_tokens,10); assert.equal(summary.usage.output_tokens,7);
+const requests=read('requests.jsonl').trim().split('\n').map(JSON.parse); assert.equal(requests.length,1);
+assert.equal(requests[0].path,'/v1/responses'); assert.equal(requests[0].request.model,'fixture-model'); assert.match(JSON.stringify(requests[0].request),/BASE_CONFIG_SENTINEL_R43/);
+const receipt=shareReceipt(summary,meta); assert.equal(receipt.details,undefined); assert.equal(receipt.run.codex_exit,0);
+fs.writeFileSync(path.join(dir,'receipt.json'),JSON.stringify(receipt,null,2)+'\n');
+console.log('PASS native Windows transport, Unicode receipt, usage, base inheritance, setup retention');

@@ -1,0 +1,28 @@
+name: Native Windows contract r43
+on:
+  push:
+    branches: [check/native-windows-r43]
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned complete native CLI
+        shell: pwsh
+        run: npm install --global @openai/codex@0.171.0
+      - name: Windows PowerShell 5.1 generated commands
+        shell: powershell
+        run: ./temp/windows-contract/check.ps1 -Case ps51
+      - name: PowerShell 7 generated commands
+        if: always()
+        shell: pwsh
+        run: ./temp/windows-contract/check.ps1 -Case ps7
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-windows-r43
+          path: temp/windows-contract/
+          retention-days: 7
