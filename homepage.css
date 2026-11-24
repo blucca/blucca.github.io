@@ -15,3 +15,6 @@
 
 /* The maintained native acquisition entry leads the owned homepage. */
 .hero-eyebrow{font-size:12px;font-weight:650;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin-bottom:20px}.hero h1{font-size:clamp(48px,5.5vw,72px);line-height:1.05}.hero-detail{max-width:42ch}.trial-stage{min-width:0}.trial-stage img{width:100%;height:auto}.trial-stage p{font-size:11px;color:var(--muted);text-align:center;margin-top:12px}.trial-path{border-top:1px solid var(--line);padding-block:36px 40px}.trial-path h2{font-size:30px}.trial-checks{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;margin-top:25px}.trial-checks h3{font-size:20px}.trial-checks p{color:var(--muted);font-size:14px;margin-top:12px}.trial-links{display:flex;flex-wrap:wrap;gap:16px 28px;margin-top:24px}.trial-path code{font-size:13px}@media(max-width:760px){.trial-stage{max-width:530px;margin:28px auto 0}.trial-checks{grid-template-columns:1fr;gap:25px}.trial-path h2{font-size:27px}.hero h1{font-size:clamp(45px,8.5vw,65px)}}
+
+/* The published guide uses its original portrait cover. */
+.featured-tool .book-cover{display:flex;justify-content:center;padding:20px;background:#eef2fa}.book-cover img{width:min(100%,240px);height:auto}

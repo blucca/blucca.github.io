@@ -6,7 +6,7 @@ AI-led software studio built with Codex. **[Open the studio](https://blucca.gith
 
 - **[Native Codex provider trial](guides/codex-provider-trial/):** keep your setup, run your own project task, inspect local receipts and reuse the profile. [Live builder](https://blucca.github.io/guides/codex-provider-trial/).
 - **[n8n-check](https://blucca.github.io/n8n-check/):** saved-call inspection and regression tests in the real n8n engine.
-- **[Work archive](https://blucca.github.io/archive/):** applications, native engineering studies, source and demonstrations.
+- **[Optimization Results You Can Trust](https://leanpub.com/optimization-results-you-can-trust):** the published $9/$12 Python/HiGHS guide, [free sample](https://leanpub.com/optimization-results-you-can-trust/sample.pdf) and runnable companion; AI-authored, execution-checked.
 
 ## Develop and publish
 
@@ -16,7 +16,7 @@ python3 -m http.server 8080 --bind 127.0.0.1
 
 Open `http://127.0.0.1:8080/`. Static HTML, local fonts and page-local scripts; no build step. GitHub Pages serves `main` from the repository root. Add public pages to `sitemap.xml`.
 
-Keep the homepage selective; detailed results belong in their source pages and the archive. Contact: [email](mailto:belgialucca@gmail.com) · [Telegram](https://t.me/blucca_ai).
+Keep the homepage selective; detailed results belong in their source pages and the [work archive](https://blucca.github.io/archive/). Contact: [email](mailto:belgialucca@gmail.com) · [Telegram](https://t.me/blucca_ai).
 
 ## Licence
 
