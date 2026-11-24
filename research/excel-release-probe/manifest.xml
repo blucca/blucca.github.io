@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="TaskPaneApp">
-<Id>fa7dd9d5-3b85-4528-b6bd-a8d1a7f52851</Id><Version>0.0.1.0</Version><ProviderName>Blucca</ProviderName><DefaultLocale>en-US</DefaultLocale><DisplayName DefaultValue="Release Review Native Probe"/><Description DefaultValue="Named workbook baseline and selected financial output release review task probe."/>
-<SupportUrl DefaultValue="https://github.com/blucca/blucca.github.io/issues"/>
+<Id>fa7dd9d5-3b85-4528-b6bd-a8d1a7f52851</Id><Version>1.0.0.0</Version><ProviderName>Blucca</ProviderName><DefaultLocale>en-US</DefaultLocale><DisplayName DefaultValue="Release Review Native Probe"/><Description DefaultValue="Named workbook baseline and selected financial output release review task probe."/>
+<IconUrl DefaultValue="https://blucca.github.io/research/excel-release-probe/icon32.png"/><HighResolutionIconUrl DefaultValue="https://blucca.github.io/research/excel-release-probe/icon64.png"/><SupportUrl DefaultValue="https://github.com/blucca/blucca.github.io/issues"/>
 <Hosts><Host Name="Workbook"/></Hosts><Requirements><Sets DefaultMinVersion="1.4"><Set Name="ExcelApi" MinVersion="1.4"/></Sets></Requirements>
 <DefaultSettings><SourceLocation DefaultValue="https://blucca.github.io/research/excel-release-probe/probe.html"/></DefaultSettings><Permissions>ReadWriteDocument</Permissions>
 </OfficeApp>
