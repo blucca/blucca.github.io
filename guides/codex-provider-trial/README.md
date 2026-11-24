@@ -38,6 +38,12 @@ Check actual local tests, native command exit, base config/auth comparisons, and
 
 On 2026-11-23, the complete official CLI 0.171.0 Linux package inspected this maintained receipt parser and ran `node guides/codex-provider-trial/receipt.test.cjs` without edits: 92.75s, native and test exits 0. The prior 0.163.0 provider sidecar, verification base config and auth stayed byte-equal; the disabled stdio MCP entry was inherited. `observed-current-result.json` records the exact scope and task result.
 
+## Windows PowerShell contract check
+
+On 2026-11-24, the complete official Codex CLI 0.171.0 Windows package ran the generated setup, model check and native task blocks on a Windows Server 2025 runner with a UTF-8 console, using a deterministic loopback Responses fixture. Windows PowerShell 5.1 and PowerShell 7 both completed with CLI exit 0. The sidecar selected the fixture model and inherited base developer instructions; base config/auth and the retained sidecar stayed byte-equal, and a second same-name setup was refused. Actual UTF-8 event/timing files (with BOM in 5.1, without BOM in 7) preserved the Unicode answer and usage in the browser-local reader and summary download.
+
+[Exact fixture scope and results](observed-windows-contract.json) · [Public Windows check and source](https://github.com/blucca/blucca.github.io/actions/runs/45310054301)
+
 ## Existing workflows
 
 CC Switch already preserves unrelated configuration; All API Hub exports to it. This recipe uses Codex's built-in profile mechanism for one new CLI task, without another installed manager or changed defaults. Source comparison links are on the page.

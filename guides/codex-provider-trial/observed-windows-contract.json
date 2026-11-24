@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "observed_utc": "2026-11-24T02:08:24Z",
+  "scope": "native_windows_generated_powershell_transport_and_local_receipt",
+  "endpoint_kind": "deterministic loopback Responses fixture",
+  "fixture_model": "fixture-model",
+  "operating_system": "Microsoft Windows Server 2025",
+  "runner_image": "windows-2025-vs2026 / 20261116.315.1",
+  "cli": "official complete @openai/codex 0.171.0 Windows package",
+  "source_app_sha256": "8893d64a01cc7e94929da69921e8eb40ded6066c1b110b187ca7ccd7a7bb4993",
+  "windows_crlf_checkout_app_sha256": "8e76f1e6755feb67f54611bab188b5dfd006ba4e3de199c1011cb0017cce947b",
+  "generated_commands_byte_equal_to_lf_source": true,
+  "check_commit": "39cbe21e046547a7c6ef89d97fff54ae01095bf2",
+  "public_check": "https://github.com/blucca/blucca.github.io/actions/runs/45310054301",
+  "cases": [
+    {
+      "shell": "5.1.26100.33822",
+      "console_output_encoding": "utf-8",
+      "native_turn": "completed",
+      "native_exit": 0,
+      "native_command_count": 0,
+      "run": {
+        "model": "fixture-model",
+        "finished_utc": "2026-11-24T02:08:15Z",
+        "codex_version": "codex-cli 0.171.0",
+        "profile": "windows-trial",
+        "started_utc": "2026-11-24T02:08:14Z",
+        "codex_exit": 0
+      },
+      "usage": {
+        "input_tokens": 42,
+        "cached_input_tokens": 10,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 7,
+        "reasoning_output_tokens": 2
+      },
+      "base_config_unchanged": true,
+      "base_auth_unchanged": true,
+      "sidecar_unchanged": true,
+      "existing_profile_refused": true,
+      "base_developer_instructions_inherited": true,
+      "unicode_answer_preserved": true,
+      "browser_file_api": {
+        "case": "ps51",
+        "view": "index.html",
+        "width": 1280,
+        "events_bom": true,
+        "timing_bom": true,
+        "native_receipt_file_api": true,
+        "unicode_preserved": true,
+        "summary_matches_node": true
+      }
+    },
+    {
+      "shell": "7.6.10",
+      "console_output_encoding": "utf-8",
+      "native_turn": "completed",
+      "native_exit": 0,
+      "native_command_count": 0,
+      "run": {
+        "codex_version": "codex-cli 0.171.0",
+        "finished_utc": "2026-11-24T02:08:18Z",
+        "model": "fixture-model",
+        "profile": "windows-trial",
+        "codex_exit": 0,
+        "started_utc": "2026-11-24T02:08:18Z"
+      },
+      "usage": {
+        "input_tokens": 42,
+        "cached_input_tokens": 10,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 7,
+        "reasoning_output_tokens": 2
+      },
+      "base_config_unchanged": true,
+      "base_auth_unchanged": true,
+      "sidecar_unchanged": true,
+      "existing_profile_refused": true,
+      "base_developer_instructions_inherited": true,
+      "unicode_answer_preserved": true,
+      "browser_file_api": {
+        "case": "ps7",
+        "view": "zh.html",
+        "width": 390,
+        "events_bom": false,
+        "timing_bom": false,
+        "native_receipt_file_api": true,
+        "unicode_preserved": true,
+        "summary_matches_node": true
+      }
+    }
+  ]
+}
