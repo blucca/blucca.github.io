@@ -12,11 +12,11 @@
 <div class="check-grid receipt-inputs"><label>原生事件（.jsonl）<input type="file" id="events-file" accept=".jsonl,.json,.txt"></label><label>运行时间（.run.json，可选）<input type="file" id="run-file" accept=".json"></label></div>
 <p id="receipt-status" role="status">选择事件文件，开始查看。</p>
 <div id="receipt-output" hidden>
-<div class="check-grid"><div class="card"><b>命令</b><p id="receipt-command-count"></p></div><div class="card"><b>原生用量</b><p id="receipt-token-count"></p></div><div class="card"><b>运行</b><p id="receipt-time"></p></div></div>
+<div class="check-grid"><div class="card"><b>命令</b><p id="receipt-command-count"></p></div><div class="card"><b>最新上报的会话累计用量</b><p id="receipt-token-count"></p></div><div class="card"><b>运行</b><p id="receipt-time"></p></div></div>
 <p class="caption" id="receipt-parse"></p>
 <details><summary>命令与实际输出</summary><ol id="receipt-commands"></ol></details>
 <details open><summary>原生最终答复与消息</summary><pre id="receipt-answer"></pre></details>
-<p>找到执行你这项任务的命令，阅读输出与退出码。打开服务商的用量或日志页面，按本次时间和模型匹配记录，以该页面显示的扣费为准。输入 token 总数包含缓存输入；推理与缓存 token 的计费方式取决于服务商。</p>
+<p>找到执行你这项任务的命令，阅读输出与退出码。打开服务商的用量或日志页面，按本次时间和模型匹配记录，以该页面显示的扣费为准。生成的命令会开启新会话。原生用量是最新上报的会话累计值；恢复旧会话时会包含之前的用量。缓存输入包含在输入中，推理输出包含在输出中。记录采用最新快照，不累加各个已完成任务的快照。推理与缓存 token 的计费方式取决于服务商。</p>
 </div>
 <button type="button" id="receipt-download" disabled>下载摘要记录</button><p class="caption">摘要包含原生任务状态、命令退出码数量、用量和可选运行信息。命令正文、命令输出与最终答复留在本地视图中。</p><p>完成了一项任务，或遇到了卡点？<a href="#feedback">反馈简短结果 →</a></p>
 </div>

@@ -1,7 +1,8 @@
 /* Native JSONL → local completion receipt; pure parser also runnable with Node. */
 (function (root) {
   function summarizeEvents(text) {
-    const commands = new Map(), usage = {}, errors = [];
+    const commands = new Map(), errors = [];
+    let usage = {};
     let lines = 0, malformed = 0, completed = 0, failed = false, finalAnswer = '';
     for (const line of text.replace(/^\uFEFF/, '').split(/\r?\n/)) {
       if (!line.trim()) continue;
@@ -11,9 +12,8 @@
       lines++;
       if (event.type === 'turn.completed') {
         completed++;
-        for (const [key, value] of Object.entries(event.usage || {})) {
-          if (typeof value === 'number' && Number.isFinite(value)) usage[key] = (usage[key] || 0) + value;
-        }
+        // Native exec reports the thread's cumulative snapshot, not a turn delta.
+        usage = Object.fromEntries(Object.entries(event.usage || {}).filter(([, value]) => typeof value === 'number' && Number.isFinite(value)));
       }
       if (event.type === 'turn.failed') failed = true;
       if (event.type === 'turn.failed' || event.type === 'error') {
@@ -33,7 +33,8 @@
     const list = [...commands.values()];
     const exits = list.filter(c => Number.isInteger(c.exit_code));
     return {
-      schema_version: 1,
+      schema_version: 2,
+      usage_basis: 'latest_reported_thread_total',
       status: failed ? 'failed' : completed ? 'completed' : 'incomplete',
       completed_turns: completed,
       parsed_events: lines,

@@ -12,11 +12,11 @@
 <div class="check-grid receipt-inputs"><label>Native events (.jsonl)<input type="file" id="events-file" accept=".jsonl,.json,.txt"></label><label>Task timing (.run.json, optional)<input type="file" id="run-file" accept=".json"></label></div>
 <p id="receipt-status" role="status">Choose your events file to begin.</p>
 <div id="receipt-output" hidden>
-<div class="check-grid"><div class="card"><b>Commands</b><p id="receipt-command-count"></p></div><div class="card"><b>Native usage</b><p id="receipt-token-count"></p></div><div class="card"><b>Run</b><p id="receipt-time"></p></div></div>
+<div class="check-grid"><div class="card"><b>Commands</b><p id="receipt-command-count"></p></div><div class="card"><b>Latest reported thread usage</b><p id="receipt-token-count"></p></div><div class="card"><b>Run</b><p id="receipt-time"></p></div></div>
 <p class="caption" id="receipt-parse"></p>
 <details><summary>Commands and their actual output</summary><ol id="receipt-commands"></ol></details>
 <details open><summary>Final native answer and messages</summary><pre id="receipt-answer"></pre></details>
-<p>Check the command that exercises your task: read its output and exit code. Open your provider’s usage/logs page and match this run’s time and model; read the charged amount there. Cached input is included in the input count. Providers can meter reasoning and cached tokens differently.</p>
+<p>Check the command that exercises your task: read its output and exit code. Open your provider’s usage/logs page and match this run’s time and model; read the charged amount there. The generated command starts a fresh thread. Native usage is the latest reported thread total; a resumed thread includes its earlier usage. Cached input is within input, and reasoning output is within output. The receipt uses the latest snapshot rather than adding completed turns. Providers can meter reasoning and cached tokens differently.</p>
 </div>
 <button type="button" id="receipt-download" disabled>Download summary receipt</button><p class="caption">Summary fields: native completion, command exit counts, usage, and optional run metadata. Command text, command output and the final answer stay in this local view.</p><p>Completed a task or hit a blocker? <a href="#feedback">Share a short result →</a></p>
 </div>

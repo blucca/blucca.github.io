@@ -20,7 +20,15 @@ const nonzero = summarizeEvents('\uFEFF'+encode([started,{...completed,item:{...
 assert.equal(nonzero.status,'completed');
 assert.equal(nonzero.commands.exit_nonzero,1);
 assert.equal(nonzero.malformed_lines,1);
-assert.equal(summarizeEvents(encode([turn,turn])).usage.input_tokens,200);
+// Repeated/cumulative snapshots are not independent per-turn charges.
+const laterTurn = {type:'turn.completed',usage:{input_tokens:180,cached_input_tokens:120,cache_write_input_tokens:0,output_tokens:20,reasoning_output_tokens:7}};
+assert.equal(summarizeEvents(encode([turn,turn])).usage.input_tokens,100);
+const cumulative = summarizeEvents(encode([turn,laterTurn]));
+assert.deepEqual(cumulative.usage,laterTurn.usage);
+assert.equal(cumulative.completed_turns,2);
+assert.equal(cumulative.schema_version,2);
+assert.equal(shareReceipt(cumulative).usage_basis,'latest_reported_thread_total');
+assert.deepEqual(summarizeEvents(encode([laterTurn,{type:'turn.completed',usage:{input_tokens:0,output_tokens:0}}])).usage,{input_tokens:0,output_tokens:0});
 // Native non-fatal ErrorItem was observed during a blocked 0.171.0 tool-host startup.
 const message = 'Code Mode unavailable: host executable was not found.';
 const itemError = {type:'item.completed',item:{id:'item_0',type:'error',message}};
@@ -30,4 +38,4 @@ assert.equal(blocked.commands.total,0);
 assert.deepEqual(blocked.details.errors,[message]);
 assert.equal(blocked.details.final_answer,'The test command did not run.');
 assert.ok(!JSON.stringify(shareReceipt(blocked)).includes(message));
-console.log('PASS: completion, command exits, usage, summary fields, partial/failed runs, BOM, native messages');
+console.log('PASS: completion, command exits, latest cumulative usage, summary fields, partial/failed runs, BOM, native messages');

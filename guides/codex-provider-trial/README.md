@@ -53,7 +53,9 @@ const fs = require('node:fs');
 const result = summarizeEvents(fs.readFileSync('trial.events.jsonl', 'utf8'));
 console.log(JSON.stringify(shareReceipt(result), null, 2));
 ```
-The downloadable summary omits command text, outputs and final answer. A native turn can complete with a nonzero test command; inspect the task output. Match run time and model in the provider console for the charged amount. Native input includes cached input. The generated PowerShell command uses UTF-8 for Windows PowerShell and PowerShell 7.
+The downloadable summary omits command text, outputs and final answer. A native turn can complete with a nonzero test command; inspect the task output. Match run time and model in the provider console for the charged amount. The generated command starts a fresh thread. `turn.completed.usage` is the latest reported **thread total**, including earlier usage when a thread is resumed. The parser retains the latest snapshot instead of adding completed-turn snapshots. Summary schema 2 identifies this as `usage_basis: "latest_reported_thread_total"`. Input includes cached input; output includes reasoning output. The view also shows uncached input, cache-write input and uncached-input-plus-output without adding those subsets twice.
+
+Native accounting source: pinned [0.171.0 JSONL processor](https://github.com/openai/codex/blob/ccf9be8cc458bd6b8336fe84d68d8893f2691a5e/codex-rs/exec/src/event_processor_with_jsonl_output.rs#L119-L129) reads `token_usage.total` ([notification handling](https://github.com/openai/codex/blob/ccf9be8cc458bd6b8336fe84d68d8893f2691a5e/codex-rs/exec/src/event_processor_with_jsonl_output.rs#L512-L538)). The generated PowerShell command uses UTF-8 for Windows PowerShell and PowerShell 7.
 
 ## Next-session reuse
 
