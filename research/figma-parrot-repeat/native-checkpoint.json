@@ -1,0 +1,25 @@
+{
+  "checkedAt": "2026-11-24T08:49:52.965564+00:00",
+  "native": "Figma Starter / published Parrot V115",
+  "frameId": "2:2",
+  "layerIds": [
+    "1:2",
+    "1:3",
+    "1:4"
+  ],
+  "stableKeys": [
+    "pay_now",
+    "order_summary"
+  ],
+  "frameDimensionsBeforeAndAfter": [
+    280,
+    255
+  ],
+  "sourceRevisionPreservedFrench": true,
+  "reviewedFrenchUpdatedTwoLinkedLayers": true,
+  "exportMatchesApprovedInput": {
+    "en": true,
+    "fr": true
+  },
+  "reopen": "exact layer/frame IDs, dimensions, linked French values and exported approved English/French retained after tab close/new-tab reopening and explicitly rerunning Parrot"
+}
