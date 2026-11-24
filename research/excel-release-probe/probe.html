@@ -1,0 +1,6 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Excel release review — native task probe</title>
+<script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+<style>body{font:14px system-ui;margin:16px}button,input,select{margin:4px;padding:8px}pre{white-space:pre-wrap;overflow-wrap:anywhere}</style>
+<h1>Release review: native task probe</h1><p>Create the synthetic test worksheet in an empty workbook, or select output cells in your test model. Baselines are saved with this workbook; cell values are calculated by Excel.</p>
+<button id="fixture">Create test worksheet</button><label>Baseline name<input id="name" value="Approved November"></label><button id="baseline">Save selected outputs and baseline</button><select id="saved" aria-label="Saved baselines"></select><button id="restore">Restore saved baseline</button><button id="revision">Revise test lookup</button><button id="compare">Review current release</button><button id="report">Download review report</button><button id="download">Download JSON evidence</button>
+<pre id="result">Waiting for Excel host.</pre><script src="probe.js"></script></html>
