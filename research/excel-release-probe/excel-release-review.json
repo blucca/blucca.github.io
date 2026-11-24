@@ -1,0 +1,117 @@
+{
+  "schema": 2,
+  "name": "Approved November",
+  "baselineAt": "2026-11-24T07:30:34.993Z",
+  "currentAt": "2026-11-24T07:32:45.662Z",
+  "sheets": [
+    {
+      "name": "Sheet1",
+      "range": null
+    },
+    {
+      "name": "ReleaseProbe",
+      "range": "ReleaseProbe!E1:H5"
+    },
+    {
+      "name": "ProbeInputs",
+      "range": "ProbeInputs!A1:C4"
+    }
+  ],
+  "changedCells": [
+    {
+      "address": "ReleaseProbe!F2",
+      "before": {
+        "value": 110,
+        "text": "110",
+        "valueType": "Double",
+        "formula": "=XLOOKUP(\"A\",ProbeInputs!A2:A4,ProbeInputs!B2:B4)*5+XLOOKUP(\"B\",ProbeInputs!A2:A4,ProbeInputs!B2:B4)*2"
+      },
+      "after": {
+        "value": 160,
+        "text": "160",
+        "valueType": "Double",
+        "formula": "=XLOOKUP(\"A\",ProbeInputs!A2:A4,ProbeInputs!B2:B4,0,0,-1)*5+XLOOKUP(\"B\",ProbeInputs!A2:A4,ProbeInputs!B2:B4)*2"
+      }
+    },
+    {
+      "address": "ReleaseProbe!F3",
+      "before": {
+        "value": 22,
+        "text": "22",
+        "valueType": "Double",
+        "formula": "=F2*0.2"
+      },
+      "after": {
+        "value": 32,
+        "text": "32",
+        "valueType": "Double",
+        "formula": "=F2*0.2"
+      }
+    },
+    {
+      "address": "ReleaseProbe!F4",
+      "before": {
+        "value": "Review",
+        "text": "Review",
+        "valueType": "String",
+        "formula": "=IF(F3>=30,\"Pass\",\"Review\")"
+      },
+      "after": {
+        "value": "Pass",
+        "text": "Pass",
+        "valueType": "String",
+        "formula": "=IF(F3>=30,\"Pass\",\"Review\")"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "address": "ReleaseProbe!F2",
+      "before": {
+        "value": 110,
+        "text": "110",
+        "valueType": "Double",
+        "formula": "=XLOOKUP(\"A\",ProbeInputs!A2:A4,ProbeInputs!B2:B4)*5+XLOOKUP(\"B\",ProbeInputs!A2:A4,ProbeInputs!B2:B4)*2"
+      },
+      "after": {
+        "value": 160,
+        "text": "160",
+        "valueType": "Double",
+        "formula": "=XLOOKUP(\"A\",ProbeInputs!A2:A4,ProbeInputs!B2:B4,0,0,-1)*5+XLOOKUP(\"B\",ProbeInputs!A2:A4,ProbeInputs!B2:B4)*2"
+      },
+      "delta": 50
+    },
+    {
+      "address": "ReleaseProbe!F3",
+      "before": {
+        "value": 22,
+        "text": "22",
+        "valueType": "Double",
+        "formula": "=F2*0.2"
+      },
+      "after": {
+        "value": 32,
+        "text": "32",
+        "valueType": "Double",
+        "formula": "=F2*0.2"
+      },
+      "delta": 10
+    },
+    {
+      "address": "ReleaseProbe!F4",
+      "before": {
+        "value": "Review",
+        "text": "Review",
+        "valueType": "String",
+        "formula": "=IF(F3>=30,\"Pass\",\"Review\")"
+      },
+      "after": {
+        "value": "Pass",
+        "text": "Pass",
+        "valueType": "String",
+        "formula": "=IF(F3>=30,\"Pass\",\"Review\")"
+      },
+      "delta": null
+    }
+  ]
+}
