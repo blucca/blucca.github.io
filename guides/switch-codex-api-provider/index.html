@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Switch Codex API provider and keep your project history | Blucca</title>
+  <meta name="description" content="Move a Codex CLI project task to another Responses API provider with a reviewed handoff. Keep the original conversation, verify one next task, and reopen the new native thread in Codex Desk.">
+  <link rel="canonical" href="https://blucca.github.io/guides/switch-codex-api-provider/">
+  <meta property="og:title" content="Switch Codex API provider. Keep your project history.">
+  <meta property="og:description" content="Choose the target endpoint and model, review saved task evidence, and continue in a distinct native thread while keeping the original conversation.">
+  <meta property="og:type" content="article"><meta property="og:url" content="https://blucca.github.io/guides/switch-codex-api-provider/">
+  <meta property="og:image" content="https://blucca.github.io/assets/codex-desk/workflow.png">
+  <meta property="og:image:alt" content="Codex Desk own synthetic example: conversation with native tool results.">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link rel="stylesheet" href="../../homepage.css"><link rel="stylesheet" href="../resume-codex-conversation/guide.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header page-width">
+  <a class="wordmark" href="../../" aria-label="Blucca home">blucca<span aria-hidden="true">✳</span></a>
+  <nav aria-label="Guide navigation"><a href="#provider">API profile</a><a href="#handoff">Review handoff</a><a href="#return">Return</a></nav>
+</header>
+<main id="main" class="guide page-width">
+  <section class="guide-hero" aria-labelledby="guide-title">
+    <p class="hero-eyebrow">Codex Desk / API provider change</p>
+    <h1 id="guide-title">Switch Codex API provider. Keep your project history.</h1>
+    <p class="guide-intro">Your old API gateway is unavailable, or you want the next task to use another endpoint and model. Carry reviewed project evidence into a new native conversation and keep the original thread as your record.</p>
+    <div class="hero-actions"><a class="button" href="#choose">Continue my project task</a><a class="text-link" href="https://github.com/blucca/codex-desk#install-the-preview">Install Codex Desk</a></div>
+    <p class="version">Python 3.11+ · Existing configured Codex CLI · Responses-compatible target API<br>Native integration exercised with CLI 0.171.0 on Linux</p>
+    <p>New to Desk? Follow the <a href="https://github.com/blucca/codex-desk#install-the-preview">current installation instructions</a>, launch <code>codex-desk</code> in that environment, and open its printed local URL. <a href="https://github.com/blucca/codex-desk/blob/main/docs/task-walkthrough.md">See the existing illustrated task walkthrough</a>.</p>
+  </section>
+
+  <ol class="task-route" aria-label="Provider change workflow">
+    <li><strong>Choose</strong><span>Resume or new provider</span></li>
+    <li><strong>Review</strong><span>Evidence + next goal</span></li>
+    <li><strong>Verify</strong><span>One own-project task</span></li>
+    <li><strong>Return</strong><span>The new saved thread</span></li>
+  </ol>
+
+  <section id="choose" aria-labelledby="choose-title">
+    <h2 id="choose-title">1. Restart, or change provider?</h2>
+    <div class="thread-paths">
+      <p><strong>Same provider, same conversation</strong><span>Reopen the saved session.<br>Continue the same native thread.</span></p>
+      <p><strong>New API provider, reviewed handoff</strong><span>Read saved evidence.<br>Start a distinct native thread.</span></p>
+    </div>
+    <p>If you only restarted Desk, choose the same named, previously used session. To find older work, choose <strong>Open a project</strong>, enter its exact saved folder, keep <strong>Current Codex settings</strong>, then <strong>Find existing sessions</strong> and resume the matching title. <a href="../resume-codex-conversation/#find">Full find-and-resume steps</a>.</p>
+    <p>A same-thread resume uses the selected current settings; the recorded source provider is history metadata. For an intentional provider change, use the reviewed-handoff route below so the original conversation stays separate.</p>
+  </section>
+
+  <section id="provider" aria-labelledby="provider-title">
+    <h2 id="provider-title">2. Save the target endpoint and model locally.</h2>
+    <p>Choose <strong>Add API provider</strong>. Your existing provider key is enough. Enter an unused <strong>Profile name</strong>, the provider’s exact <strong>API base URL</strong>, the <strong>Model</strong> ID enabled for your key, and your <strong>API key</strong>. Click <strong>Save local profile</strong>.</p>
+    <ul class="instructions">
+      <li><strong>Base URL:</strong> the API root before <code>/responses</code>; include <code>/v1</code> only when the provider requires that prefix.</li>
+      <li><strong>Protocol:</strong> Desk’s form writes <code>wire_api = "responses"</code>. Choose a provider with Responses support.</li>
+      <li><strong>Model:</strong> copy the exact ID your provider makes available to this key or token group.</li>
+    </ul>
+    <p>The form creates <code>new-router.config.toml</code> in the selected <code>CODEX_HOME</code> for a profile named <code>new-router</code>, normally <code>~/.codex/new-router.config.toml</code>. The key is stored in that local file, with mode <code>0600</code> on Linux. Desk sends provider overrides to native Codex through private stdin and keeps your main config/auth files and source rollout intact.</p>
+    <p>Confirm the saved values in <strong>Open a project</strong>: select the new profile and read its provider, model and endpoint below the selector. Then cancel. The handoff’s <strong>Next provider</strong> selector shows profile names.</p>
+    <details class="protocol" id="profile-fields">
+      <summary>Exact profile shape written by the local form</summary>
+      <p>These placeholders illustrate the <a href="https://github.com/blucca/codex-desk/blob/v0.1.0a11/codex_desk/runtime.py">released profile writer</a>. Enter your actual values in Desk’s local form:</p>
+      <pre id="profile-example"><code>model = "YOUR_PROVIDER_MODEL_ID"
+model_provider = "desk_provider"
+[model_providers.desk_provider]
+name = "new-router"
+base_url = "https://your-provider.example/v1"
+wire_api = "responses"
+experimental_bearer_token = "YOUR_EXISTING_API_KEY"</code></pre>
+      <p>An existing same-name file is kept. To correct an endpoint or model using the form, choose a new profile name. Existing sidecar profiles also appear in Desk; an <code>env_key</code> profile needs its key variable in the shell that launches Desk.</p>
+    </details>
+    <p>Optional account sources: <a href="https://www.cometapi.com/?ref=blu" rel="sponsored">CometAPI signup (affiliate link)</a> · <a href="https://88api.ai/sign-up?aff=JxZT" rel="sponsored">88API signup (affiliate link)</a>. Blucca can earn a commission through these links. Use each provider’s <a href="https://apidoc.cometapi.com/integrations/codex">CometAPI</a> or <a href="https://88api.ai/docs/apps/codex-cli/">88API Codex setup documentation</a> for current endpoint and model access.</p>
+  </section>
+
+  <section id="handoff" aria-labelledby="handoff-title">
+    <h2 id="handoff-title">3. Review the evidence before the new task.</h2>
+    <ol class="instructions">
+      <li>Choose <strong>Browse existing Codex sessions</strong> and search part of the saved title. Beside the source conversation, choose <strong>Review handoff</strong>. This reads local history without resuming the old task. From an already-open session, use <strong>Continue with another provider</strong>.</li>
+      <li>Check the <strong>Project folder</strong>, then select the target profile you verified under <strong>Next provider</strong>.</li>
+      <li>Edit <strong>Goal / current request</strong>, <strong>Completed</strong> and <strong>Remaining / constraints</strong> in the handoff. Retain the useful command output, exit codes, file changes and MCP results; remove irrelevant or sensitive text before sending it to the target API.</li>
+    </ol>
+    <div class="finding-note"><h3>Review the evidence budget too.</h3><p>The prefilled handoff uses a <strong>24,000-character budget</strong>, keeping recent readable items in their original order. Its ending reports omitted items; an oversized item has a shortening marker. The textarea is editable: trim it to the next task, or add an essential earlier result you checked. Encrypted reasoning is not carried into the new thread.</p></div>
+    <p>Reviewing the handoff runs no model turn and does not ask the old provider to compact the thread. <a href="https://github.com/blucca/codex-desk/blob/main/docs/images/task-walkthrough-05-handoff-review.png">See the existing handoff-review panel</a>.</p>
+  </section>
+
+  <section id="verify" aria-labelledby="verify-title">
+    <h2 id="verify-title">4. Run one verification task in your own project.</h2>
+    <p>For <strong>What should Codex do next?</strong>, use this small first goal:</p>
+    <pre id="next-goal"><code>Find this project's verification command in README, run it, and report the exact command, output and exit status. Do not install dependencies or edit files.</code></pre>
+    <p>Click <strong>Start new native conversation</strong> when the goal, evidence, folder and target profile are ready. This creates a distinct native thread and <strong>starts the goal immediately</strong>. Review any native command approval, then check the actual command output and exit status alongside the answer.</p>
+    <p>Check the new session’s provider/model binding, and use <strong>Rename session</strong> to give it a recognizable name, such as <code>API switch — project verification</code>. Keep the original conversation available as the source record.</p>
+  </section>
+
+  <section id="return" aria-labelledby="return-title">
+    <h2 id="return-title">5. Reopen the new conversation.</h2>
+    <p>After the task finishes, close the browser, reopen Desk’s printed URL while its terminal is running, and choose the new named session. Confirm the verification output is still there. Closing the page leaves the backend running; <strong>Ctrl+C</strong> stops Desk and its owned native tasks.</p>
+    <p>Next time, activate the same installation environment and run <code>codex-desk</code>. Reuse your original <code>--codex</code>, <code>--codex-home</code> and <code>--state-dir</code> arguments if supplied. The saved, used session resumes its new native thread; the original source conversation remains a separate session in local history.</p>
+  </section>
+
+  <section class="guide-help" id="help" aria-labelledby="help-title">
+    <h2 id="help-title">Bring the next task or the step that blocked it.</h2>
+    <p><a class="button" href="https://github.com/blucca/codex-desk/issues/new?template=task-help.yml">Get help with one provider-switch task</a></p>
+    <p>Include your CLI version, operating system, project task and step reached. Say whether the verification task finished and you reopened the new session. For a failure, include a short redacted error and the step: profile setup, history read, handoff start, task, or return.</p>
+  </section>
+</main>
+<footer class="guide-footer page-width"><a href="../../">Blucca home</a><a href="../resume-codex-conversation/">Find &amp; resume guide</a><a href="https://github.com/blucca/codex-desk/blob/main/docs/task-walkthrough.md">Illustrated project walkthrough</a><a href="../codex-provider-trial/">Optional terminal-only provider setup</a></footer>
+</body>
+</html>

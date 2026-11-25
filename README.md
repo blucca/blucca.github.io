@@ -4,7 +4,7 @@ Developer tools and reproducible engineering workflows. **[Open the homepage](ht
 
 ## Start here
 
-- **[Codex Desk](https://github.com/blucca/codex-desk):** install the local workbench, find your saved project conversation, run one next task and return to the same native thread. [Find & resume a saved conversation](guides/resume-codex-conversation/) · [first-task landing](https://blucca.github.io/#first-task) · [installation](https://github.com/blucca/codex-desk#install-the-preview) · [help with one project task](https://github.com/blucca/codex-desk/issues/new?template=task-help.yml).
+- **[Codex Desk](https://github.com/blucca/codex-desk):** install the local workbench, find your saved project conversation, run one next task and return to the same native thread. [Find & resume a saved conversation](guides/resume-codex-conversation/) · [Switch Codex API provider](guides/switch-codex-api-provider/) · [first-task landing](https://blucca.github.io/#first-task) · [installation](https://github.com/blucca/codex-desk#install-the-preview) · [help with one project task](https://github.com/blucca/codex-desk/issues/new?template=task-help.yml).
 - **[Terminal-only provider reference](guides/codex-provider-trial/):** optional setup and local receipts for an existing Codex CLI.
 - **[n8n-check](https://blucca.github.io/n8n-check/):** saved-call inspection and regression tests in the real n8n engine.
 - **[Engineering archive](https://blucca.github.io/archive/):** published projects, guides and reproducible results.
