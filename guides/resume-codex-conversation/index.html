@@ -27,7 +27,7 @@
     <h1 id="guide-title">Find and resume a saved Codex CLI conversation.</h1>
     <p class="guide-intro">You remember the task, but lost the conversation in history. Search its title, open the exact project folder, and continue the work you already started.</p>
     <div class="hero-actions"><a class="button" href="#install">Install &amp; find my conversation</a><a class="text-link" href="#find">Already installed? Start here</a></div>
-    <p class="version">Codex Desk v0.1.0a11 · Python 3.11+ · Existing Codex CLI<br>Native integration exercised with CLI 0.171.0 on Linux</p>
+    <p class="version">Codex Desk v0.1.0a13 · Python 3.11+ · Existing Codex CLI<br>Native integration exercised with CLI 0.171.0 on Linux</p>
   </section>
 
   <ol class="task-route" aria-label="Your saved conversation workflow">
@@ -46,7 +46,7 @@ mkdir -p "$HOME/codex-desk-install"
 cd "$HOME/codex-desk-install"
 python3 -m venv .venv
 . .venv/bin/activate
-python3 -m pip install https://github.com/blucca/codex-desk/releases/download/v0.1.0a11/codex_desk-0.1.0a11-py3-none-any.whl
+python3 -m pip install https://github.com/blucca/codex-desk/releases/download/v0.1.0a13/codex_desk-0.1.0a13-py3-none-any.whl
 codex-desk</code></pre>
     <p>Desk checks the selected launcher with <code>--version</code> before opening. If it fails, run the printed command in the same shell and repair that Codex installation. Open the printed local URL, normally <strong>http://127.0.0.1:8787</strong>. <a href="https://github.com/blucca/codex-desk#install-the-preview">Windows PowerShell installation</a> · <a href="https://github.com/blucca/codex-desk/blob/main/docs/task-walkthrough.md">90-second illustrated walkthrough</a>.</p>
   </section>
@@ -80,6 +80,9 @@ codex resume &lt;UUID&gt;</code></pre>
 . .venv/bin/activate
 codex-desk</code></pre>
     <p>Reuse the original <code>--codex</code>, <code>--codex-home</code> and <code>--state-dir</code> arguments if you supplied them. A saved, used conversation resumes its original native thread. A never-used blank conversation has no saved rollout yet.</p>
+    <h3>Keep projects and next tasks organized.</h3>
+    <p>Saved sessions are grouped by project, with active tasks kept visible. Use <strong>Find saved work</strong> to filter titles or folders, <strong>Archive</strong> to tuck away finished work, and <strong>Show archived</strong> to find and restore it. Archiving changes the local Desk list and keeps the conversation’s history and draft.</p>
+    <p>Write a next instruction and choose <strong>Save as follow-up</strong> instead of <strong>Run task</strong>. It stays in that conversation’s prepared list, tied to its project and provider, when you switch projects or restart Desk. Restart leaves follow-ups paused: review the conversation and choose <strong>Send next</strong> when it is idle. Each click sends one prepared task; the rest stay saved. <a href="https://github.com/blucca/codex-desk#prepared-follow-ups">Prepared follow-ups in the README</a>.</p>
   </section>
 
   <section id="accounts" aria-labelledby="accounts-title">
@@ -104,14 +107,14 @@ codex-desk</code></pre>
 
   <details class="protocol" id="native-fields">
     <summary>Native list/read fields behind the search</summary>
-    <p>Field examples for an initialized app-server connection, pinned to <a href="https://github.com/openai/codex/blob/rust-v0.171.0/codex-rs/app-server-protocol/src/protocol/v2/thread.rs">Codex CLI 0.171.0’s thread protocol</a>. Desk’s <a href="https://github.com/blucca/codex-desk/blob/v0.1.0a11/codex_desk/server.py">released list adapter</a> uses:</p>
+    <p>Field examples for an initialized app-server connection, pinned to <a href="https://github.com/openai/codex/blob/rust-v0.171.0/codex-rs/app-server-protocol/src/protocol/v2/thread.rs">Codex CLI 0.171.0’s thread protocol</a>. Desk’s <a href="https://github.com/blucca/codex-desk/blob/v0.1.0a13/codex_desk/server.py">released list adapter</a> uses:</p>
     <pre id="list-rpc"><code>{"id":1,"method":"thread/list","params":{"limit":30,"modelProviders":[],"sortKey":"updated_at","cwd":"/home/you/projects/my-app","searchTerm":"verification"}}</code></pre>
     <ul>
       <li><code>cwd</code> is an exact path match; omit it for global browsing. <code>searchTerm</code> is a substring of the extracted title; Desk omits it for a blank query.</li>
       <li><code>modelProviders: []</code> includes all recorded providers. Desk omits <code>currentAccountOnly</code>; its native default is <code>false</code>, so this local list is not restricted to the currently signed-in ChatGPT account.</li>
       <li>Desk omits <code>archived</code> and <code>sourceKinds</code>: native defaults list non-archived, interactive history. Results arrive in <code>result.data</code>; repeat the same filters with <code>cursor: result.nextCursor</code> for the next page.</li>
     </ul>
-    <p>A metadata-only read uses the returned thread ID, as in Desk’s <a href="https://github.com/blucca/codex-desk/blob/v0.1.0a11/codex_desk/inspect_running.py">read-only backend inspector</a>:</p>
+    <p>A metadata-only read uses the returned thread ID, as in Desk’s <a href="https://github.com/blucca/codex-desk/blob/v0.1.0a13/codex_desk/inspect_running.py">read-only backend inspector</a>:</p>
     <pre id="read-rpc"><code>{"id":2,"method":"thread/read","params":{"threadId":"&lt;id from result.data&gt;","includeTurns":false}}</code></pre>
     <p><code>includeTurns: false</code> reads metadata. Desk uses <code>includeTurns: true</code> when opening saved history or reviewing handoff evidence. Neither list nor read starts an inference turn.</p>
   </details>

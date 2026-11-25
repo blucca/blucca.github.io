@@ -60,7 +60,7 @@
     <p>Confirm the saved values in <strong>Open a project</strong>: select the new profile and read its provider, model and endpoint below the selector. Then cancel. The handoff’s <strong>Next provider</strong> selector shows profile names.</p>
     <details class="protocol" id="profile-fields">
       <summary>Exact profile shape written by the local form</summary>
-      <p>These placeholders illustrate the <a href="https://github.com/blucca/codex-desk/blob/v0.1.0a11/codex_desk/runtime.py">released profile writer</a>. Enter your actual values in Desk’s local form:</p>
+      <p>These placeholders illustrate the <a href="https://github.com/blucca/codex-desk/blob/v0.1.0a13/codex_desk/runtime.py">released profile writer</a>. Enter your actual values in Desk’s local form:</p>
       <pre id="profile-example"><code>model = "YOUR_PROVIDER_MODEL_ID"
 model_provider = "desk_provider"
 [model_providers.desk_provider]
@@ -68,7 +68,7 @@ name = "new-router"
 base_url = "https://your-provider.example/v1"
 wire_api = "responses"
 experimental_bearer_token = "YOUR_EXISTING_API_KEY"</code></pre>
-      <p>An existing same-name file is kept. To correct an endpoint or model using the form, choose a new profile name. Existing sidecar profiles also appear in Desk; an <code>env_key</code> profile needs its key variable in the shell that launches Desk.</p>
+      <p>An existing same-name file is kept. To update an existing Desk profile, choose <strong>Manage API profiles</strong> → <strong>Edit profile</strong>. Leave the key blank to keep it, or enter a replacement to rotate it. Relaunch Desk before using changed settings in already-loaded native sessions. Custom native files remain editable in your Codex home; an <code>env_key</code> profile needs its key variable in the shell that launches Desk.</p>
     </details>
     <p>Optional account sources: <a href="https://www.cometapi.com/?ref=blu" rel="sponsored">CometAPI signup (affiliate link)</a> · <a href="https://88api.ai/sign-up?aff=JxZT" rel="sponsored">88API signup (affiliate link)</a>. Blucca can earn a commission through these links. Use each provider’s <a href="https://apidoc.cometapi.com/integrations/codex">CometAPI</a> or <a href="https://88api.ai/docs/apps/codex-cli/">88API Codex setup documentation</a> for current endpoint and model access.</p>
   </section>
