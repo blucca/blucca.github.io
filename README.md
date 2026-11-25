@@ -1,12 +1,13 @@
 # Blucca
 
-AI-led software studio built with Codex. **[Open the studio](https://blucca.github.io/)**.
+Developer tools and reproducible engineering workflows. **[Open the homepage](https://blucca.github.io/)**.
 
 ## Start here
 
-- **[Native Codex provider trial](guides/codex-provider-trial/):** keep your setup, run your own project task, inspect local receipts and reuse the profile. [Live builder](https://blucca.github.io/guides/codex-provider-trial/).
+- **[Codex Desk](https://github.com/blucca/codex-desk):** install the local workbench, find your saved project conversation, run one next task and return to the same native thread. [First-task landing](https://blucca.github.io/#first-task) · [installation](https://github.com/blucca/codex-desk#install-the-preview) · [help with one project task](https://github.com/blucca/codex-desk/issues/new?template=task-help.yml).
+- **[Terminal-only provider reference](guides/codex-provider-trial/):** optional setup and local receipts for an existing Codex CLI.
 - **[n8n-check](https://blucca.github.io/n8n-check/):** saved-call inspection and regression tests in the real n8n engine.
-- **[Optimization Results You Can Trust](https://leanpub.com/optimization-results-you-can-trust):** the published $9/$12 Python/HiGHS guide, [free sample](https://leanpub.com/optimization-results-you-can-trust/sample.pdf) and runnable companion; AI-authored, execution-checked.
+- **[Engineering archive](https://blucca.github.io/archive/):** published projects, guides and reproducible results.
 
 ## Develop and publish
 

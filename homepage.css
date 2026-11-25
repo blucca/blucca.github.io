@@ -18,3 +18,8 @@
 
 /* The published guide uses its original portrait cover. */
 .featured-tool .book-cover{display:flex;justify-content:center;padding:20px;background:#eef2fa}.book-cover img{width:min(100%,240px);height:auto}
+
+/* Installed-workflow landing: find → own task → same-session return. */
+.desk-stage{padding:28px;border:1px solid var(--line);border-radius:16px;background:var(--ice)}.desk-stage h2{font-size:29px}.desk-stage ol{margin:22px 0;padding-left:24px}.desk-stage li{padding-left:7px;margin-top:19px}.desk-stage li::marker{color:var(--cobalt);font-weight:700}.desk-stage strong,.desk-stage span{display:block}.desk-stage span{font-size:14px;color:var(--muted);margin-top:4px}.desk-stage>.text-link{font-size:13px}.trial-checks{grid-template-columns:repeat(4,minmax(0,1fr));gap:26px}.trial-checks .text-link{font-size:inherit}.desk-task{margin:28px 0 20px;padding:20px 24px;border-left:3px solid var(--cobalt);background:var(--ice);border-radius:0 10px 10px 0}.desk-task p{font-size:17px;max-width:74ch}.desk-task footer{font-size:12px;color:var(--muted);margin-top:9px}.desk-scope,.desk-handoff p,.desk-help{font-size:14px;color:var(--muted);max-width:88ch}.desk-handoff{margin-top:24px}.desk-handoff h3{font-size:20px;margin-bottom:10px}.desk-help{margin-top:22px}.desk-help strong{color:var(--ink)}
+@media(max-width:1050px){.trial-checks{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:760px){.desk-stage{padding:23px}.desk-stage h2{font-size:26px}.trial-checks{grid-template-columns:1fr}.desk-task{padding:17px 19px}.desk-task p{font-size:16px}}
