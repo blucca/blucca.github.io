@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Find and resume a saved Codex CLI conversation | Blucca</title>
+  <meta name="description" content="Find saved Codex CLI conversations by title and exact project folder. Resume with current settings, run one verification task, and return to the same native thread in Codex Desk.">
+  <link rel="canonical" href="https://blucca.github.io/guides/resume-codex-conversation/">
+  <meta property="og:title" content="Find and resume a saved Codex CLI conversation">
+  <meta property="og:description" content="Find the saved title. Read the tool results. Run one project task. Return to the same native thread.">
+  <meta property="og:type" content="article"><meta property="og:url" content="https://blucca.github.io/guides/resume-codex-conversation/">
+  <meta property="og:image" content="https://blucca.github.io/assets/codex-desk/workflow.png">
+  <meta property="og:image:alt" content="Codex Desk own synthetic example: reopened conversation with native MCP results.">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link rel="stylesheet" href="../../homepage.css"><link rel="stylesheet" href="guide.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header page-width">
+  <a class="wordmark" href="../../" aria-label="Blucca home">blucca<span aria-hidden="true">✳</span></a>
+  <nav aria-label="Guide navigation"><a href="#find">Find &amp; resume</a><a href="#return">Return</a><a href="#help">Task help</a></nav>
+</header>
+<main id="main" class="guide page-width">
+  <section class="guide-hero" aria-labelledby="guide-title">
+    <p class="hero-eyebrow">Codex Desk / Saved project work</p>
+    <h1 id="guide-title">Find and resume a saved Codex CLI conversation.</h1>
+    <p class="guide-intro">You remember the task, but lost the conversation in history. Search its title, open the exact project folder, and continue the work you already started.</p>
+    <div class="hero-actions"><a class="button" href="#install">Install &amp; find my conversation</a><a class="text-link" href="#find">Already installed? Start here</a></div>
+    <p class="version">Codex Desk v0.1.0a11 · Python 3.11+ · Existing Codex CLI<br>Native integration exercised with CLI 0.171.0 on Linux</p>
+  </section>
+
+  <ol class="task-route" aria-label="Your saved conversation workflow">
+    <li><strong>Find</strong><span>Title + exact folder</span></li>
+    <li><strong>Read</strong><span>Messages + tool results</span></li>
+    <li><strong>Verify</strong><span>One task in your project</span></li>
+    <li><strong>Return</strong><span>The same used thread</span></li>
+  </ol>
+
+  <section id="install" aria-labelledby="install-title">
+    <h2 id="install-title">1. Install once. Use your existing Codex.</h2>
+    <p>First <a href="https://developers.openai.com/codex/cli">install and sign in to Codex CLI</a>. In the shell you will use for Desk, run the Linux/macOS/WSL commands below. The release wheel installs without Git.</p>
+    <pre id="install-command"><code>python3 --version
+codex --version
+mkdir -p "$HOME/codex-desk-install"
+cd "$HOME/codex-desk-install"
+python3 -m venv .venv
+. .venv/bin/activate
+python3 -m pip install https://github.com/blucca/codex-desk/releases/download/v0.1.0a11/codex_desk-0.1.0a11-py3-none-any.whl
+codex-desk</code></pre>
+    <p>Desk checks the selected launcher with <code>--version</code> before opening. If it fails, run the printed command in the same shell and repair that Codex installation. Open the printed local URL, normally <strong>http://127.0.0.1:8787</strong>. <a href="https://github.com/blucca/codex-desk#install-the-preview">Windows PowerShell installation</a> · <a href="https://github.com/blucca/codex-desk/blob/main/docs/task-walkthrough.md">90-second illustrated walkthrough</a>.</p>
+  </section>
+
+  <section id="find" aria-labelledby="find-title">
+    <h2 id="find-title">2. Find the saved title, then resume.</h2>
+    <ol class="instructions">
+      <li>Choose <strong>Open a project</strong> and enter the folder where the conversation started. Keep <strong>Current Codex settings</strong> for your first resume.</li>
+      <li>Enter a word or phrase in <strong>Search conversation titles</strong>, then click <strong>Find existing sessions</strong> or press Enter.</li>
+      <li>Resume the matching conversation. Read its previous messages and expand its command, file and MCP results before sending anything.</li>
+    </ol>
+    <div class="finding-note"><h3>Not in the results?</h3><p>Project search matches the exact saved working directory (<code>cwd</code>). A conversation started in <code>/projects/my-app/api</code> will not appear under <code>/projects/my-app</code>. Use that subfolder, or choose <strong>Browse existing Codex sessions</strong> in the sidebar to search across folders.</p><p>Search matches the native extracted <strong>title</strong>, not message text or tool output. Leave the title field blank to list that scope. After editing a query, submit it again; <strong>Load more</strong> continues the submitted query.</p></div>
+    <p>Prefer the terminal after finding the native thread ID? Use the same Codex home and saved folder:</p>
+    <pre id="terminal-resume-command"><code>cd /absolute/path/to/saved/project
+codex resume &lt;UUID&gt;</code></pre>
+    <p>Replace <code>&lt;UUID&gt;</code> with the saved thread ID. For a non-default home, set <code>CODEX_HOME</code> to that same path in this shell. Resume uses the CLI’s current settings and sign-in.</p>
+  </section>
+
+  <section id="task" aria-labelledby="task-title">
+    <h2 id="task-title">3. Complete one small task in your own project.</h2>
+    <p>Choose <strong>Work — native tools and edits</strong>. Paste this next task and click <strong>Run task</strong>:</p>
+    <pre id="task-command"><code>Find this project's verification command in README, run it, and report the exact command, output and exit status. Do not install dependencies or edit files.</code></pre>
+    <p>Review any native command approval. Check the actual command output and exit status alongside the summary. Keep the result in this conversation for your next visit.</p>
+  </section>
+
+  <section id="return" aria-labelledby="return-title">
+    <h2 id="return-title">4. Return to the same conversation.</h2>
+    <p>Close the browser, reopen Desk’s printed URL while its terminal is running, and choose the same named session. Closing the page leaves the backend running; <strong>Ctrl+C</strong> stops Desk and its owned native tasks.</p>
+    <p>Next time, launch without reinstalling:</p>
+    <pre id="return-command"><code>cd "$HOME/codex-desk-install"
+. .venv/bin/activate
+codex-desk</code></pre>
+    <p>Reuse the original <code>--codex</code>, <code>--codex-home</code> and <code>--state-dir</code> arguments if you supplied them. A saved, used conversation resumes its original native thread. A never-used blank conversation has no saved rollout yet.</p>
+  </section>
+
+  <section id="accounts" aria-labelledby="accounts-title">
+    <h2 id="accounts-title">Two accounts? Local history and current sign-in are different.</h2>
+    <p>Desk browses the selected <code>CODEX_HOME</code>, normally <code>~/.codex</code>. Switching personal/work sign-ins does not select a different local history folder. If both accounts used the same home, conversations can remain visible after the sign-in changes.</p>
+    <p>The saved <code>modelProvider</code> is history metadata, not a credential. A same-thread resume uses your selected current settings and their available authentication. Desk does not switch accounts for you.</p>
+    <p>If the conversation lives in another existing home, stop Desk and launch with its original path:</p>
+    <pre id="home-command"><code>codex-desk --codex-home /absolute/path/to/your/codex-home</code></pre>
+    <p>If saved history is missing, restore it or use the original home. Desk keeps the saved binding; choose <strong>Start new conversation</strong> explicitly for new work.</p>
+  </section>
+
+  <section id="handoff" aria-labelledby="handoff-title">
+    <h2 id="handoff-title">Changing provider? Review a handoff into a new thread.</h2>
+    <div class="thread-paths">
+      <p><strong>Resume</strong><span>Saved thread → same native thread<br>with selected current settings</span></p>
+      <p><strong>Reviewed handoff</strong><span>Saved evidence → distinct native thread<br>with your chosen target profile</span></p>
+    </div>
+    <p>Choose <strong>Continue with another provider</strong> in an open session, or <strong>Review handoff</strong> beside a saved conversation. Review visible messages, command/file/MCP evidence, write the next goal, and select a profile naming the endpoint and model you intend to use.</p>
+    <p><strong>Start new native conversation</strong> creates a distinct thread and keeps the original rollout intact. Reviewing the handoff does not run a model turn or compact through the old provider; encrypted reasoning is not replayed.</p>
+  </section>
+
+  <details class="protocol" id="native-fields">
+    <summary>Native list/read fields behind the search</summary>
+    <p>Field examples for an initialized app-server connection, pinned to <a href="https://github.com/openai/codex/blob/rust-v0.171.0/codex-rs/app-server-protocol/src/protocol/v2/thread.rs">Codex CLI 0.171.0’s thread protocol</a>. Desk’s <a href="https://github.com/blucca/codex-desk/blob/v0.1.0a11/codex_desk/server.py">released list adapter</a> uses:</p>
+    <pre id="list-rpc"><code>{"id":1,"method":"thread/list","params":{"limit":30,"modelProviders":[],"sortKey":"updated_at","cwd":"/home/you/projects/my-app","searchTerm":"verification"}}</code></pre>
+    <ul>
+      <li><code>cwd</code> is an exact path match; omit it for global browsing. <code>searchTerm</code> is a substring of the extracted title; Desk omits it for a blank query.</li>
+      <li><code>modelProviders: []</code> includes all recorded providers. Desk omits <code>currentAccountOnly</code>; its native default is <code>false</code>, so this local list is not restricted to the currently signed-in ChatGPT account.</li>
+      <li>Desk omits <code>archived</code> and <code>sourceKinds</code>: native defaults list non-archived, interactive history. Results arrive in <code>result.data</code>; repeat the same filters with <code>cursor: result.nextCursor</code> for the next page.</li>
+    </ul>
+    <p>A metadata-only read uses the returned thread ID, as in Desk’s <a href="https://github.com/blucca/codex-desk/blob/v0.1.0a11/codex_desk/inspect_running.py">read-only backend inspector</a>:</p>
+    <pre id="read-rpc"><code>{"id":2,"method":"thread/read","params":{"threadId":"&lt;id from result.data&gt;","includeTurns":false}}</code></pre>
+    <p><code>includeTurns: false</code> reads metadata. Desk uses <code>includeTurns: true</code> when opening saved history or reviewing handoff evidence. Neither list nor read starts an inference turn.</p>
+  </details>
+
+  <section class="guide-help" id="help" aria-labelledby="help-title">
+    <h2 id="help-title">Bring the task you want to finish.</h2>
+    <p><a class="button" href="https://github.com/blucca/codex-desk/issues/new?template=task-help.yml">Get help with one project task</a></p>
+    <p>Use the existing form for your operating system, CLI version, task, step reached and optional short redacted error. In your task description, tell us whether you completed the task and reopened the same session, or where you got stuck.</p>
+    <p><a href="https://github.com/blucca/codex-desk/blob/main/docs/task-walkthrough.md">Illustrated task-and-return walkthrough</a> · <a href="https://github.com/blucca/codex-desk">Codex Desk source &amp; installation</a></p>
+  </section>
+</main>
+<footer class="guide-footer page-width"><a href="../../">Blucca home</a><a href="../codex-provider-trial/">Optional terminal-only provider setup</a></footer>
+</body>
+</html>
