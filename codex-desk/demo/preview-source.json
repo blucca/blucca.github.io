@@ -1,0 +1,18 @@
+{
+  "source": "blucca/codex-desk",
+  "runtime_version": "0.1.0a29",
+  "sample": true,
+  "assets": [
+    "activity.js",
+    "app.js",
+    "evidence.js",
+    "followups.js",
+    "history_reader.js",
+    "home.js",
+    "index.html",
+    "native-state.js",
+    "recall.js",
+    "style.css"
+  ],
+  "build": "python3 examples/build_browser_preview.py --out OUTPUT"
+}
