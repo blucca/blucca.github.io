@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Find an old Codex answer | Blucca</title>
+  <meta name="description" content="Search a phrase from your local Codex history. Read the original answer and tool results, even when the old project folder is gone. Continue separately.">
+  <link rel="canonical" href="https://blucca.github.io/guides/find-old-codex-answer/">
+  <meta property="og:title" content="Find an old Codex answer">
+  <meta property="og:description" content="Remember a phrase, find its original conversation, and read the answer before continuing the task.">
+  <meta property="og:type" content="article"><meta property="og:url" content="https://blucca.github.io/guides/find-old-codex-answer/">
+  <meta property="og:image" content="https://blucca.github.io/assets/codex-desk/find-answer-poster.png">
+  <meta property="og:image:alt" content="Synthetic checkout example: Codex Desk opens the original retry-budget answer in its read-only history reader.">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+  <link rel="stylesheet" href="../../homepage.css">
+  <link rel="stylesheet" href="../resume-codex-conversation/guide.css">
+  <style>
+    .answer-demo{width:min(480px,100%);margin:28px auto 0}
+    .answer-demo img{width:100%;height:auto;border:1px solid var(--line);border-radius:12px}
+    .answer-demo figcaption{margin-top:12px;color:var(--muted);font-size:13px;line-height:1.6}
+    .answer-choice{margin-top:24px}
+    .answer-choice h3{margin-top:24px}
+  </style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="site-header page-width">
+  <a class="wordmark" href="../../" aria-label="Blucca home">blucca<span aria-hidden="true">✳</span></a>
+  <nav aria-label="Guide navigation"><a href="#find">Find the answer</a><a href="#continue">Continue</a><a href="#help">Task help</a></nav>
+</header>
+<main id="main" class="guide page-width">
+  <section class="guide-hero" aria-labelledby="guide-title">
+    <p class="hero-eyebrow">Codex Desk / Local conversation history</p>
+    <h1 id="guide-title">Find an old Codex answer.</h1>
+    <p class="guide-intro">Remember the decision, but not the conversation title? Search a phrase from your saved work. Read the original answer and tool results—even if the old project folder is gone.</p>
+    <div class="hero-actions"><a class="button" href="https://github.com/blucca/codex-desk#install-the-preview">Install Codex Desk</a><a class="text-link" href="#find">Already installed? Find the answer</a></div>
+    <p class="version">Free local workbench · Existing Codex CLI and sign-in · Python 3.11+</p>
+    <figure class="answer-demo">
+      <img src="../../assets/codex-desk/find-answer.gif" width="480" height="856" alt="Codex Desk workflow: open content search, index existing local history, search retry budget, and read the original answer.">
+      <figcaption>Synthetic checkout example: index local history, search <code>retry budget</code>, and read the original answer. A 20-second loop.</figcaption>
+    </figure>
+  </section>
+
+  <ol class="task-route" aria-label="Find and read an old answer">
+    <li><strong>Index</strong><span>Your existing local history</span></li>
+    <li><strong>Search</strong><span>A phrase you remember</span></li>
+    <li><strong>Read</strong><span>The original evidence</span></li>
+    <li><strong>Choose</strong><span>Continue when ready</span></li>
+  </ol>
+
+  <section id="find" aria-labelledby="find-title">
+    <h2 id="find-title">Find the answer, not its title.</h2>
+    <p>Launch Desk with your usual Codex home and open its printed local browser URL. The installation instructions above contain the current one-command launcher and the Python alternative.</p>
+    <ol class="instructions">
+      <li>On the first screen, choose <strong>Find a decision in past work</strong>. In an open project, use <strong>Search saved content</strong> in the sidebar.</li>
+      <li>Choose <strong>Index existing Codex history</strong>. This explicitly reads your recent native conversations into Desk’s local cache. Wait for the scan to finish.</li>
+      <li>In <strong>Saved content query</strong>, enter a phrase from the answer or command output—such as <code>retry budget</code>—then choose <strong>Search</strong>. Keep <strong>All indexed projects</strong> when you do not remember its folder.</li>
+      <li>Check the matching conversation, folder and snippet. Choose <strong>Read original conversation</strong> to open the exact original turn and item, with the saved phrase highlighted.</li>
+    </ol>
+    <p>Search is literal and case-insensitive, with Unicode forms normalized. It searches readable messages and tool evidence, not just conversation titles.</p>
+    <div class="finding-note"><h3>The project folder is gone?</h3><p>You can still read its saved conversation. Reading the original history does not import or resume the task, and leaves your selected project and draft unchanged. The folder is needed only when you choose to continue work there.</p></div>
+  </section>
+
+  <section id="read" aria-labelledby="read-title">
+    <h2 id="read-title">Read the result in context.</h2>
+    <p>The reader shows the original messages and command, file or tool evidence. Expand a command to inspect its reported output and exit status. Use <strong>Previous items</strong> and <strong>Next items</strong> for other pages; <strong>Earlier text</strong> and <strong>Later text</strong> reveal longer output.</p>
+    <p><strong>Back to search</strong> returns to the same query and results. If a read fails, <strong>Retry read</strong> tries that original conversation again.</p>
+  </section>
+
+  <section id="continue" aria-labelledby="continue-title">
+    <h2 id="continue-title">Continue only when you want to.</h2>
+    <div class="thread-paths">
+      <p><strong>Read original conversation</strong><span>Inspect the saved answer and evidence.<br>Your active task stays as it is.</span></p>
+      <p><strong>Continue this conversation</strong><span>Open the same native thread.<br>Its saved project folder must exist.</span></p>
+    </div>
+    <p>To work on the original task, choose <strong>Back to search</strong>, then <strong>Continue this conversation</strong> on the matching native result. Desk resumes that thread with <strong>Current Codex settings</strong>.</p>
+    <p>Write the next instruction and wait for <strong>Draft saved locally</strong>, or choose <strong>Save as follow-up</strong>. Send it with <strong>Run task</strong> or <strong>Send next</strong> when ready. Relaunch Desk with the same state directory to recover your preparation.</p>
+    <p>If the old folder no longer exists, use the useful decision in an available project instead of continuing the missing workspace.</p>
+  </section>
+
+  <details class="protocol" id="history-coverage">
+    <summary>What gets searched, and what gets read?</summary>
+    <p>Each index pass reads up to 200 recently updated conversations from the selected Codex home. <strong>Index coverage and text limits</strong> reports the local cache’s coverage. Repeating the scan refreshes this recent window and skips unchanged conversations.</p>
+    <p>A search reads the local cache. <strong>Read original conversation</strong> makes a fresh native history read for that exact thread:</p>
+    <pre><code>{"method":"thread/read","params":{"threadId":"&lt;saved-thread-id&gt;","includeTurns":true}}</code></pre>
+    <p>This read is independent of the saved working directory. Native resume is a separate operation, and sending the next instruction starts a separate task turn. The reader displays 40 original items per page and up to 20,000 text characters per item window, with controls to read the remaining text.</p>
+    <p><a href="https://github.com/blucca/codex-desk/blob/main/docs/find-past-answer.md">Full history-search and reader reference</a>.</p>
+  </details>
+
+  <section class="guide-help" id="help" aria-labelledby="help-title">
+    <h2 id="help-title">Tell us which answer you needed.</h2>
+    <p>Did you find the decision and read its original evidence? If a step blocked you, tell us your operating system, CLI version and the step reached. A short error excerpt with private details removed is enough.</p>
+    <p><a class="button" href="https://github.com/blucca/codex-desk/issues/new?template=task-help.yml">Ask for workflow help</a></p>
+  </section>
+</main>
+<footer class="guide-footer page-width"><a href="../../">Blucca home</a><a href="../resume-codex-conversation/">Find a conversation by title</a><a href="https://github.com/blucca/codex-desk">Codex Desk source</a></footer>
+</body>
+</html>
