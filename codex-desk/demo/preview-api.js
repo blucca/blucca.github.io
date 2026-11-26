@@ -97,6 +97,11 @@
   };
   window.DeskBrowserPreview={storageKey,sessionKey,requests,snapshot:()=>copy(state),reset:()=>{resetting=true;localStorage.removeItem(storageKey);localStorage.removeItem(sessionKey);location.reload();}};
   document.addEventListener('DOMContentLoaded',()=>{
+    document.getElementById('preview-start').onclick=()=>{
+      const home=document.getElementById('welcome');
+      document.getElementById(home.hidden?'search-saved-content':'home-content').click();
+      const input=document.getElementById('recall-query');input.value='retry budget';input.dispatchEvent(new Event('input',{bubbles:true}));input.focus();
+    };
     document.getElementById('preview-reset').onclick=window.DeskBrowserPreview.reset;
     for(const id of ['home-project'])document.getElementById(id).hidden=true;
     document.getElementById('send').addEventListener('click',e=>{e.preventDefault();location.assign('https://github.com/blucca/codex-desk#install-the-preview');});
