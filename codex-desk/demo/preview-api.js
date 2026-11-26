@@ -37,6 +37,8 @@
   }
   function handle(path,method,data,params){
     const post=method==='POST';
+    if(['/api/native','/api/native/thread','/api/history/index','/api/recall','/api/import','/api/open'].includes(path) && !Array.isArray(threads))
+      throw new Error('Sample histories did not load. Reload this page to try again.');
     if(path==='/api/state')return {sessions:state.sessions,profiles:[{id:'default',name:'Sample settings',provider:'sample',model:'preparation-only'}],pending:{},projects:[]};
     if(path==='/api/native'){
       let rows=threads.map(({turns,...metadata})=>metadata);const term=params.get('search'),cwd=params.get('cwd');
