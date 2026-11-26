@@ -1,6 +1,13 @@
 /* Sample-only API for the maintained Desk UI. Nothing leaves this static preview. */
 (()=>{
   'use strict';
+  // Capture before the maintained app defines its same-session open() helper.
+  const openExternal=window.open.bind(window);
+  const install=()=>{
+    const url='https://github.com/blucca/codex-desk#install-the-preview';
+    if(document.documentElement.dataset.previewEmbedded==='true')openExternal(url,'_blank','noopener');
+    else location.assign(url);
+  };
   const storageKey='codex-desk-browser-preview-v1',sessionKey='codex-desk-browser-preview-session-v1';
   const threads=window.DeskPreviewThreads, copy=v=>JSON.parse(JSON.stringify(v));
   const blank=()=>({sessions:[],indexed:false,drafts:{},followups:{},nextId:1});
@@ -104,7 +111,7 @@
     };
     document.getElementById('preview-reset').onclick=window.DeskBrowserPreview.reset;
     for(const id of ['home-project'])document.getElementById(id).hidden=true;
-    document.getElementById('send').addEventListener('click',e=>{e.preventDefault();location.assign('https://github.com/blucca/codex-desk#install-the-preview');});
-    document.getElementById('followup-send').addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();location.assign('https://github.com/blucca/codex-desk#install-the-preview');},true);
+    document.getElementById('send').addEventListener('click',e=>{e.preventDefault();install();});
+    document.getElementById('followup-send').addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();install();},true);
   });
 })();

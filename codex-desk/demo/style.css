@@ -99,6 +99,7 @@ aside{min-width:0}
 #recall-indexing{padding:12px 14px;margin:16px 0;border:1px solid #344356;border-radius:8px;background:#17212c}
 #recall-indexing h3{margin:0;font-size:14px}#recall-indexing p{margin:8px 0;font-size:12px}
 #recall-indexing .actions{flex-wrap:wrap;justify-content:flex-start}#recall-indexing button{font-size:12px;max-width:100%;overflow-wrap:anywhere}
+#recall-actions{flex-wrap:wrap}#recall-actions .recall-index-primary{font-size:12px;max-width:100%;overflow-wrap:anywhere;background:#29765c;border-color:#429a7d}
 #recall-index-status,#recall-native-coverage{white-space:pre-wrap;overflow-wrap:anywhere}#recall-index-error{color:#ffccd0;overflow-wrap:anywhere}
 #home-content{background:#203e39;border-color:#3b7767}#home-content:focus-visible{outline:2px solid #8cddc3;outline-offset:3px}
 #recall-index-coverage{margin:10px 0;font-size:12px}#recall-index-coverage summary{cursor:pointer;color:#a6d4c3}#recall-index-coverage summary:focus-visible{outline:2px solid #8cddc3;outline-offset:3px}

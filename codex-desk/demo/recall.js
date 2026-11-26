@@ -5,6 +5,7 @@ const DeskRecall=(()=>{
   let searching=false, resultOpening=false, projectSignature='', target=null, pendingNavigation=null;
   let scanVersion=0, scanTimer=null, scanBusy=false, scanReading=false, scanReady=false, scanIssue=false, scanJob=null;
   let scanRefresh=null, lastSearch=null;
+  let nativeIndexedThreads=null, indexPromoted=false, emptySearch=false;
   const nativeProjects=new Set();
   const query=()=>({q:el('recall-query').value.trim(),cwd:el('recall-project').value,archived:el('recall-archived').checked});
   const sameQuery=(a,b)=>a.q===b.q && a.cwd===b.cwd && a.archived===b.archived;
@@ -32,7 +33,7 @@ const DeskRecall=(()=>{
   }
   function invalidate(){
     ++searchVersion;++openVersion;++navigationVersion;searching=false;resultOpening=false;pendingNavigation=null;
-    lastSearch=null;if(scanRefresh)scanRefresh.search=null;
+    lastSearch=null;emptySearch=false;if(scanRefresh)scanRefresh.search=null;
     el('recall-error').hidden=true;el('recall-results').replaceChildren();
     el('recall-summary').textContent='Query changed. Choose Search to update saved content.';buttons();
   }
@@ -56,6 +57,27 @@ const DeskRecall=(()=>{
     el('recall-native-coverage').textContent=['Local native cache: '+counts.join(' · '),limits.length?'Text limits: '+limits.join(' · ')+'. Newest readable items are retained first.':'',
       'Coverage describes supplied native reads. An unchanged active search refreshes once after an explicit scan; choose Search after editing the query or reading existing results.'].filter(Boolean).join('\n');
   }
+  function indexContext(){
+    // Only the global scan response can identify a fresh cache. A project-scoped
+    // search with zero indexed threads must not turn an existing index into first use.
+    const fresh=scanReady && !scanIssue && nativeIndexedThreads===0 && scanJob?.status==='idle';
+    const promoted=fresh || (indexPromoted && scanReady && !scanIssue && scanJob?.status==='running');
+    const button=el('recall-index'),parent=el(promoted?'recall-actions':'recall-index-actions');
+    if(button.parentElement!==parent){
+      const focused=document.activeElement===button;parent.prepend(button);
+      if(focused)button.focus({preventScroll:true});
+    }
+    indexPromoted=promoted;button.classList.toggle('recall-index-primary',promoted);
+    if(!emptySearch || searching || !lastSearch || !current(lastSearch.version,lastSearch.scope))return;
+    el('recall-summary').textContent=fresh
+      ? 'Native history is not indexed yet. Choose Index existing Codex history to search it.'
+      : scanReady && !scanIssue && scanJob?.status==='running'
+        ? 'No cached matches yet. Existing Codex history is being indexed.'
+        : 'No saved content matches this query in the selected scope.';
+  }
+  function globalCoverage(value){
+    nativeIndexedThreads=Number.isFinite(value?.indexed_threads)?value.indexed_threads:null;
+  }
   function scanButtons(){
     const active=scanJob?.status==='running';
     el('recall-index').disabled=scanBusy || scanReading || !scanReady || active;
@@ -64,6 +86,7 @@ const DeskRecall=(()=>{
     el('recall-index-retry').hidden=!(scanIssue || ['cancelled','failed'].includes(scanJob?.status) || scanJob?.failed>0);
     el('recall-index-retry').disabled=scanBusy || scanReading || (active && !scanIssue);
     el('recall-indexing').setAttribute('aria-busy',String(scanBusy || scanReading || active));
+    indexContext();
   }
   function scanStatus(job){
     if(!job || typeof job.status!=='string')return;
@@ -96,7 +119,7 @@ const DeskRecall=(()=>{
     try{
       const data=await options.api('/api/history/index');
       if(version!==scanVersion || !el('recall').open)return;
-      scanReady=true;scanIssue=false;el('recall-index-error').hidden=true;scanStatus(data.job);nativeCoverage(data.coverage);refreshAfterScan();
+      scanReady=true;scanIssue=false;el('recall-index-error').hidden=true;globalCoverage(data.coverage);scanStatus(data.job);nativeCoverage(data.coverage);refreshAfterScan();
       if(scanJob?.status==='running')scanTimer=setTimeout(readScan,750);
     }catch(error){if(version===scanVersion && el('recall').open){
       scanIssue=true;scanReady=false;el('recall-index-error').textContent=error.message;el('recall-index-error').hidden=false;
@@ -112,7 +135,7 @@ const DeskRecall=(()=>{
     try{
       const data=await options.api('/api/history/index'+(cancel?'/cancel':''),cancel?{}:{limit:200});
       if(version!==scanVersion || !el('recall').open)return;
-      scanStatus(data.job || data);refreshAfterScan();
+      if(data.coverage)globalCoverage(data.coverage);scanStatus(data.job || data);refreshAfterScan();
     }catch(error){if(version===scanVersion && el('recall').open){
       scanIssue=true;scanReady=false;el('recall-index-error').textContent=error.message;el('recall-index-error').hidden=false;
     }}finally{
@@ -160,6 +183,7 @@ const DeskRecall=(()=>{
       el('recall-error').hidden=false;el('recall-query').focus();return;
     }
     const version=++searchVersion;++openVersion;++navigationVersion;pendingNavigation=null;resultOpening=false;searching=true;
+    emptySearch=false;
     lastSearch={version,scope,navigation:navigationVersion,selected:options.selected(),generation:options.generation()};
     if(scanRefresh)scanRefresh.search=lastSearch;
     el('recall-error').hidden=true;el('recall-results').replaceChildren();
@@ -173,6 +197,7 @@ const DeskRecall=(()=>{
       for(const result of rows)if(result.kind==='native-activity' && result.cwd)nativeProjects.add(result.cwd);projects();
       el('recall-results').replaceChildren(...rows.map(result=>resultRow(result,version,scope)));
       const total=Number.isFinite(data.total)?data.total:rows.length;
+      emptySearch=rows.length===0;
       el('recall-summary').textContent=rows.length
         ? `Showing ${rows.length} of ${total} matching item${total===1?'':'s'}.`+(data.truncated?' More matches exist — narrow the query or project.':'')
         : 'No saved content matches this query in the selected scope.';
@@ -180,7 +205,7 @@ const DeskRecall=(()=>{
     }catch(error){if(current(version,scope)){
       el('recall-summary').textContent='Saved content could not be searched. Choose Search to retry.';
       el('recall-error').textContent=error.message;el('recall-error').hidden=false;
-    }}finally{if(current(version,scope)){searching=false;buttons();refreshAfterScan();}}
+    }}finally{if(current(version,scope)){searching=false;buttons();indexContext();refreshAfterScan();}}
   }
   function targetFor(result){
     const matches=node=>node && typeof result.match_text==='string' && result.match_text &&
