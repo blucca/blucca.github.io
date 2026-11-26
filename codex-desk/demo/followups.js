@@ -30,7 +30,7 @@ const DeskFollowups=(()=>{
         if(editing.revision!==entry.revision){const notice=options.make('p','This entry changed in another tab. Your edit is kept here. Cancel edit to load the latest saved version.','muted');row.append(notice);}
       }else{
         row.append(options.make('pre',entry.text));const actions=options.make('div','','actions');
-        actions.append(button('Edit',()=>{editors.set(id,{id:entry.id,text:entry.text,mode:entry.mode,revision:entry.revision});draw(true);},pending));
+        actions.append(button('Edit',()=>{editors.set(id,{id:entry.id,text:entry.text,mode:entry.mode,revision:entry.revision});draw(true);},pending || data.entries.some(e=>e.id===editing?.id)));
         actions.append(button('Remove',()=>mutate(id,'remove',{id:entry.id,revision:entry.revision}).catch(e=>showError(id,e)),pending || entry.state!=='queued'));
         const entries=data.entries;
         for(const [label,delta] of [['Move up',-1],['Move down',1]]){
