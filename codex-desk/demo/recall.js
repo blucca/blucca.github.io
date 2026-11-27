@@ -92,11 +92,14 @@ const DeskRecall=(()=>{
     nativeIndexedThreads=Number.isFinite(value?.indexed_threads)?value.indexed_threads:null;
   }
   function scanButtons(){
-    const active=scanJob?.status==='running';
-    el('recall-index').disabled=scanBusy || scanReading || !scanReady || active;
-    el('recall-index').textContent=scanJob?.status==='completed'?'Index existing history again':'Index existing Codex history';
+    const active=scanJob?.status==='running',blocked=scanBusy || scanReading || !scanReady || active;
+    el('recall-index').disabled=blocked;
+    el('recall-index').textContent=scanJob && scanJob.status!=='idle'?'Refresh recent history':'Index existing Codex history';
+    el('recall-index-older').hidden=!(scanReady && !scanIssue && scanJob?.older_available);
+    el('recall-index-older').disabled=blocked;
     el('recall-index-cancel').hidden=!active;el('recall-index-cancel').disabled=scanBusy;
-    el('recall-index-retry').hidden=!(scanIssue || ['cancelled','failed'].includes(scanJob?.status) || scanJob?.failed>0);
+    el('recall-index-retry').hidden=!(scanIssue || (!active && (scanJob?.resumable || scanJob?.retryable_failures>0)));
+    el('recall-index-retry').textContent=scanIssue?'Retry':scanJob?.resumable?'Continue indexing':'Retry unread histories';
     el('recall-index-retry').disabled=scanBusy || scanReading || (active && !scanIssue);
     el('recall-indexing').setAttribute('aria-busy',String(scanBusy || scanReading || active));
     indexContext();
@@ -104,13 +107,16 @@ const DeskRecall=(()=>{
   function scanStatus(job){
     if(!job || typeof job.status!=='string')return;
     scanJob=job;
-    if(scanRefresh){if(job.status==='completed')scanRefresh.completed=true;else if(['cancelled','failed'].includes(job.status))scanRefresh=null;}
-    const label={idle:'History has not been indexed.',running:'Indexing existing Codex history…',completed:'Recent history scan completed.',cancelled:'Indexing cancelled. Already cached items are kept.',failed:'History indexing failed. Choose Retry.'}[job.status] || 'History indexing status unavailable.';
+    if(scanRefresh){if(job.status==='completed')scanRefresh.completed=true;else if(['cancelled','failed','paused'].includes(job.status))scanRefresh=null;}
+    const mode=job.mode==='older'?'older history':job.mode==='retry'?'unread history':'recent history';
+    const label={idle:'History has not been indexed.',running:'Indexing '+mode+'…',completed:mode[0].toUpperCase()+mode.slice(1)+' scan completed.',cancelled:'Indexing cancelled. Cached items and the unread page are kept.',paused:'Indexing paused after Desk stopped. Choose Continue indexing.',failed:'History indexing failed. Choose Retry.'}[job.status] || 'History indexing status unavailable.';
     const counts=[['seen','seen'],['indexed','indexed'],['skipped','unchanged'],['failed','failed']]
       .filter(([key])=>Number.isFinite(job[key])).map(([key,text])=>job[key]+' '+text).join(' · ');
     el('recall-index-status').textContent=[label,job.status==='idle'?'':counts,
       job.status!=='idle' && Number.isFinite(job.limit)?'This pass reads at most '+job.limit+' native conversations.':'',
-      job.has_more?'More native history exists beyond this pass. This is a bounded recent-history cache.':''].filter(Boolean).join('\n');
+      job.status!=='running' && job.resumable?'Unread progress is saved. Choose Continue indexing to finish this pass.':
+      job.older_available?'More native history exists beyond this pass. Choose Index next older conversations to continue explicitly.':
+      job.has_more && job.status==='completed'?'This recent pass is bounded; the retained older continuation has reached the end.':''].filter(Boolean).join('\n');
     if(job.error){el('recall-index-error').textContent=job.error;el('recall-index-error').hidden=false;}
     scanButtons();
   }
@@ -139,14 +145,14 @@ const DeskRecall=(()=>{
       el('recall-index-status').textContent='History status could not be read. Choose Retry to check it again.';
     }}finally{if(version===scanVersion){scanReading=false;scanButtons();}}
   }
-  async function controlScan(cancel=false){
-    if(scanBusy || !el('recall').open || (!cancel && (!scanReady || scanJob?.status==='running')))return;
+  async function controlScan(cancel=false,op='recent'){
+    if(scanBusy || !el('recall').open || (!cancel && (!scanReady || scanJob?.status==='running')) || (!cancel && op==='older' && !scanJob?.older_available))return;
     stopScanPolling();const version=++scanVersion;scanBusy=true;scanReading=false;scanIssue=false;
     scanRefresh=cancel?null:{search:lastSearch,completed:false};
     el('recall-index-error').hidden=true;scanButtons();
     el('recall-index-status').textContent=cancel?'Cancelling after the current native read…':'Starting a local history scan…';
     try{
-      const data=await options.api('/api/history/index'+(cancel?'/cancel':''),cancel?{}:{limit:200});
+      const data=await options.api('/api/history/index'+(cancel?'/cancel':''),cancel?{}:{limit:200,op});
       if(version!==scanVersion || !el('recall').open)return;
       if(data.coverage)globalCoverage(data.coverage);scanStatus(data.job || data);refreshAfterScan();
     }catch(error){if(version===scanVersion && el('recall').open){
@@ -348,7 +354,8 @@ const DeskRecall=(()=>{
     options=value;projects();
     el('search-saved-content').onclick=show;el('home-content').onclick=show;
     el('recall-index').onclick=()=>controlScan();el('recall-index-cancel').onclick=()=>controlScan(true);
-    el('recall-index-retry').onclick=()=>scanIssue?readScan():controlScan();
+    el('recall-index-older').onclick=()=>controlScan(false,'older');
+    el('recall-index-retry').onclick=()=>scanIssue?readScan():controlScan(false,'retry');
     el('recall-form').onsubmit=event=>{event.preventDefault();search();};
     const previous=el('recall-previous'),next=el('recall-next');
     if(previous)previous.onclick=()=>{if(resultPage && !previous.disabled)search(Math.max(0,resultPage.offset-resultPage.limit),true);};

@@ -22,7 +22,7 @@
   const draftView=d=>({text:d.text,mode:d.mode,revision:d.revision});
   const conflict=current=>{const error=new Error('Sample draft changed elsewhere. Choose Keep mine or Load saved.');error.status=409;error.current=draftView(current);throw error;};
   const coverage=()=>({indexed_threads:state.indexed?3:0,indexed_items:state.indexed?6:0,truncated_threads:0,omitted_items:0,unsupported_items:0,invalid_items:0,max_thread_items:5000,max_thread_chars:2000000,max_item_chars:200000});
-  const job=()=>({id:'sample-index-1',status:state.indexed?'completed':'idle',seen:state.indexed?3:0,indexed:state.indexed?3:0,skipped:0,failed:0,limit:200,has_more:false});
+  const job=()=>({id:'sample-index-1',status:state.indexed?'completed':'idle',mode:'recent',seen:state.indexed?3:0,indexed:state.indexed?3:0,skipped:0,failed:0,limit:200,has_more:false,older_available:false,resumable:false,retryable_failures:0});
   const fold=text=>String(text).normalize('NFKC').toLowerCase();
   function search(params){
     const q=(params.get('q') || '').trim(),needle=fold(q),cwd=params.get('cwd');const results=[];
@@ -48,7 +48,14 @@
     }
     if(path==='/api/native/thread')return thread(params.get('id'));
     if(path==='/api/history/index'){
-      if(post){state.indexed=true;save();}return {job:job(),coverage:coverage()};
+      if(post){
+        const op=data.op===undefined?'recent':data.op;
+        if(!['recent','older','retry'].includes(op))throw new Error('Choose recent refresh, older continuation or explicit retry.');
+        if(op==='older')throw new Error('All three sample histories fit the recent window. No older sample conversations remain.');
+        if(op==='retry')throw new Error('No sample indexing pass or failed history read remains to retry.');
+        state.indexed=true;save();
+      }
+      return {job:job(),coverage:coverage(),projects:state.indexed?threads.map(t=>t.cwd).sort():[]};
     }
     if(path==='/api/recall')return search(params);
     if(path==='/api/preparation'){

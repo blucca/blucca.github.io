@@ -105,7 +105,7 @@ aside{min-width:0}
 #recall-index-coverage{margin:10px 0;font-size:12px}#recall-index-coverage summary{cursor:pointer;color:#a6d4c3}#recall-index-coverage summary:focus-visible{outline:2px solid #8cddc3;outline-offset:3px}
 
 /* Read-only native transcript, independent of the selected workbench. */
-#history-reader{width:min(1000px,95vw);max-height:92vh;padding:22px;overflow:hidden}
+#history-reader{width:min(1000px,95vw);max-height:92vh;padding:22px;overflow-x:hidden;overflow-y:auto}
 #history-reader[open]{display:flex;flex-direction:column;gap:0;min-width:0}
 .history-reader-heading{display:flex;justify-content:space-between;align-items:start;gap:12px}
 #history-reader-title{font-size:19px;line-height:1.4;overflow-wrap:anywhere;margin:0;min-width:0}
@@ -135,3 +135,11 @@ aside{min-width:0}
 @media(max-width:600px){.history-reader-find-input{flex-wrap:wrap}.history-reader-find-input input{flex-basis:100%}.history-reader-find .actions button{flex:1}}
 
 .history-reader-evidence-controls{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}.history-reader-copy-status{flex-basis:100%;margin:.1rem 0}#preparation{width:min(860px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto}#preparation textarea,#preparation select{width:100%;box-sizing:border-box}#preparation .actions{flex-wrap:wrap}#preparation-conflict[hidden]{display:none}#preparation-list article{padding:.8rem 0;border-bottom:1px solid #d7dde5}#preparation pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:280px;overflow:auto}#preparation p{overflow-wrap:anywhere}#preparation-editor{margin-top:1rem;border-top:1px solid #d7dde5;padding-top:1rem}
+
+/* Recent inspection keeps the selected workbench and its active stream mounted. */
+#recent-work{width:min(860px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto}
+.recent-heading{display:flex;justify-content:space-between;align-items:start;gap:12px;flex-wrap:wrap}
+.recent-heading h2{margin:0}#recent-return{font-size:12px}
+#recent-selected-status{overflow-wrap:anywhere}#recent-work #welcome{margin:16px 0 0}#recent-work #welcome-title{display:none}
+#show-recent[hidden]{display:none}#show-recent:focus-visible,#recent-work button:focus-visible{outline:2px solid #8cddc3;outline-offset:3px}
+@media(max-width:760px){#recent-work{padding:18px 14px}}

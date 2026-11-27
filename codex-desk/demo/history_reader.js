@@ -259,6 +259,14 @@
     el('previous').hidden=el('next').hidden=pages===1;
     const target=body.querySelector('.history-reader-target');if(target && scroll)scrollMatch(target,ticket);
   }
+  function movePage(direction) {
+    const next=page+direction;
+    if(!source || !available() || next<0 || next*PAGE_ENTRIES>=rows.length)return;
+    page=next;manualFindNavigation();render();
+    // A page without a match still needs a keyboard destination. In
+    // particular, the final page disables the footer's Next items button.
+    if(!el('body').querySelector('.history-reader-target'))el('body').focus({preventScroll:true});
+  }
   async function read() {
     if(loading || !requested || !available())return false;
     const ticket=++version;loading=true;source=null;rows=[];
@@ -318,8 +326,8 @@
     api=value.api;
     el('back').onclick=el('close').onclick=close;
     el('retry').onclick=()=>{el('retry').disabled=true;read();};
-    el('previous').onclick=()=>{if(source && available() && page>0){--page;manualFindNavigation();render();}};
-    el('next').onclick=()=>{if(source && available() && (page+1)*PAGE_ENTRIES<rows.length){++page;manualFindNavigation();render();}};
+    el('previous').onclick=()=>movePage(-1);
+    el('next').onclick=()=>movePage(1);
     el('find-form').onsubmit=event=>{event.preventDefault();submitFind();};
     el('find-previous').onclick=()=>jumpFind(-1);el('find-next').onclick=()=>jumpFind(1);
     el('find-query').oninput=()=>{

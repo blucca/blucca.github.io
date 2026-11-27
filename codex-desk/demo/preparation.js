@@ -22,6 +22,9 @@
   function button(label,action,disabled=false){
     const node=make('button',label);node.type='button';node.disabled=disabled;node.onclick=action;return node;
   }
+  function focusEditor(){
+    if(el('').open)el(editors.get(selected)?.ready?'text':'editor-title').focus({preventScroll:true});
+  }
   function remember(){
     const editor=editors.get(selected);if(!editor?.ready)return;
     const text=el('text').value,mode=el('mode').value;
@@ -29,7 +32,7 @@
   }
   function edit(){
     remember();const editor=editors.get(selected);if(!editor)return;
-    editor.message='Unsaved edits kept for this page. Choose Save draft.';controls();
+    editor.message='Unsaved edits kept for this page. Choose Save draft or Save draft and open.';controls();
   }
   function controls(){
     el('refresh').disabled=false;el('list').setAttribute('aria-busy',String(reading));
@@ -39,7 +42,10 @@
     el('save').disabled=!ready || editor.saving || !!editor.conflict;
     el('copy').disabled=!ready || !editor.text;
     el('open').hidden=!options?.openConversation;
-    el('open').disabled=!editor || !!editor.opening;
+    el('open').disabled=!editor || editor.saving || !!editor.opening;
+    el('open').textContent=ready && changed(editor)?'Open without these edits':'Open conversation';
+    el('save-open').hidden=!options?.openConversation;
+    el('save-open').disabled=!ready || editor.saving || !!editor.conflict || !!editor.opening;
     el('conflict').hidden=!editor?.conflict;
     el('keep').disabled=el('load').disabled=!editor?.conflict || editor.saving;
     el('draft-status').textContent=editor?.conflict?'This draft changed elsewhere. Your edits are kept; choose Keep mine or Load saved.':
@@ -106,13 +112,22 @@
     }finally{if(visible(id))controls();}
   }
   function drawFollowups(editor){
-    const container=el('followups');container.replaceChildren();
+    const container=el('followups'),focus=document.activeElement;
+    const owned=container.contains(focus) && focus?.dataset?.session===editor.row.id;
+    let restore=null;
+    function action(label,callback,control,entry=null,disabled=false){
+      const node=button(label,callback,disabled);node.dataset.session=editor.row.id;node.dataset.control=control;
+      if(entry)node.dataset.followup=entry.id;
+      if(owned && focus.dataset.control===control && focus.dataset.followup===node.dataset.followup)restore=node;
+      return node;
+    }
+    container.replaceChildren();
     const reservation=editor.row.followups?.reservation;
     if(reservation){
       const box=make('section','','preparation-reservation');
       box.append(make('h4',reservation.state==='unknown'?'Start unconfirmed':'Start receipt pending'),
         make('p','Captured instruction. Open this conversation to review its activity and start receipt.','muted'),make('pre',reservation.text));
-      box.append(button('Copy captured instruction',()=>copy(editor.row.id,reservation.text,'Captured instruction')));container.append(box);
+      box.append(action('Copy captured instruction',()=>copy(editor.row.id,reservation.text,'Captured instruction'),'copy-captured'));container.append(box);
     }
     const entries=editor.row.followups?.entries || [];
     for(const entry of entries){
@@ -120,19 +135,25 @@
       const state={queued:'Prepared',reserved:'Awaiting start receipt',needs_review:'Needs start review'}[entry.state] || 'State unreported';
       box.append(make('h4',entry.order+'. '+modeLabel(entry.mode)+' · '+state),make('pre',entry.text));
       const actions=make('div','','actions');
-      actions.append(button('Copy instruction',()=>copy(editor.row.id,entry.text,'Instruction')));
-      if(entry.state==='queued')actions.append(button('Use in this session draft',()=>{
+      actions.append(action('Copy instruction',()=>copy(editor.row.id,entry.text,'Instruction'),'copy-followup',entry));
+      if(entry.state==='queued')actions.append(action('Use in this session draft',()=>{
         if(!visible(editor.row.id))return;
         remember();editor.reuse={id:entry.id,revision:entry.revision,text:entry.text,mode:entry.mode};
         editor.message='Review this destination draft, then choose Append or Replace. The follow-up stays prepared.';controls();
         el('reuse').scrollIntoView({block:'nearest'});
-      },!editor.ready));
+        el('reuse-text').focus({preventScroll:true});
+      },'reuse-followup',entry,!editor.ready));
       box.append(actions);container.append(box);
     }
     if(!entries.length && !reservation)container.append(make('p','No prepared follow-ups for this conversation.','muted'));
+    // Refresh and a save receipt replace these controls. Restore the exact
+    // session/instruction/action, never another row with the same text or ID.
+    if(owned && el('').open){if(restore && !restore.disabled)restore.focus({preventScroll:true});else focusEditor();}
   }
   function drawEditor(){
-    const editor=editors.get(selected);controls();if(!editor)return;
+    const editor=editors.get(selected);
+    const reuseEnded=!editor?.reuse && ['reuse-text','append','replace','reuse-cancel'].some(id=>document.activeElement===el(id));
+    controls();if(!editor)return;
     const row=editor.row;
     el('editor-title').textContent='Preparation in '+name(row);
     el('editor-binding').textContent=row.cwd+'\n'+options.profileLabel(row.profile)+
@@ -140,6 +161,7 @@
     if(el('text').value!==editor.text)el('text').value=editor.text;
     if(el('mode').value!==editor.mode)el('mode').value=editor.mode;
     drawFollowups(editor);
+    if(reuseEnded)focusEditor();
   }
   async function loadEditor(editor){
     if(editor.loading)return editor.loading;
@@ -165,8 +187,9 @@
       editors.set(id,editor);
     }else updateRow(row);
     drawList();drawEditor();
+    const focus=document.activeElement;
     if(!editor.ready)await loadEditor(editor);
-    if(ticket===selectionVersion && visible(id) && editor.ready)el('text').focus({preventScroll:true});
+    if(ticket===selectionVersion && visible(id) && editor.ready && document.activeElement===focus)focusEditor();
     return editor.ready;
   }
   async function refresh(){
@@ -204,7 +227,7 @@
     remember();const editor=editors.get(selected);if(!editor?.ready || editor.saving || editor.conflict)return false;
     const id=editor.row.id,captured={text:editor.text,mode:editor.mode,revision:editor.revision,sequence:editor.sequence};
     if(captured.text.length>200000){editor.message='Draft exceeds 200,000 characters. Shorten it before saving.';controls();return false;}
-    editor.saving=true;editor.message='Saving draft…';el('error').hidden=true;controls();
+    editor.saving=true;editor.openReady=true;editor.message='Saving draft…';el('error').hidden=true;controls();
     try{
       const next=draft(await options.api('/api/draft',{session:id,...captured,writer}));
       ++saveVersion;
@@ -212,7 +235,14 @@
       if(!editor.conflict || editor.conflict.revision<=next.revision)editor.conflict=null;
       editor.message=changed(editor)?'Saved the reviewed draft. Newer edits are kept; choose Save draft again.':'Draft saved locally. Nothing has been sent.';
       editor.row={...editor.row,draft:next.text?next:null};if(rows.has(id))rows.set(id,editor.row);
-      if(options.onSaved){try{await options.onSaved(id,next);}catch(e){editor.message='Draft saved locally. Workbench refresh failed: '+e.message;}}
+      if(options.onSaved){
+        try{
+          if(await options.onSaved(id,next)===false){
+            editor.openReady=false;
+            editor.message='Draft saved locally. The conversation has other unsaved edits; open it to review the draft conflict.';
+          }
+        }catch(e){editor.openReady=false;editor.message='Draft saved locally. Workbench refresh failed: '+e.message;}
+      }
       if(visible(id))drawList();return true;
     }catch(e){
       if(e.status===409 && e.current){try{editor.conflict=draft(e.current);editor.message='Draft changed elsewhere. Your edits are kept.';}catch(invalid){editor.message=invalid.message;}}
@@ -238,22 +268,54 @@
   }
   function keepMine(){
     remember();const editor=editors.get(selected);if(!editor?.conflict || editor.saving)return;
-    editor.saved=editor.conflict;editor.revision=editor.conflict.revision;editor.conflict=null;++editor.sequence;return save();
+    const returnFocus=document.activeElement===el('keep');
+    editor.saved=editor.conflict;editor.revision=editor.conflict.revision;editor.conflict=null;++editor.sequence;
+    if(returnFocus)focusEditor();return save();
   }
   function loadSaved(){
     const editor=editors.get(selected);if(!editor?.conflict || editor.saving)return;
+    const returnFocus=document.activeElement===el('load');
     const current=editor.conflict;Object.assign(editor,current,{saved:current,conflict:null});++editor.sequence;
     editor.message='Saved draft loaded by your choice. Nothing has been sent.';drawEditor();
+    if(returnFocus)focusEditor();
+  }
+  function cancelReuse(){
+    const editor=editors.get(selected);if(!editor)return;
+    const reuse=editor.reuse,returnFocus=document.activeElement===el('reuse-cancel');editor.reuse=null;controls();
+    if(returnFocus){
+      const source=[...el('followups').querySelectorAll('button')].find(node=>node.dataset.session===editor.row.id &&
+        node.dataset.followup===reuse?.id && node.dataset.control==='reuse-followup' && !node.disabled);
+      if(source)source.focus({preventScroll:true});else focusEditor();
+    }
   }
   async function openConversation(){
-    remember();const editor=editors.get(selected);if(!editor || editor.opening || !options.openConversation)return;
-    const id=editor.row.id;editor.opening=true;controls();
+    remember();const editor=editors.get(selected);if(!editor || editor.saving || editor.opening || !options.openConversation)return;
+    const id=editor.row.id,sequence=editor.sequence,reviewVersion=selectionVersion;editor.opening=true;controls();
     try{
       const result=await options.openConversation(id);
       if(result===false || result?.error)throw result?.error || new Error('The conversation could not be opened. Local preparation is kept.');
-      if(visible(id))el('').close();
+      if(visible(id)){
+        if(selectionVersion===reviewVersion && editor.sequence===sequence)el('').close();
+        else editor.message=editor.sequence!==sequence?
+          'Conversation opened with the saved draft. Newer edits are kept here; choose Save draft to keep them.':
+          'Conversation opened. Your current preparation review is kept.';
+      }
     }catch(e){error(e.message,id);}
     finally{editor.opening=false;if(visible(id))controls();}
+  }
+  async function saveAndOpen(){
+    remember();const editor=editors.get(selected);
+    if(!editor?.ready || editor.saving || editor.opening || editor.conflict || !options.openConversation)return false;
+    const id=editor.row.id,sequence=editor.sequence,reviewVersion=selectionVersion;
+    if(!await save() || !editor.openReady)return false;
+    // Saving is local; a late reply is never permission to leave another
+    // review or to open a draft that has gained newer edits in the meantime.
+    if(!visible(id) || selectionVersion!==reviewVersion || editor.sequence!==sequence || editor.conflict || changed(editor)){
+      if(editor.sequence===sequence && !editor.conflict && !changed(editor))
+        editor.message='Draft saved locally. Return to this preparation to open it when ready.';
+      if(visible(id))controls();return false;
+    }
+    return openConversation();
   }
   function show(){
     if(!options)throw new Error('Prepared work is not configured.');
@@ -267,8 +329,9 @@
     el('save').onclick=save;el('copy').onclick=()=>{remember();const editor=editors.get(selected);if(editor?.ready)return copy(selected,editor.text,'Draft text');};
     el('keep').onclick=keepMine;el('load').onclick=loadSaved;
     el('append').onclick=()=>reuse(false);el('replace').onclick=()=>reuse(true);
-    el('reuse-cancel').onclick=()=>{const editor=editors.get(selected);if(editor){editor.reuse=null;controls();}};
+    el('reuse-cancel').onclick=cancelReuse;
     el('open').onclick=openConversation;
+    el('save-open').onclick=saveAndOpen;
     el('').addEventListener('close',()=>{remember();++listVersion;++selectionVersion;reading=false;});
     controls();
   }
