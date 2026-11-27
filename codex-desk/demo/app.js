@@ -590,14 +590,92 @@ async function nativeList(cursor=null) {
   }
 }
 function fillProfiles(select) {select.replaceChildren(...state.profiles.map(p=>{const n=make('option',p.name);n.value=p.id;return n;}));}
-let handoffSource=null;
-// Canceled next-task preparation belongs to its source, not the shared dialog.
-const handoffGoals=new Map(), handoffEvidence=new Map();
-$('handoff-goal').oninput=()=>{if(handoffSource)handoffGoals.set(handoffSource,$('handoff-goal').value);};
-$('handoff-text').oninput=()=>{if(handoffSource)handoffEvidence.set(handoffSource,$('handoff-text').value);};
+let handoffSource=null,handoffVersion=0,handoffVisible=false;
+const handoffStarts=new Set(),handoffRequests=new Map();
+const handoffTokenKey='codex-desk-handoff-requests';
+// Only opaque request IDs survive a reload. Reviewed work stays in page memory
+// and the private server receipt, never in browser storage.
+const handoffTokens=new Map();
+try{for(const [source,token] of Object.entries(JSON.parse(sessionStorage.getItem(handoffTokenKey) || '{}'))){
+  if(source && typeof token==='string' && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(token))handoffTokens.set(source,token);
+}}catch(e){}
+function saveHandoffTokens(){sessionStorage.setItem(handoffTokenKey,JSON.stringify(Object.fromEntries(handoffTokens)));}
+function handoffRequest(source){
+  if(!handoffRequests.has(source) && handoffTokens.has(source))handoffRequests.set(source,{source,token:handoffTokens.get(source),body:null,result:null,receiptVersion:0});
+  return handoffRequests.get(source);
+}
+// Canceled preparation belongs to its source, not the shared dialog.
+const handoffGoals=new Map(),handoffEvidence=new Map(),handoffScopes=new Map(),handoffEdits=new Map();
+function rememberHandoff(){
+  if(!handoffSource)return;
+  handoffGoals.set(handoffSource,$('handoff-goal').value);handoffEvidence.set(handoffSource,$('handoff-text').value);
+  handoffScopes.set(handoffSource,{cwd:$('handoff-cwd').value,profile:$('handoff-profile').value});
+  handoffEdits.set(handoffSource,(handoffEdits.get(handoffSource) || 0)+1);
+}
+$('handoff-goal').oninput=rememberHandoff;$('handoff-text').oninput=rememberHandoff;
+$('handoff-cwd').oninput=rememberHandoff;$('handoff-profile').onchange=rememberHandoff;
+function handoffBodyMatches(body){return !!body && handoffSource===body.source && ['goal','text','cwd','profile'].every(key=>$('handoff-'+key).value===body[key]);}
+function handoffAccepted(result){return result?.handoff?.status==='accepted' && result.handoff.admission?.outcome==='accepted';}
+function handoffCanReplace(request){
+  if(!request || request.reading || handoffStarts.has(request.source))return false;
+  if(request.notFound)return true;
+  const result=request.result;
+  return !!result && !result.preparation?.reservation && (handoffAccepted(result) || (result.handoff?.status==='needs_review' && result.handoff.admission?.outcome==='rejected'));
+}
+function drawHandoff(){
+  const request=handoffRequest(handoffSource),busy=handoffStarts.has(handoffSource),result=request?.result;
+  $('handoff-start').disabled=busy || !!request;$('handoff-start').hidden=!!request;
+  $('handoff-recover').hidden=!request;$('handoff-recover').disabled=!!request?.reading;
+  $('handoff-retry').hidden=!request?.body || !!result || !!request?.conflict;
+  $('handoff-retry').disabled=busy || !!request?.reading;
+  $('handoff-open').hidden=!result?.id;$('handoff-open').disabled=!!request?.reading;
+  $('handoff-open').textContent=handoffAccepted(result)?'Open retained conversation':'Review retained target';
+  $('handoff-new').hidden=!request;$('handoff-new').disabled=!handoffCanReplace(request);
+  $('handoff-status').hidden=!request;
+  if(!request)return;
+  let message;
+  if(busy)message='Starting the captured reviewed request…';
+  else if(request.reading)message='Checking the retained request. Nothing is being sent.';
+  else if(result){
+    if(handoffAccepted(result))message='Start accepted. The exact conversation is retained in saved sessions.';
+    else if(result.handoff?.admission?.outcome==='unknown' || result.preparation?.reservation?.state==='unknown')message='Start unconfirmed. Review the retained reservation and activity before sending another task.';
+    else if(result.handoff?.status==='pending')message='Start receipt pending. Review the retained target before another send.';
+    else if(result.handoff?.admission?.outcome==='rejected')message='Start rejected. The original task remains prepared in the retained target. Review and retry it there.';
+    else message='No completed start receipt. Review the retained target and preparation before another send.';
+  }else if(request.notFound)message='No saved target for this request. Explicitly retry the original request or prepare a different task.';
+  else message='No local start receipt. The request token is retained. Check the saved request'+(request.body?' or explicitly retry the original reviewed request.':'. Recover the saved target rather than sending the visible editor.');
+  if(request.conflict)message+=' This token belongs to different reviewed work; review its original target.';
+  if(request.body && !handoffBodyMatches(request.body))message+=' Your later edits have not been sent.';
+  $('handoff-status').textContent=message;
+}
+async function readHandoffRequest(request){
+  if(request.reading)return request.reading;
+  const receiptVersion=request.receiptVersion;
+  const pending=(async()=>{
+    try{
+      const result=await api('/api/handoff/request?token='+encodeURIComponent(request.token));
+      if(result.token!==request.token || !result.id)throw Error('The retained request receipt did not match this token');
+      if(receiptVersion===request.receiptVersion){request.result=result;request.notFound=false;request.error=null;++request.receiptVersion;}
+    }catch(e){if(receiptVersion===request.receiptVersion){request.error=e;if(e.status===404){request.notFound=true;request.result=null;}}}
+    finally{request.reading=null;}
+  })();
+  request.reading=pending;return pending;
+}
 async function showHandoff(thread,cwd,valid=()=>true) {
-  const current=generation;
-  try {const r=await api('/api/handoff',{thread});if(current!==generation || !valid())return;handoffSource=thread;$('handoff-goal').value=handoffGoals.get(thread) || '';$('handoff-error').hidden=true;$('handoff-cwd').value=cwd;fillProfiles($('handoff-profile'));$('handoff-text').value=handoffEvidence.has(thread)?handoffEvidence.get(thread):r.text;$('history').close();$('preview').showModal();}catch(e){if(current===generation && valid())error(e);}
+  if(!$('preview').open)handoffVisible=false;
+  const current=generation,version=++handoffVersion,request=handoffRequest(thread);
+  try{
+    let reviewError=null;
+    const original=api('/api/handoff',{thread}).catch(e=>{if(!request)throw e;reviewError=e;return {text:''};});
+    const [review]=await Promise.all([original,request?readHandoffRequest(request):Promise.resolve()]);
+    if(current!==generation || version!==handoffVersion || !valid())return;
+    handoffSource=thread;$('handoff-goal').value=handoffGoals.get(thread) || '';$('handoff-error').hidden=true;
+    const scope=handoffScopes.get(thread);$('handoff-cwd').value=scope?.cwd ?? cwd;fillProfiles($('handoff-profile'));
+    if(scope)$('handoff-profile').value=scope.profile;
+    $('handoff-text').value=handoffEvidence.has(thread)?handoffEvidence.get(thread):review.text;
+    drawHandoff();const failure=request?.error || reviewError;if(failure){$('handoff-error').textContent=failure.message;$('handoff-error').hidden=false;}
+    $('history').close();$('preview').showModal();handoffVisible=true;
+  }catch(e){if(current===generation && version===handoffVersion && valid())error(e);}
 }
 $('browse').onclick=()=>{$('history').showModal();nativeList();};
 $('history-search').oninput=resetNative;
@@ -606,7 +684,65 @@ $('history').addEventListener('close',()=>{if(!$('history').open)resetNative();}
 $('more').onclick=()=>nativeList(nativeCursor);
 $('history-close').onclick=()=>$('history').close();$('preview-close').onclick=()=>$('preview').close();
 $('handoff').onclick=()=>{const s=state.sessions.find(s=>s.id===selected);if(s)showHandoff(s.thread_id,s.cwd);};
-$('handoff-start').onclick=async()=>{const b=$('handoff-start'),source=handoffSource,goal=$('handoff-goal').value,text=$('handoff-text').value;b.disabled=true;$('handoff-error').hidden=true;try{const r=await api('/api/handoff/start',{cwd:$('handoff-cwd').value,profile:$('handoff-profile').value,text,goal});if(handoffGoals.get(source)===goal)handoffGoals.delete(source);if(handoffEvidence.get(source)===text)handoffEvidence.delete(source);$('preview').close();await open(r.id);}catch(e){$('handoff-error').textContent=e.message;$('handoff-error').hidden=false;}finally{b.disabled=false;}};
+$('preview').addEventListener('close',()=>{if(handoffVisible && !$('preview').open){handoffVisible=false;++handoffVersion;}});
+function handoffIntent(source){
+  const version=handoffVersion,startedGeneration=generation,startedSelection=selected;
+  return ()=>version===handoffVersion && generation===startedGeneration && selected===startedSelection && handoffSource===source && $('preview').open;
+}
+async function sendHandoffRequest(request){
+  const source=request.source,current=handoffIntent(source),edit=handoffEdits.get(source) || 0;
+  if(!request.body || handoffStarts.has(source) || request.reading || !$('preview').open)return;
+  handoffStarts.add(source);request.error=null;$('handoff-error').hidden=true;drawHandoff();
+  try{
+    // Retention must precede native work; an explicit retry reuses this body.
+    handoffTokens.set(source,request.token);saveHandoffTokens();
+    const result=await api('/api/handoff/start',request.body);
+    if(result.token!==request.token || !result.id)throw Error('The start receipt did not match this request token');
+    request.result=result;request.notFound=false;++request.receiptVersion;
+    if(handoffAccepted(result) && (handoffEdits.get(source) || 0)===edit){
+      if(handoffGoals.get(source)===request.body.goal)handoffGoals.delete(source);
+      if(handoffEvidence.get(source)===request.body.text)handoffEvidence.delete(source);
+    }
+    await refresh();
+    if(current() && handoffAccepted(result) && handoffBodyMatches(request.body) && (handoffEdits.get(source) || 0)===edit){
+      $('preview').close();await open(result.id);
+    }else if(current())drawHandoff();
+  }catch(e){
+    request.error=e;
+    if(e.status===409 && e.current?.token===request.token){request.result=e.current;request.conflict=true;request.notFound=false;++request.receiptVersion;await refresh();}
+    if(current()){$('handoff-error').textContent=e.message;$('handoff-error').hidden=false;drawHandoff();}
+  }finally{
+    handoffStarts.delete(source);
+    // Old replies can unlock their source, but cannot repaint a newer editor.
+    if(handoffSource===source && $('preview').open)drawHandoff();
+  }
+}
+$('handoff-start').onclick=async()=>{
+  const source=handoffSource;if(!source || handoffRequest(source) || handoffStarts.has(source) || !$('preview').open)return;
+  const body=Object.freeze({token:crypto.randomUUID(),source,cwd:$('handoff-cwd').value,profile:$('handoff-profile').value,goal:$('handoff-goal').value,text:$('handoff-text').value});
+  const request={source,token:body.token,body,result:null,receiptVersion:0};handoffRequests.set(source,request);
+  await sendHandoffRequest(request);
+};
+$('handoff-retry').onclick=()=>{
+  const request=handoffRequest(handoffSource);
+  if(request?.body && !request.result && !request.conflict)return sendHandoffRequest(request);
+};
+$('handoff-recover').onclick=async()=>{
+  const request=handoffRequest(handoffSource);if(!request || request.reading || !$('preview').open)return;
+  const current=handoffIntent(request.source),pending=readHandoffRequest(request);$('handoff-error').hidden=true;drawHandoff();await pending;
+  if(current()){drawHandoff();if(request.error){$('handoff-error').textContent=request.error.message;$('handoff-error').hidden=false;}}
+};
+$('handoff-open').onclick=async()=>{
+  const request=handoffRequest(handoffSource);if(!request?.result?.id || request.reading || !$('preview').open)return;
+  $('preview').close();await open(request.result.id,{revealLatest:false});
+};
+$('handoff-new').onclick=()=>{
+  const source=handoffSource,request=handoffRequest(source);if(!handoffCanReplace(request) || !$('preview').open)return;
+  handoffTokens.delete(source);
+  try{saveHandoffTokens();}catch(e){handoffTokens.set(source,request.token);$('handoff-error').textContent=e.message;$('handoff-error').hidden=false;return;}
+  handoffRequests.delete(source);++handoffVersion;drawHandoff();$('handoff-error').hidden=true;
+  $('handoff-status').textContent='Different task prepared. Review the current editor, then explicitly Start a new request.';$('handoff-status').hidden=false;
+};
 
 let providerEditing=null, providerVersion=0, providerReturn=false;
 function drawProfiles(){

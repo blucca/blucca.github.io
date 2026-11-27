@@ -145,3 +145,5 @@ aside{min-width:0}
 @media(max-width:760px){#recent-work{padding:18px 14px}}
 
 button[aria-disabled="true"]{opacity:.5;cursor:default}
+
+#preview{max-height:calc(100dvh - 32px);overflow:auto}#preview .actions{flex-wrap:wrap}#preview .actions button{max-width:100%;overflow-wrap:anywhere}
