@@ -24,6 +24,32 @@
   const coverage=()=>({indexed_threads:state.indexed?3:0,indexed_items:state.indexed?6:0,truncated_threads:0,omitted_items:0,unsupported_items:0,invalid_items:0,max_thread_items:5000,max_thread_chars:2000000,max_item_chars:200000});
   const job=()=>({id:'sample-index-1',status:state.indexed?'completed':'idle',mode:'recent',seen:state.indexed?3:0,indexed:state.indexed?3:0,skipped:0,failed:0,limit:200,has_more:false,older_available:false,resumable:false,retryable_failures:0});
   const fold=text=>String(text).normalize('NFKC').toLowerCase();
+  const preparationFold=text=>Array.from(String(text).normalize('NFKC'), c=>window.DeskPreviewCasefold?.[c] ?? c.toLowerCase()).join('').normalize('NFKC');
+  function preparationPage(sessions,params){
+    for(const key of params.keys())if(!['q','archived','cwd','limit','offset'].includes(key) || params.getAll(key).length!==1)throw Error('Use each saved-work query option once.');
+    if(!params.has('q')){if(params.has('limit') || params.has('offset'))throw Error('Submit a phrase before paging saved work.');return {sessions};}
+    const raw=params.get('q'),q=raw.trim(),size=Array.from(raw).length;
+    if(size>200 || (q && Array.from(q).length<2))throw Error('Use a remembered phrase from 2 to 200 characters.');
+    const number=(key,fallback)=>{if(!params.has(key))return fallback;const value=params.get(key);if(!/^(0|[1-9][0-9]*)$/.test(value) || !Number.isSafeInteger(Number(value)))throw Error('Choose a saved-work page number.');return Number(value);};
+    const limit=number('limit',30),offset=number('offset',0);if(limit<1 || limit>50)throw Error('Choose a lookup page from 1 to 50.');
+    const needle=preparationFold(q),results=[];
+    function add(row,kind,text,identity){
+      if(!needle || typeof text!=='string')return;
+      const chunks=Array.from(new Intl.Segmenter(undefined,{granularity:'grapheme'}).segment(text), x=>({text:x.segment,start:x.index,end:x.index+x.segment.length,folded:preparationFold(x.segment)}));
+      const at=chunks.map(x=>x.folded).join('').indexOf(needle);if(at<0)return;
+      let n=0,left=null,right=null;
+      for(const x of chunks){const end=n+x.folded.length;if(left===null && at<end)left=x.start;if(at+needle.length<=end){right=x.end;break;}n=end;}
+      let begin=Math.max(0,left-80),end=Math.min(text.length,Math.max(right,begin+420));if(end-begin>420){begin=left;end=Math.min(text.length,left+420);}
+      results.push({session_id:row.id,kind,name:row.name,cwd:row.cwd,profile:row.profile,archived:row.archived,owner_status:row.status,updated:row.updated,snippet:(begin?'…':'')+text.slice(begin,end)+(end<text.length?'…':''),match_text:text.slice(left,Math.min(right,end)),...identity});
+    }
+    for(const row of sessions){
+      add(row,'session',row.name,{control:'review'});
+      if(row.draft)add(row,'draft',row.draft.text,{control:'draft',mode:row.draft.mode,revision:row.draft.revision});
+      for(const entry of row.followups.entries)add(row,'followup',entry.text,{control:'followup',followup_id:entry.id,mode:entry.mode,revision:entry.revision,state:entry.state,order:entry.order});
+      const r=row.followups.reservation;if(r)add(row,'reservation',r.text,{control:'reservation',token:r.token,followup_id:r.entry_id,revision:r.revision,mode:r.mode,state:r.state});
+    }
+    return {sessions,lookup:{q,limit,offset,total:results.length,results:results.slice(offset,offset+limit),has_more:offset+limit<results.length}};
+  }
   function search(params){
     const q=(params.get('q') || '').trim(),needle=fold(q),cwd=params.get('cwd');const results=[];
     if(state.indexed && needle.length>=2)for(const t of threads){
@@ -111,7 +137,7 @@
         sessions.push({id:row.id,name:row.name,cwd:row.cwd,profile:row.profile,archived:!!row.archived,status:row.status,
           updated:row.updated || threads?.find(t=>t.id===row.thread_id)?.updatedAt || 0,draft,followups});
       }
-      sessions.sort((a,b)=>b.updated-a.updated || a.id.localeCompare(b.id));return {sessions};
+      sessions.sort((a,b)=>b.updated-a.updated || a.id.localeCompare(b.id));return preparationPage(sessions,params);
     }
     if(path==='/api/import' && post){
       const t=thread(data.thread),id='desk-'+t.id;

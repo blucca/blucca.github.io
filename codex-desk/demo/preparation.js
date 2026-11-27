@@ -20,6 +20,7 @@ Native conversation: ${binding.thread_id || '(not attached)'}`;
 (function(root){
   const el=id=>document.getElementById('preparation'+(id?'-'+id:''));
   const editors=new Map(), projects=new Set(), writer=crypto.randomUUID();
+  let lookup=null,lookupSavedAt=0,modalVersion=0,savedMatch=null;
   let options,rows=new Map(),selected=null,displayed=null,listVersion=0,selectionVersion=0,saveVersion=0,reading=false,returnOrigin=null,evidenceView=null;
   const scope=()=>({cwd:el('project').value,archived:el('archived').checked});
   const sameScope=(a,b)=>a.cwd===b.cwd && a.archived===b.archived;
@@ -340,7 +341,7 @@ Native conversation: ${binding.thread_id || '(not attached)'}`;
     container.replaceChildren();
     const reservation=editor.row.followups?.reservation;
     if(reservation){
-      const box=make('section','','preparation-reservation');
+      const box=make('section','','preparation-reservation');box.dataset.session=editor.row.id;box.dataset.token=reservation.token;box.dataset.control='reservation';box.tabIndex=-1;
       box.append(make('h4',reservation.state==='unknown'?'Start unconfirmed':'Start receipt pending'),
         make('p','Captured instruction. Open this conversation to review its activity and start receipt.','muted'),make('pre',reservation.text));evidenceButtons(reservation.text,box);
       box.append(action('Copy captured instruction',()=>copy(editor.row.id,reservation.text,'Captured instruction'),'copy-captured'));container.append(box);
@@ -351,7 +352,7 @@ Native conversation: ${binding.thread_id || '(not attached)'}`;
     const entries=[...savedEntries];
     for(const edit of editor.queueEdits?.values() || [])if(!entries.some(e=>e.id===edit.id))entries.push({id:edit.id,text:edit.text,mode:edit.mode,revision:edit.revision,order:'Removed',state:'unavailable'});
     for(const entry of entries){
-      const box=make('article','','preparation-followup');box.dataset.followup=entry.id;
+      const box=make('article','','preparation-followup');box.dataset.followup=entry.id;box.dataset.session=editor.row.id;box.dataset.control='followup';box.tabIndex=-1;
       const state={queued:'Prepared',reserved:'Awaiting start receipt',needs_review:'Needs start review',unavailable:'No longer queued'}[entry.state] || 'State unreported';
       box.append(make('h4',entry.order+'. '+modeLabel(entry.mode)+' · '+state),make('pre',entry.text));evidenceButtons(entry.text,box);
       const actions=make('div','','actions');
@@ -421,7 +422,7 @@ Native conversation: ${binding.thread_id || '(not attached)'}`;
   }
   async function select(id){
     const row=rows.get(id);if(!row)return false;
-    remember();const ticket=++selectionVersion;selected=id;el('error').hidden=true;
+    remember();if(savedMatch)savedMatch.panel.hidden=true;const ticket=++selectionVersion;selected=id;el('error').hidden=true;
     let editor=editors.get(id);
     if(!editor){
       editor={row,text:'',mode:'native',revision:0,saved:null,ready:false,sequence:0,saving:false,conflict:null,reuse:null,message:'Reading saved local draft…'};
@@ -434,6 +435,116 @@ Native conversation: ${binding.thread_id || '(not attached)'}`;
     if(ticket===selectionVersion && visible(id) && editor.ready && document.activeElement===focus)focusEditor();
     return editor.ready;
   }
+  function snapshotRows(data){
+    if(!Array.isArray(data?.sessions))throw Error('Prepared work could not be read. Choose Refresh.');
+    const incoming=new Map();
+    for(const row of data.sessions){
+      if(!row || typeof row.id!=='string' || !row.id || incoming.has(row.id) || typeof row.cwd!=='string' ||
+        (row.turn_request && !root.DeskPreparedRequest.validIdentity(row.id,row.turn_request.token)))throw Error('Prepared conversation identity is unavailable. Choose Refresh.');
+      if(row.draft)draft(row.draft);
+      incoming.set(row.id,row);
+    }
+    return incoming;
+  }
+  async function acceptLookup(data,valid){
+    const savedAt=lookupSavedAt,query=scope(),incoming=snapshotRows(data);
+    const current=()=>valid() && savedAt===saveVersion;
+    if(!current())throw Error('Saved preparation changed during Search. Choose Search again.');
+    remember();
+    const reviewed=editors.get(selected);
+    if(reviewed && !incoming.get(selected)?.draft){
+      await loadEditor(reviewed);if(!current())return false;
+    }
+    if(reviewed?.queueEdits?.size && !incoming.has(reviewed.row.id) &&
+      (!query.cwd || query.cwd===reviewed.row.cwd) && (query.archived || !reviewed.row.archived)){
+      const latest=await options.api('/api/followups?session='+encodeURIComponent(reviewed.row.id));
+      if(!current())return false;
+      reviewed.row={...reviewed.row,followups:latest};reconcileQueueEdits(reviewed);
+    }
+    if(!current())return false;
+    remember();for(const row of incoming.values()){projects.add(row.cwd);updateRow(row);}
+    rows=incoming;drawProjects();drawList();drawEditor();
+    el('status').textContent=rows.size+' saved-work owner'+(rows.size===1?'':'s')+' in this scope. Local editors are retained.';
+    return true;
+  }
+  function lookupReturn(index,scroll){
+    if(!el('').open)return;
+    const source=[...el('find-results').querySelectorAll('button')].find(node=>node.dataset.match===String(index));
+    el('').scrollTop=scroll;(source || el('find-search')).focus({preventScroll:true});
+  }
+  async function reviewLookupMatch(match,context){
+    const before=selectionVersion,savedAt=saveVersion,query=scope(),scroll=el('').scrollTop;
+    const current=()=>context.valid() && before===selectionVersion && savedAt===saveVersion;
+    try{
+      // Re-read the scoped owner's existing local sources before switching or
+      // exposing controls. No native Open, queue write or draft save occurs.
+      const params=new URLSearchParams({archived:String(query.archived)});if(query.cwd)params.set('cwd',query.cwd);
+      const data=await options.api('/api/preparation?'+params);
+      if(!current())return false;
+      const row=snapshotRows(data).get(match.session_id);
+      if(!root.DeskPreparationFind.matches(row,match))throw Error('This saved match changed. Your local edits are kept; choose Search again.');
+      rows.set(row.id,row);const selectedReady=await select(row.id);
+      const owned=()=>context.valid() && selectionVersion===before+1 && visible(row.id);
+      if(!owned())return false;
+      if(match.kind==='turn_request')return reviewRequest(row,{...context,valid:owned,scroll,
+        // The persisted pending intent becomes needs_review on a cold read
+        // when no admission gate is live; its exact captured body is unchanged.
+        verifyReceipt:result=>(result.request?.status===match.state ||
+          (match.state==='pending' && result.request?.status==='needs_review')) && result.request?.payload?.mode===match.mode &&
+          typeof result.request?.payload?.text==='string' && result.request.payload.text.includes(match.match_text)});
+      if(!selectedReady)return false;
+      if(match.kind==='draft'){
+        savedMatch.title.textContent='Saved '+modeLabel(row.draft.mode)+' draft · revision '+row.draft.revision;
+        savedMatch.text.textContent=row.draft.text;savedMatch.panel.hidden=false;
+        savedMatch.panel.scrollIntoView({block:'nearest'});savedMatch.text.focus({preventScroll:true});
+      }else if(match.kind==='followup' || match.kind==='reservation'){
+        const source=[...el('followups').querySelectorAll(match.kind==='followup'?'article':'section')].find(node=>
+          node.dataset.session===row.id && node.dataset.control===match.kind &&
+          (match.kind==='followup'?node.dataset.followup===match.followup_id:node.dataset.token===match.token));
+        if(!source)throw Error('The exact saved instruction is unavailable. Choose Search again.');
+        source.scrollIntoView({block:'nearest'});source.focus({preventScroll:true});
+      }else focusEditor();
+      return true;
+    }catch(failure){if(context.valid() && (selectionVersion===before || selectionVersion===before+1))error(failure.message);return false;}
+  }
+  function drawLookup(state){
+    if(!lookup)return;
+    reading=!!state?.pending;controls();el('find').hidden=!state;
+    el('find-search').disabled=!!state?.pending;
+    el('find-previous').disabled=!state?.data || state.pending || state.offset===0;
+    el('find-next').disabled=!state?.data?.lookup.has_more || state.pending;
+    const list=el('find-results');list.replaceChildren();list.setAttribute('aria-busy',String(!!state?.pending));
+    if(!state)return;
+    el('find-status').textContent=state.pending?'Searching saved preparation…':state.error || (state.data?
+      (state.data.lookup.total?`${state.offset+1}–${state.offset+state.data.lookup.results.length} of ${state.data.lookup.total} matches for “${state.data.lookup.q}”.`:
+        `No saved preparation matches for “${state.data.lookup.q}”.`):'Choose Search again.');
+    const labels={session:'Conversation title',draft:'Saved draft',followup:'Saved follow-up',reservation:'Captured instruction',turn_request:'Retained Run request'};
+    for(const [index,match] of (state.data?.lookup.results || []).entries()){
+      const item=make('article','','preparation-find-match');item.dataset.session=match.session_id;
+      item.append(make('h3',labels[match.kind]+' · '+(match.name || match.session_id)),
+        make('p',match.cwd+' · '+options.profileLabel(match.profile)+(match.archived?' · Archived locally':''),'muted'));
+      const snippet=make('pre');snippet.textContent=match.snippet;item.append(snippet);
+      const review=button('Review '+labels[match.kind].toLowerCase(),()=>lookup.select(index));
+      review.dataset.match=String(index);review.dataset.session=match.session_id;review.dataset.control=match.control;
+      review.setAttribute('aria-label','Review '+labels[match.kind].toLowerCase()+' in '+(match.name || match.session_id));item.append(review);list.append(item);
+    }
+  }
+  function invalidateLookup(){lookup?.invalidate();if(savedMatch)savedMatch.panel.hidden=true;}
+  function searchLookup(offset=0){
+    remember();++listVersion;lookupSavedAt=saveVersion;return lookup.search(offset);
+  }
+  function configureLookup(){
+    if(!root.DeskPreparationFind)return;
+    const panel=make('section'),title=make('h4'),text=make('pre');panel.id='preparation-saved-match';panel.hidden=true;text.tabIndex=-1;
+    panel.append(title,make('p','Saved original only. Any unsaved draft below stays unchanged.','muted'),text);el('editor').append(panel);savedMatch={panel,title,text};
+    lookup=root.DeskPreparationFind.create({api:options.api,
+      current:()=>({...scope(),open:el('').open,q:el('find-query').value,owner:modalVersion+':'+(options.navigationIdentity?.() || '')}),
+      onState:drawLookup,onResults:acceptLookup,onReturn:(data,index)=>lookupReturn(index,el('').scrollTop),onError:failure=>error(failure.message),reviewMatch:reviewLookupMatch});
+    el('find-form').onsubmit=event=>{event.preventDefault();return searchLookup();};
+    el('find-query').oninput=()=>{++listVersion;invalidateLookup();};
+    el('find-previous').onclick=()=>searchLookup(Math.max(0,lookup.state().offset-30));
+    el('find-next').onclick=()=>searchLookup(lookup.state().offset+30);
+  }
   async function refresh(){
     if(!options || !el('').open)return false;
     remember();const ticket=++listVersion,query=scope(),savedAt=saveVersion;reading=true;el('error').hidden=true;
@@ -444,13 +555,7 @@ Native conversation: ${binding.thread_id || '(not attached)'}`;
       if(ticket!==listVersion || !el('').open || !sameScope(query,scope()))return false;
       if(savedAt!==saveVersion){el('status').textContent='A draft was saved while Refresh was reading. Choose Refresh for the latest list; your edits are kept.';return false;}
       if(!Array.isArray(data.sessions))throw new Error('Prepared work could not be read. Choose Refresh.');
-      const incoming=new Map();
-      for(const row of data.sessions){
-        if(!row || typeof row.id!=='string' || typeof row.cwd!=='string' ||
-          (row.turn_request && !root.DeskPreparedRequest.validIdentity(row.id,row.turn_request.token)))throw new Error('Prepared conversation identity is unavailable. Choose Refresh.');
-        if(row.draft)draft(row.draft);
-        incoming.set(row.id,row);projects.add(row.cwd);updateRow(row);
-      }
+      const incoming=snapshotRows(data);for(const row of incoming.values()){projects.add(row.cwd);updateRow(row);}
       // Empty saved drafts are intentionally absent from the overview. Read
       // the retained editor's exact revision before interpreting that absence:
       // it can mean a cleared draft or simply a different project/archive scope.
@@ -568,12 +673,13 @@ Native conversation: ${binding.thread_id || '(not attached)'}`;
     }
     return openConversation();
   }
-  function reviewRequest(row){
+  function reviewRequest(row,context=null){
     remember();
-    const origin={session:row.id,token:row.turn_request.token,scroll:el('').scrollTop};
-    return root.DeskPreparedRequest.show(row,{origin:'prepared',valid:()=>el('').open,
+    const origin={session:row.id,token:row.turn_request.token,scroll:context?.scroll ?? el('').scrollTop};
+    return root.DeskPreparedRequest.show(row,{origin:'prepared',valid:()=>el('').open && (!context || context.valid()),verifyReceipt:context?.verifyReceipt,
       onResolved:()=>{++saveVersion;return refresh();},onReturn:()=>{
       if(!el('').open)return;
+      if(context){el('').scrollTop=origin.scroll;context.onReturn();return;}
       const source=[...el('list').querySelectorAll('button')].find(node=>node.dataset.session===origin.session &&
         node.dataset.control==='request' && node.dataset.token===origin.token);
       el('').scrollTop=origin.scroll;
@@ -596,9 +702,9 @@ Native conversation: ${binding.thread_id || '(not attached)'}`;
       const node=document.activeElement;
       returnOrigin={node,identity:options.navigationIdentity?.(),value:node?.value,start:node?.selectionStart,
         end:node?.selectionEnd,direction:node?.selectionDirection,scroll:node?.scrollTop};
-      el('').showModal();
+      ++modalVersion;el('').showModal();
     }
-    drawEditor(true);return refresh();
+    invalidateLookup();drawEditor(true);return refresh();
   }
   function configure(value){
     options=value;el('mode').value='native';
@@ -608,8 +714,9 @@ Native conversation: ${binding.thread_id || '(not attached)'}`;
       panel.id='preparation-evidence';browse.id='preparation-browse-evidence';list.id='preparation-evidence-list';
       panel.append(browse,list);el('editor').append(panel);evidenceView={panel,browse,list,signature:null};
     }
-    el('refresh').onclick=refresh;el('close').onclick=()=>{remember();el('').close();restoreOrigin();};
-    el('project').onchange=el('archived').onchange=refresh;
+    configureLookup();
+    el('refresh').onclick=()=>{invalidateLookup();return refresh();};el('close').onclick=()=>{remember();el('').close();restoreOrigin();};
+    el('project').onchange=el('archived').onchange=()=>{invalidateLookup();return refresh();};
     el('text').oninput=edit;el('mode').onchange=edit;
     el('save').onclick=save;el('copy').onclick=()=>{remember();const editor=editors.get(selected);if(editor?.ready)return copy(selected,editor.text,'Draft text');};
     el('keep').onclick=keepMine;el('load').onclick=loadSaved;
@@ -620,7 +727,7 @@ Native conversation: ${binding.thread_id || '(not attached)'}`;
     el('').addEventListener('cancel',()=>remember());
     el('').addEventListener('close',()=>{
       if(el('').open)return;
-      remember();++listVersion;++selectionVersion;reading=false;root.DeskPreparedRequest.close('prepared');options.onEvidenceChange?.();
+      remember();invalidateLookup();++modalVersion;++listVersion;++selectionVersion;reading=false;root.DeskPreparedRequest.close('prepared');options.onEvidenceChange?.();
       // Native dialog refocus can reset a textarea's range. Restore only the
       // unchanged origin, after close, never an editor loaded by Open.
       restoreOrigin();
@@ -740,7 +847,8 @@ Native conversation: ${binding.thread_id || '(not attached)'}`;
     try{
       const result=await options.api('/api/turn/request?session='+encodeURIComponent(request.session)+'&token='+encodeURIComponent(request.token));
       if(!valid(ticket) || readVersion!==request.readVersion || revision!==request.revision)return false;
-      apply(request,result);return true;
+      if(ticket.verifyInitial && ticket.owner.verifyReceipt && !ticket.owner.verifyReceipt(result))throw Error('This saved task request match changed. Return and choose Search again.');
+      apply(request,result);ticket.verifyInitial=false;return true;
     }catch(e){
       if(valid(ticket) && readVersion===request.readVersion && revision===request.revision)request.error=e;
       return false;
@@ -829,7 +937,7 @@ Native conversation: ${binding.thread_id || '(not attached)'}`;
     const token=row.turn_request.token,key=JSON.stringify([row.id,token]);
     let request=states.get(key);
     if(!request){request={session:row.id,token,body:null,result:null,status:null,revision:0,readVersion:0,writeVersion:0,reading:false,writing:false};states.set(key,request);}
-    active={request,generation:++generation,name:row.name || row.cwd || row.id,owner};
+    active={request,generation:++generation,name:row.name || row.cwd || row.id,owner,verifyInitial:true};
     if(!el('').open)el('').showModal();draw();el('title').focus({preventScroll:true});return read(active);
   }
   function configure(value){

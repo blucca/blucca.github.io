@@ -143,6 +143,45 @@ function applyTurnReceipt(request,result){
 }
 function turnBindingText(binding){return DeskTurnReview.bindingText(binding);}
 function sameTurnBinding(a,b){return DeskTurnReview.sameBinding(a,b);}
+let ordinaryTurnSource=null,ordinaryTurnSourcePanel=null;
+function stopOrdinaryTurnSource(){const previous=ordinaryTurnSource;ordinaryTurnSource=null;if(previous?.callbacks)DeskHistoryReader.close(previous.callbacks);}
+function drawOrdinaryRequestSources(request){
+  if(ordinaryTurnSource && !ordinaryTurnSource.valid())stopOrdinaryTurnSource();
+  if(!ordinaryTurnSourcePanel){ordinaryTurnSourcePanel=make('div','','ordinary-request-evidence');$('turn-request-captured').append(ordinaryTurnSourcePanel);}
+  const body=request && DeskTurnReview.captured(request),references=DeskEvidencePreparation.parse(body?.text || '');
+  const signature=JSON.stringify([request?.session,request?.token,body?.text,body?.mode]);
+  if(ordinaryTurnSourcePanel.dataset.signature===signature)return;
+  ordinaryTurnSourcePanel.dataset.signature=signature;ordinaryTurnSourcePanel.replaceChildren();
+  for(const {reference} of references){
+    const read=make('button','Read referenced original · '+(reference.title || reference.item_id));read.type='button';
+    read.onclick=async()=>{
+      const owner=request,context=generation,text=body.text,mode=body.mode;
+      const current=()=>selected===owner.session && generation===context && turnRequest()===owner && !opening && !owner.conflict && !owner.writing &&
+        DeskTurnReview.captured(owner)?.text===text && DeskTurnReview.captured(owner)?.mode===mode;
+      if(!current() || owner.reading || $('history-reader').open)return false;
+      stopOrdinaryTurnSource();const ticket={callbacks:null,valid:()=>ordinaryTurnSource===ticket && current()};ordinaryTurnSource=ticket;
+      const pre=$('turn-request-captured-text'),disclosure=$('turn-request-captured'),prompt=$('prompt');
+      const capture=()=>({preScroll:pre.scrollTop,open:disclosure.open,window:window.scrollY,prompt:prompt.value,
+        start:prompt.selectionStart,end:prompt.selectionEnd,direction:prompt.selectionDirection,promptScroll:prompt.scrollTop,
+        range:(()=>{const selection=globalThis.getSelection?.();return selection?.rangeCount && pre.contains(selection.anchorNode)?selection.getRangeAt(0).cloneRange():null;})()});
+      let view=capture();read.disabled=true;
+      try{
+        await readTurnRequest(owner);if(!ticket.valid())return false;
+        const opened=await DeskEvidencePreparation.readReference(reference,{owner:{session:owner.session,token:owner.token,generation:context},valid:ticket.valid,ownerCurrent:ticket.valid,
+          backLabel:'Return to retained Run request',onReader:callbacks=>{if(ticket.valid()){ticket.callbacks=callbacks;view=capture();}},
+          onReturn:()=>{if(!ticket.valid())return;ordinaryTurnSource=null;disclosure.open=view.open;pre.scrollTop=view.preScroll;
+            if(read.isConnected)read.focus({preventScroll:true});
+            if(prompt.value===view.prompt){prompt.setSelectionRange(view.start,view.end,view.direction);prompt.scrollTop=view.promptScroll;}
+            const selection=globalThis.getSelection?.();if(view.range && selection){selection.removeAllRanges();selection.addRange(view.range);}
+            window.scrollTo({top:view.window,behavior:'instant'});
+          },onError:e=>{if(ticket.valid()){owner.error=e;drawTurnRequest();}}});
+        if(!opened && ticket.valid())ordinaryTurnSource=null;return opened;
+      }catch(e){if(ticket.valid()){owner.error=e;ordinaryTurnSource=null;drawTurnRequest();}return false;}
+      finally{if(read.isConnected)read.disabled=false;}
+    };
+    ordinaryTurnSourcePanel.append(read);
+  }
+}
 function drawCapturedTurn(request){
   const body=DeskTurnReview.captured(request),disclosure=$('turn-request-captured');
   disclosure.hidden=!body;
@@ -158,7 +197,7 @@ function drawCapturedTurn(request){
 function drawTurnRequest(){
   const request=turnRequest(),busy=opening || submitting.has(selected) || !!request?.reading || !!request?.writing;
   $('turn-request').hidden=!request;
-  drawCapturedTurn(request);
+  drawCapturedTurn(request);drawOrdinaryRequestSources(request);
   $('prompt').required=!request;
   $('send').textContent=request?'Check Run request':'Run task';
   if(request)$('send').disabled=busy;
@@ -702,6 +741,7 @@ async function refresh() {
   state=next;syncInteractionCards(state.pending);stopStateSnapshot=stopSnapshot;DeskFollowups.refresh(selected);requests=new Map((state.pending?.[selected] || []).map(m=>[String(m.id),m]));approvals();draw();DeskRecall.stateChanged();if($('profiles-dialog').open)drawProfiles();
 }
 async function open(id,{revealLatest=true,keepError=false,steerReceiptOnly=false}={}) {
+  stopOrdinaryTurnSource();
   if(selected){rememberDraft(selected);persistDraft(selected);}
   const current=++generation;
   latestUpdates=0;latestLabel();
@@ -876,7 +916,7 @@ $('prompt').oninput=()=>{if(selected){rememberDraft(selected);scheduleDraft(sele
 $('turn-mode').onchange=()=>{if(selected){rememberDraft(selected);scheduleDraft(selected);DeskEvidencePreparation.sync();}};
 DeskStopTask.configure({$,api,make,selection:()=>({session:selected,thread:nativeThreadId,generation,opening,connected:Object.hasOwn(state.pending || {},selected),status:state.sessions.find(s=>s.id===selected)?.status})});
 DeskSteering.configure({$,api,selection:()=>({session:selected,thread:nativeThreadId,generation,opening,connected:Object.hasOwn(state.pending || {},selected),status:state.sessions.find(s=>s.id===selected)?.status})});
-DeskFollowups.configure({api,make,selected:()=>selected,refresh,afterDraw:drawTurnRequest});
+DeskFollowups.configure({api,make,selected:()=>selected,refresh,afterDraw:drawTurnRequest,   navigationIdentity:()=>selected+':'+generation,readEvidenceReference:(reference,callbacks)=>DeskEvidencePreparation.readReference(reference,callbacks),   closeReader:callbacks=>DeskHistoryReader.close(callbacks)});
 let preparedEvidenceOwner=null;
 function evidenceDestination(){
   if(preparedEvidenceOwner){

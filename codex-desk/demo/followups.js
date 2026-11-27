@@ -1,10 +1,56 @@
 /* Explicit session-bound preparation; no background submission. */
 const DeskFollowups=(()=>{
   const el=id=>document.getElementById(id), snapshots=new Map(), editors=new Map(), mutations=new Set(), loads=new Map(), versions=new Map(), messages=new Map();
-  let options, session=null, busy=true, signature='', editorView=null, renderedSession=null;
+  let options, session=null, busy=true, signature='', editorView=null, renderedSession=null, sourceRead=null;
+  function stopSource(){const previous=sourceRead;sourceRead=null;if(previous?.callbacks)options.closeReader?.(previous.callbacks);}
   const visible=id=>id===session && id===options?.selected();
   const button=(label,action,disabled=false)=>{const b=options.make('button',label);b.type='button';b.disabled=disabled;b.onclick=action;return b;};
   function showError(id,error){if(visible(id)){el('followup-error').textContent=error.message;el('followup-error').hidden=false;}}
+  function sourceIdentity(data,kind,identity){
+    return kind==='reservation'?data?.reservation:data?.entries.find(entry=>entry.id===identity.id);
+  }
+  function referenceControls(parent,text,kind,identity){
+    if(!options.readEvidenceReference || typeof DeskEvidencePreparation==='undefined')return;
+    const references=DeskEvidencePreparation.parse(text),key=JSON.stringify([session,kind,identity,references.map(row=>row.reference)]);
+    let panel=parent.referencePanel;
+    if(panel?.dataset.signature===key)return;
+    if(!panel){panel=options.make('div','','followup-evidence-references');parent.referencePanel=panel;parent.append(panel);}
+    panel.dataset.signature=key;panel.replaceChildren();
+    for(const {reference} of references){
+      const read=button('Read referenced original · '+(reference.title || reference.item_id),async()=>{
+        const id=session,navigation=options.navigationIdentity?.(),revision=versions.get(id) || 0;
+        const same=saved=>!!saved && saved.text===text && saved.mode===identity.mode && saved.revision===identity.revision && saved.state===identity.state &&
+          (kind!=='reservation' || saved.token===identity.token && saved.entry_id===identity.entry_id);
+        const current=()=>visible(id) && (versions.get(id) || 0)===revision && options.navigationIdentity?.()===navigation &&
+          same(sourceIdentity(snapshots.get(id),kind,identity));
+        if(!current() || !read.isConnected)return false;
+        stopSource();const ticket={id,callbacks:null};sourceRead=ticket;
+        const owned=()=>sourceRead===ticket && current();
+        const edit=editorView?.session===id?editorView:null,field=edit?.row.querySelector('textarea');
+        const view={list:el('followup-list').scrollTop,window:globalThis.scrollY,
+          text:field?.value,start:field?.selectionStart,end:field?.selectionEnd,direction:field?.selectionDirection,scroll:field?.scrollTop};
+        read.disabled=true;el('followup-error').hidden=true;
+        try{
+          const latest=await options.api('/api/followups?session='+encodeURIComponent(id));
+          if(!owned())return false;
+          if(!same(sourceIdentity(latest,kind,identity)))throw Error('This saved instruction changed. Your local edit stays unchanged; refresh the queue.');
+          const opened=await options.readEvidenceReference(reference,{owner:{session:id,kind,...identity},ownerCurrent:owned,valid:owned,
+            backLabel:kind==='reservation'?'Return to captured instruction':'Return to saved follow-up',
+            onReader:callbacks=>{if(owned()){ticket.callbacks=callbacks;
+              Object.assign(view,{list:el('followup-list').scrollTop,window:globalThis.scrollY,text:field?.value,start:field?.selectionStart,end:field?.selectionEnd,direction:field?.selectionDirection,scroll:field?.scrollTop});
+            }},
+            onReturn:()=>{if(!owned())return;sourceRead=null;
+              if(field?.isConnected && field.value===view.text){field.focus({preventScroll:true});field.setSelectionRange(view.start,view.end,view.direction);field.scrollTop=view.scroll;}
+              else if(read.isConnected)read.focus({preventScroll:true});
+              el('followup-list').scrollTop=view.list;if(Number.isFinite(view.window))globalThis.scrollTo?.({top:view.window,behavior:'instant'});
+            },onError:e=>{if(owned())showError(id,e);}});
+          if(!opened && owned())sourceRead=null;return opened;
+        }catch(e){if(owned()){showError(id,e);sourceRead=null;}return false;}
+        finally{if(read.isConnected)read.disabled=false;}
+      });
+      panel.append(read);
+    }
+  }
   function draw(force=false){
     el('followups').hidden=!session;if(!session || !options)return;
     const data=snapshots.get(session), editing=editors.get(session), pending=mutations.has(session);
@@ -17,7 +63,7 @@ const DeskFollowups=(()=>{
     el('followup-status').textContent=data?.reservation?(data.reservation.state==='unknown'?'Start unconfirmed. Review its activity before sending more.':'Start receipt pending. Review before sending more.'):(messages.get(session) || (data?.entries.length?'Prepared locally. Send next targets this conversation only.':'Write a task below, then choose Save as follow-up.'));
     const reservation=data?.reservation;
     el('followup-review').hidden=!reservation;
-    if(reservation){el('followup-pending-text').textContent=reservation.text;for(const id of ['followup-confirm-started','followup-confirm-not-started'])el(id).disabled=pending;}
+    if(reservation){referenceControls(el('followup-review'),reservation.text,'reservation',reservation);el('followup-pending-text').textContent=reservation.text;for(const id of ['followup-confirm-started','followup-confirm-not-started'])el(id).disabled=pending;}
     if(!force && signature===key)return;signature=key;
     const list=el('followup-list'), scroll=renderedSession===session?[list.scrollTop,list.scrollLeft]:null;
     renderedSession=session;
@@ -57,6 +103,7 @@ const DeskFollowups=(()=>{
         }
         row.append(actions);
       }
+      referenceControls(row,entry.text,'followup',entry);
       if(retained)passedEditor=true;
       else if(live && !passedEditor)list.insertBefore(row,live.row);
       else list.append(row);
@@ -71,7 +118,7 @@ const DeskFollowups=(()=>{
   }
   async function mutate(id,action,data){
     if(mutations.has(id))throw new Error('Wait for this preparation change to finish');
-    mutations.add(id);versions.set(id,(versions.get(id) || 0)+1);if(visible(id)){el('followup-error').hidden=true;draw();}
+    if(sourceRead?.id===id)stopSource();mutations.add(id);versions.set(id,(versions.get(id) || 0)+1);if(visible(id)){el('followup-error').hidden=true;draw();}
     try{const result=await options.api('/api/followups'+(action?'/'+action:''),{session:id,...data});versions.set(id,(versions.get(id) || 0)+1);snapshots.set(id,result);messages.set(id,result.receipt?.outcome==='unknown'?'Start unconfirmed. Check activity and review the receipt.':action==='send'?'Start accepted. Remaining follow-ups stay prepared.':'Preparation saved locally.');return result;}
     catch(e){await loads.get(id);loads.delete(id);await refresh(id);throw e;}
     finally{mutations.delete(id);if(visible(id))draw();}
@@ -82,5 +129,5 @@ const DeskFollowups=(()=>{
     el('followup-clear').onclick=()=>{const id=session,data=snapshots.get(id);if(data)mutate(id,'clear',{order:data.entries.map(e=>e.id)}).catch(e=>showError(id,e));};
     for(const [control,outcome] of [['followup-confirm-started','accepted'],['followup-confirm-not-started','rejected']])el(control).onclick=()=>{const id=session,r=snapshots.get(id)?.reservation;if(r)mutate(id,'resolve',{token:r.token,id:r.entry_id,revision:r.revision,outcome}).catch(e=>showError(id,e));};
   }
-  return {configure,blocked(id){return !!snapshots.get(id)?.reservation;},select(id){session=id;busy=true;signature='';el('followup-error').hidden=true;draw(true);refresh(id);},status(id,value){if(id!==session)return;busy=value;draw();},refresh,async add(id,text,mode){const result=await mutate(id,'',{text,mode});if(visible(id))el('followups').open=true;return result;}};
+  return {configure,blocked(id){return !!snapshots.get(id)?.reservation;},select(id){stopSource();session=id;busy=true;signature='';el('followup-error').hidden=true;draw(true);refresh(id);},status(id,value){if(id!==session)return;busy=value;draw();},refresh,async add(id,text,mode){const result=await mutate(id,'',{text,mode});if(visible(id))el('followups').open=true;return result;}};
 })();

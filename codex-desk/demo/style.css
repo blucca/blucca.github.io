@@ -227,3 +227,9 @@ html:has(#stop-request-captured[open]:not([hidden])),html:has(#stop-request-prev
 #draft-evidence-list{display:flex;flex-wrap:wrap;gap:8px}
 
 #history-reader-saved-evidence pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:240px;overflow:auto;font-size:12px}
+
+.preparation-find-input{display:flex;gap:10px;align-items:center}.preparation-find-input input{flex:1;min-width:0}
+#preparation-find{margin:18px 0;padding:14px;border:1px solid #40524d;border-radius:8px}
+.preparation-find-match{padding:12px 0;border-bottom:1px solid #35413e}.preparation-find-match pre{max-height:12rem;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+#preparation-find .actions{flex-wrap:wrap}#preparation-saved-match{margin:18px 0}#preparation-saved-match pre{max-height:20rem;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:500px){.preparation-find-input{flex-wrap:wrap}.preparation-find-input input,.preparation-find-input button{flex:1 1 100%}}
