@@ -21,8 +21,8 @@ const DeskNativeState=(()=>{
     const detail=code && typeof info==='object'?info[code]:null;
     const http=detail?.httpStatusCode;
     const message=typeof e.message==='string'?e.message:'Native task failed';
-    const action=willRetry?'Native Codex is retrying this turn. Its approval and completion state stays authoritative.':actions[code] || (/ConnectionFailed|StreamDisconnected/.test(code || '')?'Check the selected provider connection and retained activity before retrying.':'Review the retained activity and native error before continuing.');
-    return {label:willRetry?'Native retry in progress':'Native task failed',message,code,http:Number.isInteger(http)?http:null,action,additional:typeof e.additionalDetails==='string'?e.additionalDetails:null};
+    const action=willRetry?'Native Codex reported a retry for this turn. Read its latest native task outcome above.':actions[code] || (/ConnectionFailed|StreamDisconnected/.test(code || '')?'Check the selected provider connection and retained activity before retrying.':'Review the retained activity and native error before continuing.');
+    return {label:willRetry?'Native retry reported':'Native task failed',message,code,http:Number.isInteger(http)?http:null,action,additional:typeof e.additionalDetails==='string'?e.additionalDetails:null};
   }
   function usage(value){
     let u=value;if(typeof u==='string'){try{u=JSON.parse(u);}catch{return 'Native usage is unavailable.';}}
@@ -41,5 +41,14 @@ const DeskNativeState=(()=>{
     if(f.additional){const details=make('details'),summary=make('summary','Native error details');details.append(summary,make('pre',f.additional));card.append(details);}
     return card;
   }
-  return {failure,usage,card};
+  const outcomeLabels={inProgress:'In progress',completed:'Completed',failed:'Failed',interrupted:'Interrupted',unreported:'Status unreported'};
+  function outcome(value,make){
+    if(!value || typeof value.turn_id!=='string')return null;
+    const node=make('section','','native-outcome-card');
+    node.append(make('strong',outcomeLabels[value.status] || 'Native status: '+value.status));
+    if(value.error)node.append(card(value.error,false,make));
+    else node.append(make('p',value.status==='inProgress'?'This native turn has not finished.':'No native turn error was reported.','muted'));
+    return node;
+  }
+  return {failure,usage,card,outcome};
 })();

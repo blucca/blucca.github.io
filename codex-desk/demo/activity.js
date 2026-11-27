@@ -228,7 +228,7 @@
   function render(node, item, value) {
     const collaboration = collaborationTypes.has(item.type);
     const text = String(collaboration ? root.DeskEvidence.collaboration(item) : value ?? '');
-    const mode = collaboration ? 'collaboration' : toolTypes.has(item.type) ? 'tool' : item.type === 'agentMessage' ? 'markdown' : 'plain';
+    const mode = collaboration ? 'collaboration' : toolTypes.has(item.type) ? 'tool' : item.type === 'plan' ? 'plan' : item.type === 'agentMessage' ? 'markdown' : 'plain';
     let reader = readers.get(node);
     node.dataset.itemId = item.id;node.classList.add('activity-reader');node.hidden = !toolTypes.has(item.type) && !text.trim();
     if(!reader || reader.mode !== mode) {
@@ -247,6 +247,12 @@
         reader.summary = element('div', undefined, 'activity-collaboration-label');
         reader.body = element('pre', undefined, 'activity-evidence');
         node.append(reader.summary, reader.body);
+      } else if(mode === 'plan') {
+        reader.label = element('strong', '', 'activity-plan-label');
+        reader.body = element('pre', undefined, 'activity-plan');
+        reader.body.tabIndex = 0;
+        reader.body.setAttribute('aria-label', 'Proposed plan text');
+        node.append(reader.label, reader.body);
       } else {
         reader.body = element('div', undefined, 'activity-' + mode);node.append(reader.body);
       }
@@ -259,10 +265,36 @@
       reader.summary.textContent = summary(item);
     }
     if(mode === 'collaboration')reader.summary.textContent = summary(item);
+    if(mode === 'plan') {
+      const state = item._deskPlan;
+      reader.label.textContent = state === 'streaming' ? 'Proposed plan · Streaming' :
+        state === 'complete' ? 'Proposed plan · Final native item' :
+        ['completed', 'interrupted', 'failed'].includes(state) ? 'Partial proposed plan · Task ' + state :
+        state === 'retired' ? 'Partial proposed plan · Earlier task' : 'Proposed plan';
+    }
     if(reader.text === text)return;
+    const previous = reader.text;
     reader.text = text;
     if(mode === 'markdown') {reader.body.replaceChildren();blocks(reader.body, text.replace(/\r\n?/g, '\n').split('\n'));}
-    else reader.body.textContent = text;
+    else {
+      const top = reader.body.scrollTop, left = reader.body.scrollLeft;
+      // Append on the existing live text node so an earlier DOM selection
+      // stays on its exact text. A final native item replaces the provisional.
+      if(mode === 'plan' && item._deskPlan === 'streaming' && typeof previous === 'string' && text.startsWith(previous) && reader.body.firstChild?.nodeType === 3)
+        reader.body.firstChild.appendData(text.slice(previous.length));
+      else reader.body.textContent = text;
+      if(mode === 'plan') {reader.body.scrollTop = top;reader.body.scrollLeft = left;}
+    }
   }
-  root.DeskActivity = {render};
+  function reading() {
+    const inPlan = node => {
+      const element = node?.nodeType === 3 ? node.parentElement : node;
+      const plan = element?.closest?.('.activity-plan');
+      return !!plan?.isConnected && !plan.closest('[hidden]');
+    };
+    if(inPlan(document.activeElement))return true;
+    const selection = root.getSelection?.();
+    return !!selection && !selection.isCollapsed && (inPlan(selection.anchorNode) || inPlan(selection.focusNode));
+  }
+  root.DeskActivity = {render, reading};
 })(typeof globalThis === 'undefined' ? this : globalThis);

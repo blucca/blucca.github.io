@@ -4,7 +4,7 @@ const DeskRecall=(()=>{
   let options, searchVersion=0, openVersion=0, navigationVersion=0;
   let searching=false, resultOpening=false, projectSignature='', target=null, pendingNavigation=null;
   let scanVersion=0, scanTimer=null, scanBusy=false, scanReading=false, scanReady=false, scanIssue=false, scanJob=null;
-  let scanRefresh=null, lastSearch=null, resultPage=null;
+  let scanRefresh=null, lastSearch=null, resultPage=null, requestOwner=null, returnOrigin=null;
   let nativeIndexedThreads=null, indexPromoted=false, emptySearch=false;
   const nativeProjects=new Set();
   const query=()=>({q:el('recall-query').value.trim(),cwd:el('recall-project').value,archived:el('recall-archived').checked});
@@ -12,7 +12,7 @@ const DeskRecall=(()=>{
   const current=(version,scope)=>version===searchVersion && el('recall').open && sameQuery(scope,query());
   const make=(tag,text,cls)=>options.make(tag,text,cls);
   function clearTarget(){if(target){target.node.classList.remove('recall-target');if(target.addedTabindex)target.node.removeAttribute('tabindex');target=null;}}
-  function selectionChanged(){clearTarget();++navigationVersion;pendingNavigation=null;scanRefresh=null;}
+  function selectionChanged(){stopRequest();clearTarget();++navigationVersion;pendingNavigation=null;scanRefresh=null;}
   function projects(){
     if(!options)return;
     const values=[...new Set([...options.state().sessions.map(s=>s.cwd),...nativeProjects].filter(Boolean))].sort();
@@ -45,7 +45,7 @@ const DeskRecall=(()=>{
     }
   }
   function invalidate(){
-    ++searchVersion;++openVersion;++navigationVersion;searching=false;resultOpening=false;pendingNavigation=null;
+    stopRequest();++searchVersion;++openVersion;++navigationVersion;searching=false;resultOpening=false;pendingNavigation=null;
     lastSearch=null;resultPage=null;emptySearch=false;if(scanRefresh)scanRefresh.search=null;
     el('recall-error').hidden=true;el('recall-results').replaceChildren();
     el('recall-summary').textContent='Query changed. Choose Search to update saved content.';buttons();
@@ -125,7 +125,7 @@ const DeskRecall=(()=>{
     const ticket=scanRefresh.search;
     if(!ticket || !current(ticket.version,ticket.scope) || ticket.navigation!==navigationVersion ||
        ticket.selected!==options.selected() || ticket.generation!==options.generation() ||
-       resultOpening || el('history-reader').open || el('recall-results').contains(document.activeElement)){
+       resultOpening || requestOwner || el('history-reader').open || el('recall-results').contains(document.activeElement)){
       scanRefresh=null;return;
     }
     if(searching)return; // Its own current request must settle before one fresh lookup.
@@ -166,7 +166,7 @@ const DeskRecall=(()=>{
   }
   function coverage(value){
     const counts=[];
-    for(const [key,label] of [['sessions','Desk sessions'],['activity_items','cached activity items'],['drafts','saved drafts'],['followups','prepared follow-ups']]){
+    for(const [key,label] of [['sessions','Desk sessions'],['activity_items','cached activity items'],['drafts','saved drafts'],['followups','prepared follow-ups'],['turn_requests','unconfirmed captured requests']]){
       if(Number.isFinite(value?.[key]))counts.push(value[key]+' '+label);
     }
     nativeCoverage(value?.native);
@@ -174,16 +174,16 @@ const DeskRecall=(()=>{
   }
   function resultRow(result,version,scope){
     const row=make('article','','recall-result');rowData.set(row,result);if(result.session_id)row.dataset.session=result.session_id;if(result.thread_id)row.dataset.thread=result.thread_id;row.dataset.kind=result.kind;
-    if(result.item_id)row.dataset.item=result.item_id;if(result.followup_id)row.dataset.followup=result.followup_id;
+    if(result.token)row.dataset.token=result.token;if(result.item_id)row.dataset.item=result.item_id;if(result.followup_id)row.dataset.followup=result.followup_id;
     const name=result.session_name || result.title || result.name || result.cwd || 'Saved conversation';
-    const kind={activity:'Cached activity','native-activity':'Indexed native activity',draft:'Saved draft',followup:'Prepared follow-up'}[result.kind] || 'Saved content';
+    const kind={activity:'Cached activity','native-activity':'Indexed native activity',draft:'Saved draft',followup:'Prepared follow-up',turn_request:'Unconfirmed captured '+(result.mode==='plan'?'Plan':'Work')+' request'}[result.kind] || 'Saved content';
     row.append(make('h3',name),make('p',kind+(result.archived?' · Archived locally':''),'recall-kind'),
       make('p',`${result.cwd || ''}\n${options.profileLabel(result.profile)}${result.kind==='native-activity' && result.provider?' · '+result.provider:''}`,'recall-binding'),snippet(result.snippet,result.match_text));
     if(Number.isFinite(result.updated) && result.updated>0){
       const date=new Date(result.updated*1000);
       if(!Number.isNaN(date.getTime())){const time=make('time',date.toLocaleString(),'recall-updated');time.dateTime=date.toISOString();row.append(time);}
     }
-    const action=make('button',{activity:'Open matching activity','native-activity':'Continue this conversation',draft:'Go to saved draft',followup:'Go to prepared follow-up'}[result.kind] || 'Open saved content','recall-open');action.type='button';
+    const action=make('button',{activity:'Open matching activity','native-activity':'Continue this conversation',draft:'Go to saved draft',followup:'Go to prepared follow-up',turn_request:'Review captured request'}[result.kind] || 'Open saved content','recall-open');action.type='button';
     action.setAttribute('aria-label',action.textContent+' in '+name);
     const notice=make('p','','recall-result-status');notice.setAttribute('role','status');notice.hidden=true;
     if(['native-activity','activity'].includes(result.kind) && result.thread_id){
@@ -192,20 +192,53 @@ const DeskRecall=(()=>{
       read.onclick=()=>DeskHistoryReader.show(result,{valid:()=>current(version,scope) && row.isConnected});
       row.append(read);
     }
-    action.onclick=()=>reveal(result,row,notice,version,scope);row.append(action,notice);return row;
+    action.onclick=()=>activateResult(result,row,notice,version,scope);row.append(action,notice);return row;
   }
   function bindRows(version,scope){
     for(const row of el('recall-results').children){const result=rowData.get(row);
       if(result){
-        row.querySelector('.recall-open').onclick=()=>reveal(result,row,row.querySelector('.recall-result-status'),version,scope);
+        row.querySelector('.recall-open').onclick=()=>activateResult(result,row,row.querySelector('.recall-result-status'),version,scope);
         const read=row.querySelector('.recall-read');
         if(read)read.onclick=()=>DeskHistoryReader.show(result,{valid:()=>current(version,scope) && row.isConnected});
       }
     }
   }
+  function stopRequest(){
+    requestOwner=null;
+    globalThis.DeskPreparedRequest?.close('recall');
+  }
+  function activateResult(result,row,notice,version,scope){
+    return result.kind==='turn_request'?reviewRequest(result,row,notice,version,scope):reveal(result,row,notice,version,scope);
+  }
+  async function reviewRequest(result,row,notice,version,scope){
+    if(searching || resultOpening || !current(version,scope) || !row.isConnected)return false;
+    const viewer=globalThis.DeskPreparedRequest;
+    if(!viewer?.validIdentity(result.session_id,result.token)){
+      notice.textContent='The captured request identity is unavailable. Choose Search to refresh results.';notice.hidden=false;return false;
+    }
+    const page=resultPage,navigation=++navigationVersion,selected=options.selected(),generation=options.generation();
+    const view={scroll:el('recall').scrollTop,resultsScroll:el('recall-results').scrollTop};
+    scanRefresh=null;
+    const owner={origin:'recall',backLabel:'Return to results',
+      valid:()=>requestOwner===owner && current(version,scope) && page===resultPage && row.isConnected &&
+        navigation===navigationVersion && selected===options.selected() && generation===options.generation(),
+      refreshMessage:'Review recorded. Return to results, then choose Search to update this saved query.',
+      onResolved:()=>{
+        if(!owner.valid())return false;
+        notice.textContent='Review recorded. Choose Search to update these results.';notice.hidden=false;return false;
+      },
+      onReturn:()=>{
+        if(!owner.valid())return;
+        requestOwner=null;el('recall').scrollTop=view.scroll;el('recall-results').scrollTop=view.resultsScroll;
+        const action=row.querySelector('.recall-open');
+        if(action && !action.disabled)action.focus({preventScroll:true});
+      }};
+    requestOwner=owner;
+    return viewer.show({id:result.session_id,name:result.session_name,cwd:result.cwd,turn_request:{token:result.token}},owner);
+  }
   async function search(offset=null,revealPage=false){
     if(!options)return;
-    const scope=query(),requestedOffset=offset ?? 0;
+    stopRequest();const scope=query(),requestedOffset=offset ?? 0;
     const keepPage=offset!==null && resultPage && sameQuery(resultPage.scope,scope);
     if(scope.q.length<2 || scope.q.length>200){
       el('recall-error').textContent='Enter 2–200 characters from a saved message, tool result or prepared task.';
@@ -338,7 +371,21 @@ const DeskRecall=(()=>{
     }catch(error){if(valid()){notice.textContent=error.message;notice.hidden=false;}}
     finally{if(ticket===openVersion){resultOpening=false;buttons();}}
   }
+  function restoreOrigin(){
+    const origin=returnOrigin;returnOrigin=null;
+    if(!origin || origin.selected!==options.selected() || origin.generation!==options.generation() ||
+      !origin.node || origin.node.isConnected===false || origin.node.disabled ||
+      (origin.value!==undefined && origin.node.value!==origin.value))return;
+    origin.node.focus({preventScroll:true});
+    if(Number.isInteger(origin.start) && Number.isInteger(origin.end))origin.node.setSelectionRange?.(origin.start,origin.end,origin.direction);
+    if(typeof origin.scroll==='number')origin.node.scrollTop=origin.scroll;
+  }
   function show(){
+    if(!el('recall').open){
+      const node=document.activeElement;
+      returnOrigin={node,selected:options.selected(),generation:options.generation(),value:node?.value,
+        start:node?.selectionStart,end:node?.selectionEnd,direction:node?.selectionDirection,scroll:node?.scrollTop};
+    }
     ++navigationVersion;pendingNavigation=null;projects();
     const version=searchVersion,scope=query();
     // A new explicit scan can refresh a retained submitted query in this
@@ -356,19 +403,20 @@ const DeskRecall=(()=>{
     el('recall-index').onclick=()=>controlScan();el('recall-index-cancel').onclick=()=>controlScan(true);
     el('recall-index-older').onclick=()=>controlScan(false,'older');
     el('recall-index-retry').onclick=()=>scanIssue?readScan():controlScan(false,'retry');
-    el('recall-form').onsubmit=event=>{event.preventDefault();search();};
+    el('recall-form').onsubmit=event=>{event.preventDefault();search(resultPage && sameQuery(resultPage.scope,query())?resultPage.offset:null);};
     const previous=el('recall-previous'),next=el('recall-next');
     if(previous)previous.onclick=()=>{if(resultPage && !previous.disabled)search(Math.max(0,resultPage.offset-resultPage.limit),true);};
     if(next)next.onclick=()=>{if(resultPage && !next.disabled)search(resultPage.offset+resultPage.limit,true);};
     el('recall-query').oninput=invalidate;el('recall-project').onchange=invalidate;el('recall-archived').onchange=invalidate;
-    el('recall-close').onclick=()=>el('recall').close();
+    el('recall-close').onclick=()=>{el('recall').close();restoreOrigin();};
     el('recall').addEventListener('close',()=>{
-      stopScanPolling();++scanVersion;scanReading=false;scanReady=false;scanRefresh=null;
+      if(el('recall').open)return;
+      stopRequest();stopScanPolling();++scanVersion;scanReading=false;scanReady=false;scanRefresh=null;
       const nav=pendingNavigation;pendingNavigation=null;++searchVersion;++openVersion;
       if(searching){lastSearch=null;el('recall-summary').textContent='Search canceled. Choose Search to try again.';}
       searching=false;resultOpening=false;buttons();
       // show() rebinds retained results to the next dialog generation.
-      if(nav)requestAnimationFrame(()=>focusMatch(nav));
+      if(nav){returnOrigin=null;requestAnimationFrame(()=>focusMatch(nav));}else restoreOrigin();
     });
     el('recall').addEventListener('cancel',()=>{pendingNavigation=null;++navigationVersion;});
   }

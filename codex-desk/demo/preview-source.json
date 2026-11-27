@@ -1,10 +1,11 @@
 {
   "source": "blucca/codex-desk",
-  "runtime_version": "0.1.0a43",
+  "runtime_version": "0.1.0a53",
   "sample": true,
   "assets": [
     "activity.js",
     "app.js",
+    "evidence-preparation.js",
     "evidence.js",
     "followups.js",
     "history_find.js",
@@ -12,9 +13,13 @@
     "home.js",
     "index.html",
     "native-state.js",
+    "native-steps.js",
     "preparation.js",
     "recall.js",
-    "style.css"
+    "steering.js",
+    "stop-task.js",
+    "style.css",
+    "turn-changes.js"
   ],
   "build": "python3 examples/build_browser_preview.py --out OUTPUT"
 }

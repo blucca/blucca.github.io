@@ -1,4 +1,6 @@
 const $ = id => document.getElementById(id);
+DeskNativeSteps.configure({$,make});
+DeskTurnChanges.configure({$,writeText:text=>navigator.clipboard.writeText(text)});
 function consumeDeskAccessFragment(){
   const accessFragment = new URLSearchParams(window.location.hash.slice(1));
   if(!accessFragment.has('access'))return false;
@@ -16,13 +18,13 @@ function deskAccessHeaders(headers={}){
 let state = {profiles: [], sessions: []}, selected = null, after = 0, items = new Map(), requests = new Map();
 const nodes = new Map(), itemTurns = new Map(), collaborationGroups = new Map();
 const collaborationTypes = new Set(['collabAgentToolCall', 'subAgentActivity']);
-let nativeThreadId = null, currentTurn = null;
-let modeSelected=null, generation=0, opening=false, refreshVersion=0, nativeFailureSignature='';
+let nativeThreadId = null, currentTurn = null, stopStateSnapshot = null;
+let modeSelected=null, generation=0, opening=false, refreshVersion=0, nativeOutcomeSignature='',nativeFailureSignature='';
 const drafts=new Map(), submitting=new Set();
 let projectVersion=0, projectCursor=null, projectQuery=null, projectScope=null, projectOpening=false;
 let latestUpdates=0, statePollAt=0;
 const draftWriter=crypto.randomUUID();
-const draftEdits=new Map(), draftRevisions=new Map(), draftModes=new Map(), draftSaved=new Map(), draftLoads=new Map(), draftSaves=new Map(), draftTimers=new Map(), draftConflicts=new Map(), draftMessages=new Map();
+const draftEdits=new Map(), draftRevisions=new Map(), draftModes=new Map(), draftSaved=new Map(), draftLoads=new Map(), draftSaves=new Map(), draftTimers=new Map(), draftConflicts=new Map(), draftMessages=new Map(), draftIdentities=new Map();
 function draftStatus(id=selected){
   if(id!==selected)return;
   $('draft-status').textContent=draftMessages.get(id) || 'Unsent task drafts stay private in your local Desk database.';
@@ -44,7 +46,7 @@ async function loadDraft(id,current=generation){
   await draftLoads.get(id);
   if(current===generation && selected===id){$('prompt').value=drafts.get(id) || '';if(draftModes.has(id)){$('turn-mode').value=draftModes.get(id);modeSelected=id;}draftStatus(id);}
 }
-function persistDraft(id){
+function persistDraft(id,{identify=false,onSaved=null}={}){
   clearTimeout(draftTimers.get(id));draftTimers.delete(id);
   const previous=draftSaves.get(id) || Promise.resolve();
   const pending=previous.then(async()=>{
@@ -52,12 +54,13 @@ function persistDraft(id){
     if(draftConflicts.has(id))return false;
     if(!draftRevisions.has(id))return false;
     const text=drafts.get(id) || '', mode=draftModes.get(id) || 'native', saved=draftSaved.get(id);
-    if(saved && saved.text===text && saved.mode===mode){draftMessages.set(id,'Draft saved locally. Nothing has been sent.');draftStatus(id);return true;}
+    const sequence=draftEdits.get(id) || 0, identity=draftIdentities.get(id);
+    if(saved && saved.text===text && saved.mode===mode && (!identity || identity.sequence===sequence) && (!identify || (identity?.revision===saved.revision && identity.sequence===sequence))){draftMessages.set(id,'Draft saved locally. Nothing has been sent.');draftStatus(id);return true;}
     draftMessages.set(id,'Saving draft…');draftStatus(id);
     try{
-      const next=await api('/api/draft',{session:id,text,mode,revision:draftRevisions.get(id),writer:draftWriter,sequence:draftEdits.get(id) || 0});
-      draftRevisions.set(id,next.revision);draftSaved.set(id,next);
-      draftMessages.set(id,'Draft saved locally. Nothing has been sent.');draftStatus(id);return true;
+      const next=await api('/api/draft',{session:id,text,mode,revision:draftRevisions.get(id),writer:draftWriter,sequence});
+      draftRevisions.set(id,next.revision);draftSaved.set(id,next);draftIdentities.set(id,{revision:next.revision,sequence});
+      draftMessages.set(id,'Draft saved locally. Nothing has been sent.');draftStatus(id);if(onSaved)onSaved({...next});return true;
     }catch(e){
       if(e.status===409 && e.current){draftConflicts.set(id,e.current);draftMessages.set(id,'This session’s draft changed in another tab. Choose which preparation to keep.');}
       else draftMessages.set(id,'Draft not saved: '+e.message);
@@ -72,12 +75,204 @@ function scheduleDraft(id){
   draftTimers.set(id,setTimeout(()=>persistDraft(id),350));
 }
 $('draft-keep').onclick=()=>{const id=selected,current=draftConflicts.get(id);if(!current)return;draftRevisions.set(id,current.revision);draftSaved.set(id,current);draftConflicts.delete(id);draftEdits.set(id,(draftEdits.get(id) || 0)+1);persistDraft(id);};
-$('draft-load').onclick=()=>{const id=selected,current=draftConflicts.get(id);if(!current)return;draftRevisions.set(id,current.revision);draftSaved.set(id,current);drafts.set(id,current.text);draftModes.set(id,current.mode);draftConflicts.delete(id);draftEdits.set(id,(draftEdits.get(id) || 0)+1);$('prompt').value=current.text;$('turn-mode').value=current.mode;modeSelected=id;draftMessages.set(id,'Saved draft loaded. Nothing has been sent.');draftStatus(id);};
+$('draft-load').onclick=()=>{const id=selected,current=draftConflicts.get(id);if(!current)return;draftRevisions.set(id,current.revision);draftSaved.set(id,current);drafts.set(id,current.text);draftModes.set(id,current.mode);draftConflicts.delete(id);draftEdits.set(id,(draftEdits.get(id) || 0)+1);$('prompt').value=current.text;$('turn-mode').value=current.mode;modeSelected=id;draftMessages.set(id,'Saved draft loaded. Nothing has been sent.');draftStatus(id);syncDraftEvidence();DeskEvidencePreparation.sync();};
 window.addEventListener('pagehide',()=>{
   if(selected)rememberDraft(selected);
   // A debounced save can already be waiting behind an in-flight response.
   for(const id of new Set([...draftTimers.keys(),...draftSaves.keys()])){clearTimeout(draftTimers.get(id));if(draftRevisions.has(id) && !draftConflicts.has(id))fetch('/api/draft',{method:'POST',headers:deskAccessHeaders({'Content-Type':'application/json'}),body:JSON.stringify({session:id,text:drafts.get(id) || '',mode:draftModes.get(id) || 'native',revision:draftRevisions.get(id),writer:draftWriter,sequence:draftEdits.get(id) || 0}),keepalive:true}).catch(()=>{});}
 });
+// Browser retention is opaque. Captured work stays in memory or the private receipt.
+const turnRequestKey='codex-desk-turn-requests', turnTokens=new Map(), turnRequests=new Map();
+let turnCapturedView=null;
+try{
+  const retained=JSON.parse(sessionStorage.getItem(turnRequestKey) || '[]');
+  if(Array.isArray(retained))for(const entry of retained){
+    if(typeof entry?.session==='string' && entry.session && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(entry.token))turnTokens.set(entry.session,entry.token);
+  }
+}catch(e){}
+function saveTurnTokens(){sessionStorage.setItem(turnRequestKey,JSON.stringify([...turnTokens].map(([session,token])=>({session,token}))));}
+function turnRequest(id=selected){
+  if(!turnRequests.has(id) && turnTokens.has(id))turnRequests.set(id,{session:id,token:turnTokens.get(id),body:null,capture:null,status:null,receiptVersion:0});
+  return turnRequests.get(id);
+}
+function turnRequestBlocked(id=selected){const request=turnRequest(id);return !!request && !['accepted','rejected'].includes(request.status);}
+function retireTurnRequest(request){
+  if(turnRequests.get(request.session)!==request)return false;
+  turnTokens.delete(request.session);
+  try{saveTurnTokens();}catch(e){turnTokens.set(request.session,request.token);request.error=e;return false;}
+  turnRequests.delete(request.session);return true;
+}
+function reconcileTurnDraft(request,saved){
+  const id=request.session,body=request.body,previous=draftSaved.get(id),revision=draftRevisions.get(id);
+  if(!body || !saved || !Number.isInteger(saved.revision) || (revision ?? -1)>saved.revision)return false;
+  const clean=previous && drafts.get(id)===previous.text && draftModes.get(id)===previous.mode && !draftTimers.has(id) && !draftSaves.has(id) && !draftConflicts.has(id);
+  const exact=drafts.get(id)===body.text && draftModes.get(id)===body.mode &&
+    (request.capture?(draftEdits.get(id) || 0)===request.capture.edit && revision===body.revision && (!request.capture.cold || request.capture.clean):
+      clean && revision===body.revision);
+  // Only the backend's exact conditional clear is proof to clear this editor.
+  const cleared=saved.text==='' && saved.mode===body.mode && saved.revision===body.revision+1;
+  if(exact && cleared){
+    clearTimeout(draftTimers.get(id));draftTimers.delete(id);
+    draftEdits.set(id,(draftEdits.get(id) || 0)+1);drafts.set(id,'');
+    if(selected===id && $('prompt').value===body.text && $('turn-mode').value===body.mode)$('prompt').value='';
+    draftMessages.set(id,'Task accepted. Draft cleared.');
+  }
+  // A different saved preparation still uses the existing explicit conflict UI.
+  if(!cleared && previous && saved.revision>(revision ?? -1) && (drafts.get(id)!==saved.text || draftModes.get(id)!==saved.mode)){
+    draftConflicts.set(id,saved);draftMessages.set(id,'Task accepted. The saved draft changed in another tab; your local preparation remains unsent.');draftStatus(id);return false;
+  }
+  // A receipt can advance the saved revision while newer local edits remain unsent.
+  draftRevisions.set(id,saved.revision);draftSaved.set(id,saved);
+  if(draftConflicts.get(id)?.revision<=saved.revision && exact && cleared)draftConflicts.delete(id);
+  if(!(exact && cleared) && drafts.get(id)!==saved.text)draftMessages.set(id,'Task accepted. Your newer draft remains unsent.');
+  draftStatus(id);
+  return (exact && cleared) || (clean && drafts.get(id)==='' && saved.text==='');
+}
+function applyTurnReceipt(request,result){
+  if(turnRequests.get(request.session)!==request)return;
+  if(result?.session!==request.session || result?.token!==request.token || !['pending','accepted','rejected','needs_review'].includes(result.request?.status))throw Error('The Run receipt did not match this request');
+  const receipt=result.request;
+  if(receipt.payload){
+    const body=receipt.payload;
+    if(body.session!==request.session || body.token!==request.token)throw Error('The captured Run request did not match its receipt');
+    if(!request.body)request.body=Object.freeze({...body});
+    else if(['session','token','text','mode','revision','writer','sequence'].some(key=>body[key]!==request.body[key]))request.conflict=true;
+  }
+  request.status=receipt.status;request.result=result;request.notFound=false;request.error=null;++request.receiptVersion;
+  if(receipt.status==='accepted' && !request.conflict && !receipt.binding_mismatch && reconcileTurnDraft(request,receipt.draft))retireTurnRequest(request);
+}
+function turnBindingText(binding){return DeskTurnReview.bindingText(binding);}
+function sameTurnBinding(a,b){return DeskTurnReview.sameBinding(a,b);}
+function drawCapturedTurn(request){
+  const body=DeskTurnReview.captured(request),disclosure=$('turn-request-captured');
+  disclosure.hidden=!body;
+  if(!body)return;
+  if(turnCapturedView?.session===request.session && turnCapturedView.token===request.token && turnCapturedView.text===body.text && turnCapturedView.mode===body.mode)return;
+  const identityChanged=turnCapturedView?.session!==request.session || turnCapturedView?.token!==request.token;
+  $('turn-request-captured-title').textContent=body.title;
+  $('turn-request-captured-text').textContent=body.text;
+  $('turn-request-captured-text').scrollTop=0;
+  if(identityChanged)disclosure.open=['pending','needs_review','rejected'].includes(request.status);
+  turnCapturedView={session:request.session,token:request.token,text:body.text,mode:body.mode};
+}
+function drawTurnRequest(){
+  const request=turnRequest(),busy=opening || submitting.has(selected) || !!request?.reading || !!request?.writing;
+  $('turn-request').hidden=!request;
+  drawCapturedTurn(request);
+  $('prompt').required=!request;
+  $('send').textContent=request?'Check Run request':'Run task';
+  if(request)$('send').disabled=busy;
+  $('turn-request-recover').disabled=busy;
+  $('turn-request-retry').hidden=request?.status!=='rejected' || request.conflict;
+  const mismatch=!!request?.result?.request?.binding_mismatch;
+  $('turn-request-retry').disabled=busy || !request?.body || mismatch;
+  for(const name of ['accepted','rejected']){
+    $('turn-request-'+name).hidden=request?.status!=='needs_review' || mismatch;
+    $('turn-request-'+name).disabled=busy || mismatch;
+  }
+  $('turn-request-new').hidden=!request || !['accepted','rejected'].includes(request.status);
+  $('turn-request-new').disabled=busy;
+  $('turn-request-new').textContent=mismatch?'Use current target for a new task':'Prepare a new task';
+  $('turn-request-binding').hidden=!mismatch;
+  if(mismatch){
+    $('turn-request-original-binding').textContent=turnBindingText(request.result.request.binding);
+    $('turn-request-current-binding').textContent=turnBindingText(request.result.request.current_binding);
+  }
+  const failure=request?.error?.message || request?.result?.request?.error || '';
+  $('turn-request-error').hidden=!failure;
+  $('turn-request-error').textContent=failure;
+  if(!request)return;
+  let message=request.writing?'Sending the captured Run request…':request.reading?'Checking the retained Run request. Nothing is being sent.':
+    request.status==='accepted'?'Run accepted. Your current draft remains unsent. Prepare a new task before another Run.':
+    request.status==='rejected'?'Run rejected. Retry the original captured task, or prepare a new task.':
+    request.status==='needs_review'?'Run unconfirmed. Review this conversation’s activity, then record whether it started.':
+    request.status==='pending'?'Run receipt pending. Check this request before sending another task.':
+    request.notFound?'No retained receipt found yet. Check this request again; the visible draft will not be resent.':
+    'Run response unconfirmed. Check the retained request before another task.';
+  if(request.body && (drafts.get(selected)!==request.body.text || draftModes.get(selected)!==request.body.mode) && request.status!=='accepted')message+=' Your current draft has not been sent.';
+  if(mismatch)message+=' The retained original target differs from the current target. Original retry and admission review are blocked. '+(['accepted','rejected'].includes(request.status)?'Review both targets before choosing a new task on the current target.':'Restore the original target, then Check request.');
+  if(request.reviewMessage)message+=' '+request.reviewMessage;
+  if(request.conflict)message+=' This token belongs to different captured work; its original receipt is retained.';
+  $('turn-request-status').textContent=message;
+}
+async function readTurnRequest(request){
+  if(request.reading)return request.reading;
+  const receiptVersion=request.receiptVersion;
+  if(!request.capture && draftRevisions.has(request.session)){
+    const id=request.session,saved=draftSaved.get(id);
+    request.capture={edit:draftEdits.get(id) || 0,cold:true,clean:!!saved && drafts.get(id)===saved.text && draftModes.get(id)===saved.mode && !draftTimers.has(id) && !draftSaves.has(id) && !draftConflicts.has(id)};
+  }
+  const pending=(async()=>{
+    try{
+      const result=await api('/api/turn/request?session='+encodeURIComponent(request.session)+'&token='+encodeURIComponent(request.token));
+      if(receiptVersion===request.receiptVersion)applyTurnReceipt(request,result);
+    }catch(e){if(receiptVersion===request.receiptVersion){request.error=e;if(e.status===404)request.notFound=true;}}
+    finally{request.reading=null;if(selected===request.session)draw();}
+  })();
+  request.reading=pending;if(selected===request.session)draw();return pending;
+}
+async function discoverTurnRequest(id){
+  try{
+    const result=await api('/api/turn/request?session='+encodeURIComponent(id));
+    if(result?.session!==id || !['pending','needs_review'].includes(result.request?.status))return null;
+    const request={session:id,token:result.token,body:null,capture:null,status:null,receiptVersion:0};
+    if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(request.token))throw Error('The retained Run request identity could not be read');
+    turnTokens.set(id,request.token);
+    try{saveTurnTokens();}catch(e){turnTokens.delete(id);throw e;}
+    turnRequests.set(id,request);applyTurnReceipt(request,result);return request;
+  }catch(e){if(e.status===404)return null;throw e;}
+}
+function adoptTurnConflict(request,result){
+  if(result?.session!==request.session || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(result?.token) || !result.request)return null;
+  if(result.token===request.token){applyTurnReceipt(request,result);return request;}
+  // The server rejected this fresh Run because earlier captured work still owns
+  // this session. Recover that identity, never replay the newer visible draft.
+  const retained={session:request.session,token:result.token,body:null,capture:null,status:null,receiptVersion:0};
+  turnTokens.set(request.session,retained.token);
+  try{saveTurnTokens();}catch(e){turnTokens.set(request.session,request.token);throw e;}
+  turnRequests.set(request.session,retained);applyTurnReceipt(retained,result);return retained;
+}
+async function sendTurnRequest(request,{retry=false}={}){
+  const id=request.session;
+  if(!request.body || request.writing || request.reading || (retry && (request.status!=='rejected' || request.conflict || request.result?.request?.binding_mismatch)))return;
+  request.writing=true;request.error=null;if(selected===id)draw();
+  try{
+    const result=await api('/api/turn',retry?{...request.body,retry:true}:request.body);
+    applyTurnReceipt(request,result);
+    if(selected===id)await refresh();
+  }catch(e){
+    request.error=e;
+    if(e.status===409){
+      try{const retained=adoptTurnConflict(request,e.current);if(retained && retained!==request)await readTurnRequest(retained);else if(retained)retained.error=e;}
+      catch(failure){request.error=failure;}
+    }
+  }finally{request.writing=false;if(selected===id)draw();}
+}
+$('turn-request-recover').onclick=()=>{const request=turnRequest();if(request && !opening)return readTurnRequest(request);};
+$('turn-request-retry').onclick=()=>{const request=turnRequest();if(request && !opening && !submitting.has(selected))return sendTurnRequest(request,{retry:true});};
+for(const outcome of ['accepted','rejected'])$('turn-request-'+outcome).onclick=async()=>{
+  const request=turnRequest();if(!request || opening || submitting.has(selected) || request.status!=='needs_review' || request.result?.request?.binding_mismatch || request.reading || request.writing)return;
+  request.writing=true;request.error=null;draw();
+  try{applyTurnReceipt(request,await api('/api/turn/resolve',{session:request.session,token:request.token,outcome}));if(selected===request.session)await refresh();}
+  catch(e){request.error=e;}
+  finally{request.writing=false;if(selected===request.session)draw();}
+};
+$('turn-request-new').onclick=async()=>{
+  const request=turnRequest();if(!request || opening || request.reading || request.writing || submitting.has(selected) || !['accepted','rejected'].includes(request.status))return;
+  if(request.result?.request?.binding_mismatch){
+    const intent={session:selected,generation,edit:draftEdits.get(selected) || 0,text:$('prompt').value,mode:$('turn-mode').value,binding:request.result.request.current_binding};
+    request.reviewMessage=null;
+    await readTurnRequest(request);
+    if(turnRequest(intent.session)!==request || selected!==intent.session || generation!==intent.generation)return;
+    if(request.error || !['accepted','rejected'].includes(request.status))return;
+    if((draftEdits.get(selected) || 0)!==intent.edit || $('prompt').value!==intent.text || $('turn-mode').value!==intent.mode || !sameTurnBinding(intent.binding,request.result?.request?.current_binding)){
+      request.reviewMessage='The draft or current target changed during review. Review the current details and choose again.';draw();return;
+    }
+  }
+  if(retireTurnRequest(request)){draftMessages.set(request.session,'New task prepared. Review the draft, then choose Run task.');draftStatus(request.session);}
+  draw();
+};
+
 function nearLatest(){return window.scrollY+window.innerHeight >= document.documentElement.scrollHeight-140;}
 function latestLabel(){
   $('latest-output').textContent=latestUpdates?`${latestUpdates} new update${latestUpdates===1?'':'s'} · Latest output ↓`:'Latest output ↓';
@@ -189,14 +384,17 @@ function syncSelectedOriginal(){
   }
   const button=$('read-original'),session=state.sessions.find(s=>s.id===selected),binding=selectedOriginalBinding();
   button.hidden=!session;button.disabled=!binding || !!selectedOriginalReview?.pending;
+  if($('read-task-response'))$('read-task-response').disabled=!binding || !!selectedOriginalReview?.pending || $('history-reader').open;
   button.title=opening?'Wait for the native conversation binding.':!binding?'Native conversation not available yet.':'Read this conversation without opening or sending a task.';
 }
-async function readSelectedOriginal({find=false,returnFocus=$('read-original')}={}){
+async function readSelectedOriginal({find=false,taskResponse=false,returnFocus=$('read-original')}={}){
   const binding=selectedOriginalBinding();if(!binding || selectedOriginalReview?.pending || $('history-reader').open)return false;
-  const intent={...binding,pending:true,returnFocus};selectedOriginalReview=intent;syncSelectedOriginal();
+  const outcome=state.native_outcomes?.[binding.session];
+  if(taskResponse && (!outcome || outcome.thread_id!==binding.thread_id || typeof outcome.turn_id!=='string' || !outcome.turn_id.trim() || outcome.turn_id.length>200))return false;
+  const intent={...binding,turn_id:taskResponse?outcome.turn_id:undefined,pending:true,returnFocus};selectedOriginalReview=intent;syncSelectedOriginal();
   const valid=()=>selectedOriginalCurrent(intent);
   try{
-    const read=await DeskHistoryReader.show({thread_id:binding.thread_id,cwd:binding.cwd},{valid,startAtEnd:true,backLabel:'Return to selected task',onReturn:()=>{
+    const read=await DeskHistoryReader.show({thread_id:binding.thread_id,cwd:binding.cwd,...(taskResponse?{turn_id:intent.turn_id}:{})},{valid,taskResponse,startAtEnd:true,backLabel:'Return to selected task',onReturn:()=>{
       const current=valid();if(selectedOriginalReview===intent)selectedOriginalReview=null;
       syncSelectedOriginal();
       if(current){const target=intent.returnFocus;
@@ -209,12 +407,34 @@ async function readSelectedOriginal({find=false,returnFocus=$('read-original')}=
 }
 function draw() {
   drawSidebar();
+  $('approvals').hidden=opening;
   DeskHome.sync();
   syncSelectedOriginal();
+  syncDraftEvidence();DeskEvidencePreparation.sync();
   const running=state.sessions.filter(s=>['running','approval','starting'].includes(s.status)).length;
   document.title=(running?`(${running} active) `:'')+'Codex Desk';
   $('activity-controls').hidden=!selected;
-  const s = state.sessions.find(s=>s.id===selected); if(!s) return;
+  const s = state.sessions.find(s=>s.id===selected); if(!s){$('native-outcome').hidden=true;return;}
+  const outcome=state.native_outcomes?.[selected];
+  const visibleOutcome=outcome && outcome.thread_id===s.thread_id;
+  $('native-outcome').hidden=!visibleOutcome;
+  const responseButton=$('read-task-response');
+  responseButton.disabled=!visibleOutcome || !selectedOriginalBinding() || !!selectedOriginalReview?.pending || $('history-reader').open;
+  responseButton.title='Read the response supplied for this displayed native parent turn. No task is sent.';
+  const outcomeKey=visibleOutcome?JSON.stringify([selected,outcome]):'';
+  if(outcomeKey!==nativeOutcomeSignature){
+    nativeOutcomeSignature=outcomeKey;
+    $('native-outcome-summary').textContent=visibleOutcome?'— '+outcome.status:'';
+    $('native-outcome-identity').textContent=visibleOutcome?`Thread ${outcome.thread_id}\nTurn ${outcome.turn_id}\nSource: ${outcome.source}`:'';
+    $('native-outcome-body').replaceChildren(...(visibleOutcome?[DeskNativeState.outcome(outcome,make)]:[]));
+  }
+  if(!opening){
+    const progressChanged=DeskNativeSteps.sync(s,{session:selected,thread:nativeThreadId,generation});
+    const diffChanged=DeskTurnChanges.sync(s,{session:selected,thread:nativeThreadId,generation});
+    if(progressChanged || diffChanged){++latestUpdates;latestLabel();}
+  }
+  DeskSteering.sync(s,{session:selected,thread:nativeThreadId,generation});
+  DeskStopTask.sync(s,{session:selected,thread:nativeThreadId,generation,snapshot:stopStateSnapshot});
   $('archive-session').hidden=false;$('archive-session').textContent=s.archived?'Restore session':'Archive session';
   $('archive-session').disabled=archiving.has(s.id);
   $('archive-status').hidden=!s.archived;
@@ -223,10 +443,10 @@ function draw() {
   $('binding').textContent=`${s.cwd}\n${profileLabel(s.profile)} → ${s.provider || 'loading'} / ${s.model || 'native default'}`;
   if(modeSelected!==selected){$('turn-mode').value=s.mode || 'native';modeSelected=selected;}
   const busy=opening || submitting.has(selected) || ['running','approval','starting'].includes(s.status);
-  DeskFollowups.status(selected,busy);$('prepare-followup').disabled=opening || submitting.has(selected);
+  DeskFollowups.status(selected,busy || turnRequestBlocked(selected));$('prepare-followup').disabled=opening || submitting.has(selected);
   $('turn-mode').disabled=opening;
   $('status').textContent=opening?'Opening session…':s.status; $('send').disabled=busy || DeskFollowups.blocked(selected);
-  $('stop').disabled=opening || !['running','approval'].includes(s.status);
+  drawTurnRequest();
   $('rename').disabled=opening;$('handoff').disabled=opening;
   $('usage').textContent=DeskNativeState.usage(s.usage);
   $('native-failure').hidden=!s.error || s.status!=='failed' || opening;
@@ -236,7 +456,7 @@ function draw() {
 function itemText(i) {
   switch(i.type) {
     case 'userMessage':return (i.content || []).map(c=>c.text || '').join('\n');
-    case 'agentMessage':return i.text || '';
+    case 'agentMessage':case 'plan':return i.text || '';
     case 'commandExecution':return `$ ${i.command || ''}\n${i.aggregatedOutput || ''}${i.exitCode == null ? '' : '\nExit '+i.exitCode}`;
     case 'fileChange':return (i.changes || []).map(c=>`${c.kind?.type || 'change'} ${c.path}\n${c.diff || ''}`).join('\n');
     case 'reasoning':return (i.summary || []).join('\n');
@@ -289,44 +509,180 @@ function renderItem(i,turnId) {
   DeskActivity.render(node,i,text);
 }
 let approvalsSignature='';
+const interactionCards=new Map();
 function approvals() {
-  const signature=JSON.stringify([selected,[...requests]]);
+  const parentThread=state.sessions.find(s=>s.id===selected)?.thread_id || null;
+  const signature=JSON.stringify([selected,generation,parentThread,[...requests]]);
   if(signature===approvalsSignature)return;
   approvalsSignature=signature;
-  $('approvals').replaceChildren();
+  const host=$('approvals'), session=selected;
+  if(!interactionCards.has(session))interactionCards.set(session,new Map());
+  const cards=interactionCards.get(session), desired=[];
+  const active=document.activeElement;
+  let retiredFocus=false;
+  function retire(card){
+    if(card.box.contains(active))retiredFocus=true;
+    for(const input of card.fields.values())input.value='';
+    card.retired=true;
+    if(card.readerCallbacks){retiredFocus=true;DeskHistoryReader.close(card.readerCallbacks);}
+    card.box.remove();
+  }
+  for(const [id,card] of cards){
+    const message=requests.get(id);
+    if(!message || JSON.stringify(message)!==card.signature){retire(card);cards.delete(id);}
+  }
   for(const [id,m] of requests) {
-    const session=selected, current=generation;
-    const p=m.params || {}, box=make('div',`${m.method}\n${p.command || p.reason || 'Native Codex needs your input.'}`, 'approval');
-    if(['item/commandExecution/requestApproval','item/fileChange/requestApproval'].includes(m.method)) {
-      const buttons=make('div','','actions');
-      for(const [label,decision] of [['Allow once','accept'],['Decline','decline']]) {
-        const b=make('button',label); b.onclick=async()=>{try{await api('/api/approval',{session,request:id,decision});if(current===generation){requests.delete(id);approvals();}}catch(e){if(current===generation)error(e)}};buttons.append(b);
-      } box.append(buttons);
-    } else if(m.method==='item/tool/requestUserInput') {
-      const form=make('form'), fields=new Map();
-      for(const q of p.questions || []) {
-        const label=make('label',q.header+' — '+q.question);
-        const input=make(q.options?.length && !q.isOther?'select':'input');
-        if(input.tagName==='SELECT') for(const o of q.options) {const option=make('option',o.label+' — '+o.description);option.value=o.label;input.append(option);}
-        else {input.type=q.isSecret?'password':'text';input.required=true;input.autocomplete='off';if(q.options?.length)input.placeholder=q.options.map(o=>o.label).join(' / ');}
-        label.append(input);form.append(label);fields.set(q.id,input);
+    let card=cards.get(id);
+    if(!card){
+      const p=m.params || {}, title=m.method==='item/tool/requestUserInput'?'Questions for this task':m.method==='item/commandExecution/requestApproval'?'Command approval':m.method==='item/fileChange/requestApproval'?'File change approval':'Native input required';
+      const box=make('section','','approval');box.append(make('strong',title));
+      for(const [key,label] of [['command','Command'],['cwd','Native working directory'],['reason','Native reason']]) {
+        const value=p[key];
+        if(typeof value==='string' && value.length)box.append(make('pre',label+'\n'+value,'approval-context-field'));
       }
-      const submit=make('button','Send answers');form.append(submit);
-      form.onsubmit=async e=>{e.preventDefault();submit.disabled=true;try{const answers=Object.fromEntries([...fields].map(([id,input])=>[id,[input.value]]));await api('/api/answer',{session,request:id,answers});if(current===generation){requests.delete(id);approvals();await refresh();}}catch(e){if(current===generation){error(e);submit.disabled=false;}}};
-      box.append(form);
-    } else box.append(make('p','Use Stop turn for this interaction; a dedicated UI is not implemented yet.'));
-    $('approvals').append(box);
+      const status=make('p','','muted');status.setAttribute('role','status');
+      card={box,signature:JSON.stringify(m),fields:new Map(),controls:[],pending:false,retired:false,status};cards.set(id,card);
+      const owned=card;owned.contextGeneration=generation;
+      const reportedId=value=>typeof value==='string' && value.trim() && value.length<=200;
+      const context=make('details','','approval-context'),summary=make('summary',
+        reportedId(p.threadId) && p.threadId!==parentThread?'Original request context · related thread':'Original request context');
+      const identity=make('pre','Native request '+id+'\nMethod '+m.method+
+        '\nSelected parent thread '+(parentThread || 'unreported')+
+        '\nRequest thread '+(reportedId(p.threadId)?p.threadId:'unreported')+
+        '\nRequest turn '+(reportedId(p.turnId)?p.turnId:'unreported')+
+        '\nRequest item '+(reportedId(p.itemId)?p.itemId:'unreported'),'approval-context-identity');
+      context.append(summary,identity);box.append(context);card.contextIdentity=identity;card.contextSummary=summary;
+      if(reportedId(p.threadId)) {
+        const read=make('button','Read related native activity','approval-context-read');read.type='button';
+        const readStatus=make('p','','muted');readStatus.setAttribute('role','status');context.append(read,readStatus);
+        const valid=()=>selected===session && generation===owned.contextGeneration && !owned.retired &&
+          cards.get(id)===owned && requests.get(id) && JSON.stringify(requests.get(id))===owned.signature;
+        read.onclick=async()=>{
+          if(!valid() || read.disabled || $('history-reader').open)return false;
+          read.disabled=true;readStatus.textContent='';
+          const readGeneration=generation;
+          const callbacks={valid:()=>valid() && generation===readGeneration,backLabel:'Return to native request',onReturn:()=>{
+            if(owned.readerCallbacks===callbacks)owned.readerCallbacks=null;
+            read.disabled=false;if(valid() && read.isConnected)read.focus({preventScroll:true});
+          }};owned.readerCallbacks=callbacks;
+          try {
+            return await DeskHistoryReader.show({thread_id:p.threadId,
+              ...(reportedId(p.turnId) && reportedId(p.itemId)?{turn_id:p.turnId,item_id:p.itemId}:{})},callbacks);
+          }catch(error){if(valid())readStatus.textContent='Original activity could not be read: '+error.message;return false;}
+          finally{read.disabled=false;}
+        };
+      }
+      async function send(path,body){
+        if(owned.pending || owned.retired)return;
+        owned.pending=true;for(const control of owned.controls)control.disabled=true;
+        status.textContent='Sending this response…';
+        try{
+          await api(path,{session,request:id,...body});
+          if(cards.get(id)!==owned || owned.retired)return;
+          if(selected===session && requests.get(id) && JSON.stringify(requests.get(id))===owned.signature){
+            requests.delete(id);approvals();
+          }else{for(const input of owned.fields.values())input.value='';owned.retired=true;cards.delete(id);owned.box.remove();}
+          await refresh();
+        }catch(e){
+          if(cards.get(id)===owned && !owned.retired){
+            status.textContent='Response not confirmed: '+e.message;
+            owned.pending=false;for(const control of owned.controls)control.disabled=false;
+          }
+        }
+      }
+      if(['item/commandExecution/requestApproval','item/fileChange/requestApproval'].includes(m.method)) {
+        const buttons=make('div','','actions');
+        for(const [label,decision] of [['Allow once','accept'],['Decline','decline']]) {
+          const b=make('button',label);b.type='button';b.onclick=()=>send('/api/approval',{decision});buttons.append(b);card.controls.push(b);
+        }box.append(buttons);
+      }else if(m.method==='item/tool/requestUserInput') {
+        const form=make('form');
+        for(const q of p.questions || []) {
+          const label=make('label',(q.header || '')+' — '+q.question);
+          const input=make(q.options?.length && !q.isOther?'select':'input');
+          if(input.tagName==='SELECT')for(const o of q.options){const option=make('option',o.label+' — '+o.description);option.value=o.label;input.append(option);}
+          else{input.type=q.isSecret?'password':'text';input.required=true;input.autocomplete='off';if(q.options?.length)input.placeholder=q.options.map(o=>o.label).join(' / ');}
+          label.append(input);form.append(label);card.fields.set(q.id,input);card.controls.push(input);
+        }
+        const submit=make('button','Send answers');submit.type='submit';form.append(submit);card.controls.push(submit);
+        form.onsubmit=e=>{e.preventDefault();return send('/api/answer',{answers:Object.fromEntries([...owned.fields].map(([id,input])=>[id,[input.value]]))});};
+        box.append(form);
+      }else box.append(make('p','Use Stop current task to end this native interaction.'));
+      box.append(status);
+    }
+    card.contextGeneration=generation;
+    if(card.contextIdentity){
+      const p=m.params || {},reported=value=>typeof value==='string' && value.trim() && value.length<=200;
+      card.contextSummary.textContent=reported(p.threadId) && p.threadId!==parentThread?'Original request context · related thread':'Original request context';
+      const identity='Native request '+id+'\nMethod '+m.method+
+        '\nSelected parent thread '+(parentThread || 'unreported')+
+        '\nRequest thread '+(reported(p.threadId)?p.threadId:'unreported')+
+        '\nRequest turn '+(reported(p.turnId)?p.turnId:'unreported')+
+        '\nRequest item '+(reported(p.itemId)?p.itemId:'unreported');
+      if(card.contextIdentity.textContent!==identity)card.contextIdentity.textContent=identity;
+    }
+    desired.push(card.box);
+  }
+  // Keep unchanged nodes in place: sibling requests must not reset answers,
+  // caret, selection, disclosure or a pending response's disabled controls.
+  let cursor=host.firstChild;
+  for(const box of desired){if(box===cursor)cursor=cursor.nextSibling;else host.insertBefore(box,cursor);}
+  const keep=new Set(desired);for(const box of [...host.children])if(!keep.has(box))box.remove();
+  if(retiredFocus && document.activeElement!==active){
+    const next=host.querySelector('button:not(:disabled), input:not(:disabled), select:not(:disabled)');
+    if(next)next.focus();else if(!$('stop').disabled)$('stop').focus();else $('prompt').focus();
+  }
+}
+function syncInteractionCards(pending){
+  // Retire resolved inputs in tasks being read in the background, too.
+  for(const [session,cards] of interactionCards){
+    if(session===selected)continue;
+    for(const card of cards.values())if(card.readerCallbacks)DeskHistoryReader.close(card.readerCallbacks);
+    const current=new Map((pending?.[session] || []).map(m=>[String(m.id),JSON.stringify(m)]));
+    for(const [id,card] of cards)if(current.get(id)!==card.signature){
+      for(const input of card.fields.values())input.value='';
+      card.retired=true;if(card.readerCallbacks)DeskHistoryReader.close(card.readerCallbacks);card.box.remove();cards.delete(id);
+    }
+    if(!cards.size)interactionCards.delete(session);
   }
 }
 function consume(m) {
   const p=m.params || {};
+  let planChanged=false;
   // Old cached streams may contain owned child notifications. Keep native
   // requests/resolutions, but never display a child as the selected parent.
   if(p.threadId && nativeThreadId && p.threadId!==nativeThreadId && m.id===undefined && m.method!=='serverRequest/resolved')return;
-  if(m.method==='turn/started')currentTurn=p.turn?.id || p.turnId || currentTurn;
+  DeskSteering.consume(m,{session:selected,thread:nativeThreadId,generation});
+  DeskStopTask.consume(m,{session:selected,thread:nativeThreadId,generation});
+  const progressChanged=DeskNativeSteps.consume(m,{session:selected,thread:nativeThreadId,generation});
+  const diffChanged=DeskTurnChanges.consume(m,{session:selected,thread:nativeThreadId,generation});
+  if(m.method==='turn/started') {
+    const nextTurn=p.turn?.id || p.turnId || currentTurn;
+    if(currentTurn && nextTurn!==currentTurn)for(const i of items.values()) {
+      if(i.type==='plan' && i._deskPlan==='streaming' && itemTurns.get(i.id)===currentTurn)
+        renderItem({...i,_deskPlan:'retired'},currentTurn);
+    }
+    currentTurn=nextTurn;
+  }
   if(m.id !== undefined && m.method) {requests.set(String(m.id),m);approvals();}
   if(m.method==='serverRequest/resolved') {requests.delete(String(p.requestId));approvals();}
-  if(m.method==='item/started' || m.method==='item/completed') renderItem(p.item,p.turnId);
+  if(m.method==='item/started' || m.method==='item/completed') {
+    const i=p.item;
+    renderItem(i?.type==='plan'?{...i,_deskPlan:m.method==='item/completed'?'complete':'streaming'}:i,p.turnId);
+  }
+  if(m.method==='item/plan/delta') {
+    const i=items.get(p.itemId);
+    if(i?.type==='plan' && i._deskPlan==='streaming' && p.turnId===currentTurn && itemTurns.get(p.itemId)===p.turnId && typeof p.delta==='string') {
+      if(p.delta){renderItem({...i,text:(i.text || '')+p.delta},p.turnId);planChanged=true;}
+    }
+  }
+  if(m.method==='turn/completed') {
+    const turn=p.turn?.id || p.turnId;
+    // Native final items replace provisional text, never append to it.
+    for(const i of p.turn?.items || [])if(i?.type==='plan')renderItem({...i,_deskPlan:'complete'},turn);
+    for(const i of items.values())if(i.type==='plan' && i._deskPlan==='streaming' && itemTurns.get(i.id)===turn)
+      renderItem({...i,_deskPlan:p.turn?.status || 'completed'},turn);
+  }
   if(m.method==='item/agentMessage/delta') {
     const i=items.get(p.itemId) || {id:p.itemId,type:'agentMessage',text:''};i.text+=p.delta || '';renderItem(i,p.turnId);
   }
@@ -338,33 +694,91 @@ function consume(m) {
     i.progress=[...(i.progress || []),p.message].slice(-50);renderItem(i,p.turnId);
   }
   if(m.method==='error')$('activity').append(DeskNativeState.card(p.error || p,!!p.willRetry,make));
+  return progressChanged || diffChanged || planChanged;
 }
 async function refresh() {
-  const current=generation, version=++refreshVersion, next=await api('/api/state');
+  const current=generation, version=++refreshVersion, stopSnapshot=DeskStopTask.snapshot(), next=await api('/api/state');
   if(current!==generation || version!==refreshVersion)return;
-  state=next;DeskFollowups.refresh(selected);requests=new Map((state.pending?.[selected] || []).map(m=>[String(m.id),m]));approvals();draw();DeskRecall.stateChanged();if($('profiles-dialog').open)drawProfiles();
+  state=next;syncInteractionCards(state.pending);stopStateSnapshot=stopSnapshot;DeskFollowups.refresh(selected);requests=new Map((state.pending?.[selected] || []).map(m=>[String(m.id),m]));approvals();draw();DeskRecall.stateChanged();if($('profiles-dialog').open)drawProfiles();
 }
-async function open(id,{revealLatest=true,keepError=false}={}) {
+async function open(id,{revealLatest=true,keepError=false,steerReceiptOnly=false}={}) {
   if(selected){rememberDraft(selected);persistDraft(selected);}
   const current=++generation;
   latestUpdates=0;latestLabel();
   selected=id;DeskHome.selectionChanged();DeskRecall.selectionChanged();DeskFollowups.select(id);$('prompt').value=drafts.get(id) || '';opening=true;modeSelected=null;after=0;items.clear();nodes.clear();itemTurns.clear();collaborationGroups.clear();nativeThreadId=null;currentTurn=null;requests.clear();
+  // A deliberate return starts with the latest known native pending snapshot.
+  // An initial empty reset is not a resolution of this task's retained editor.
+  const initialPending=state.pending ? state.pending[id] || [] :
+    [...(typeof interactionCards==='undefined'?[]:interactionCards.get(id)?.values() || [])]
+      .filter(card=>!card.retired).map(card=>JSON.parse(card.signature));
+  for(const message of initialPending)requests.set(String(message.id),message);
+  DeskNativeSteps.select({session:id,thread:null,generation:current});
+  DeskTurnChanges.select({session:id,thread:null,generation:current});
+  DeskSteering.select({session:id,thread:null,generation:current});
+  DeskStopTask.select({session:id,thread:null,generation:current});
   if(!keepError)$('error').hidden=true;
   $('native-failure').hidden=true;$('task').hidden=true;$('handoff').hidden=true;
   $('activity').replaceChildren();approvals();draw();draftStatus();
   const preparation=loadDraft(id,current);
   try {
+    await preparation;if(current!==generation)return;
+    const retained=turnRequest(id) || await discoverTurnRequest(id);
+    if(current!==generation)return;
+    if(retained){
+      // Cold receipt recovery does not attach or resume a native runtime.
+      await preparation;await readTurnRequest(retained);if(current!==generation)return;
+      nativeThreadId=state.sessions.find(s=>s.id===id)?.thread_id || null;
+      DeskNativeSteps.select({session:id,thread:nativeThreadId,generation:current});
+      DeskTurnChanges.select({session:id,thread:nativeThreadId,generation:current});
+      DeskSteering.select({session:id,thread:nativeThreadId,generation:current});
+      DeskStopTask.select({session:id,thread:nativeThreadId,generation:current});
+      const rows=await api('/api/events?session='+encodeURIComponent(id)+'&after=0');
+      if(current!==generation)return;
+      for(const row of rows){after=row.seq;consume(row.event);}
+      await refresh();if(current!==generation)return;
+      localStorage.setItem('codex-desk-browser-preview-session-v1',id);
+      opening=false;$('welcome').hidden=true;$('task').hidden=false;syncDraftEvidence();$('handoff').hidden=false;draw();DeskSteering.opened();DeskStopTask.opened();
+      return true;
+    }
+    const stopRetained=await DeskStopTask.opened();if(current!==generation)return;
+    let steeringRetained=false;
+    if(steerReceiptOnly && !stopRetained){steeringRetained=await DeskSteering.opened();if(current!==generation)return;}
+    if(steeringRetained || stopRetained){
+      nativeThreadId=state.sessions.find(s=>s.id===id)?.thread_id || null;
+      DeskNativeSteps.select({session:id,thread:nativeThreadId,generation:current});
+      DeskTurnChanges.select({session:id,thread:nativeThreadId,generation:current});
+      DeskSteering.select({session:id,thread:nativeThreadId,generation:current});
+      DeskStopTask.select({session:id,thread:nativeThreadId,generation:current});
+      const rows=await api('/api/events?session='+encodeURIComponent(id)+'&after=0');
+      if(current!==generation)return;
+      for(const row of rows){after=row.seq;consume(row.event);}
+      await refresh();if(current!==generation)return;
+      localStorage.setItem('codex-desk-browser-preview-session-v1',id);
+      opening=false;$('welcome').hidden=true;$('task').hidden=false;syncDraftEvidence();$('handoff').hidden=false;draw();
+      return true;
+    }
     const opened=await api('/api/open',{session:id});
     if(current!==generation)return;
     localStorage.setItem('codex-desk-browser-preview-session-v1',id);
     nativeThreadId=opened.thread.id;
+    DeskNativeSteps.select({session:id,thread:nativeThreadId,generation:current});
+    DeskTurnChanges.select({session:id,thread:nativeThreadId,generation:current});
+      DeskSteering.select({session:id,thread:nativeThreadId,generation:current});
+      DeskStopTask.select({session:id,thread:nativeThreadId,generation:current});
     for(const [index,t] of (opened.thread.turns || []).entries())for(const i of t.items || [])renderItem(i,t.id || 'snapshot:'+index);
+    const rows=await api('/api/events?session='+encodeURIComponent(id)+'&after=0');
+    if(current!==generation)return;
+    for(const row of rows){after=row.seq;consume(row.event);}
+    DeskNativeSteps.restoreThread(opened.thread,{session:id,thread:nativeThreadId,generation:current});
+    DeskTurnChanges.restoreThread(opened.thread,{session:id,thread:nativeThreadId,generation:current});
+    DeskSteering.restoreThread(opened.thread,{session:id,thread:nativeThreadId,generation:current});
+    DeskStopTask.restoreThread(opened.thread,{session:id,thread:nativeThreadId,generation:current});
     $('prompt').value=drafts.get(id) || '';$('welcome').hidden=true;
     await refresh();
     if(current!==generation)return;
     await preparation;if(current!==generation)return;
-    opening=false;draw();$('task').hidden=false;$('handoff').hidden=false;
-    if(revealLatest)requestAnimationFrame(()=>{if(current===generation && !$('history-reader').open)goLatest();});
+    opening=false;draw();$('task').hidden=false;syncDraftEvidence();$('handoff').hidden=false;DeskSteering.opened();DeskStopTask.opened();
+    if(revealLatest)requestAnimationFrame(()=>{if(current===generation && ($('native-steps').hidden || !$('native-steps').open) && ($('turn-changes').hidden || !$('turn-changes').open) && ($('native-outcome').hidden || !$('native-outcome').open) && !DeskSteering.reading() && !DeskStopTask.reading() && !$('history-reader').open && !$('preparation').open && !$('preparation-request').open)goLatest();});
     return true;
   } catch(e) {
     if(current===generation){opening=false;draw();error(e);}
@@ -458,16 +872,91 @@ $('project').addEventListener('close',()=>{if(!$('project').open)resetProject();
 $('create').onsubmit=async e=>{e.preventDefault();await findProject();};
 $('project-more').onclick=()=>findProject(projectCursor);
 $('project-new').onclick=()=>{if($('create').reportValidity())return openProjectChoice(()=>api('/api/sessions',{cwd:$('cwd').value,profile:$('profile').value,name:$('session-name').value.trim() || null}));};
-$('prompt').oninput=()=>{if(selected){rememberDraft(selected);scheduleDraft(selected);}};
-$('turn-mode').onchange=()=>{if(selected){rememberDraft(selected);scheduleDraft(selected);}};
-DeskFollowups.configure({api,make,selected:()=>selected,refresh});
-DeskHistoryReader.configure({api});
-$('read-original').onclick=()=>readSelectedOriginal();
+$('prompt').oninput=()=>{if(selected){rememberDraft(selected);scheduleDraft(selected);syncDraftEvidence();DeskEvidencePreparation.sync();}};
+$('turn-mode').onchange=()=>{if(selected){rememberDraft(selected);scheduleDraft(selected);DeskEvidencePreparation.sync();}};
+DeskStopTask.configure({$,api,make,selection:()=>({session:selected,thread:nativeThreadId,generation,opening,connected:Object.hasOwn(state.pending || {},selected),status:state.sessions.find(s=>s.id===selected)?.status})});
+DeskSteering.configure({$,api,selection:()=>({session:selected,thread:nativeThreadId,generation,opening,connected:Object.hasOwn(state.pending || {},selected),status:state.sessions.find(s=>s.id===selected)?.status})});
+DeskFollowups.configure({api,make,selected:()=>selected,refresh,afterDraw:drawTurnRequest});
+let preparedEvidenceOwner=null;
+function evidenceDestination(){
+  if(preparedEvidenceOwner){
+    const current=DeskPreparation.evidenceDestination();
+    return current && current.session===preparedEvidenceOwner.session && current.generation===preparedEvidenceOwner.generation && current.writer===preparedEvidenceOwner.writer?current:null;
+  }
+  return taskEvidenceDestination();
+}
+function taskEvidenceDestination(){
+  const session=state.sessions.find(s=>s.id===selected),id=selected;
+  if(!session || opening || !draftRevisions.has(id) || $('task').hidden)return null;
+  return {session:id,generation,revision:draftRevisions.get(id),sequence:draftEdits.get(id)||0,
+    writer:draftWriter,text:$('prompt').value,mode:$('turn-mode').value,name:session.name,cwd:session.cwd,
+    busy:opening || submitting.has(id) || draftSaves.has(id) || draftTimers.has(id) || draftConflicts.has(id)};
+}
+async function saveReviewedEvidence(payload,capture){
+  if(!DeskEvidencePreparation.sameDestination(capture,evidenceDestination()))throw Error('The destination changed. Review its current draft.');
+  if(capture.kind==='prepared')return DeskPreparation.saveReviewedEvidence(payload,capture);
+  const id=capture.session;
+  // Reserve this page's next sequence before later typing can autosave.
+  draftEdits.set(id,payload.sequence);drafts.set(id,payload.text);draftModes.set(id,payload.mode);
+  $('prompt').value=payload.text;syncDraftEvidence();
+  let receipt=null;
+  const pending=persistDraft(id,{identify:true,onSaved:next=>{receipt=next;}});
+  const saved=await pending;
+  if(!saved){const conflict=draftConflicts.get(id),e=Error(draftMessages.get(id)||'The reviewed draft was not saved.');if(conflict){e.status=409;e.current=conflict;}throw e;}
+  // Confirm this accepted write, not whatever later draft save is now current.
+  if(!receipt || receipt.text!==payload.text || receipt.mode!==payload.mode)throw Error('Newer local edits remain saved. Review the draft before another append.');
+  return receipt;
+}
+function syncDraftEvidence(){
+  const panel=$('draft-evidence');if(!panel)return;
+  const destination=taskEvidenceDestination();
+  if(!destination){panel.hidden=true;panel.dataset.signature='';$('draft-evidence-list').replaceChildren();return;}
+  const references=DeskEvidencePreparation.parse(destination.text);
+  const signature=JSON.stringify([selected,generation,references.map(x=>x.reference)]);
+  if(panel.dataset.signature===signature)return;
+  panel.dataset.signature=signature;panel.hidden=!references.length;$('draft-evidence-list').replaceChildren();
+  for(const {reference} of references){
+    const button=make('button','Read referenced original · '+(reference.title||reference.item_id));button.type='button';
+    button.onclick=async()=>{
+      preparedEvidenceOwner=null;const owner=evidenceDestination();if(!owner || $('history-reader').open)return;
+      const editor=$('prompt'),view={start:editor.selectionStart,end:editor.selectionEnd,direction:editor.selectionDirection,scroll:editor.scrollTop,window:window.scrollY};
+      button.disabled=true;$('draft-evidence-status').textContent='Reading the captured original source…';
+      await DeskEvidencePreparation.readReference(reference,{owner,ownerCurrent:capture=>{
+        const current=evidenceDestination();return !!current && current.session===capture.session && current.generation===capture.generation;
+      },onReturn:()=>{if(evidenceDestination()?.session===owner.session && generation===owner.generation){editor.focus({preventScroll:true});if(editor.value===owner.text){editor.setSelectionRange(view.start,view.end,view.direction);editor.scrollTop=view.scroll;}window.scrollTo({top:view.window,behavior:'instant'});}},
+      onError:error=>{$('draft-evidence-status').textContent=error.message;}});
+      if(button.isConnected)button.disabled=false;
+    };
+    $('draft-evidence-list').append(button);
+  }
+}
+DeskEvidencePreparation.configure({api,destination:evidenceDestination,save:saveReviewedEvidence,
+  textForItem:DeskHistoryReader.textForItem,
+  apply:(receipt,capture,payload)=>{if(capture.kind==='prepared')return true;if(selected===capture.session && generation===capture.generation){syncDraftEvidence();draftStatus();}return drafts.get(capture.session)===payload.text;},
+  onConflict:(capture,current)=>{if(capture.kind==='prepared')return;if(current){draftConflicts.set(capture.session,current);draftStatus(capture.session);}},
+  onError:e=>{$('draft-evidence-status').textContent=e.message;error(e);},
+  showOriginal:(target,callbacks)=>DeskHistoryReader.show({thread_id:target.thread_id,turn_id:target.turn_id,item_id:target.item_id,
+    ...(callbacks.resolution.available?{match_text:callbacks.savedReference.quote,match_start:callbacks.resolution.start_utf16}:{})},callbacks)
+});
+DeskHistoryReader.configure({api,onEvidence:payload=>{
+  const destination=evidenceDestination();
+  if(!destination)throw Error('Select an existing task to prepare with this original evidence.');
+  if(destination.busy)throw Error('Wait for this task draft to finish saving before reviewing evidence.');
+  if(!payload.selection_utf16){
+    const turn=payload.thread.turns.find(turn=>turn.id===payload.turn_id),item=turn?.items?.find(item=>item.id===payload.item_id);
+    if(Array.from(DeskHistoryReader.textForItem(item)).length>DeskEvidencePreparation.MAX_QUOTE)throw Error('Select up to 8,000 characters from this original item first.');
+  }
+  return DeskEvidencePreparation.reviewLoaded({thread:payload.thread,thread_id:payload.thread.id,
+    turn_id:payload.turn_id,item_id:payload.item_id,start_utf16:payload.selection_utf16?.start,
+    end_utf16:payload.selection_utf16?.end},{valid:payload.valid,onReturn:payload.onReturn});
+}});
+$('read-original').onclick=()=>{preparedEvidenceOwner=null;return readSelectedOriginal();};
+$('read-task-response').onclick=()=>{preparedEvidenceOwner=null;return readSelectedOriginal({taskResponse:true,returnFocus:$('read-task-response')});};
 document.addEventListener('keydown',event=>{
   if(event.key!=='F3' || event.defaultPrevented || event.ctrlKey || event.altKey || event.metaKey)return;
   const target=event.target;
   if(document.querySelector('dialog[open]') || target?.isContentEditable || target?.closest?.('input, textarea, select, [contenteditable]') || !(target===document.body || target?.closest?.('main')) || !selectedOriginalBinding())return;
-  event.preventDefault();readSelectedOriginal({find:true,returnFocus:target===document.body?$('read-original'):target});
+  event.preventDefault();preparedEvidenceOwner=null;readSelectedOriginal({find:true,returnFocus:target===document.body?$('read-original'):target});
 });
 DeskRecall.configure({api,make,state:()=>state,selected:()=>selected,generation:()=>generation,
   loaded:()=>!opening && !!nativeThreadId && !$('task').hidden,open,refresh,profileLabel,
@@ -486,19 +975,24 @@ $('prepare-followup').onclick=async()=>{
   finally{submitting.delete(id);draw();}
 };
 $('task').onsubmit=async e=>{
-  e.preventDefault();if(!selected || opening || submitting.has(selected) || $('send').disabled)return;
-  const id=selected, current=generation, text=$('prompt').value, mode=$('turn-mode').value;
+  e.preventDefault();if(!selected || opening)return;
+  const retained=turnRequest();
+  if(retained){if(!retained.writing && !submitting.has(selected))return readTurnRequest(retained);return;}
+  if(submitting.has(selected) || $('send').disabled || !$('prompt').value.trim())return;
+  const id=selected,current=generation,text=$('prompt').value,mode=$('turn-mode').value;
   rememberDraft(id);const sentEdit=draftEdits.get(id) || 0;submitting.add(id);$('error').hidden=true;draw();
-  try {
-    if(!await persistDraft(id))return;
-    const sentRevision=draftRevisions.get(id);
-    await api('/api/turn',{session:id,text,mode});
-    if((draftEdits.get(id) || 0)===sentEdit && draftRevisions.get(id)===sentRevision && drafts.get(id)===text && draftModes.get(id)===mode){draftEdits.set(id,(draftEdits.get(id) || 0)+1);drafts.set(id,'');if(selected===id && $('prompt').value===text)$('prompt').value='';await persistDraft(id);}
-    if(current===generation)await refresh();
-  } catch(err) {if(current===generation)error(err);}
-  finally {submitting.delete(id);draw();}
+  try{
+    if(!await persistDraft(id,{identify:true}))return;
+    if((draftEdits.get(id) || 0)!==sentEdit || drafts.get(id)!==text || draftModes.get(id)!==mode){draftMessages.set(id,'Newer edits remain unsent. Review the draft, then Run again.');draftStatus(id);return;}
+    if(current!==generation)return;
+    const body=Object.freeze({session:id,token:crypto.randomUUID(),text,mode,revision:draftRevisions.get(id),writer:draftWriter,sequence:sentEdit});
+    turnTokens.set(id,body.token);
+    try{saveTurnTokens();}catch(e){turnTokens.delete(id);throw e;}
+    const request={session:id,token:body.token,body,capture:{edit:sentEdit},status:'pending',receiptVersion:0};
+    turnRequests.set(id,request);await sendTurnRequest(request);
+  }catch(err){if(current===generation)error(err);}
+  finally{submitting.delete(id);draw();}
 };
-$('stop').onclick=async()=>{if(opening)return;const session=selected,current=generation;try{await api('/api/stop',{session});if(current===generation){requests.clear();approvals();await refresh();}}catch(e){if(current===generation)error(e);}};
 let failures=0;
 const connectionError='Connection lost. Retrying… If Desk stopped, relaunch it and reopen this URL.';
 let starting=true, restoreChosen=false, restoreSession=null, restoreGeneration=0, startupError='';
@@ -513,7 +1007,7 @@ async function startup(){
   // A deliberate selection supersedes this return, including a late open reply.
   if(restoreSession && restoreGeneration===generation){
     const attempt=generation+1;
-    const restored=await open(restoreSession,{keepError:true});
+    const restored=await open(restoreSession,{keepError:true,steerReceiptOnly:true});
     if(generation===attempt){
       restoreGeneration=attempt;
       if(restored!==true){
@@ -534,21 +1028,31 @@ async function pollActivity(){
   if(selected && !opening){
     const rows=await api(`/api/events?session=${selected}&after=${after}`);
     if(current!==generation)return;
-    const follow=nearLatest() && !$('recent-work').open && !$('history-reader').open;let changed=0;
+    const editor=document.activeElement;
+    const editorAnchor=editor?.isConnected && editor.closest?.('.approval')
+      ? {node:editor,top:editor.getBoundingClientRect().top}:null;
+    const follow=nearLatest() && !globalThis.DeskActivity?.reading?.() && !document.activeElement?.closest?.('.approval') && ($('native-steps').hidden || !$('native-steps').open) && ($('turn-changes').hidden || !$('turn-changes').open) && ($('native-outcome').hidden || !$('native-outcome').open) && !$('recent-work').open && !DeskSteering.reading() && !DeskStopTask.reading() && !$('history-reader').open && !$('preparation').open && !$('preparation-request').open;let changed=0;
     for(const r of rows){
-      after=r.seq;consume(r.event);
-      if(['item/started','item/completed','item/agentMessage/delta','item/commandExecution/outputDelta','item/mcpToolCall/progress','error'].includes(r.event.method))++changed;
+      after=r.seq;const progressChanged=consume(r.event);
+      if(progressChanged || ['item/started','item/completed','item/agentMessage/delta','item/commandExecution/outputDelta','item/mcpToolCall/progress','error'].includes(r.event.method))++changed;
+    }
+    // Output inserted above a focused answer must not move its viewport.
+    if(editorAnchor && editorAnchor.node.isConnected && document.activeElement===editorAnchor.node) {
+      const delta=editorAnchor.node.getBoundingClientRect().top-editorAnchor.top;
+      if(delta)window.scrollBy({top:delta,behavior:'instant'});
     }
     if(changed){
       if(follow)requestAnimationFrame(()=>{
         if(current!==generation)return;
-        if(!$('recent-work').open && !$('history-reader').open)goLatest();
+        if(!globalThis.DeskActivity?.reading?.() && !document.activeElement?.closest?.('.approval') && ($('native-steps').hidden || !$('native-steps').open) && ($('turn-changes').hidden || !$('turn-changes').open) && ($('native-outcome').hidden || !$('native-outcome').open) && !$('recent-work').open && !DeskSteering.reading() && !DeskStopTask.reading() && !$('history-reader').open && !$('preparation').open && !$('preparation-request').open)goLatest();
         else{latestUpdates+=changed;latestLabel();}
       });
       else{latestUpdates+=changed;latestLabel();}
     }
     if(rows.length){await refresh();statePollAt=Date.now();}
   }
+  const retained=turnRequest();
+  if(selected && !opening && retained && !['accepted','rejected'].includes(retained.status) && !retained.writing && !retained.reading)await readTurnRequest(retained);
   // Other projects can finish or request approval while this conversation is quiet.
   if(Date.now()-statePollAt>=4000){await refresh();statePollAt=Date.now();}
 }
@@ -568,10 +1072,14 @@ function preparationSaved(id,saved){
   draftRevisions.set(id,saved.revision);draftSaved.set(id,saved);
   drafts.set(id,saved.text);draftModes.set(id,saved.mode);
   draftMessages.set(id,'Draft saved locally. Nothing has been sent.');
-  if(selected===id){$('prompt').value=saved.text;$('turn-mode').value=saved.mode;modeSelected=id;draftStatus(id);}
+  if(selected===id){$('prompt').value=saved.text;$('turn-mode').value=saved.mode;modeSelected=id;draftStatus(id);syncDraftEvidence();}
   return true;
 }
 DeskPreparation.configure({api,make,profileLabel,onSaved:preparationSaved,
+  onBrowseEvidence:capture=>{preparedEvidenceOwner=capture;$('history').showModal();return nativeList();},
+  onEvidenceChange:()=>DeskEvidencePreparation.sync(),
+  readEvidenceReference:(reference,callbacks)=>DeskEvidencePreparation.readReference(reference,callbacks),
+  navigationIdentity:()=>JSON.stringify([selected,generation]),
   openConversation:async id=>{await open(id);return selected===id && !opening && !$('task').hidden;}});
 $('show-preparation').onclick=()=>DeskPreparation.show();
 DeskHome.configure({api,row:nativeRow,selected:()=>selected,generation:()=>generation,open,
@@ -726,7 +1234,7 @@ async function showHandoff(thread,cwd,valid=()=>true) {
     $('history').close();$('preview').showModal();handoffVisible=true;
   }catch(e){if(current===generation && version===handoffVersion && valid())error(e);}
 }
-$('browse').onclick=()=>{$('history').showModal();nativeList();};
+$('browse').onclick=()=>{preparedEvidenceOwner=null;$('history').showModal();nativeList();};
 $('history-search').oninput=resetNative;
 $('history-search-form').onsubmit=e=>{e.preventDefault();nativeList();};
 $('history').addEventListener('close',()=>{if(!$('history').open)resetNative();});

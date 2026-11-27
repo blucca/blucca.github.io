@@ -37,16 +37,55 @@
     }
     return {results,total:results.length,truncated:false,coverage:{sessions:state.sessions.length,activity_items:state.sessions.length*2,drafts:Object.keys(state.drafts).length,followups:Object.values(state.followups).reduce((n,x)=>n+x.entries.length,0),native:coverage()}};
   }
+  const sampleHome='4a5fd9a01846eac1b6f7d6505ceebf6f0b9460aee12e6ea1241397e607581986';
+  function exactQuery(params,required,optional=[]){
+    for(const key of params.keys())if(!required.includes(key) && !optional.includes(key) || params.getAll(key).length!==1)throw Error('Use the exact sample native query.');
+    for(const key of required)if(!params.has(key))throw Error('Supply the captured native source IDs.');
+  }
+  function identifier(value){if(typeof value!=='string' || !value.trim() || Array.from(value).length>200)throw Error('Use the captured native thread and turn IDs.');return value;}
+  function taskResponse(original,threadId,turnId){
+    const result={thread_id:threadId,turn_id:turnId,available:false,turn_status:null,turn_error:null,source:'native history read'};
+    const matching=original.turns.filter(turn=>turn?.id===turnId);
+    if(!matching.length)return {...result,status:'turn_unavailable',reason:'turn_unavailable'};
+    if(matching.length!==1)throw Error('Native original supplied an ambiguous captured turn');
+    const turn=matching[0];result.turn_status=typeof turn.status==='string'?turn.status:null;result.turn_error=turn.error ?? null;
+    const items=Array.isArray(turn.items)?turn.items:[],messages=items.filter(item=>item?.type==='agentMessage' && typeof item.id==='string' && item.id.trim() && Array.from(item.id).length<=200 && typeof item.text==='string' && item.text.trim());
+    if(!messages.length)return {...result,status:'response_unavailable',reason:'response_unavailable'};
+    const final=messages.filter(item=>item.phase==='final_answer'),chosen=(final.length?final:messages).at(-1);
+    if(items.filter(item=>item?.id===chosen.id).length!==1)throw Error('Native original supplied an ambiguous response item');
+    const phase=typeof chosen.phase==='string'?chosen.phase:null;
+    return {...result,status:'available',available:true,reason:null,item_id:chosen.id,phase,
+      selection:final.length?'final_answer':'last_assistant_message',label:({final_answer:'Final answer',commentary:'Commentary',partial_answer:'Partial answer'})[phase] || 'Last assistant message'};
+  }
   function handle(path,method,data,params){
     const post=method==='POST';
+    if(path==='/api/native' || path.startsWith('/api/native/')){
+      if(method!=='GET')throw Error('Native sample sources are read-only.');
+      if(!Array.isArray(threads))throw Error('Sample histories did not load. Reload this page to try again.');
+      if(path==='/api/native')exactQuery(params,[],['search','cwd','cursor','recent']);
+      else if(path==='/api/native/thread')exactQuery(params,['id']);
+      else if(path==='/api/native/home')exactQuery(params,[]);
+      else if(path==='/api/native/task-response')exactQuery(params,['thread','turn']);
+      else if(path==='/api/native/evidence-source')exactQuery(params,['home','thread']);
+    }
+    if(path==='/api/native/home')return {home_namespace:sampleHome};
+    if(path==='/api/native/task-response'){
+      const id=identifier(params.get('thread')),turn=identifier(params.get('turn')),original=thread(id);
+      return {thread:original,response:taskResponse(original,id,turn)};
+    }
+    if(path==='/api/native/evidence-source'){
+      const id=identifier(params.get('thread'));
+      if(params.get('home')!==sampleHome)throw Error('This evidence belongs to another native home. Use its original sample source.');
+      return {thread:thread(id),home_namespace:sampleHome,source:'native history read'};
+    }
     if(['/api/native','/api/native/thread','/api/history/index','/api/recall','/api/import','/api/open'].includes(path) && !Array.isArray(threads))
       throw new Error('Sample histories did not load. Reload this page to try again.');
-    if(path==='/api/state')return {sessions:state.sessions,profiles:[{id:'default',name:'Sample settings',provider:'sample',model:'preparation-only'}],pending:{},projects:[]};
+    if(path==='/api/state')return {sessions:state.sessions,native_outcomes:Object.fromEntries(state.sessions.flatMap(s=>{const t=Array.isArray(threads)?threads.find(t=>t.id===s.thread_id):null,last=t?.turns?.at(-1);return last?[[s.id,{thread_id:t.id,turn_id:last.id,status:last.status,error:last.error ?? null,source:'native history read'}]]:[];})),profiles:[{id:'default',name:'Sample settings',provider:'sample',model:'preparation-only'}],pending:{},projects:[]};
     if(path==='/api/native'){
       let rows=threads.map(({turns,...metadata})=>metadata);const term=params.get('search'),cwd=params.get('cwd');
       if(term)rows=rows.filter(t=>fold(t.name).includes(fold(term)));if(cwd)rows=rows.filter(t=>t.cwd===cwd);return {data:rows,nextCursor:null};
     }
-    if(path==='/api/native/thread')return thread(params.get('id'));
+    if(path==='/api/native/thread')return thread(identifier(params.get('id')));
     if(path==='/api/history/index'){
       if(post){
         const op=data.op===undefined?'recent':data.op;
@@ -81,6 +120,14 @@
     }
     if(path==='/api/open' && post)return {thread:thread(lookup(data.session).thread_id)};
     if(path==='/api/events')return [];
+    if((path==='/api/stop' || path==='/api/steer/request') && !post){
+      lookup(params.get('session'));
+      const error=new Error('No saved native task-control request in this browser sample.');error.status=404;throw error;
+    }
+    if(path==='/api/turn/request' && !post){
+      lookup(params.get('session'));
+      const error=new Error('No saved ordinary task request in this preparation-only sample.');error.status=404;throw error;
+    }
     if(path==='/api/draft'){
       const id=post?data.session:params.get('session');lookup(id);
       const current=state.drafts[id] || {text:'',mode:'native',revision:0};

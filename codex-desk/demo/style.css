@@ -19,6 +19,7 @@ aside{min-width:0}
 /* Activity reader: readable messages, compact evidence, local code copying. */
 .item.activity-reader{white-space:normal;min-width:0}
 .activity-plain{white-space:pre-wrap}
+.activity-plan-label{display:block;font-size:12px;color:#b4c9dc;margin-bottom:8px}.activity-plan{font:inherit;white-space:pre-wrap;overflow-wrap:anywhere;overflow:auto;max-height:440px;max-width:100%;margin:0;line-height:1.7}.activity-plan:focus-visible{outline:2px solid #8cddc3;outline-offset:4px}
 .activity-markdown{font-size:15px}
 .activity-markdown p{margin:.65em 0}
 .activity-markdown h1,.activity-markdown h2,.activity-markdown h3,.activity-markdown h4,.activity-markdown h5,.activity-markdown h6{line-height:1.35;letter-spacing:0;margin:1em 0 .45em}
@@ -150,3 +151,79 @@ button[aria-disabled="true"]{opacity:.5;cursor:default}
 
 /* Keep long-original evidence readable beneath multiline source and Find controls. */
 #history-reader-body{flex-shrink:0;min-height:min(38dvh,320px)}
+
+.turn-request{padding:12px 14px;margin:12px 0;border:1px solid #405367;border-radius:8px}.turn-request h3{margin:0 0 8px}.turn-request p{overflow-wrap:anywhere}.turn-request .actions{flex-wrap:wrap}
+
+.turn-request-binding>div{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}.turn-request-binding h4,.turn-request-binding h5{margin:10px 0 6px}.turn-request-binding pre{white-space:pre-wrap;overflow-wrap:anywhere;margin:0;font-size:12px;padding:10px;background:#151c25;border-radius:6px}
+
+.turn-request-captured{margin:10px 0}.turn-request-captured summary{cursor:pointer;font-weight:600}.turn-request-captured pre{max-height:18rem;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;padding:12px;background:#151c25;border:1px solid #405367;border-radius:6px;font:inherit;font-size:13px;line-height:1.5}
+
+#preparation-request{width:min(860px,calc(100vw - 32px));max-height:calc(100dvh - 32px);overflow:auto}
+#preparation-request p,#preparation-request h2{overflow-wrap:anywhere}
+#preparation-request .actions{flex-wrap:wrap}
+#preparation-request-captured-text{max-height:min(26rem,48dvh);font-size:14px;line-height:1.6}
+#preparation-request .turn-request-binding>div{grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr))}
+#preparation-request .turn-request-binding pre{line-height:1.6}
+#preparation-request-error{color:#ffccd0;white-space:pre-wrap}
+#preparation-request :focus-visible{outline:2px solid #70d6b0;outline-offset:3px}
+@media(max-width:500px){#preparation-request{padding:18px}#preparation-request .actions button{flex:1 1 100%;white-space:normal}}
+
+/* Native scroll anchoring must not move the workbench behind a local review. */
+html:has(#preparation[open]), html:has(#preparation-request[open]), html:has(#native-steps[open]:not([hidden])), html:has(#turn-changes[open]:not([hidden])) { overflow-anchor: none; }
+
+/* Compact native checklist; independent of Work/Plan drafts and preparation. */
+.native-steps{margin:12px 0;border:1px solid #344356;border-radius:9px;background:#151e29;min-width:0}
+.native-steps[hidden]{display:none}
+.native-steps>summary{cursor:pointer;padding:12px 15px;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#native-steps-current{color:#9eb6c8;margin-left:12px}
+#native-steps-body{max-height:320px;overflow:auto;padding:0 16px 14px;overflow-wrap:anywhere}
+#native-steps-body:focus-visible,.native-steps>summary:focus-visible{outline:2px solid #70d6b0;outline-offset:2px}
+#native-steps-status{margin:0 0 8px}
+#native-steps-explanation{white-space:pre-wrap;font-size:13px;line-height:1.6;margin:8px 0}
+#native-steps-list{padding-left:24px;margin:8px 0 0;font-size:13px}
+#native-steps-list li{padding:7px 0;line-height:1.55}
+.native-step-text{white-space:pre-wrap}
+.native-step-status{display:block;color:#9aaaba;font-size:11px}
+#native-steps-list li[data-status="inProgress"] .native-step-status{color:#9adcbe}
+
+.turn-changes{margin:12px 0;border:1px solid #344356;border-radius:9px;background:#151e29;min-width:0}
+.turn-changes[hidden]{display:none}
+.turn-changes>summary{cursor:pointer;padding:12px 15px;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#turn-changes-summary{color:#9eb6c8;margin-left:12px}
+#turn-changes-status,.turn-changes>.actions{margin:0 16px 10px}
+#turn-changes-body{max-height:420px;overflow:auto;margin:0;padding:14px 16px;white-space:pre;font-size:12px;line-height:1.6;tab-size:4}
+#turn-changes-body:focus-visible,.turn-changes>summary:focus-visible{outline:2px solid #70d6b0;outline-offset:2px}
+
+/* Same-turn correction editor and retained native instruction receipt. */
+.steering{margin:16px 0;padding:14px 16px;border:1px solid #344356;border-radius:9px;background:#151e29;min-width:0}
+.steering[hidden]{display:none}.steering h2{font-size:15px;margin:0 0 8px}
+.steering textarea{box-sizing:border-box;width:100%;resize:vertical;min-height:90px;margin:8px 0 12px}
+.steering .actions{flex-wrap:wrap}.steering p{overflow-wrap:anywhere;white-space:pre-wrap}
+#steering-captured{margin-top:12px}#steering-captured summary{cursor:pointer}
+#steering-captured-text{max-height:260px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;padding:10px;background:#101821}
+html:has(#steering-input:focus),html:has(#steering-captured[open]:not([hidden])){overflow-anchor:none}
+@media(max-width:500px){.steering .actions button{flex:1 1 100%;white-space:normal}}
+
+.stop-request{margin:16px 0;padding:14px 16px;border:1px solid #344356;border-radius:9px;background:#151e29;min-width:0}
+.stop-request[hidden],.stop-request [hidden]{display:none}.stop-request h3{font-size:15px;margin:0 0 8px}
+.stop-request p{overflow-wrap:anywhere;white-space:pre-wrap}.stop-request summary{cursor:pointer}
+.stop-request pre{max-height:230px;overflow:auto;white-space:pre-wrap;overflow-wrap:anywhere;background:#101821;padding:10px}
+.stop-previous-item{padding:8px 0;border-top:1px solid #344356}.stop-request .actions{flex-wrap:wrap}
+html:has(#stop-request-captured[open]:not([hidden])),html:has(#stop-request-previous[open]:not([hidden])){overflow-anchor:none}
+@media(max-width:500px){.stop-request .actions button,.stop-previous-item button{width:100%;white-space:normal}}
+
+.approval pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:260px;overflow:auto}.approval p:empty{display:none}
+
+#preparation h2,#preparation h3,#preparation h4{overflow-wrap:anywhere}
+
+/* Explicit reader refresh preserves its owned view, not browser scroll anchoring. */
+#history-reader{overflow-anchor:none}
+#history-reader> *{flex-shrink:0}
+#history-reader-response{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px;line-height:1.5;margin:6px 0}
+
+#evidence-preparation{width:min(880px,95vw);max-height:90vh;overflow:auto}
+#evidence-preparation pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:220px;overflow:auto}
+#evidence-preparation textarea{width:100%;box-sizing:border-box}
+#draft-evidence-list{display:flex;flex-wrap:wrap;gap:8px}
+
+#history-reader-saved-evidence pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:240px;overflow:auto;font-size:12px}
