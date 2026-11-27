@@ -147,3 +147,6 @@ aside{min-width:0}
 button[aria-disabled="true"]{opacity:.5;cursor:default}
 
 #preview{max-height:calc(100dvh - 32px);overflow:auto}#preview .actions{flex-wrap:wrap}#preview .actions button{max-width:100%;overflow-wrap:anywhere}
+
+/* Keep long-original evidence readable beneath multiline source and Find controls. */
+#history-reader-body{flex-shrink:0;min-height:min(38dvh,320px)}

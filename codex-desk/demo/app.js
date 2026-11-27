@@ -170,9 +170,47 @@ async function setArchived(id,archived){
 $('session-filter').oninput=()=>drawSidebar();
 $('show-archived').onchange=()=>drawSidebar();
 $('archive-session').onclick=()=>{const s=state.sessions.find(s=>s.id===selected);if(s)setArchived(s.id,!s.archived);};
+let selectedOriginalReview=null;
+function selectedOriginalBinding(){
+  const session=state.sessions.find(s=>s.id===selected),thread=session?.thread_id;
+  // Store/open responses own the parent binding. Stream notifications may
+  // describe children or arrive before native attach has committed its ID.
+  if(opening || typeof thread!=='string' || !thread.trim() || thread.length>200)return null;
+  return {session:selected,generation,thread_id:thread,cwd:session.cwd};
+}
+function selectedOriginalCurrent(intent){
+  const binding=selectedOriginalBinding();
+  return selectedOriginalReview===intent && !!binding && binding.session===intent.session && binding.generation===intent.generation && binding.thread_id===intent.thread_id;
+}
+function syncSelectedOriginal(){
+  if(selectedOriginalReview && !selectedOriginalCurrent(selectedOriginalReview)){
+    selectedOriginalReview=null;
+    if($('history-reader').open)DeskHistoryReader.close();
+  }
+  const button=$('read-original'),session=state.sessions.find(s=>s.id===selected),binding=selectedOriginalBinding();
+  button.hidden=!session;button.disabled=!binding || !!selectedOriginalReview?.pending;
+  button.title=opening?'Wait for the native conversation binding.':!binding?'Native conversation not available yet.':'Read this conversation without opening or sending a task.';
+}
+async function readSelectedOriginal({find=false,returnFocus=$('read-original')}={}){
+  const binding=selectedOriginalBinding();if(!binding || selectedOriginalReview?.pending || $('history-reader').open)return false;
+  const intent={...binding,pending:true,returnFocus};selectedOriginalReview=intent;syncSelectedOriginal();
+  const valid=()=>selectedOriginalCurrent(intent);
+  try{
+    const read=await DeskHistoryReader.show({thread_id:binding.thread_id,cwd:binding.cwd},{valid,startAtEnd:true,backLabel:'Return to selected task',onReturn:()=>{
+      const current=valid();if(selectedOriginalReview===intent)selectedOriginalReview=null;
+      syncSelectedOriginal();
+      if(current){const target=intent.returnFocus;
+        (target?.isConnected && !target.disabled && !target.hidden?target:$('read-original')).focus({preventScroll:true});
+      }
+    }});
+    if(read && find && valid() && $('history-reader').open && !$('history-reader-find-query').disabled)$('history-reader-find-query').focus({preventScroll:true});
+    return read;
+  }finally{intent.pending=false;if(selectedOriginalReview===intent)syncSelectedOriginal();}
+}
 function draw() {
   drawSidebar();
   DeskHome.sync();
+  syncSelectedOriginal();
   const running=state.sessions.filter(s=>['running','approval','starting'].includes(s.status)).length;
   document.title=(running?`(${running} active) `:'')+'Codex Desk';
   $('activity-controls').hidden=!selected;
@@ -326,7 +364,7 @@ async function open(id,{revealLatest=true,keepError=false}={}) {
     if(current!==generation)return;
     await preparation;if(current!==generation)return;
     opening=false;draw();$('task').hidden=false;$('handoff').hidden=false;
-    if(revealLatest)requestAnimationFrame(()=>{if(current===generation)goLatest();});
+    if(revealLatest)requestAnimationFrame(()=>{if(current===generation && !$('history-reader').open)goLatest();});
     return true;
   } catch(e) {
     if(current===generation){opening=false;draw();error(e);}
@@ -424,6 +462,13 @@ $('prompt').oninput=()=>{if(selected){rememberDraft(selected);scheduleDraft(sele
 $('turn-mode').onchange=()=>{if(selected){rememberDraft(selected);scheduleDraft(selected);}};
 DeskFollowups.configure({api,make,selected:()=>selected,refresh});
 DeskHistoryReader.configure({api});
+$('read-original').onclick=()=>readSelectedOriginal();
+document.addEventListener('keydown',event=>{
+  if(event.key!=='F3' || event.defaultPrevented || event.ctrlKey || event.altKey || event.metaKey)return;
+  const target=event.target;
+  if(document.querySelector('dialog[open]') || target?.isContentEditable || target?.closest?.('input, textarea, select, [contenteditable]') || !(target===document.body || target?.closest?.('main')) || !selectedOriginalBinding())return;
+  event.preventDefault();readSelectedOriginal({find:true,returnFocus:target===document.body?$('read-original'):target});
+});
 DeskRecall.configure({api,make,state:()=>state,selected:()=>selected,generation:()=>generation,
   loaded:()=>!opening && !!nativeThreadId && !$('task').hidden,open,refresh,profileLabel,
   itemNode:id=>nodes.get(id),itemTurn:id=>itemTurns.get(id),refreshFollowups:id=>DeskFollowups.refresh(id)});
@@ -489,13 +534,17 @@ async function pollActivity(){
   if(selected && !opening){
     const rows=await api(`/api/events?session=${selected}&after=${after}`);
     if(current!==generation)return;
-    const follow=nearLatest() && !$('recent-work').open;let changed=0;
+    const follow=nearLatest() && !$('recent-work').open && !$('history-reader').open;let changed=0;
     for(const r of rows){
       after=r.seq;consume(r.event);
       if(['item/started','item/completed','item/agentMessage/delta','item/commandExecution/outputDelta','item/mcpToolCall/progress','error'].includes(r.event.method))++changed;
     }
     if(changed){
-      if(follow)requestAnimationFrame(()=>{if(current===generation)goLatest();});
+      if(follow)requestAnimationFrame(()=>{
+        if(current!==generation)return;
+        if(!$('recent-work').open && !$('history-reader').open)goLatest();
+        else{latestUpdates+=changed;latestLabel();}
+      });
       else{latestUpdates+=changed;latestLabel();}
     }
     if(rows.length){await refresh();statePollAt=Date.now();}

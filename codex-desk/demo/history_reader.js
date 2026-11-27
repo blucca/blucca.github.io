@@ -10,6 +10,7 @@
   const str=value=>typeof value==='string'?value:'';
   const node=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
   let api,version=0,source=null,rows=[],page=0,requested=null,options=null,targetIndex=-1;
+  let refreshing=false,refreshVersion=0;
   let loading=false,originalItems=0,unsupportedItems=0,turnOnlyRows=0;
   let findVersion=0,finding=false,findSubmitted=false,findQuery='',findGroups=[],findTotal=0,findCursor=-1;
 
@@ -17,7 +18,7 @@
     return ticket===version && el('').open && (!options?.valid || options.valid());
   }
   function invalidate() {
-    ++version;const callback=options?.onReturn;
+    ++version;++refreshVersion;refreshing=false;const callback=options?.onReturn;
     options=null;source=null;requested=null;rows=[];loading=false;targetIndex=-1;
     resetFind();
     el('body').replaceChildren();if(callback)callback();
@@ -90,7 +91,7 @@
   }
   function manualFindNavigation() {
     findCursor=-1;
-    if(finding){++findVersion;finding=false;findGroups=[];findTotal=0;
+    if(finding){++findVersion;finding=false;findSubmitted=false;findGroups=[];findTotal=0;
       findControls('Find canceled by navigation. Choose Find to search this original.');}
     else findControls();
   }
@@ -180,10 +181,16 @@
       if(mark) {
         const pre=mark.closest('pre'),line=mark.getBoundingClientRect(),frame=pre.getBoundingClientRect();
         pre.scrollTop+=line.top-frame.top-pre.clientHeight/2;
+        // A long text window can be taller than the transcript viewport.
+        const visible=mark.getBoundingClientRect();
+        body.scrollTop+=visible.top-body.getBoundingClientRect().top-body.clientHeight/2;
+        const reader=el(''),outer=reader.getBoundingClientRect(),inner=body.getBoundingClientRect();
+        if(inner.bottom>outer.bottom-16 || inner.top<outer.top+16)reader.scrollTop+=inner.top-outer.top-24;
       }
     });
   }
-  function itemNode(row,index,ticket) {
+  function rowKey(row){return row?.item && str(row.turn.id) && str(row.item.id)?JSON.stringify([row.turn.id,row.item.id]):null;}
+  function itemNode(row,index,ticket,view=null) {
     const {item,turn}=row,text=textFor(item),occurrence=findMatch();
     const matched=occurrence?index===occurrence.index:!findSubmitted && index===targetIndex;
     const phrase=matched && !occurrence?str(requested.match_text):'';
@@ -200,9 +207,10 @@
     const controls=node('div',undefined,'history-reader-text-controls');
     const earlier=node('button','Earlier text'),later=node('button','Later text');
     earlier.type=later.type='button';controls.append(earlier,later);
-    let start=matched && at>=0?Math.max(0,at-Math.floor(TEXT_CHARS/2)):0;
+    const saved=view?.items.get(rowKey(row));
+    let start=saved?.start ?? (matched && at>=0?Math.max(0,at-Math.floor(TEXT_CHARS/2)):0);
     function windowText(next) {
-      const window=bounds(text,next);start=window.start;
+      const window=bounds(text,next);start=window.start;detail.dataset.windowStart=String(start);
       const value=text.slice(window.start,window.end);
       markText(pre,value,matched && at>=window.start && matchEnd<=window.end?at-window.start:-1,matchEnd-window.start);
       range.hidden=controls.hidden=text.length<=TEXT_CHARS;
@@ -219,14 +227,15 @@
     }
     earlier.onclick=()=>moveText(start-TEXT_CHARS);later.onclick=()=>moveText(start+TEXT_CHARS);
     windowText(start);detail.append(summary,identity,range,pre,controls);
-    detail.open=matched || ['userMessage','agentMessage'].includes(item.type);
+    detail.open=saved?.open ?? (matched || ['userMessage','agentMessage'].includes(item.type));
+    if(saved)pre.scrollTop=saved.scroll;
     copyControls(detail,row,text,ticket);
     if(matched && (occurrence || !phrase || at>=0) && visibleTypes.has(item.type)) {
       detail.classList.add('history-reader-target');detail.tabIndex=-1;
     }
     return detail;
   }
-  function render(scroll=true) {
+  function render(scroll=true,view=null) {
     if(!source || !available())return;
     const ticket=version,first=page*PAGE_ENTRIES,last=Math.min(rows.length,first+PAGE_ENTRIES);
     const body=el('body');body.replaceChildren();body.scrollTop=0;
@@ -241,7 +250,7 @@
         if(str(row.turn.error?.message))section.append(node('p',str(row.turn.error.message).slice(0,2000),'history-reader-turn-error'));
         body.append(section);
       }
-      if(row.item)section.append(itemNode(row,index,ticket));
+      if(row.item)section.append(itemNode(row,index,ticket,view));
       else {
         section.classList.add('history-reader-turn-only');
         section.append(node('p',row.turn.items.length?'No readable native items were returned for this turn.':
@@ -258,6 +267,7 @@
     el('previous').disabled=page===0;el('next').disabled=last>=rows.length;
     el('previous').hidden=el('next').hidden=pages===1;
     const target=body.querySelector('.history-reader-target');if(target && scroll)scrollMatch(target,ticket);
+    if(view)restoreView(view,ticket);
   }
   function movePage(direction) {
     const next=page+direction;
@@ -267,10 +277,108 @@
     // particular, the final page disables the footer's Next items button.
     if(!el('body').querySelector('.history-reader-target'))el('body').focus({preventScroll:true});
   }
+  function viewItems(){return Array.from(el('body').querySelectorAll('.history-reader-item'));}
+  function elementKey(item){return JSON.stringify([item.dataset.turnId,item.dataset.itemId]);}
+  function captureView(){
+    const body=el('body'),items=new Map(),active=document.activeElement;
+    const box=body.getBoundingClientRect();let anchor=null,focus=null;
+    for(const item of viewItems()){
+      const key=elementKey(item),pre=item.querySelector('.history-reader-text'),rect=item.getBoundingClientRect();
+      items.set(key,{start:Number(item.dataset.windowStart)||0,open:item.open,scroll:pre?.scrollTop || 0});
+      if(!anchor && rect.bottom>box.top)anchor={key,offset:rect.top-box.top};
+      if(item===active || item.contains(active)){
+        const controls=Array.from(item.querySelectorAll('button,summary,pre'));
+        focus={key,index:controls.indexOf(active),item:item===active};
+      }
+    }
+    return {items,anchor,focus,scroll:body.scrollTop,page,first:rowKey(rows[page*PAGE_ENTRIES])};
+  }
+  function restoreView(view,ticket){
+    if(!current(ticket))return;
+    const body=el('body'),items=viewItems();
+    for(const item of items){const saved=view.items.get(elementKey(item));if(saved)item.querySelector('.history-reader-text').scrollTop=saved.scroll;}
+    body.scrollTop=view.scroll;
+    if(view.anchor){const item=items.find(item=>elementKey(item)===view.anchor.key);
+      if(item)body.scrollTop+=item.getBoundingClientRect().top-body.getBoundingClientRect().top-view.anchor.offset;}
+    if(view.focus){
+      const item=items.find(item=>elementKey(item)===view.focus.key);
+      const target=view.focus.item?item:item?.querySelectorAll('button,summary,pre')[view.focus.index];
+      if(target){if(view.focus.item)target.tabIndex=-1;target.focus({preventScroll:true});}
+      else body.focus({preventScroll:true});
+    }
+  }
+  function refreshControls(){
+    const button=el('refresh');if(!button)return;
+    button.hidden=!source;button.disabled=refreshing || loading;
+    button.textContent=refreshing?'Refreshing original…':'Refresh original';
+  }
+  async function refreshFind(query,anchor,ticket){
+    const search=++findVersion,valid=()=>search===findVersion && current(ticket);
+    finding=true;findGroups=[];findTotal=0;findCursor=-1;findControls();
+    const groups=[];let total=0;
+    try{
+      for(let index=0;index<rows.length;index++){
+        if(!valid())return;
+        const item=rows[index].item;if(!item || !visibleTypes.has(item.type))continue;
+        const spans=await root.DeskHistoryFind.spansAsync(textFor(item),query,valid);
+        if(!valid() || spans===null)return;
+        if(spans.length){groups.push({index,spans,first:total});total+=spans.length;}
+        if(index%40===39){await new Promise(resolve=>setTimeout(resolve,0));if(!valid())return;}
+      }
+      if(!valid())return;
+      const view=captureView();findGroups=groups;findTotal=total;finding=false;
+      if(anchor?.key){const group=groups.find(group=>rowKey(rows[group.index])===anchor.key);
+        let index=-1;if(group)for(let i=0;i<group.spans.length;i++){const span=group.spans.at(i);if(span.start===anchor.start && span.end===anchor.end){index=i;break;}}
+        if(index>=0)findCursor=group.first+index;}
+      findControls(anchor && findCursor<0?'The previous occurrence is no longer at its original location. Choose Previous/Next match or Find to navigate the refreshed original.':undefined);
+      render(false,view);
+    }catch{
+      if(valid()){finding=false;findControls('The refreshed original could not be searched. Choose Find to retry.');}
+    }
+  }
+  async function refresh(){
+    if(!source || loading || refreshing || !available())return false;
+    const ticket=version,request=++refreshVersion;refreshing=true;refreshControls();el('error').hidden=true;
+    el('status').textContent='Refreshing original native conversation. The current snapshot stays readable.';
+    try{
+      const thread=await api('/api/native/thread?id='+encodeURIComponent(requested.thread_id));
+      if(request!==refreshVersion)return false;
+      if(!current(ticket)){if(ticket===version && el('').open)close();return false;}
+      if(!thread || thread.id!==requested.thread_id || !Array.isArray(thread.turns))throw Error('The original native read did not return this conversation.');
+      // Commit the latest reader intent, not the page/query captured on click.
+      const view=captureView(),oldMatch=findMatch();
+      const anchorKey=oldMatch?rowKey(rows[oldMatch.index]):null;
+      const anchor=anchorKey?{key:anchorKey,start:oldMatch.start,end:oldMatch.end}:null;
+      const query=el('find-query').value.trim(),submitted=findSubmitted && findQuery===query;
+      ++findVersion;finding=false;findGroups=[];findTotal=0;findCursor=-1;
+      source=thread;rows=flatten(thread);
+      const first=view.anchor?.key || view.first,index=first?rows.findIndex(row=>rowKey(row)===first):-1;
+      page=index>=0?Math.floor(index/PAGE_ENTRIES):Math.min(view.page,Math.max(0,Math.ceil(rows.length/PAGE_ENTRIES)-1));
+      targetIndex=typeof requested.turn_id==='string' && typeof requested.item_id==='string'
+        ? rows.findIndex(row=>row.item && row.turn.id===requested.turn_id && row.item.id===requested.item_id):-1;
+      el('title').textContent=(str(thread.name)||str(thread.title)||str(thread.preview)||'Original Codex conversation').slice(0,240);
+      el('binding').textContent='Thread '+thread.id+'\n'+(str(thread.cwd)||'Working directory unreported')+
+        (str(thread.modelProvider)?'\nProvider: '+thread.modelProvider:'');
+      el('status').textContent=index<0 && first?'Original refreshed. The previously visible item is no longer present; a readable page is shown.':'Original refreshed. Your selected task and draft stay unchanged.';
+      if(targetIndex<0 && requested.item_id)el('match').textContent='The requested native turn/item is not present in this refreshed original. You can still read the conversation.';
+      else if(targetIndex>=0){const row=rows[targetIndex],phrase=str(requested.match_text);
+        el('match').textContent=!visibleTypes.has(row.item.type)?'The requested item has no supported readable text. You can still read the conversation.':
+          phrase && !textFor(row.item).includes(phrase)?'The saved phrase is no longer in this original native item. You can still read the conversation.':'Showing the matching original native turn and item.';}
+      el('error').hidden=el('retry').hidden=true;render(false,view);findControls();
+      if(submitted && query)await refreshFind(query,anchor,ticket);
+      return true;
+    }catch(error){
+      if(request===refreshVersion && current(ticket)){
+        el('status').textContent='Refresh failed. The last successfully read original stays available.';
+        el('error').textContent=error.message;el('error').hidden=false;el('retry').hidden=false;
+      }
+      return false;
+    }finally{if(request===refreshVersion){refreshing=false;el('retry').disabled=false;refreshControls();}}
+  }
   async function read() {
     if(loading || !requested || !available())return false;
     const ticket=++version;loading=true;source=null;rows=[];
-    resetFind();el('find-query').value=str(requested.match_text);
+    resetFind();refreshControls();el('find-query').value=str(requested.match_text);
     el('body').replaceChildren();el('body').setAttribute('aria-busy','true');
     el('status').textContent='Reading original native conversation…';
     el('error').hidden=true;el('retry').hidden=true;el('match').textContent='';el('coverage').textContent='';
@@ -286,7 +394,7 @@
       el('status').textContent='Read-only original conversation. Your selected task and draft stay unchanged.';
       const hasIdentity=typeof requested.turn_id==='string' && typeof requested.item_id==='string';
       targetIndex=hasIdentity?rows.findIndex(row=>row.item && row.turn.id===requested.turn_id && row.item.id===requested.item_id):-1;
-      page=targetIndex>=0?Math.floor(targetIndex/PAGE_ENTRIES):0;
+      page=targetIndex>=0?Math.floor(targetIndex/PAGE_ENTRIES):options?.startAtEnd?Math.max(0,Math.ceil(rows.length/PAGE_ENTRIES)-1):0;
       if(hasIdentity && targetIndex<0)el('match').textContent='The requested native turn/item is not present in this original read. You can still read the conversation.';
       else if(targetIndex>=0) {
         const row=rows[targetIndex],phrase=str(requested.match_text);
@@ -301,13 +409,13 @@
       el('error').textContent=error.message;el('error').hidden=false;el('retry').hidden=false;
       return false;
     } finally {
-      if(ticket===version){loading=false;el('body').setAttribute('aria-busy','false');el('retry').disabled=false;findControls();}
+      if(ticket===version){loading=false;el('body').setAttribute('aria-busy','false');el('retry').disabled=false;findControls();refreshControls();}
     }
   }
   async function show(result,callbacks={}) {
     if(!api)throw new Error('Native history reader is not configured.');
     if(callbacks.valid && !callbacks.valid())return false;
-    ++version;loading=false;source=null;rows=[];targetIndex=-1;
+    ++version;++refreshVersion;refreshing=false;loading=false;source=null;rows=[];targetIndex=-1;refreshControls();
     resetFind();
     requested={...result};options=callbacks;
     el('back').textContent=callbacks.backLabel || 'Back to search';
@@ -325,14 +433,15 @@
   function configure(value) {
     api=value.api;
     el('back').onclick=el('close').onclick=close;
-    el('retry').onclick=()=>{el('retry').disabled=true;read();};
+    el('retry').onclick=()=>{el('retry').disabled=true;source?refresh():read();};
+    if(el('refresh'))el('refresh').onclick=refresh;
     el('previous').onclick=()=>movePage(-1);
     el('next').onclick=()=>movePage(1);
     el('find-form').onsubmit=event=>{event.preventDefault();submitFind();};
     el('find-previous').onclick=()=>jumpFind(-1);el('find-next').onclick=()=>jumpFind(1);
     el('find-query').oninput=()=>{
-      ++findVersion;finding=false;findGroups=[];findTotal=0;findCursor=-1;
-      findControls('Query changed. Choose Find to search this original.');if(source && available())render(false);
+      ++findVersion;finding=false;findSubmitted=false;findGroups=[];findTotal=0;findCursor=-1;
+      findControls('Query changed. Choose Find to search this original.');if(source && available())render(false,captureView());
     };
     el('').addEventListener('keydown',event=>{
       if(event.key!=='F3' || !el('').open || !source || loading || !el('').contains(event.target))return;
