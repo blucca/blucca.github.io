@@ -19,6 +19,8 @@
   const lookup=id=>{const row=state.sessions.find(s=>s.id===id);if(!row)throw new Error('Choose a sample conversation first.');return row;};
   const thread=id=>{const row=threads.find(t=>t.id===id);if(!row)throw new Error('This preview contains three sample conversations.');return row;};
   const queue=id=>{lookup(id);return state.followups[id] || (state.followups[id]={entries:[],reservation:null});};
+  const draftView=d=>({text:d.text,mode:d.mode,revision:d.revision});
+  const conflict=current=>{const error=new Error('Sample draft changed elsewhere. Choose Keep mine or Load saved.');error.status=409;error.current=draftView(current);throw error;};
   const coverage=()=>({indexed_threads:state.indexed?3:0,indexed_items:state.indexed?6:0,truncated_threads:0,omitted_items:0,unsupported_items:0,invalid_items:0,max_thread_items:5000,max_thread_chars:2000000,max_item_chars:200000});
   const job=()=>({id:'sample-index-1',status:state.indexed?'completed':'idle',seen:state.indexed?3:0,indexed:state.indexed?3:0,skipped:0,failed:0,limit:200,has_more:false});
   const fold=text=>String(text).normalize('NFKC').toLowerCase();
@@ -49,9 +51,25 @@
       if(post){state.indexed=true;save();}return {job:job(),coverage:coverage()};
     }
     if(path==='/api/recall')return search(params);
+    if(path==='/api/preparation'){
+      if(post)throw new Error('Prepared work is read-only until you explicitly save a draft.');
+      const archived=params.get('archived') || 'false',cwd=params.get('cwd');
+      if(!['false','true','0','1'].includes(archived))throw new Error('Choose whether to include archived sessions.');
+      const sessions=[];
+      for(const row of state.sessions){
+        if((row.archived && !['true','1'].includes(archived)) || (cwd && cwd!==row.cwd))continue;
+        const saved=state.drafts[row.id],draft=saved?.revision>0 && saved.text?.trim()?draftView(saved):null;
+        // Overview reads do not create an empty queue or alter browser storage.
+        const followups=state.followups[row.id] || {entries:[],reservation:null};
+        if(!draft && !followups.entries.length && !followups.reservation)continue;
+        sessions.push({id:row.id,name:row.name,cwd:row.cwd,profile:row.profile,archived:!!row.archived,status:row.status,
+          updated:row.updated || threads?.find(t=>t.id===row.thread_id)?.updatedAt || 0,draft,followups});
+      }
+      sessions.sort((a,b)=>b.updated-a.updated || a.id.localeCompare(b.id));return {sessions};
+    }
     if(path==='/api/import' && post){
       const t=thread(data.thread),id='desk-'+t.id;
-      if(!state.sessions.some(s=>s.id===id))state.sessions.push({id,thread_id:t.id,name:t.name,cwd:t.cwd,profile:'default',status:'saved',provider:'sample',model:'preparation-only',mode:'native',archived:false});
+      if(!state.sessions.some(s=>s.id===id))state.sessions.push({id,thread_id:t.id,name:t.name,cwd:t.cwd,profile:'default',status:'saved',provider:'sample',model:'preparation-only',mode:'native',archived:false,updated:t.updatedAt});
       save();return {id};
     }
     if(path==='/api/open' && post)return {thread:thread(lookup(data.session).thread_id)};
@@ -60,12 +78,20 @@
       const id=post?data.session:params.get('session');lookup(id);
       const current=state.drafts[id] || {text:'',mode:'native',revision:0};
       if(post){
-        if(current.text===data.text && current.mode===data.mode)return current;
-        if(data.revision!==current.revision)throw new Error('Sample preparation changed in another page. Reload to read it.');
         if(typeof data.text!=='string' || data.text.length>200000)throw new Error('Use a sample draft of at most 200,000 characters.');
-        state.drafts[id]={text:data.text,mode:data.mode==='plan'?'plan':'native',revision:current.revision+1};save();
+        if(!['native','plan'].includes(data.mode) || !Number.isInteger(data.revision) || data.revision<0)throw new Error('Choose Work or Plan and the reviewed draft revision.');
+        const identified=data.writer!==undefined || data.sequence!==undefined;
+        if(identified && (typeof data.writer!=='string' || !data.writer || data.writer.length>128 || !Number.isSafeInteger(data.sequence) || data.sequence<0))throw new Error('Use the current page writer and edit sequence.');
+        const sameWriter=identified && current.writer===data.writer;
+        if(sameWriter && data.sequence<=current.edit_sequence){
+          if(data.sequence===current.edit_sequence && current.text===data.text && current.mode===data.mode)return draftView(current);
+          conflict(current);
+        }
+        const samePageRecovery=sameWriter && data.sequence>current.edit_sequence && data.revision<current.revision;
+        if(data.revision!==current.revision && !samePageRecovery)conflict(current);
+        state.drafts[id]={text:data.text,mode:data.mode,revision:current.revision+1,...(identified?{writer:data.writer,edit_sequence:data.sequence}:{})};save();
       }
-      return state.drafts[id] || current;
+      return draftView(state.drafts[id] || current);
     }
     if(path.startsWith('/api/followups')){
       const id=post?data.session:params.get('session'),q=queue(id),action=path.slice('/api/followups'.length);
@@ -102,7 +128,7 @@
     const method=(options.method || 'GET').toUpperCase();let data={};
     try{data=options.body?JSON.parse(options.body):{};requests.push({path:address.pathname+address.search,method,data:copy(data)});
       const result=copy(handle(address.pathname,method,data,address.searchParams));return new Response(JSON.stringify(result),{status:200,headers:{'Content-Type':'application/json'}});
-    }catch(error){return new Response(JSON.stringify({error:error.message}),{status:400,headers:{'Content-Type':'application/json'}});}
+    }catch(error){return new Response(JSON.stringify({error:error.message,...(error.current?{current:error.current}:{})}),{status:error.status || 400,headers:{'Content-Type':'application/json'}});}
   };
   window.DeskBrowserPreview={storageKey,sessionKey,requests,snapshot:()=>copy(state),reset:()=>{resetting=true;localStorage.removeItem(storageKey);localStorage.removeItem(sessionKey);location.reload();}};
   document.addEventListener('DOMContentLoaded',()=>{

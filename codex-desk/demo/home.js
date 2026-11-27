@@ -28,14 +28,22 @@ const DeskHome=(()=>{
       const result=await env.api('/api/native?recent=1');
       if(!current(v,g))return;
       const all=result.data || [], unavailable=all.filter(t=>t.cwdExists===false).length;
-      const rows=all.filter(t=>t.cwdExists!==false).slice(0,6);
+      const rows=all.slice(0,6);
       for(const thread of rows){
         const title=String(thread.name || thread.preview || thread.id).replace(/\s+/g,' ').trim();
         const preview={...thread,name:title.length>160?title.slice(0,157)+'…':title};
-        $('home-list').append(env.row(preview,()=>resume(thread,v,g),null,'Resume conversation'));
+        let row;
+        const read=()=>DeskHistoryReader.show({thread_id:thread.id,cwd:thread.cwd},
+          {valid:()=>current(v,g) && row.isConnected,backLabel:'Back to recent work',onReturn:()=>{
+            if(current(v,g) && row.isConnected)row.querySelector('.native-read')?.focus({preventScroll:true});
+          }});
+        row=env.row(preview,thread.cwdExists===false?null:()=>resume(thread,v,g),null,'Resume conversation',read);
+        if(thread.cwdExists===false){const note=document.createElement('p');note.className='muted';
+          note.textContent='Project folder unavailable. Original evidence is still readable; restore the folder to resume.';row.append(note);}
+        $('home-list').append(row);
       }
-      $('home-status').textContent=rows.length?'Recently updated conversations. Choose one to review its saved work.':(unavailable?'Recent history points to unavailable project folders. Browse all to read the original conversations. Restore a folder only to resume work.':'No saved conversations in this Codex home yet. Open a project to start your first task. Use --codex-home if your CLI history is stored elsewhere.');
-      if(rows.length && unavailable)$('home-status').textContent+=` ${unavailable} recent project folder(s) unavailable; Browse all to read their original conversations.`;
+      $('home-status').textContent=rows.length?'Recently updated conversations. Read original evidence without opening a task, or Resume when ready to work.':(unavailable?'Recent history points to unavailable project folders. Browse all to read the original conversations. Restore a folder only to resume work.':'No saved conversations in this Codex home yet. Open a project to start your first task. Use --codex-home if your CLI history is stored elsewhere.');
+      if(rows.length && unavailable)$('home-status').textContent+=` ${unavailable} recent project folder(s) unavailable; original reading does not require them.`;
     }catch(error){
       if(current(v,g)){
         $('home-status').textContent='Recent conversations could not be loaded. Retry, or open a project.';

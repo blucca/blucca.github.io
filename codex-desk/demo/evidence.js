@@ -34,21 +34,37 @@
   function json(value) {return JSON.stringify(review(value), null, 2) ?? 'null';}
   function location(value) {
     if(typeof value!=='string')return '';
-    if(value.toLowerCase().startsWith('data:'))return value.split(';')[0]+' (embedded)';
-    try {const u=new URL(value);u.username='';u.password='';u.search='';u.hash='';return u.toString();}catch {return value.split(/[?#]/)[0];}
+    return reviewLocation(value);
+  }
+  function annotations(block) {
+    const value=block.annotations;
+    if(!value || typeof value!=='object' || Array.isArray(value))return '';
+    const fields={};
+    if(Array.isArray(value.audience) && value.audience.every(v=>typeof v==='string' && ['user','assistant'].includes(v)))fields.audience=value.audience;
+    if(typeof value.priority==='number')fields.priority=value.priority;
+    if(typeof value.lastModified==='string')fields.lastModified=value.lastModified;
+    return Object.keys(fields).length?'\nAnnotations: '+json(fields):'';
   }
   function content(block) {
     if(block===null || typeof block!=='object')return json(block);
-    if(block.type==='text' || block.type==='inputText')return typeof block.text==='string'?block.text:'[Unavailable text content]';
-    if(['image','audio','inputImage','inputAudio'].includes(block.type)) {
+    let text;
+    if(block.type==='text' || block.type==='inputText')text=typeof block.text==='string'?block.text:'[Unavailable text content]';
+    else if(['image','audio','inputImage','inputAudio'].includes(block.type)) {
       const kind=block.type.toLowerCase().includes('image')?'Image':'Audio';
-      return `[${kind}${block.mimeType?' · '+block.mimeType:''}${block.imageUrl || block.audioUrl?' · '+location(block.imageUrl || block.audioUrl):''} · binary omitted]`;
+      text=`[${kind}${block.mimeType?' · '+block.mimeType:''}${block.imageUrl || block.audioUrl?' · '+location(block.imageUrl || block.audioUrl):''} · binary omitted]`;
     }
-    if(['resource_link','resourceLink'].includes(block.type))return `Resource: ${block.name || block.title || ''}\n${location(block.uri)}${block.description?'\n'+block.description:''}`;
-    if(block.type==='resource') {
-      const r=block.resource || {};return `Resource: ${location(r.uri)}${r.mimeType?' · '+r.mimeType:''}\n${typeof r.text==='string'?r.text:'[Binary resource omitted]'}`;
+    else if(['resource_link','resourceLink'].includes(block.type)) {
+      const uri=typeof block.uri==='string' && block.uri.toLowerCase().startsWith('data:')?inlineDescription(block.uri,'Resource'):reviewLocation(block.uri);
+      const lines=['Resource link','URI: '+uri];
+      for(const key of ['name','title','description','mimeType'])if(typeof block[key]==='string')lines.push(key+': '+block[key]);
+      if(typeof block.size==='number')lines.push('size: '+block.size);
+      text=lines.join('\n');
     }
-    return `[Unsupported content block: ${block.type || 'unknown'}]`;
+    else if(block.type==='resource') {
+      const r=block.resource || {};text=`Resource: ${location(r.uri)}${r.mimeType?' · '+r.mimeType:''}\n${typeof r.text==='string'?r.text:'[Binary resource omitted]'}`;
+    }
+    else return `[Unsupported content block: ${block.type || 'unknown'}]`;
+    return text+annotations(block);
   }
   function tool(item) {
     const mcp=item.type==='mcpToolCall';

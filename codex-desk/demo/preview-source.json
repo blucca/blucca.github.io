@@ -1,16 +1,18 @@
 {
   "source": "blucca/codex-desk",
-  "runtime_version": "0.1.0a30",
+  "runtime_version": "0.1.0a38",
   "sample": true,
   "assets": [
     "activity.js",
     "app.js",
     "evidence.js",
     "followups.js",
+    "history_find.js",
     "history_reader.js",
     "home.js",
     "index.html",
     "native-state.js",
+    "preparation.js",
     "recall.js",
     "style.css"
   ],

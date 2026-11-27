@@ -4,7 +4,7 @@ const DeskRecall=(()=>{
   let options, searchVersion=0, openVersion=0, navigationVersion=0;
   let searching=false, resultOpening=false, projectSignature='', target=null, pendingNavigation=null;
   let scanVersion=0, scanTimer=null, scanBusy=false, scanReading=false, scanReady=false, scanIssue=false, scanJob=null;
-  let scanRefresh=null, lastSearch=null;
+  let scanRefresh=null, lastSearch=null, resultPage=null;
   let nativeIndexedThreads=null, indexPromoted=false, emptySearch=false;
   const nativeProjects=new Set();
   const query=()=>({q:el('recall-query').value.trim(),cwd:el('recall-project').value,archived:el('recall-archived').checked});
@@ -25,15 +25,28 @@ const DeskRecall=(()=>{
     if(selected && !values.includes(selected)){const row=make('option',selected+' — saved scope');row.value=selected;rows.push(row);}
     el('recall-project').replaceChildren(all,...rows);el('recall-project').value=selected;
   }
+  function cacheProjects(values){
+    if(!Array.isArray(values))return;
+    nativeProjects.clear();
+    for(const cwd of values)if(typeof cwd==='string' && cwd)nativeProjects.add(cwd);
+    projects();
+  }
   function stateChanged(){projects();if(target && (target.session!==options.selected() || target.generation!==options.generation()))clearTarget();}
   function buttons(){
     el('recall-search').disabled=searching;
     el('recall-results').setAttribute('aria-busy',String(searching || resultOpening));
-    for(const b of el('recall-results').querySelectorAll('.recall-open'))b.disabled=resultOpening;
+    for(const b of el('recall-results').querySelectorAll('.recall-open, .recall-read'))b.disabled=searching || resultOpening;
+    const scoped=resultPage && sameQuery(resultPage.scope,query());
+    const previous=el('recall-previous'),next=el('recall-next');
+    if(previous && next){
+      previous.hidden=next.hidden=!scoped || (resultPage.offset===0 && resultPage.total<=resultPage.limit);
+      previous.disabled=searching || resultOpening || !scoped || resultPage.offset===0;
+      next.disabled=searching || resultOpening || !scoped || resultPage.offset+resultPage.count>=resultPage.total;
+    }
   }
   function invalidate(){
     ++searchVersion;++openVersion;++navigationVersion;searching=false;resultOpening=false;pendingNavigation=null;
-    lastSearch=null;emptySearch=false;if(scanRefresh)scanRefresh.search=null;
+    lastSearch=null;resultPage=null;emptySearch=false;if(scanRefresh)scanRefresh.search=null;
     el('recall-error').hidden=true;el('recall-results').replaceChildren();
     el('recall-summary').textContent='Query changed. Choose Search to update saved content.';buttons();
   }
@@ -110,7 +123,7 @@ const DeskRecall=(()=>{
       scanRefresh=null;return;
     }
     if(searching)return; // Its own current request must settle before one fresh lookup.
-    scanRefresh=null;search();
+    scanRefresh=null;search(resultPage?.offset ?? 0);
   }
   function stopScanPolling(){if(scanTimer!==null)clearTimeout(scanTimer);scanTimer=null;}
   async function readScan(){
@@ -119,7 +132,7 @@ const DeskRecall=(()=>{
     try{
       const data=await options.api('/api/history/index');
       if(version!==scanVersion || !el('recall').open)return;
-      scanReady=true;scanIssue=false;el('recall-index-error').hidden=true;globalCoverage(data.coverage);scanStatus(data.job);nativeCoverage(data.coverage);refreshAfterScan();
+      scanReady=true;scanIssue=false;el('recall-index-error').hidden=true;globalCoverage(data.coverage);cacheProjects(data.projects);scanStatus(data.job);nativeCoverage(data.coverage);refreshAfterScan();
       if(scanJob?.status==='running')scanTimer=setTimeout(readScan,750);
     }catch(error){if(version===scanVersion && el('recall').open){
       scanIssue=true;scanReady=false;el('recall-index-error').textContent=error.message;el('recall-index-error').hidden=false;
@@ -175,20 +188,31 @@ const DeskRecall=(()=>{
     }
     action.onclick=()=>reveal(result,row,notice,version,scope);row.append(action,notice);return row;
   }
-  async function search(){
+  function bindRows(version,scope){
+    for(const row of el('recall-results').children){const result=rowData.get(row);
+      if(result){
+        row.querySelector('.recall-open').onclick=()=>reveal(result,row,row.querySelector('.recall-result-status'),version,scope);
+        const read=row.querySelector('.recall-read');
+        if(read)read.onclick=()=>DeskHistoryReader.show(result,{valid:()=>current(version,scope) && row.isConnected});
+      }
+    }
+  }
+  async function search(offset=null,revealPage=false){
     if(!options)return;
-    const scope=query();
+    const scope=query(),requestedOffset=offset ?? 0;
+    const keepPage=offset!==null && resultPage && sameQuery(resultPage.scope,scope);
     if(scope.q.length<2 || scope.q.length>200){
       el('recall-error').textContent='Enter 2–200 characters from a saved message, tool result or prepared task.';
       el('recall-error').hidden=false;el('recall-query').focus();return;
     }
     const version=++searchVersion;++openVersion;++navigationVersion;pendingNavigation=null;resultOpening=false;searching=true;
     emptySearch=false;
-    lastSearch={version,scope,navigation:navigationVersion,selected:options.selected(),generation:options.generation()};
+    lastSearch={version,scope,offset:requestedOffset,navigation:navigationVersion,selected:options.selected(),generation:options.generation()};
     if(scanRefresh)scanRefresh.search=lastSearch;
-    el('recall-error').hidden=true;el('recall-results').replaceChildren();
-    el('recall-summary').textContent='Searching saved content…';buttons();
-    const params=new URLSearchParams({q:scope.q,archived:String(scope.archived),limit:'30'});
+    el('recall-error').hidden=true;
+    if(!keepPage){resultPage=null;el('recall-results').replaceChildren();}
+    el('recall-summary').textContent=keepPage?'Loading saved content results…':'Searching saved content…';buttons();
+    const params=new URLSearchParams({q:scope.q,archived:String(scope.archived),limit:'30',offset:String(requestedOffset)});
     if(scope.cwd)params.set('cwd',scope.cwd);
     try{
       const data=await options.api('/api/recall?'+params);
@@ -197,13 +221,26 @@ const DeskRecall=(()=>{
       for(const result of rows)if(result.kind==='native-activity' && result.cwd)nativeProjects.add(result.cwd);projects();
       el('recall-results').replaceChildren(...rows.map(result=>resultRow(result,version,scope)));
       const total=Number.isFinite(data.total)?data.total:rows.length;
-      emptySearch=rows.length===0;
+      const returnedOffset=Number.isInteger(data.offset)?data.offset:requestedOffset;
+      const returnedLimit=Number.isInteger(data.limit) && data.limit>0?data.limit:30;
+      resultPage={scope,offset:returnedOffset,limit:returnedLimit,total,count:rows.length};
+      emptySearch=rows.length===0 && returnedOffset===0;
       el('recall-summary').textContent=rows.length
-        ? `Showing ${rows.length} of ${total} matching item${total===1?'':'s'}.`+(data.truncated?' More matches exist — narrow the query or project.':'')
-        : 'No saved content matches this query in the selected scope.';
+        ? `Showing ${rows.length} of ${total} matching item${total===1?'':'s'}. Items ${returnedOffset+1}–${returnedOffset+rows.length}.`+
+          (returnedOffset+rows.length<total?' Choose Next matches to see more.':'')
+        : returnedOffset>0?'No matching items on this page. Choose Previous matches or Search to refresh.':'No saved content matches this query in the selected scope.';
       coverage(data.coverage);
+      if(keepPage && revealPage && rows.length){
+        const first=el('recall-results').firstElementChild;
+        first.querySelector('.recall-read, .recall-open')?.focus({preventScroll:true});
+        first.scrollIntoView({block:'start',behavior:'instant'});
+      }
     }catch(error){if(current(version,scope)){
-      el('recall-summary').textContent='Saved content could not be searched. Choose Search to retry.';
+      if(keepPage){
+        bindRows(version,scope);
+        lastSearch={...lastSearch,offset:resultPage.offset};
+        el('recall-summary').textContent='The requested result page could not be loaded. Your current results are kept; choose the page button to retry.';
+      }else el('recall-summary').textContent='Saved content could not be searched. Choose Search to retry.';
       el('recall-error').textContent=error.message;el('recall-error').hidden=false;
     }}finally{if(current(version,scope)){searching=false;buttons();indexContext();refreshAfterScan();}}
   }
@@ -298,14 +335,13 @@ const DeskRecall=(()=>{
   function show(){
     ++navigationVersion;pendingNavigation=null;projects();
     const version=searchVersion,scope=query();
-    for(const row of el('recall-results').children){const result=rowData.get(row);
-      if(result){
-        row.querySelector('.recall-open').onclick=()=>reveal(result,row,row.querySelector('.recall-result-status'),version,scope);
-        const read=row.querySelector('.recall-read');
-        if(read)read.onclick=()=>DeskHistoryReader.show(result,{valid:()=>current(version,scope) && row.isConnected});
-      }
+    // A new explicit scan can refresh a retained submitted query in this
+    // dialog generation. Reopening alone never resumes a previous scan's ticket.
+    if(lastSearch && sameQuery(lastSearch.scope,scope) && lastSearch.selected===options.selected() && lastSearch.generation===options.generation()){
+      lastSearch={...lastSearch,version,navigation:navigationVersion};
     }
-    el('recall').showModal();el('recall-query').focus();
+    bindRows(version,scope);
+    el('recall').showModal();el('recall-query').focus();buttons();
     scanReady=false;scanIssue=false;el('recall-index-error').hidden=true;scanButtons();readScan();
   }
   function configure(value){
@@ -314,12 +350,15 @@ const DeskRecall=(()=>{
     el('recall-index').onclick=()=>controlScan();el('recall-index-cancel').onclick=()=>controlScan(true);
     el('recall-index-retry').onclick=()=>scanIssue?readScan():controlScan();
     el('recall-form').onsubmit=event=>{event.preventDefault();search();};
+    const previous=el('recall-previous'),next=el('recall-next');
+    if(previous)previous.onclick=()=>{if(resultPage && !previous.disabled)search(Math.max(0,resultPage.offset-resultPage.limit),true);};
+    if(next)next.onclick=()=>{if(resultPage && !next.disabled)search(resultPage.offset+resultPage.limit,true);};
     el('recall-query').oninput=invalidate;el('recall-project').onchange=invalidate;el('recall-archived').onchange=invalidate;
     el('recall-close').onclick=()=>el('recall').close();
     el('recall').addEventListener('close',()=>{
       stopScanPolling();++scanVersion;scanReading=false;scanReady=false;scanRefresh=null;
       const nav=pendingNavigation;pendingNavigation=null;++searchVersion;++openVersion;
-      if(searching)el('recall-summary').textContent='Search canceled. Choose Search to try again.';
+      if(searching){lastSearch=null;el('recall-summary').textContent='Search canceled. Choose Search to try again.';}
       searching=false;resultOpening=false;buttons();
       // show() rebinds retained results to the next dialog generation.
       if(nav)requestAnimationFrame(()=>focusMatch(nav));
