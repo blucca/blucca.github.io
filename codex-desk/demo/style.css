@@ -143,3 +143,5 @@ aside{min-width:0}
 #recent-selected-status{overflow-wrap:anywhere}#recent-work #welcome{margin:16px 0 0}#recent-work #welcome-title{display:none}
 #show-recent[hidden]{display:none}#show-recent:focus-visible,#recent-work button:focus-visible{outline:2px solid #8cddc3;outline-offset:3px}
 @media(max-width:760px){#recent-work{padding:18px 14px}}
+
+button[aria-disabled="true"]{opacity:.5;cursor:default}

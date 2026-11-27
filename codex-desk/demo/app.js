@@ -112,6 +112,8 @@ function drawSidebar(){
   const focused=document.activeElement, focusedRow=list.contains(focused)?focused.closest('.session-row'):null;
   const focusedControl=focusedRow && (focused.classList.contains('session-archive')?'archive':focused.classList.contains('session')?'session':null);
   const focusedSession=focusedControl?focusedRow.dataset.session:null;let restoreFocus=null;
+  const focusedWasActive=focusedRow?.dataset.active==='true';
+  const focusedIndex=focusedRow?[...list.querySelectorAll('.session-row')].indexOf(focusedRow):-1;
   list.replaceChildren();
   const query=$('session-filter').value.trim().normalize('NFC').toLocaleLowerCase(), showArchived=$('show-archived').checked;
   const current=new Map(state.sessions.map(s=>[s.id,s]));let visible=0;
@@ -131,14 +133,15 @@ function drawSidebar(){
       if(!rows.length)continue;
       section.append(make('h4',`${kind[0].toUpperCase()+kind.slice(1)} · ${rows.length}`,'session-category'));
       for(const s of rows){
-        const row=make('div','','session-row');row.dataset.session=s.id;
+        const row=make('div','','session-row');row.dataset.session=s.id;row.dataset.active=String(activeSession(s));
         const b=make('button','','session'+(s.id===selected?' selected':''));b.title=s.cwd;
         b.type='button';if(s.id===selected)b.setAttribute('aria-current','page');
         b.append(make('strong',s.name || group.name),make('small',`${profileLabel(s.profile)} · ${s.status}${s.archived?' · archived locally':''}`));
         b.onclick=()=>open(s.id);
         const archive=make('button',s.archived?'Restore':'Archive','session-archive');archive.type='button';
         archive.setAttribute('aria-label',`${s.archived?'Restore':'Archive'} saved session ${s.name || group.name}`);
-        archive.disabled=archiving.has(s.id);archive.onclick=()=>setArchived(s.id,!s.archived);
+        // Keep the pending action focusable; setArchived rejects repeats.
+        archive.setAttribute('aria-disabled',String(archiving.has(s.id)));archive.onclick=()=>setArchived(s.id,!s.archived);
         if(s.id===focusedSession)restoreFocus=focusedControl==='archive'?archive:b;
         row.append(b,archive);section.append(row);++visible;
       }
@@ -148,6 +151,13 @@ function drawSidebar(){
   if(!visible && state.sessions.length)list.append(make('p',query?'No saved titles or project folders match.':'No recent saved sessions. Open a project or show archived sessions.','muted'));
   $('session-count').textContent=`${visible} shown · ${state.sessions.length} saved${state.sessions.some(s=>activeSession(s))?' · active tasks stay visible':''}`;
   if(restoreFocus && !restoreFocus.disabled)restoreFocus.focus({preventScroll:true});
+  else if((focusedControl==='archive' && archiving.has(focusedSession)) ||
+          (focusedControl && focusedWasActive && current.has(focusedSession) && !activeSession(current.get(focusedSession)))){
+    // A formerly Active row can disappear under the unchanged title/archive scope.
+    const remaining=[...list.querySelectorAll('.session-row')];
+    const nearby=remaining[Math.min(focusedIndex,remaining.length-1)];
+    (nearby?.querySelector(focusedControl==='archive'?'.session-archive':'.session') || $('session-filter')).focus({preventScroll:true});
+  }
   list.scrollLeft=left;list.scrollTop=top;
 }
 async function setArchived(id,archived){
@@ -655,6 +665,28 @@ $('provider-form').onsubmit=async e=>{
   finally{if(version===providerVersion){$('provider-key').value='';for(const id of ['provider-name','provider-endpoint','provider-model','provider-key','provider-save'])$(id).disabled=false;}}
 };
 
-$('rename').onclick=()=>{const s=state.sessions.find(s=>s.id===selected);if(!s)return;$('rename-name').value=s.name || '';$('rename-error').hidden=true;$('rename-dialog').showModal();$('rename-name').focus();$('rename-name').select();};
+let renameSession=null,renameVersion=0;
+const renaming=new Set();
+function renameControls(){$('rename-save').disabled=renaming.has(renameSession);}
+$('rename').onclick=()=>{
+  const s=state.sessions.find(s=>s.id===selected);if(!s)return;
+  ++renameVersion;renameSession=s.id;$('rename-name').value=s.name || '';$('rename-error').hidden=true;
+  renameControls();$('rename-dialog').showModal();$('rename-name').focus();$('rename-name').select();
+};
 $('rename-cancel').onclick=()=>$('rename-dialog').close();
-$('rename-form').onsubmit=async e=>{e.preventDefault();const b=$('rename-save');b.disabled=true;try{await api('/api/rename',{session:selected,name:$('rename-name').value});$('rename-dialog').close();await refresh();}catch(e){$('rename-error').textContent=e.message;$('rename-error').hidden=false;await refresh();}finally{b.disabled=false;}};
+$('rename-dialog').addEventListener('close',()=>{if(!$('rename-dialog').open)++renameVersion;});
+$('rename-form').onsubmit=async e=>{
+  e.preventDefault();const id=renameSession,version=renameVersion,name=$('rename-name').value;
+  if(!id || renaming.has(id))return;
+  renaming.add(id);renameControls();$('rename-error').hidden=true;
+  const current=()=>version===renameVersion && renameSession===id && $('rename-dialog').open;
+  try{
+    await api('/api/rename',{session:id,name});
+    // Only the submitted editor may close; later edits remain available to save.
+    if(current() && $('rename-name').value===name)$('rename-dialog').close();
+    await refresh();
+  }catch(e){
+    if(current()){$('rename-error').textContent=e.message;$('rename-error').hidden=false;}
+    await refresh();
+  }finally{renaming.delete(id);renameControls();}
+};
