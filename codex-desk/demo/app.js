@@ -1062,11 +1062,12 @@ function projectCurrent(version, query) {
   const current=projectFilter();
   return version===projectVersion && $('project').open && query.cwd===current.cwd && query.search===current.search;
 }
-function historyPath(search, cwd=null, cursor=null) {
+function historyPath(search, cwd=null, cursor=null, archived=null) {
   const params=new URLSearchParams();
   if(search)params.set('search',search);
   if(cwd!==null)params.set('cwd',cwd);
   if(cursor)params.set('cursor',cursor);
+  if(archived!==null)params.set('archived',String(archived));
   const query=params.toString();return '/api/native'+(query?'?'+query:'');
 }
 function projectSummary(query) {
@@ -1201,7 +1202,8 @@ DeskHistoryReader.configure({api,onEvidence:payload=>{
   if(!destination)throw Error('Select an existing task to prepare with this original evidence.');
   if(destination.busy)throw Error('Wait for this task draft to finish saving before reviewing evidence.');
   if(!payload.selection_utf16){
-    const turn=payload.thread.turns.find(turn=>turn.id===payload.turn_id),item=turn?.items?.find(item=>item.id===payload.item_id);
+    const turn=payload.thread.turns.find(turn=>turn?.id===payload.turn_id),item=turn?.items?.find(item=>item?.id===payload.item_id);
+    if(!item)throw Error('The selected original item is unavailable. Read its source again.');
     if(Array.from(DeskHistoryReader.textForItem(item)).length>DeskEvidencePreparation.MAX_QUOTE)throw Error('Select up to 8,000 characters from this original item first.');
   }
   return DeskEvidencePreparation.reviewLoaded({thread:payload.thread,thread_id:payload.thread.id,
@@ -1348,7 +1350,7 @@ DeskHome.configure({api,row:nativeRow,selected:()=>selected,generation:()=>gener
 tick();
 
 let nativeVersion=0,nativeCursor=null,nativeQuery=null,nativeLoading=false;
-function nativeRow(t, resume, handoff, label='Resume with current settings', read=null) {
+function nativeRow(t, resume, handoff, label='Resume with current settings', read=null, archived=false) {
   const box=make('div','','native-row');box.append(make('strong',t.name || t.preview || t.id),make('small',`${t.cwd} · ${t.modelProvider}`));
   const actions=make('div','','actions');
   if(resume && t.cwdExists!==false){const view=make('button',label);view.type='button';
@@ -1360,7 +1362,8 @@ function nativeRow(t, resume, handoff, label='Resume with current settings', rea
   if(handoff){const review=make('button','Review handoff');review.type='button';review.onclick=()=>{resetNativeId();return handoff();};actions.append(review);}
   if(read){const original=make('button','Read original conversation','native-read');original.type='button';original.onclick=()=>{resetNativeId();return read();};actions.append(original);}
   box.append(actions);
-  if(t.cwdExists===false)box.append(make('p','Project folder unavailable. Original evidence is still readable; restore the folder to resume.','muted'));
+  if(t.cwdExists===false)box.append(make('p',archived?'Project folder unavailable. Original evidence is still readable.':'Project folder unavailable. Original evidence is still readable; restore the folder to resume.','muted'));
+  if(archived)box.append(make('p','Archived in native Codex history. Reading does not restore or resume it.','muted'));
   return box;
 }
 // A pasted native ID is an explicit read target, independent of title discovery.
@@ -1395,7 +1398,7 @@ async function readNativeById() {
       if(source.thread?.id!==threadId || !Array.isArray(source.thread.turns))throw Error('The native read did not supply this original conversation.');
       return source.thread;
     };
-    const read=await DeskHistoryReader.show({thread_id:threadId},{valid,loadOriginal,
+    const read=await DeskHistoryReader.show({thread_id:threadId},{valid,loadOriginal,nativeHome:home,
       backLabel:'Back to conversation ID',onReturn:()=>{
         if(!valid())return;
         resetNativeId();
@@ -1416,31 +1419,52 @@ function resetNative() {
   $('history-search-submit').disabled=false;$('history-error').hidden=true;
   $('history-summary').textContent='Choose Search titles to find saved conversations. Leave the search blank to list them without a title filter.';
 }
-function nativeCurrent(version, query) {return version===nativeVersion && $('history').open && query===$('history-search').value.trim();}
+function nativeFilter() {
+  return {search:$('history-search').value.trim(),archived:$('history-source').value==='archived',owner:selected,generation};
+}
+function nativeCurrent(version, query) {
+  const now=nativeFilter();
+  return version===nativeVersion && $('history').open && query.search===now.search &&
+    query.archived===now.archived && query.owner===now.owner && query.generation===now.generation;
+}
 function nativeSummary(query) {
   const count=$('native-list').children.length;
+  const scope=query.archived?'Archived native conversations':'Current native conversations';
   $('history-summary').textContent=count
-    ? (query?`Saved conversations with titles matching “${query}”. `:'')+'Read the original conversation, resume with current settings, or review a handoff.'
-    : query?`No saved conversation titles match “${query}”.`:'No saved conversations found.';
+    ? scope+(query.search?` with titles matching “${query.search}”. `:'. ')+(query.archived
+      ? 'Read an original without restoring or resuming it.'
+      : 'Read the original conversation, resume with current settings, or review a handoff.')
+    : query.search?(query.archived?`No archived native conversation titles match “${query.search}”.`:`No saved conversation titles match “${query.search}”. Current native history.`):(query.archived?'No archived native conversations found.':'No saved conversations found. Current native history.');
 }
 async function nativeList(cursor=null) {
-  const query=$('history-search').value.trim();
-  if(cursor && (nativeLoading || nativeQuery!==query || !nativeCursor))return;
+  const query=nativeFilter();
+  if(cursor && (nativeLoading || !nativeQuery || !nativeCurrent(nativeVersion,nativeQuery) || cursor!==nativeCursor || $('more').disabled))return;
   if(!cursor)resetNative();
   const current=nativeVersion;nativeQuery=query;nativeLoading=true;
   $('history-error').hidden=true;$('history-search-submit').disabled=true;$('more').disabled=true;
-  $('history-summary').textContent=query?`Searching conversation titles for “${query}”…`:'Looking for saved conversations…';
+  $('history-summary').textContent=query.search?`Searching ${query.archived?'archived':'current'} native conversation titles for “${query.search}”…`:`Looking for ${query.archived?'archived':'current'} native conversations…`;
   try {
-    const data=await api(historyPath(query,null,cursor));
+    const data=await api(historyPath(query.search,null,cursor,query.archived));
     if(!nativeCurrent(current,query))return;
     for(const t of data.data || []) {
-      const row=nativeRow(t,async()=>{
-        if(!nativeCurrent(current,query))return;
-        try {const r=await api('/api/import',{thread:t.id,profile:'default'});if(!nativeCurrent(current,query))return;$('history').close();await open(r.id);}
-        catch(e){if(nativeCurrent(current,query)){$('history-error').textContent=e.message;$('history-error').hidden=false;}}
-      },()=>{if(nativeCurrent(current,query))showHandoff(t.id,t.cwd,()=>nativeCurrent(current,query));},
-      'Resume with current settings',()=>DeskHistoryReader.show({thread_id:t.id,cwd:t.cwd},
-        {valid:()=>nativeCurrent(current,query)&&row.isConnected}));
+      let row;
+      const valid=()=>nativeCurrent(current,query) && row.isConnected && row.parentElement===$('native-list');
+      row=nativeRow(t,query.archived?null:async()=>{
+        if(!valid())return;
+        try {const r=await api('/api/import',{thread:t.id,profile:'default'});if(!valid())return;$('history').close();await open(r.id);}
+        catch(e){if(valid()){$('history-error').textContent=e.message;$('history-error').hidden=false;}}
+      },query.archived?null:()=>{if(valid())showHandoff(t.id,t.cwd,valid);},
+      'Resume with current settings',()=>{
+        if(!valid())return;
+        const scroll=$('history').scrollTop;
+        return DeskHistoryReader.show({thread_id:t.id,cwd:t.cwd},{valid,
+          backLabel:query.archived?'Back to archived conversations':'Back to current conversations',onReturn:()=>{
+            if(!valid())return;
+            $('history').scrollTop=scroll;
+            row.querySelector('.native-read')?.focus({preventScroll:true});
+          }});
+      },query.archived);
+      row.dataset.thread=t.id;row.dataset.cursor=cursor || '';row.dataset.nativeSource=query.archived?'archived':'current';
       $('native-list').append(row);
     }
     nativeCursor=data.nextCursor;$('more').hidden=!nativeCursor;nativeSummary(query);
@@ -1450,7 +1474,7 @@ async function nativeList(cursor=null) {
       $('history-error').textContent=e.message;$('history-error').hidden=false;
     }
   } finally {
-    if(nativeCurrent(current,query)){nativeLoading=false;$('history-search-submit').disabled=false;$('more').disabled=false;}
+    if(nativeCurrent(current,query)) {nativeLoading=false;$('history-search-submit').disabled=false;$('more').disabled=false;}
   }
 }
 function fillProfiles(select) {select.replaceChildren(...state.profiles.map(p=>{const n=make('option',p.name);n.value=p.id;return n;}));}
@@ -1545,6 +1569,7 @@ $('browse').onclick=()=>{preparedEvidenceOwner=null;$('history').showModal();nat
 $('history-id').oninput=resetNativeId;
 $('history-id-form').onsubmit=e=>{e.preventDefault();readNativeById();};
 $('history-search').oninput=resetNative;
+$('history-source').onchange=()=>nativeList();
 $('history-search-form').onsubmit=e=>{e.preventDefault();nativeList();};
 $('history').addEventListener('close',()=>{if(!$('history').open)resetNative();});
 $('more').onclick=()=>nativeList(nativeCursor);

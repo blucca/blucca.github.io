@@ -112,7 +112,39 @@
     }
     return result;
   }
-  const api={list,containing,instructions,adjacent,response,search,textForItem};
+  const OVERVIEW_PAGE=20,PREVIEW_CHARS=320,INSTRUCTION_PREVIEWS=3;
+  function preview(text) {
+    let value='',count=0,truncated=false;
+    for(const char of text){if(count++===PREVIEW_CHARS){truncated=true;break;}value+=char;}
+    return {text:value,truncated};
+  }
+  function overview(thread,threadId,page=0) {
+    if(!Number.isSafeInteger(page) || page<0)throw new TypeError('Use a supplied task page');
+    const tasks=list(thread,threadId),pages=Math.max(1,Math.ceil(tasks.length/OVERVIEW_PAGE));
+    page=Math.min(page,pages-1);
+    const first=page*OVERVIEW_PAGE,entries=[];
+    for(const task of tasks.slice(first,first+OVERVIEW_PAGE)) {
+      const entry={...task,ordinal:task.index+1,user_message_count:null,instructions:[],
+        response:{available:false,status:task.reason || 'response_unavailable'}};
+      if(task.available) {
+        const instruction=instructions(thread,task);
+        entry.user_message_count=instruction.user_message_count;
+        entry.instructions=instruction.items.slice(0,INSTRUCTION_PREVIEWS).map(item=>({
+          item_id:item.item_id,available:item.available,reason:item.reason,
+          ...preview(item.text.slice('User\n'.length))}));
+        try {
+          entry.response=response(thread,task);
+          if(entry.response.available){
+            const item=thread.turns[task.index].items.find(item=>item?.id===entry.response.item_id);
+            entry.response={...entry.response,preview:preview(item.text)};
+          }
+        }catch(error){entry.response={available:false,status:error.code || 'response_unavailable'};}
+      }
+      entries.push(entry);
+    }
+    return {thread_id:threadId,page,pages,total:tasks.length,first,limit:OVERVIEW_PAGE,entries};
+  }
+  const api={list,containing,instructions,adjacent,response,search,overview,textForItem};
   root.DeskHistoryTasks=api;
   if(typeof module!=='undefined' && module.exports)module.exports=api;
 })(typeof globalThis==='undefined'?this:globalThis);

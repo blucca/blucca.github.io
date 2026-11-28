@@ -1,6 +1,6 @@
 {
   "source": "blucca/codex-desk",
-  "runtime_version": "0.1.0a59",
+  "runtime_version": "0.1.0a64",
   "sample": true,
   "assets": [
     "activity.js",
@@ -22,6 +22,7 @@
     "native-steps.js",
     "new-activity-view.js",
     "new-activity.js",
+    "original_frontier.js",
     "preparation-find.js",
     "preparation.js",
     "reading_checkpoint.js",
@@ -29,6 +30,7 @@
     "steering.js",
     "stop-task.js",
     "style.css",
+    "task-evidence.js",
     "turn-changes.js"
   ],
   "build": "python3 examples/build_browser_preview.py --out OUTPUT"

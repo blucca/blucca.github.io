@@ -243,6 +243,7 @@ html:has(#history-reader[open]){overflow-anchor:none}
 @media(max-width:500px){.preparation-find-input{flex-wrap:wrap}.preparation-find-input input,.preparation-find-input button{flex:1 1 100%}}
 
 /* Source-owned native task context in the existing original reader. */
+.history-reader-task-overview{min-width:0;overflow-wrap:anywhere}.history-reader-task-overview h3{font-size:16px}.history-reader-task-overview h4{font-size:13px;margin:8px 0}.history-reader-task-overview-row{min-width:0;padding:10px;margin:10px 0;border:1px solid #344356;border-radius:8px}.history-reader-task-overview-row p{font-size:12px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}.history-reader-task-overview-row button{max-width:100%;white-space:normal;overflow-wrap:anywhere;font-size:12px;padding:7px 11px}.history-reader-task-overview-row .actions{flex-wrap:wrap}
 .history-reader-task-context{min-width:0;overflow-wrap:anywhere}.history-reader-task-context h3{font-size:16px;margin:8px 0}.history-reader-task-context h4{font-size:13px;margin:8px 0}.history-reader-task-instruction{padding:10px;margin:10px 0;border:1px solid #344356;border-radius:8px}.history-reader-task-preview{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace}.history-reader-task-navigation{flex-wrap:wrap;margin:12px 0}.history-reader-task-context button,.history-reader-turn-task{font-size:12px;padding:7px 11px}.history-reader-task-context p,#history-reader-task-status{font-size:12px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}.history-reader-task-context:focus-visible{outline:2px solid #8cddc3;outline-offset:2px}
 
 .native-material-dot { float: right; color: #679edf; font-size: .7rem; margin-left: .45rem; }
@@ -269,3 +270,8 @@ html:has(#history-reader[open]){overflow-anchor:none}
 @media(max-width:600px){.history-reader-instruction-search .history-reader-find-input{flex-wrap:wrap}.history-reader-instruction-search input{flex-basis:100%;width:100%}}
 
 .history-reader-native-id{margin:4px 0;min-width:0}.history-reader-native-id button{font-size:12px;padding:7px 11px;max-width:100%;white-space:normal;overflow-wrap:anywhere}#history-reader-native-id-status{min-height:1.6em;font-size:11px;line-height:1.6;margin:3px 0;overflow-wrap:anywhere}
+
+/* Exact occurrences from the existing supplied-original Find index. */
+#history-reader-find-matches[hidden]{display:none}#history-reader-find-match-list{max-height:45dvh;overflow:auto;scrollbar-gutter:stable}.history-reader-find-match{padding:10px 0;border-bottom:1px solid #405367}.history-reader-find-match p{margin:4px 0}.history-reader-find-match pre{margin:6px 0;padding:10px;font-size:12px;white-space:pre-wrap;overflow-wrap:anywhere}.history-reader-find-match mark{background:#ead08c;color:#1b222b}#history-reader-find-matches button:focus-visible{outline:2px solid #70d6b0;outline-offset:3px}
+
+.history-reader-task-evidence{min-width:0;overflow-wrap:anywhere}.history-reader-task-evidence-row{padding:10px 0;border-bottom:1px solid #405367}.history-reader-task-evidence-row h4{font-size:13px;margin:5px 0}.history-reader-task-evidence-row p{margin:5px 0}#history-reader-find-scope[hidden]{display:none}.history-reader-task-evidence button:focus-visible{outline:2px solid #70d6b0;outline-offset:3px}

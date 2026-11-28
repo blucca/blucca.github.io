@@ -8,16 +8,16 @@
     if(document.documentElement.dataset.previewEmbedded==='true')openExternal(url,'_blank','noopener');
     else location.assign(url);
   };
-  const storageKey='codex-desk-browser-preview-v1',sessionKey='codex-desk-browser-preview-session-v1',readingKey='codex-desk-browser-preview-reading-checkpoints-v1',reviewKey='codex-desk-browser-preview-activity-review-v1',resetKey='codex-desk-browser-preview-reset-v1';
+  const storageKey='codex-desk-browser-preview-v1',sessionKey='codex-desk-browser-preview-session-v1',readingKey='codex-desk-browser-preview-reading-checkpoints-v1',originalReadingKey='codex-desk-browser-preview-original-reading-checkpoints-v1',originalFrontierKey='codex-desk-browser-preview-original-frontiers-v1',reviewKey='codex-desk-browser-preview-activity-review-v1',resetKey='codex-desk-browser-preview-reset-v1';
   const readingFixture=window.DeskPreviewReadingFixture || null;
   const threads=window.DeskPreviewThreads, copy=v=>JSON.parse(JSON.stringify(v));
   const blank=()=>({sessions:[],indexed:false,drafts:{},followups:{},nextId:1});
   let state=blank(),resetting=false;
   // The ordinary app's pagehide save can run after Reset removes the old keys.
   // Consume the reset marker before this new document loads any preparation.
-  try{if(localStorage.getItem(resetKey)==='1')for(const key of [storageKey,sessionKey,readingKey,reviewKey,resetKey])localStorage.removeItem(key);}catch(_){}
+  try{if(localStorage.getItem(resetKey)==='1')for(const key of [storageKey,sessionKey,readingKey,originalReadingKey,originalFrontierKey,reviewKey,resetKey])localStorage.removeItem(key);}catch(_){}
   try{const saved=JSON.parse(localStorage.getItem(storageKey));if(saved && Array.isArray(saved.sessions) && saved.drafts && saved.followups)state=saved;}catch(_){}
-  const requests=[];
+  const requests=[];let headerHold=null;
   const notice=text=>{const el=document.getElementById('preview-notice');if(el)el.textContent=text;};
   const save=()=>{try{localStorage.setItem(storageKey,JSON.stringify(state));}catch(_){throw new Error('Browser storage is unavailable. Enable site storage to keep sample preparation.');}};
   const lookup=id=>{const row=state.sessions.find(s=>s.id===id);if(!row)throw new Error('Choose a sample conversation first.');return row;};
@@ -124,7 +124,7 @@
     if(path==='/api/native' || path.startsWith('/api/native/')){
       if(method!=='GET')throw Error('Native sample sources are read-only.');
       if(!Array.isArray(threads))throw Error('Sample histories did not load. Reload this page to try again.');
-      if(path==='/api/native')exactQuery(params,[],['search','cwd','cursor','recent']);
+      if(path==='/api/native')exactQuery(params,[],['search','cwd','cursor','recent','archived']);
       else if(path==='/api/native/thread')exactQuery(params,['id']);
       else if(path==='/api/native/home')exactQuery(params,[]);
       else if(path==='/api/native/task-response')exactQuery(params,['thread','turn']);
@@ -144,7 +144,9 @@
       throw new Error('Sample histories did not load. Reload this page to try again.');
     if(path==='/api/state')return {sessions:state.sessions,native_material:nativeMaterialState(),native_outcomes:Object.fromEntries(state.sessions.flatMap(s=>{const t=Array.isArray(threads)?threads.find(t=>t.id===s.thread_id):null,last=t?.turns?.at(-1);return last?[[s.id,{thread_id:t.id,turn_id:last.id,status:last.status,error:last.error ?? null,source:'native history read'}]]:[];})),profiles:[{id:'default',name:'Sample settings',provider:'sample',model:'preparation-only'}],pending:readingFixture?.pending || {},projects:[]};
     if(path==='/api/native'){
-      let rows=threads.map(({turns,...metadata})=>metadata);const term=params.get('search'),cwd=params.get('cwd');
+      const archived=params.has('archived')?params.get('archived'):'false';
+      if(!['true','false'].includes(archived))throw Error('Choose one native history scope: archived=true or archived=false');
+      let rows=threads.filter(t=>!!t.archived===(archived==='true')).map(({turns,...metadata})=>metadata);const term=params.get('search'),cwd=params.get('cwd');
       if(term)rows=rows.filter(t=>fold(t.name).includes(fold(term)));if(cwd)rows=rows.filter(t=>t.cwd===cwd);return {data:rows,nextCursor:null};
     }
     if(path==='/api/native/thread')return thread(identifier(params.get('id')));
@@ -244,18 +246,92 @@
     const method=(options.method || 'GET').toUpperCase();let data={};
     try{data=options.body?JSON.parse(options.body):{};requests.push({path:address.pathname+address.search,method,data:copy(data)});
       if(readingFixture)await readingFixture.controls.before(address.pathname);
+      if(headerHold && ['/api/native/thread','/api/native/evidence-source'].includes(address.pathname)){const hold=headerHold;hold.entered=true;await hold.promise;}
       const result=copy(handle(address.pathname,method,data,address.searchParams));
       if(readingFixture)await readingFixture.controls.after?.(address.pathname);
       return new Response(JSON.stringify(result),{status:200,headers:{'Content-Type':'application/json'}});
     }catch(error){return new Response(JSON.stringify({error:error.message,...(error.current?{current:error.current}:{})}),{status:error.status || 400,headers:{'Content-Type':'application/json'}});}
   };
-  window.DeskBrowserPreview={storageKey,sessionKey,readingKey,reviewKey,requests,...(readingFixture?{fixture:readingFixture.controls}:{}),snapshot:()=>copy(state),reset:()=>{resetting=true;localStorage.setItem(resetKey,'1');for(const key of [storageKey,sessionKey,readingKey,reviewKey])localStorage.removeItem(key);location.reload();}};
+  // Explicit source-only sample mutation. No activity frontier, preparation or task admission.
+  const originalFixture={
+    threadId:'sample-child-thread',turnId:'sample-child-supplied-turn',itemId:'sample-child-supplied-question',
+    append:()=>{
+      const original=thread(originalFixture.threadId);
+      if(original.turns.some(t=>t.id===originalFixture.turnId))return false;
+      original.turns.push({id:originalFixture.turnId,status:'completed',items:[
+        {id:originalFixture.itemId,type:'userMessage',content:[{type:'text',text:'FIRST NEW SAMPLE ORIGINAL ITEM — inspect the supplied retry transport evidence.'}]},
+        {id:'sample-child-supplied-command',type:'commandExecution',command:'printf sample-supplied-transport',status:'completed',exitCode:0,aggregatedOutput:'New sample native transport evidence — café🙂 项目.'},
+        {id:'sample-child-supplied-answer',type:'agentMessage',phase:'final_answer',text:'The first added task retains its exact transport observation.'}]});
+      original.turns.push({id:'sample-child-later-turn',status:'completed',items:[
+        {id:'sample-child-later-question',type:'userMessage',content:[{type:'text',text:'Summarize the later sample task separately.'}]},
+        {id:'sample-child-later-answer',type:'agentMessage',phase:'final_answer',text:'LATER SAMPLE FINAL ANSWER — separate from the first newly supplied native item.'}]});
+      notice('Five synthetic native items supplied. Close and deliberately read the sample linked original again.');
+      const button=document.getElementById('preview-supply-original');if(button)button.disabled=true;
+      return true;
+    }};
+  // Existing original item only: synthetic status headers never become Activity events.
+  const headerFixture={
+    threadId:'sample-child-thread',turnId:'sample-child-turn',itemId:'sample-child-evidence',
+    quote:'HEADER OUTPUT PASSAGE — café🙂 项目.',prepared:false,
+    command:()=>thread(headerFixture.threadId).turns[0].items.find(i=>i.id===headerFixture.itemId),
+    buttons:()=>{for(const id of ['preview-header-toggle','preview-header-reader-toggle']){
+      const b=document.getElementById(id);if(b){b.hidden=!headerFixture.prepared;b.textContent=headerFixture.command().status==='inProgress'?'Complete sample command':'Restore sample command in progress';}}
+      const b=document.getElementById('preview-header-prepare');if(b)b.disabled=headerFixture.prepared;},
+    prepare:()=>{if(headerFixture.prepared)return false;const command=headerFixture.command();
+      command.command='fixture inspect source';command.status='inProgress';delete command.exitCode;
+      command.aggregatedOutput=Array.from({length:10000},(_,n)=>'H'+String(n).padStart(4,'0')+(n===6450?' '+headerFixture.quote:'')).join('\n');
+      headerFixture.prepared=true;headerFixture.buttons();notice('Sample original command prepared. Read it by ID, find HEADER OUTPUT PASSAGE, then complete only its status.');return true;},
+    toggle:()=>{if(!headerFixture.prepared)return false;const command=headerFixture.command();
+      if(command.status==='inProgress'){command.status='completed';command.exitCode=0;}else{command.status='inProgress';delete command.exitCode;}
+      headerFixture.buttons();notice('Only the sample command status/exit header changed; native output is identical. Reopen or Refresh original deliberately.');return true;},
+    hold:()=>{if(headerHold)throw Error('One sample original read is already held.');let release;
+      const promise=new Promise(r=>release=r);headerHold={entered:false,promise,release};},
+    held:()=>!!headerHold?.entered,
+    release:()=>{if(headerHold){const hold=headerHold;headerHold=null;hold.release();}}
+  };
+  const tasksFixture={
+    threadId:'sample-child-thread',turnId:'sample-review-task-41',itemId:'sample-review-long-command',
+    responseId:'sample-review-reused-answer',quote:'TASK EVIDENCE — Straße Café 项目 😀',
+    query:'TASK EVIDENCE — STRASSE Cafe\u0301 项目 😀',prepared:false,
+    prepare:()=>{
+      if(tasksFixture.prepared)return false;
+      const original=thread(tasksFixture.threadId),quote=tasksFixture.quote;
+      for(let n=1;n<=60;n++){
+        const id='sample-review-task-'+String(n).padStart(2,'0'),shared=[40,41,42].includes(n);
+        const instruction={id:'sample-review-instruction',type:'userMessage',content:[{type:'text',text:shared?'Inspect the retained task evidence and keep its exact source.':'Inspect supplied sample task '+String(n).padStart(2,'0')+'.'}]};
+        let items=[instruction,{id:tasksFixture.responseId,type:'agentMessage',phase:'final_answer',text:'Own supplied task '+String(n).padStart(2,'0')+' final response.'}];
+        if(n===42)items=[instruction,{id:tasksFixture.responseId,type:'agentMessage',text:'Task 42 supplied assistant message with phase unreported.'}];
+        if(n===46)items=[{id:tasksFixture.responseId,type:'agentMessage',phase:'final_answer',text:'Task 46 supplied response; no user instruction was supplied.'}];
+        if(n===41){
+          items.push({id:'sample-review-late-commentary',type:'agentMessage',phase:'commentary',text:'Later commentary is not this task’s final response.'});
+          for(let i=0;i<42;i++){
+            const item={id:'sample-review-tool-'+String(i).padStart(2,'0'),type:'commandExecution',command:'inspect supplied sample evidence '+i,status:'completed',exitCode:0,aggregatedOutput:'Task 41 native supplied evidence item '+i+'.'};
+            if(i===22){item.id=tasksFixture.itemId;item.command='inspect retained Unicode source';item.exitCode=1;item.aggregatedOutput=Array.from({length:1900},(_,line)=>'Task source line '+String(line).padStart(4,'0')+' retains Café 项目 😀'+(line===1450?' '+quote:'')).join('\n');}
+            if(i===5){item.type='mcpToolCall';item.server='sample';item.tool='read_retained_evidence';item.arguments={task:id};item.result={content:[{type:'text',text:'Structured original sample tool result.'}]};delete item.command;delete item.aggregatedOutput;delete item.exitCode;}
+            if(i===6){item.type='fileChange';item.changes=[{path:'sample/retry.txt',diff:'- previous sample evidence\n+ retained sample evidence'}];delete item.command;delete item.aggregatedOutput;delete item.exitCode;}
+            items.push(item);
+          }
+        }else if(shared)items.push({id:tasksFixture.itemId,type:'commandExecution',command:'inspect sample task '+n,status:'completed',exitCode:0,aggregatedOutput:quote+' — task '+n+' only.'});
+        else if(n!==45)items.push({id:'sample-review-short-tool',type:'commandExecution',command:'inspect sample task '+n,status:'completed',exitCode:0,aggregatedOutput:'Own supplied sample task '+n+' result.'});
+        if(n===45)items=[];
+        original.turns.push({id,status:n===45?'interrupted':n===41?'failed':'completed',...(n===45?{error:{message:'Sample task interrupted before native items were supplied.'}}:{}),items});
+      }
+      tasksFixture.prepared=true;const button=document.getElementById('preview-tasks-prepare');if(button)button.disabled=true;
+      notice('Sample task chain prepared on sample-child-thread. Read by ID → Task overview → task 42 → Read this task’s evidence.');return true;
+    }
+  };
+  window.DeskBrowserPreview={storageKey,sessionKey,readingKey,originalReadingKey,originalFrontierKey,reviewKey,requests,originalFixture,headerFixture,tasksFixture,...(readingFixture?{fixture:readingFixture.controls}:{}),snapshot:()=>copy(state),reset:()=>{resetting=true;localStorage.setItem(resetKey,'1');for(const key of [storageKey,sessionKey,readingKey,originalReadingKey,originalFrontierKey,reviewKey])localStorage.removeItem(key);location.reload();}};
   document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('preview-start').onclick=()=>{
       const home=document.getElementById('welcome');
       document.getElementById(home.hidden?'search-saved-content':'home-content').click();
       const input=document.getElementById('recall-query');input.value='retry budget';input.dispatchEvent(new Event('input',{bubbles:true}));input.focus();
     };
+    document.getElementById('preview-supply-original').onclick=originalFixture.append;
+    document.getElementById('preview-header-prepare').onclick=headerFixture.prepare;
+    document.getElementById('preview-tasks-prepare').onclick=tasksFixture.prepare;
+    for(const id of ['preview-header-toggle','preview-header-reader-toggle'])document.getElementById(id).onclick=headerFixture.toggle;
+    headerFixture.buttons();
     document.getElementById('preview-reset').onclick=window.DeskBrowserPreview.reset;
     for(const id of ['home-project'])document.getElementById(id).hidden=true;
     document.getElementById('send').addEventListener('click',e=>{e.preventDefault();install();});

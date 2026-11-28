@@ -1,7 +1,7 @@
 /* Bounded reading-place metadata; native content is always read afresh. */
 (function(root) {
   'use strict';
-  const VERSION=1,STORAGE_KEY='codex-desk-browser-preview-reading-checkpoints-v1';
+  const VERSION=1,STORAGE_KEY='codex-desk-browser-preview-reading-checkpoints-v1',ORIGINAL_STORAGE_KEY='codex-desk-browser-preview-original-reading-checkpoints-v1';
   const LIMITS=Object.freeze({owners:100,item_views:40,turn_views:40,characters:524288,coordinate:1000000000});
   const kinds=new Set(['collaboration','native_steps','turn_changes']);
   const record=value=>value!==null && typeof value==='object' && !Array.isArray(value);
@@ -9,9 +9,10 @@
     if(typeof value!=='string' || !value.trim() || Array.from(value).length>200)throw Error('Use the actual native reading identity.');
     return value;
   }
-  function owner(value) {
+  function owner(value,original=false) {
     if(!record(value) || typeof value.native_home!=='string' || !/^[a-f0-9]{64}$/.test(value.native_home))throw Error('Use the captured native home namespace.');
-    return {native_home:value.native_home,session:identifier(value.session),thread_id:identifier(value.thread_id)};
+    return original?{native_home:value.native_home,thread_id:identifier(value.thread_id)}:
+      {native_home:value.native_home,session:identifier(value.session),thread_id:identifier(value.thread_id)};
   }
   const ownerKey=value=>JSON.stringify([value.native_home,value.session,value.thread_id]);
   const itemKey=value=>JSON.stringify([value.turn_id,value.item_id]);
@@ -26,12 +27,19 @@
     return {turn_id:identifier(value.turn_id),item_id:identifier(value.item_id),
       offset:number(value.offset,0,true),screen_top:number(value.screen_top,0,true)};
   }
+  function visibleCharacter(value) {
+    if(!record(value) || value.offset===undefined || value.top===undefined)throw Error('Use original visible-character metadata.');
+    return {offset:number(value.offset,0,false,true),top:number(value.top,0,true)};
+  }
   function itemView(value) {
     if(!record(value))throw Error('Use native item view metadata.');
     const open=value.open===undefined?null:value.open;
     if(open!==null && typeof open!=='boolean')throw Error('Use a deliberate disclosure state.');
-    return {turn_id:identifier(value.turn_id),item_id:identifier(value.item_id),open,
+    const view={turn_id:identifier(value.turn_id),item_id:identifier(value.item_id),open,
       window_start:number(value.window_start,0,false,true),scroll_top:number(value.scroll_top),scroll_left:number(value.scroll_left)};
+    if(value.command_output_start!==undefined && value.command_output_start!==null)view.command_output_start=number(value.command_output_start,0,false,true);
+    if(value.visible_character!==undefined && value.visible_character!==null)view.visible_character=visibleCharacter(value.visible_character);
+    return view;
   }
   function turnView(value) {
     if(!record(value) || !kinds.has(value.kind) || typeof value.open!=='boolean')throw Error('Use a source-bound native turn disclosure.');
@@ -61,9 +69,15 @@
       row=>row?.kind==='native_steps' || row?.kind==='turn_changes' || (!!at && row?.turn_id===at.turn_id));
     return {latest:value.latest,anchor:at,window_scroll:{top:number(scroll.top),left:number(scroll.left)},item_views,turn_views};
   }
-  function checkpoint(value) {
+  function normalizeOriginalView(value) {
+    const view=normalizeView(value),scroll=value.reader_scroll===undefined?{}:value.reader_scroll;
+    if(view.latest || !view.anchor)throw Error('Use an exact original native reading anchor.');
+    if(!record(scroll))throw Error('Use original reader scroll metadata.');
+    return {...view,reader_scroll:{top:number(scroll.top),left:number(scroll.left)}};
+  }
+  function checkpoint(value,original=false) {
     if(!record(value) || value.version!==VERSION || !Number.isSafeInteger(value.saved_at) || value.saved_at<0)throw Error('The reading checkpoint could not be read.');
-    return {version:VERSION,owner:owner(value.owner),saved_at:value.saved_at,view:normalizeView(value.view)};
+    return {version:VERSION,owner:owner(value.owner,original),saved_at:value.saved_at,view:original?normalizeOriginalView(value.view):normalizeView(value.view)};
   }
   function explicit(options) {
     const value=options?.explicitTarget;
@@ -123,18 +137,20 @@
     for(const [field,status] of [['native_home','home_mismatch'],['session','session_mismatch'],['thread_id','thread_mismatch']])if(a[field]!==b[field])return status;
     return null;
   }
-  function resolve(value,saved,source,options={}) {
+  function resolve(value,saved,source,options={},original=false) {
     if(explicit(options))return result('explicit_target');
     let current,entry,fresh;
-    try{current=owner(value);}catch{return result('owner_unavailable');}
+    try{current=owner(value,original);}catch{return result('owner_unavailable');}
     if(saved===null || saved===undefined)return result('checkpoint_missing');
-    try{entry=checkpoint(saved);}catch{return result('invalid_checkpoint');}
+    try{entry=checkpoint(saved,original);}catch{return result('invalid_checkpoint');}
     const changed=mismatch(current,entry.owner);if(changed)return result(changed);
-    try{fresh=owner(source);}catch{return result('source_unavailable');}
+    try{fresh=owner(source,original);}catch{return result('source_unavailable');}
     const sourceChanged=mismatch(current,fresh);if(sourceChanged)return result(sourceChanged);
-    return resolveView(entry.view,source,options);
+    const resolved=resolveView(entry.view,source,options);
+    if(original && resolved.available)resolved.view.reader_scroll=entry.view.reader_scroll;
+    return resolved;
   }
-  function create(storage,options={}) {
+  function create(storage,options={},original=false) {
     const key=options.key===undefined?STORAGE_KEY:identifier(options.key),now=options.now || Date.now;
     function read() {
       let raw;
@@ -147,14 +163,14 @@
       const entries=[],seen=new Set();
       for(const row of data.checkpoints) {
         if(entries.length===LIMITS.owners)break;
-        let entry;try{entry=checkpoint(row);}catch{continue;}
+        let entry;try{entry=checkpoint(row,original);}catch{continue;}
         const identity=ownerKey(entry.owner);if(seen.has(identity))continue;
         seen.add(identity);entries.push(entry);
       }
       return {status:'ok',checkpoints:entries};
     }
     function get(value) {
-      const current=owner(value),identity=ownerKey(current);
+      const current=owner(value,original),identity=ownerKey(current);
       return read().checkpoints.find(row=>ownerKey(row.owner)===identity) || null;
     }
     function write(entries) {
@@ -164,7 +180,7 @@
       try{storage.setItem(key,raw);return true;}catch{return false;}
     }
     function put(value,metadata) {
-      const current=owner(value),view=normalizeView(metadata),saved_at=now();
+      const current=owner(value,original),view=original?normalizeOriginalView(metadata):normalizeView(metadata),saved_at=now();
       if(!Number.isSafeInteger(saved_at) || saved_at<0)throw Error('Use the current reading checkpoint time.');
       const entry={version:VERSION,owner:current,saved_at,view},identity=ownerKey(current);
       const previous=read();
@@ -174,7 +190,7 @@
       return {stored,status:stored?'stored':'storage_unavailable',checkpoint:entry};
     }
     function remove(value) {
-      const current=owner(value),identity=ownerKey(current),previous=read();
+      const current=owner(value,original),identity=ownerKey(current),previous=read();
       if(previous.status==='storage_unavailable')return {removed:false,status:previous.status};
       const entries=previous.checkpoints.filter(row=>ownerKey(row.owner)!==identity);
       if(entries.length===previous.checkpoints.length)return {removed:false,status:'not_found'};
@@ -184,13 +200,15 @@
       if(explicit(resolveOptions))return result('explicit_target');
       const previous=read();
       if(previous.status!=='ok')return result(previous.status);
-      let current;try{current=owner(value);}catch{return result('owner_unavailable');}
+      let current;try{current=owner(value,original);}catch{return result('owner_unavailable');}
       const saved=previous.checkpoints.find(row=>ownerKey(row.owner)===ownerKey(current)) || null;
-      return resolve(current,saved,source,resolveOptions);
+      return resolve(current,saved,source,resolveOptions,original);
     }
     return {read,get,put,remove,restore};
   }
-  const api={VERSION,STORAGE_KEY,LIMITS,normalizeView,resolveView,resolve,create};
+  const createOriginal=(storage,options={})=>create(storage,{key:ORIGINAL_STORAGE_KEY,...options},true);
+  const resolveOriginal=(value,saved,source,options={})=>resolve(value,saved,source,options,true);
+  const api={VERSION,STORAGE_KEY,ORIGINAL_STORAGE_KEY,LIMITS,normalizeView,normalizeOriginalView,resolveView,resolve,create,createOriginal,resolveOriginal};
   root.DeskReadingCheckpoint=api;
   if(typeof module!=='undefined' && module.exports)module.exports=api;
 })(typeof globalThis==='undefined'?this:globalThis);

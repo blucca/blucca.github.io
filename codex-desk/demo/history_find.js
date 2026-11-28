@@ -148,7 +148,14 @@
     }
     return valid()?new Spans(values):null;
   }
-  const api={normalize,spans,spansAsync};
+  function occurrence(groups,cursor) {
+    if(!Array.isArray(groups) || !Number.isSafeInteger(cursor) || cursor<0)return null;
+    let left=0,right=groups.length;
+    while(left<right){const mid=(left+right)>>>1;if(groups[mid].first<=cursor)left=mid+1;else right=mid;}
+    const group=groups[left-1],local=cursor-(group?.first ?? 0),span=group?.spans?.at(local);
+    return span?{index:group.index,cursor,occurrence:local+1,item_total:group.spans.length,...span}:null;
+  }
+  const api={normalize,spans,spansAsync,occurrence};
   root.DeskHistoryFind=api;
   if(typeof module!=='undefined' && module.exports)module.exports=api;
 })(typeof globalThis==='undefined'?this:globalThis);
