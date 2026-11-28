@@ -1,6 +1,6 @@
 {
   "source": "blucca/codex-desk",
-  "runtime_version": "0.1.0a54",
+  "runtime_version": "0.1.0a56",
   "sample": true,
   "assets": [
     "activity.js",
@@ -10,12 +10,14 @@
     "followups.js",
     "history_find.js",
     "history_reader.js",
+    "history_tasks.js",
     "home.js",
     "index.html",
     "native-state.js",
     "native-steps.js",
     "preparation-find.js",
     "preparation.js",
+    "reading_checkpoint.js",
     "recall.js",
     "steering.js",
     "stop-task.js",

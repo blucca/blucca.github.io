@@ -312,11 +312,171 @@ $('turn-request-new').onclick=async()=>{
   draw();
 };
 
+const sessionReadingViews=new Map();
+let sessionReadingKey=null,sessionReadingLatest=true,sessionReadingEpoch=0,sessionReadingRestoring=false,sessionReadingPending=false,sessionReadingNotice='';
+let sessionReadingSourceTurns=null,sessionReadingSourceItems=new Map();
+let sessionReadingHomeValue=null,sessionReadingHomeRequest=null,sessionReadingStorage=null;
+const sessionReadingHomes=new Map();
+function sessionReadingStore(){
+  if(!sessionReadingStorage && globalThis.DeskReadingCheckpoint)try{sessionReadingStorage=DeskReadingCheckpoint.create(localStorage);}catch{return null;}
+  return sessionReadingStorage;
+}
+function sessionReadingHome(){
+  if(sessionReadingHomeValue)return Promise.resolve(sessionReadingHomeValue);
+  if(!sessionReadingHomeRequest)sessionReadingHomeRequest=(async()=>{
+    try{const result=await api('/api/native/home'),home=result?.home_namespace;
+      if(typeof home==='string' && /^[a-f0-9]{64}$/.test(home)){sessionReadingHomeValue=home;return home;}
+    }catch{}
+    return null;
+  })().finally(()=>{sessionReadingHomeRequest=null;});
+  return sessionReadingHomeRequest;
+}
+function saveSessionReading(){
+  const binding=sessionReadingBinding(),view=captureSessionReading();if(!binding || !view)return;
+  const key=sessionReadingIdentity(binding);sessionReadingViews.set(key,view);
+  const save=home=>{if(!home || sessionReadingViews.get(key)!==view)return;
+    sessionReadingHomes.set(key,home);sessionReadingStore()?.put({native_home:home,...binding},view);};
+  if(sessionReadingHomeValue)save(sessionReadingHomeValue);
+  else if(sessionReadingHomeRequest)sessionReadingHomeRequest.then(save);
+}
+function sessionReadingBinding(){
+  const row=state.sessions.find(row=>row.id===selected);
+  return selected && nativeThreadId && row?.thread_id===nativeThreadId?{session:selected,thread_id:nativeThreadId}:null;
+}
+function sessionReadingIdentity(binding){return JSON.stringify([binding.session,binding.thread_id]);}
+function sessionReadingCatalog(){
+  const steps=DeskNativeSteps.state?.(),changes=DeskTurnChanges.state?.();
+  const turn_ids=sessionReadingSourceTurns?[...sessionReadingSourceTurns]:[];
+  for(const turn of [steps?.turn,changes?.turn].filter(Boolean))if(!turn_ids.includes(turn))turn_ids.push(turn);
+  const identities=[];for(const [id] of nodes){const turn=itemTurns.get(id);if(turn && turn_ids.includes(turn) && items.has(id)){
+    const count=sessionReadingSourceItems.get(JSON.stringify([turn,id])) || 1;
+    for(let index=0;index<count;index++)identities.push({turn_id:turn,item_id:id});
+  }}
+  return {thread_id:nativeThreadId,items:identities,
+    turn_ids,
+    native_steps_turn:steps?.turn || null,turn_changes_turn:changes?.turn || null};
+}
+function captureSessionReading(){
+  const binding=sessionReadingBinding(),helper=globalThis.DeskReadingCheckpoint;
+  if(!binding || opening || sessionReadingPending || !helper || $('task').hidden)return null;
+  const key=sessionReadingIdentity(binding),item_views=[],turn_views=[];let anchor=null,last=null;
+  const suppliedTurns=new Set(sessionReadingCatalog().turn_ids);
+  for(const [id,node] of nodes){
+    const turn=itemTurns.get(id);if(!turn || !suppliedTurns.has(turn) || !items.has(id) || !node.isConnected || node.hidden)continue;
+    const view=DeskActivity.capture?.(node);if(view)item_views.push({turn_id:turn,item_id:id,...view});
+    const rect=node.getBoundingClientRect();if(rect.height<=0)continue;
+    last={turn_id:turn,item_id:id,offset:rect.top,screen_top:rect.top};
+    if(!anchor && rect.bottom>0)anchor=last;
+  }
+  for(const [turn,group] of collaborationGroups)if(suppliedTurns.has(turn))turn_views.push({turn_id:turn,kind:'collaboration',open:group.node.open,
+    scroll_top:group.body.scrollTop || 0,scroll_left:group.body.scrollLeft || 0});
+  for(const [kind,controller,disclosure,body] of [['native_steps',DeskNativeSteps,'native-steps','native-steps-body'],
+    ['turn_changes',DeskTurnChanges,'turn-changes','turn-changes-body']]){
+    const turn=controller.state?.()?.turn;if(turn)turn_views.push({turn_id:turn,kind,open:$(disclosure).open,
+      scroll_top:$(body).scrollTop || 0,scroll_left:$(body).scrollLeft || 0});
+  }
+  try{return helper.normalizeView({latest:(sessionReadingKey!==key || sessionReadingLatest) && nearLatest(),anchor:anchor || last,
+    window_scroll:{top:window.scrollY,left:window.scrollX || 0},item_views,turn_views});}catch{return null;}
+}
+function leaveSessionReading(){
+  saveSessionReading();
+  ++sessionReadingEpoch;sessionReadingRestoring=false;sessionReadingPending=false;sessionReadingNotice='';sessionReadingSourceTurns=null;sessionReadingSourceItems.clear();
+}
+function sessionReadingSource(current,thread){
+  if(current!==generation || thread?.id!==nativeThreadId)return;
+  sessionReadingSourceTurns=[];sessionReadingSourceItems.clear();
+  for(const turn of thread.turns || []){
+    if(typeof turn?.id!=='string')continue;sessionReadingSourceTurns.push(turn.id);
+    for(const item of turn.items || [])if(typeof item?.id==='string'){
+      const key=JSON.stringify([turn.id,item.id]);sessionReadingSourceItems.set(key,(sessionReadingSourceItems.get(key) || 0)+1);
+    }
+  }
+}
+function sessionReadingEventTurn(turn){
+  if(typeof turn!=='string' || !turn)return;
+  if(!sessionReadingSourceTurns)sessionReadingSourceTurns=[];
+  if(!sessionReadingSourceTurns.includes(turn))sessionReadingSourceTurns.push(turn);
+}
+function restoreSessionReading(current,options={}){
+  const {explicitTarget=null}=options;
+  const binding=sessionReadingBinding(),helper=globalThis.DeskReadingCheckpoint;
+  if(!binding || opening || current!==generation || !helper)return false;
+  const key=sessionReadingIdentity(binding),saved=Object.hasOwn(options,'savedView')?options.savedView:sessionReadingViews.get(key),epoch=++sessionReadingEpoch;
+  sessionReadingKey=key;sessionReadingLatest=!explicitTarget;sessionReadingNotice='';sessionReadingPending=false;
+  if(explicitTarget || !saved)return false;
+  const resolved=helper.resolveView(saved,sessionReadingCatalog());
+  if(!resolved.available){sessionReadingLatest=false;sessionReadingNotice='Previous reading place unavailable';latestLabel();return true;}
+  const view=resolved.view,valid=()=>current===generation && !opening && sessionReadingEpoch===epoch &&
+    sessionReadingIdentity(sessionReadingBinding() || {})===key && !document.querySelector('dialog[open]');
+  sessionReadingLatest=view.latest;
+  sessionReadingPending=true;
+  requestAnimationFrame(()=>{
+    if(!valid()){if(sessionReadingEpoch===epoch)sessionReadingPending=false;return;}sessionReadingRestoring=true;
+    for(const row of view.item_views){const node=nodes.get(row.item_id);
+      if(node && itemTurns.get(row.item_id)===row.turn_id)DeskActivity.restore?.(node,row);}
+    for(const row of view.turn_views){
+      if(row.kind==='collaboration'){
+        const group=collaborationGroups.get(row.turn_id);if(group){group.node.open=row.open;group.body.scrollTop=row.scroll_top;group.body.scrollLeft=row.scroll_left;}
+      }else{
+        const steps=row.kind==='native_steps',controller=steps?DeskNativeSteps:DeskTurnChanges;
+        if(controller.state?.()?.turn!==row.turn_id)continue;
+        const disclosure=$(steps?'native-steps':'turn-changes'),body=$(steps?'native-steps-body':'turn-changes-body');
+        disclosure.open=row.open;body.scrollTop=row.scroll_top;body.scrollLeft=row.scroll_left;
+      }
+    }
+    if(view.latest){latestUpdates=0;latestLabel();window.scrollTo({top:document.documentElement.scrollHeight,behavior:'instant'});}
+    else window.scrollTo({top:view.window_scroll.top,left:view.window_scroll.left,behavior:'instant'});
+    requestAnimationFrame(()=>{
+      if(valid() && !view.latest){const node=nodes.get(view.anchor.item_id);
+        if(node && itemTurns.get(view.anchor.item_id)===view.anchor.turn_id)window.scrollTo({
+          top:window.scrollY+node.getBoundingClientRect().top-view.anchor.screen_top,left:view.window_scroll.left,behavior:'instant'});}
+      if(sessionReadingEpoch===epoch){sessionReadingRestoring=false;sessionReadingPending=false;}
+    });
+  });
+  return true;
+}
+async function restoreStoredSessionReading(current,options={}){
+  if(options.explicitTarget)return restoreSessionReading(current,options);
+  const binding=sessionReadingBinding();if(!binding || opening || current!==generation || !globalThis.DeskReadingCheckpoint)return false;
+  const key=sessionReadingIdentity(binding),epoch=sessionReadingEpoch;sessionReadingPending=true;
+  const home=await sessionReadingHome();
+  if(current!==generation || opening || epoch!==sessionReadingEpoch || sessionReadingIdentity(sessionReadingBinding() || {})!==key)return true;
+  sessionReadingPending=false;
+  let savedView=sessionReadingViews.get(key);
+  if(home){
+    if(savedView && sessionReadingHomes.has(key) && sessionReadingHomes.get(key)!==home)savedView=null;
+    if(!savedView)savedView=sessionReadingStore()?.get({native_home:home,...binding})?.view || null;
+  }
+  return restoreSessionReading(current,{...options,savedView});
+}
+globalThis.DeskSessionReading={capture:captureSessionReading,save:saveSessionReading,leave:leaveSessionReading,restore:restoreStoredSessionReading,
+  prepare:sessionReadingHome,
+  source:sessionReadingSource,eventTurn:sessionReadingEventTurn,
+  target:()=>{++sessionReadingEpoch;sessionReadingLatest=false;sessionReadingPending=false;sessionReadingRestoring=false;},
+  latest:()=>{++sessionReadingEpoch;const binding=sessionReadingBinding();sessionReadingKey=binding?sessionReadingIdentity(binding):null;sessionReadingLatest=true;sessionReadingNotice='';sessionReadingPending=false;sessionReadingRestoring=false;},
+  follow:()=>{const binding=sessionReadingBinding();return !binding || sessionReadingKey!==sessionReadingIdentity(binding) || sessionReadingLatest;},
+  intent:()=>sessionReadingEpoch,canLatest:epoch=>epoch===sessionReadingEpoch && globalThis.DeskSessionReading.follow(),
+  notice:()=>sessionReadingNotice};
+window.addEventListener('pagehide',saveSessionReading);
+window.addEventListener('scroll',()=>{
+  if(opening || sessionReadingRestoring || sessionReadingPending)return;
+  if(!nearLatest())sessionReadingLatest=false;
+},{passive:true});
+function sessionReadingInput(){
+  if(opening || !sessionReadingBinding())return;
+  ++sessionReadingEpoch;
+  if(sessionReadingPending){sessionReadingPending=false;sessionReadingRestoring=false;sessionReadingLatest=false;}
+}
+window.addEventListener('wheel',sessionReadingInput,{passive:true});
+window.addEventListener('pointerdown',sessionReadingInput,{passive:true});
+window.addEventListener('keydown',event=>{if(['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' '].includes(event.key))sessionReadingInput();});
 function nearLatest(){return window.scrollY+window.innerHeight >= document.documentElement.scrollHeight-140;}
 function latestLabel(){
-  $('latest-output').textContent=latestUpdates?`${latestUpdates} new update${latestUpdates===1?'':'s'} · Latest output ↓`:'Latest output ↓';
+  const reading=globalThis.DeskSessionReading?.notice?.();
+  $('latest-output').textContent=reading?reading+' · Latest output ↓':latestUpdates?`${latestUpdates} new update${latestUpdates===1?'':'s'} · Latest output ↓`:'Latest output ↓';
 }
 function goLatest(){
+  globalThis.DeskSessionReading?.latest?.();
   latestUpdates=0;latestLabel();
   window.scrollTo({top:document.documentElement.scrollHeight,behavior:'instant'});
 }
@@ -430,6 +590,7 @@ async function readSelectedOriginal({find=false,taskResponse=false,returnFocus=$
   const binding=selectedOriginalBinding();if(!binding || selectedOriginalReview?.pending || $('history-reader').open)return false;
   const outcome=state.native_outcomes?.[binding.session];
   if(taskResponse && (!outcome || outcome.thread_id!==binding.thread_id || typeof outcome.turn_id!=='string' || !outcome.turn_id.trim() || outcome.turn_id.length>200))return false;
+  globalThis.DeskSessionReading?.target?.();
   const intent={...binding,turn_id:taskResponse?outcome.turn_id:undefined,pending:true,returnFocus};selectedOriginalReview=intent;syncSelectedOriginal();
   const valid=()=>selectedOriginalCurrent(intent);
   try{
@@ -540,6 +701,7 @@ function renderItem(i,turnId) {
   itemTurns.set(i.id,turn);items.set(i.id,i);
   let node=nodes.get(i.id);const text=itemText(i);
   if(!node) {node=make('div','','item '+i.type);nodes.set(i.id,node);}
+  node.dataset.turnId=turn;
   if(collaborationTypes.has(i.type)) {
     const group=collaborationGroup(turn);
     if(node.parentNode!==group.body)group.body.append(node);
@@ -691,6 +853,8 @@ function consume(m) {
   // Old cached streams may contain owned child notifications. Keep native
   // requests/resolutions, but never display a child as the selected parent.
   if(p.threadId && nativeThreadId && p.threadId!==nativeThreadId && m.id===undefined && m.method!=='serverRequest/resolved')return;
+  const readingThread=p.threadId || p.thread?.id || p.turn?.threadId;
+  if(m.id===undefined && (!readingThread || readingThread===nativeThreadId))globalThis.DeskSessionReading?.eventTurn?.(p.turn?.id || p.turnId);
   DeskSteering.consume(m,{session:selected,thread:nativeThreadId,generation});
   DeskStopTask.consume(m,{session:selected,thread:nativeThreadId,generation});
   const progressChanged=DeskNativeSteps.consume(m,{session:selected,thread:nativeThreadId,generation});
@@ -740,7 +904,8 @@ async function refresh() {
   if(current!==generation || version!==refreshVersion)return;
   state=next;syncInteractionCards(state.pending);stopStateSnapshot=stopSnapshot;DeskFollowups.refresh(selected);requests=new Map((state.pending?.[selected] || []).map(m=>[String(m.id),m]));approvals();draw();DeskRecall.stateChanged();if($('profiles-dialog').open)drawProfiles();
 }
-async function open(id,{revealLatest=true,keepError=false,steerReceiptOnly=false}={}) {
+async function open(id,{revealLatest=true,keepError=false,steerReceiptOnly=false,readingTarget=null}={}) {
+  globalThis.DeskSessionReading?.leave?.();
   stopOrdinaryTurnSource();
   if(selected){rememberDraft(selected);persistDraft(selected);}
   const current=++generation;
@@ -776,8 +941,10 @@ async function open(id,{revealLatest=true,keepError=false,steerReceiptOnly=false
       if(current!==generation)return;
       for(const row of rows){after=row.seq;consume(row.event);}
       await refresh();if(current!==generation)return;
-      localStorage.setItem('codex-desk-browser-preview-session-v1',id);
+      try{localStorage.setItem('codex-desk-browser-preview-session-v1',id);}catch{}
       opening=false;$('welcome').hidden=true;$('task').hidden=false;syncDraftEvidence();$('handoff').hidden=false;draw();DeskSteering.opened();DeskStopTask.opened();
+      await globalThis.DeskSessionReading?.restore?.(current,{explicitTarget:readingTarget || !revealLatest});
+      if(current!==generation)return;
       return true;
     }
     const stopRetained=await DeskStopTask.opened();if(current!==generation)return;
@@ -793,14 +960,17 @@ async function open(id,{revealLatest=true,keepError=false,steerReceiptOnly=false
       if(current!==generation)return;
       for(const row of rows){after=row.seq;consume(row.event);}
       await refresh();if(current!==generation)return;
-      localStorage.setItem('codex-desk-browser-preview-session-v1',id);
+      try{localStorage.setItem('codex-desk-browser-preview-session-v1',id);}catch{}
       opening=false;$('welcome').hidden=true;$('task').hidden=false;syncDraftEvidence();$('handoff').hidden=false;draw();
+      await globalThis.DeskSessionReading?.restore?.(current,{explicitTarget:readingTarget || !revealLatest});
+      if(current!==generation)return;
       return true;
     }
     const opened=await api('/api/open',{session:id});
     if(current!==generation)return;
-    localStorage.setItem('codex-desk-browser-preview-session-v1',id);
+    try{localStorage.setItem('codex-desk-browser-preview-session-v1',id);}catch{}
     nativeThreadId=opened.thread.id;
+    globalThis.DeskSessionReading?.source?.(current,opened.thread);
     DeskNativeSteps.select({session:id,thread:nativeThreadId,generation:current});
     DeskTurnChanges.select({session:id,thread:nativeThreadId,generation:current});
       DeskSteering.select({session:id,thread:nativeThreadId,generation:current});
@@ -818,7 +988,10 @@ async function open(id,{revealLatest=true,keepError=false,steerReceiptOnly=false
     if(current!==generation)return;
     await preparation;if(current!==generation)return;
     opening=false;draw();$('task').hidden=false;syncDraftEvidence();$('handoff').hidden=false;DeskSteering.opened();DeskStopTask.opened();
-    if(revealLatest)requestAnimationFrame(()=>{if(current===generation && ($('native-steps').hidden || !$('native-steps').open) && ($('turn-changes').hidden || !$('turn-changes').open) && ($('native-outcome').hidden || !$('native-outcome').open) && !DeskSteering.reading() && !DeskStopTask.reading() && !$('history-reader').open && !$('preparation').open && !$('preparation-request').open)goLatest();});
+    const readingRestored=await globalThis.DeskSessionReading?.restore?.(current,{explicitTarget:readingTarget || !revealLatest});
+    if(current!==generation)return;
+    const readingIntent=globalThis.DeskSessionReading?.intent?.();
+    if(revealLatest && !readingTarget && !readingRestored)requestAnimationFrame(()=>{if(current===generation && (globalThis.DeskSessionReading?.canLatest?.(readingIntent) ?? true) && ($('native-steps').hidden || !$('native-steps').open) && ($('turn-changes').hidden || !$('turn-changes').open) && ($('native-outcome').hidden || !$('native-outcome').open) && !DeskSteering.reading() && !DeskStopTask.reading() && !$('history-reader').open && !$('preparation').open && !$('preparation-request').open)goLatest();});
     return true;
   } catch(e) {
     if(current===generation){opening=false;draw();error(e);}
@@ -1039,9 +1212,10 @@ let starting=true, restoreChosen=false, restoreSession=null, restoreGeneration=0
 async function startup(){
   const current=generation;
   await refresh();
+  globalThis.DeskSessionReading?.prepare?.();
   if(!restoreChosen){
     restoreChosen=true;restoreGeneration=current;
-    const last=localStorage.getItem('codex-desk-browser-preview-session-v1');
+    let last=null;try{last=localStorage.getItem('codex-desk-browser-preview-session-v1');}catch{}
     if(current===generation && !selected && state.sessions.some(s=>s.id===last && (!s.archived || activeSession(s))))restoreSession=last;
   }
   // A deliberate selection supersedes this return, including a late open reply.
@@ -1071,7 +1245,7 @@ async function pollActivity(){
     const editor=document.activeElement;
     const editorAnchor=editor?.isConnected && editor.closest?.('.approval')
       ? {node:editor,top:editor.getBoundingClientRect().top}:null;
-    const follow=nearLatest() && !globalThis.DeskActivity?.reading?.() && !document.activeElement?.closest?.('.approval') && ($('native-steps').hidden || !$('native-steps').open) && ($('turn-changes').hidden || !$('turn-changes').open) && ($('native-outcome').hidden || !$('native-outcome').open) && !$('recent-work').open && !DeskSteering.reading() && !DeskStopTask.reading() && !$('history-reader').open && !$('preparation').open && !$('preparation-request').open;let changed=0;
+    const follow=nearLatest() && (globalThis.DeskSessionReading?.follow?.() ?? true) && !globalThis.DeskActivity?.reading?.() && !document.activeElement?.closest?.('.approval') && ($('native-steps').hidden || !$('native-steps').open) && ($('turn-changes').hidden || !$('turn-changes').open) && ($('native-outcome').hidden || !$('native-outcome').open) && !$('recent-work').open && !DeskSteering.reading() && !DeskStopTask.reading() && !$('history-reader').open && !$('preparation').open && !$('preparation-request').open;let changed=0;
     for(const r of rows){
       after=r.seq;const progressChanged=consume(r.event);
       if(progressChanged || ['item/started','item/completed','item/agentMessage/delta','item/commandExecution/outputDelta','item/mcpToolCall/progress','error'].includes(r.event.method))++changed;
@@ -1084,7 +1258,7 @@ async function pollActivity(){
     if(changed){
       if(follow)requestAnimationFrame(()=>{
         if(current!==generation)return;
-        if(!globalThis.DeskActivity?.reading?.() && !document.activeElement?.closest?.('.approval') && ($('native-steps').hidden || !$('native-steps').open) && ($('turn-changes').hidden || !$('turn-changes').open) && ($('native-outcome').hidden || !$('native-outcome').open) && !$('recent-work').open && !DeskSteering.reading() && !DeskStopTask.reading() && !$('history-reader').open && !$('preparation').open && !$('preparation-request').open)goLatest();
+        if((globalThis.DeskSessionReading?.follow?.() ?? true) && !globalThis.DeskActivity?.reading?.() && !document.activeElement?.closest?.('.approval') && ($('native-steps').hidden || !$('native-steps').open) && ($('turn-changes').hidden || !$('turn-changes').open) && ($('native-outcome').hidden || !$('native-outcome').open) && !$('recent-work').open && !DeskSteering.reading() && !DeskStopTask.reading() && !$('history-reader').open && !$('preparation').open && !$('preparation-request').open)goLatest();
         else{latestUpdates+=changed;latestLabel();}
       });
       else{latestUpdates+=changed;latestLabel();}

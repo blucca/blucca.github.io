@@ -283,7 +283,7 @@
       if(mode === 'plan' && item._deskPlan === 'streaming' && typeof previous === 'string' && text.startsWith(previous) && reader.body.firstChild?.nodeType === 3)
         reader.body.firstChild.appendData(text.slice(previous.length));
       else reader.body.textContent = text;
-      if(mode === 'plan') {reader.body.scrollTop = top;reader.body.scrollLeft = left;}
+      if(['tool', 'collaboration', 'plan'].includes(mode)) {reader.body.scrollTop = top;reader.body.scrollLeft = left;}
     }
   }
   function reading() {
@@ -296,5 +296,18 @@
     const selection = root.getSelection?.();
     return !!selection && !selection.isCollapsed && (inPlan(selection.anchorNode) || inPlan(selection.focusNode));
   }
-  root.DeskActivity = {render, reading};
+  function capture(node) {
+    const reader=readers.get(node);if(!reader)return null;
+    return {open:reader.details?reader.details.open:null,window_start:0,
+      scroll_top:reader.body.scrollTop || 0,scroll_left:reader.body.scrollLeft || 0};
+  }
+  function restore(node,view) {
+    const reader=readers.get(node);if(!reader || !view)return false;
+    if(reader.details && typeof view.open==='boolean') {
+      reader.preference=view.open;reader.expectedOpen=view.open;reader.details.open=view.open;
+    }
+    reader.body.scrollTop=view.scroll_top || 0;reader.body.scrollLeft=view.scroll_left || 0;
+    return true;
+  }
+  root.DeskActivity = {render, reading, capture, restore};
 })(typeof globalThis === 'undefined' ? this : globalThis);

@@ -13,13 +13,14 @@
   let refreshing=false,refreshVersion=0,unavailableThread=null;
   let loading=false,originalItems=0,unsupportedItems=0,turnOnlyRows=0;
   let findVersion=0,finding=false,findSubmitted=false,findQuery='',findGroups=[],findTotal=0,findCursor=-1;
+  let taskReview=null;
 
   function current(ticket) {
     return ticket===version && el('').open && (!options?.valid || options.valid());
   }
   function invalidate() {
     ++version;++refreshVersion;refreshing=false;const callback=options?.onReturn;
-    options=null;source=null;requested=null;rows=[];loading=false;targetIndex=-1;unavailableThread=null;
+    options=null;source=null;requested=null;rows=[];loading=false;targetIndex=-1;unavailableThread=null;taskReview=null;taskControls();
     el('response').hidden=true;el('response').textContent='';el('original').hidden=true;el('saved-evidence').hidden=true;el('saved-evidence-quote').textContent='';
     resetFind();
     el('body').replaceChildren();if(callback)callback();
@@ -80,7 +81,7 @@
     return {start,end};
   }
   function findControls(message) {
-    const ready=!!source && !loading && el('').open;
+    const ready=!!source && !loading && el('').open && taskReview?.mode!=='context';
     el('find-form').hidden=!ready;el('find-query').disabled=!ready;
     el('find-submit').disabled=!ready || finding;
     el('find-previous').disabled=el('find-next').disabled=!ready || finding || findTotal===0;
@@ -176,6 +177,13 @@
     }
     copyText.onclick=()=>copy(text,'Full item text');copySource.onclick=()=>copy(reference,'Source reference');
     actions.append(copyText,copySource,status);
+    if(root.DeskHistoryTasks && str(row.turn.id) && str(row.item.id)) {
+      const task=node('button','Read containing task','history-reader-task-open');task.type='button';
+      task.onmousedown=event=>{if(event.button===0 && selectedText())event.preventDefault();};
+      task.onclick=()=>{try{openTaskContext({thread_id:source.id,turn_id:row.turn.id,item_id:row.item.id});}
+        catch(error){if(current(ticket))status.textContent=error.message;}};
+      actions.append(task);
+    }
     if(typeof evidenceReview==='function'){
       const review=node('button','Review evidence for task','history-reader-review-evidence');review.type='button';
       review.onmousedown=event=>{if(event.button===0 && selectedText()?.key===rowKey(row))event.preventDefault();};
@@ -208,7 +216,7 @@
     detail.append(actions);
   }
   async function readEmbeddedReference(reference,ticket){
-    const parentSource=source,parentRequested={...requested},parentOptions=options,view=captureView();
+    const parentSource=source,parentRequested={...requested},parentOptions=options,view=captureView(),parentTask=taskReview;
     const search={query:el('find-query').value,submitted:findSubmitted,findQuery,groups:findGroups,total:findTotal,cursor:findCursor,page};
     const result=await api('/api/native/evidence-source?home='+encodeURIComponent(reference.native_home)+'&thread='+encodeURIComponent(reference.thread_id));
     if(!current(ticket))return false;
@@ -221,6 +229,7 @@
         const restored=parentOptions;restored.preloadedThread=parentSource;
         show(parentRequested,restored).then(ok=>{
           if(!ok || options!==restored)return;
+          taskReview=parentTask;taskControls();
           el('find-query').value=search.query;findSubmitted=search.submitted;findQuery=search.findQuery;
           findGroups=search.groups;findTotal=search.total;findCursor=search.cursor;page=search.page;
           findControls();render(false,view);
@@ -301,6 +310,8 @@
   }
   function render(scroll=true,view=null) {
     if(!source || !available())return;
+    taskControls();
+    if(taskReview?.mode==='context')return renderTaskContext(scroll,view);
     const ticket=version,first=page*PAGE_ENTRIES,last=Math.min(rows.length,first+PAGE_ENTRIES);
     const body=el('body');body.replaceChildren();body.scrollTop=0;
     let previousTurn=null,section=null;
@@ -312,6 +323,14 @@
         section.append(node('h3','Turn '+(str(row.turn.id)||'unreported')+
           (str(row.turn.status)?' · '+str(row.turn.status).slice(0,80):'')));
         if(str(row.turn.error?.message))section.append(node('p',str(row.turn.error.message).slice(0,2000),'history-reader-turn-error'));
+        if(root.DeskHistoryTasks && str(row.turn.id)) {
+          const task=node('button','Read task context','history-reader-turn-task');task.type='button';
+          task.dataset.taskAction='turn:'+row.turn.id;
+          task.onmousedown=event=>{if(event.button===0 && selectedText())event.preventDefault();};
+          task.onclick=()=>{try{openTaskContext({thread_id:source.id,turn_id:row.turn.id});}
+            catch(error){if(current(ticket)){el('error').textContent=error.message;el('error').hidden=false;}}};
+          section.append(task);
+        }
         body.append(section);
       }
       if(row.item)section.append(itemNode(row,index,ticket,view));
@@ -356,18 +375,22 @@
     return {key:elementKey(item),start:windowStart+start,end:windowStart+end,text:range.toString(),
       backward:selection.anchorNode===range.endContainer && selection.anchorOffset===range.endOffset};
   }
-  function textPoint(pre,offset){
+  function textPoint(pre,offset,right=false){
     if(offset<0)return null;
-    const walker=document.createTreeWalker(pre,NodeFilter.SHOW_TEXT);let node;
-    while((node=walker.nextNode())){if(offset<=node.data.length)return {node,offset};offset-=node.data.length;}
-    return null;
+    const walker=document.createTreeWalker(pre,NodeFilter.SHOW_TEXT);let node,last=null;
+    while((node=walker.nextNode())){
+      last=node;
+      if(offset<node.data.length || (!right && offset===node.data.length))return {node,offset};
+      offset-=node.data.length;
+    }
+    return offset===0 && last?{node:last,offset:last.data.length}:null;
   }
   function restoreSelectedText(saved){
     if(!saved)return;
     const row=rows.find(row=>rowKey(row)===saved.key),item=viewItems().find(item=>elementKey(item)===saved.key);
     const pre=item?.querySelector('.history-reader-text'),start=saved.start-(Number(item?.dataset.windowStart)||0);
     const end=saved.end-(Number(item?.dataset.windowStart)||0);
-    const first=pre?textPoint(pre,start):null,last=pre?textPoint(pre,end):null;
+    const first=pre?textPoint(pre,start,true):null,last=pre?textPoint(pre,end):null;
     if(!row || !first || !last || textFor(row.item).slice(saved.start,saved.end)!==saved.text){
       el('status').textContent='Original refreshed. The selected original text changed or is no longer at its original location; its selection was not moved to another source.';
       return;
@@ -388,7 +411,8 @@
         focus={key,index:controls.indexOf(active),item:item===active};
       }
     }
-    return {items,anchor,focus,selection:selectedText(),scroll:body.scrollTop,outer:el('').scrollTop,page,first:rowKey(rows[page*PAGE_ENTRIES])};
+    return {items,anchor,focus,taskFocus:active?.dataset?.taskAction && body.contains(active)?active.dataset.taskAction:null,
+      selection:selectedText(),scroll:body.scrollTop,outer:el('').scrollTop,page,first:rowKey(rows[page*PAGE_ENTRIES])};
   }
   function restoreView(view,ticket){
     if(!current(ticket))return;
@@ -403,6 +427,8 @@
       if(target){if(view.focus.item)target.tabIndex=-1;target.focus({preventScroll:true});}
       else body.focus({preventScroll:true});
     }
+    if(view.taskFocus){const target=Array.from(body.querySelectorAll('[data-task-action]')).find(control=>control.dataset.taskAction===view.taskFocus);
+      if(target && !target.disabled)target.focus({preventScroll:true});}
     restoreSelectedText(view.selection);
     if(Number.isFinite(view.outer))el('').scrollTop=view.outer;
     if(Number.isFinite(view.anchor?.screenTop)){
@@ -558,7 +584,7 @@
   async function show(result,callbacks={}) {
     if(!api)throw new Error('Native history reader is not configured.');
     if(callbacks.valid && !callbacks.valid())return false;
-    ++version;++refreshVersion;refreshing=false;loading=false;source=null;rows=[];targetIndex=-1;refreshControls();
+    ++version;++refreshVersion;refreshing=false;loading=false;source=null;rows=[];targetIndex=-1;taskReview=null;taskControls();refreshControls();
     resetFind();
     requested={...result};options=callbacks;unavailableThread=null;el('response').hidden=true;el('response').textContent='';el('original').hidden=true;el('saved-evidence').hidden=true;el('saved-evidence-quote').textContent='';
     if(callbacks.savedReference){
@@ -582,12 +608,131 @@
     }
     return read();
   }
+  function taskControls() {
+    const active=!!taskReview && !!source;
+    if(el('task-return'))el('task-return').hidden=!active || taskReview.mode==='context';
+    if(el('task-passage'))el('task-passage').hidden=!active;
+    if(el('task-status')){
+      el('task-status').hidden=!active;
+      el('task-status').textContent=active?(taskReview.itemLabel || 'Native task context · Turn '+str(taskReview.capture.turn_id)):'';
+    }
+  }
+  function taskSnapshot() {
+    const occurrence=findMatch(),key=occurrence?rowKey(rows[occurrence.index]):null;
+    const chrome={};for(const id of ['status','match','response','error','retry']){
+      const element=el(id);chrome[id]={text:element.textContent,hidden:element.hidden};
+    }
+    return {source,refreshVersion,requested:{...requested},view:captureView(),page,targetIndex,chrome,
+      find:{query:el('find-query').value,submitted:findSubmitted && !finding,queryAtSubmit:findQuery,
+        groups:findGroups,total:findTotal,cursor:findCursor,message:finding?'Find canceled by task navigation. Choose Find to search this original.':el('find-status').textContent,
+        anchor:key?{key,start:occurrence.start,end:occurrence.end}:null}};
+  }
+  function openTaskContext(capture) {
+    if(!root.DeskHistoryTasks || !source || !available())return false;
+    const task=capture.item_id?root.DeskHistoryTasks.containing(source,capture):
+      root.DeskHistoryTasks.list(source,capture.thread_id).find(task=>task.turn_id===capture.turn_id && task.available);
+    if(!task?.available)throw Error('The captured native task or item is not supplied by this original read.');
+    if(!taskReview)taskReview={passage:taskSnapshot(),capture:null,mode:'context',contextView:null};
+    ++findVersion;finding=false;findSubmitted=false;findGroups=[];findTotal=0;findCursor=-1;
+    taskReview.capture={thread_id:task.thread_id,turn_id:task.turn_id};taskReview.mode='context';
+    taskReview.contextView=null;taskReview.message='';taskReview.itemLabel='';
+    findControls();render();return true;
+  }
+  function taskButton(label,action,callback,disabled=false) {
+    const button=node('button',label);button.type='button';button.dataset.taskAction=action;
+    button.disabled=disabled;button.onclick=callback;return button;
+  }
+  function renderTaskContext(focus=true,view=null) {
+    const review=taskReview,ticket=version,body=el('body');if(!review || !current(ticket))return;
+    body.replaceChildren();body.scrollTop=0;
+    const panel=node('section',undefined,'history-reader-task-context');panel.tabIndex=-1;
+    panel.append(node('h3','Native task context'),node('p','Thread '+str(review.capture.thread_id)+'\nTurn '+str(review.capture.turn_id),'history-reader-identity'));
+    let instruction;
+    try{instruction=root.DeskHistoryTasks.instructions(source,review.capture,textFor);}
+    catch(error){instruction={available:false,status:'task_unavailable',items:[]};review.message=error.message;}
+    panel.append(node('p','Native turn status: '+(str(instruction.turn_status)||'unreported')+' · Source: native history read','history-reader-task-outcome'));
+    const turnError=typeof instruction.turn_error==='string'?instruction.turn_error:str(instruction.turn_error?.message);
+    if(turnError)panel.append(node('p',turnError,'history-reader-turn-error'));
+    if(!instruction.available)panel.append(node('p',instruction.status==='turn_unavailable' || instruction.status==='task_unavailable'
+      ?'This captured native task is not available in the current original read.':
+      instruction.user_message_count?'No readable, addressable user instruction was supplied for this task.':'No user instruction was supplied for this task.','muted'));
+    for(const [index,item] of instruction.items.entries()) {
+      const article=node('article',undefined,'history-reader-task-instruction');
+      article.append(node('h4','Supplied user instruction '+(index+1)),node('p','Item '+(str(item.item_id)||'unreported'),'history-reader-identity'));
+      if(item.text){const preview=Array.from(item.text.slice(0,640)).slice(0,320).join('');
+        article.append(node('pre',preview+(preview.length<item.text.length?'…':''),'history-reader-task-preview'));}
+      if(!item.available)article.append(node('p',item.reason==='instruction_unavailable'?'No readable user text was supplied.':'This instruction has no unambiguous native item identity.','muted'));
+      article.append(taskButton('Read full instruction','instruction:'+item.item_id,()=>readTaskItem('instruction',item.item_id),!item.available));panel.append(article);
+    }
+    const addressable=root.DeskHistoryTasks.list(source,review.capture.thread_id).some(task=>task.turn_id===review.capture.turn_id && task.available);
+    panel.append(taskButton('Read this task response','response',()=>readTaskItem('response'),!addressable));
+    const navigation=node('div',undefined,'actions history-reader-task-navigation');
+    for(const [direction,label] of [[-1,'Previous task'],[1,'Next task']]) {
+      const adjacent=addressable?root.DeskHistoryTasks.adjacent(source,review.capture,direction):null;
+      navigation.append(taskButton(label,direction<0?'previous':'next',()=>openTaskContext(adjacent),!adjacent?.available));
+      if(!adjacent)navigation.append(node('span',direction<0?'Start of supplied tasks.':'End of supplied tasks.','muted'));
+      else if(!adjacent.available)navigation.append(node('span','Adjacent task has no unambiguous native identity.','muted'));
+    }
+    panel.append(navigation);
+    if(review.message){const message=node('p',review.message,'history-reader-task-message');message.setAttribute('role','status');panel.append(message);}
+    body.append(panel);el('coverage').textContent='Task context uses only this original read’s supplied turn and user-message items.';
+    el('previous').hidden=el('next').hidden=true;taskControls();
+    if(view)restoreView(view,ticket);
+    else if(focus){panel.focus({preventScroll:true});el('').scrollTop=0;}
+  }
+  function readTaskItem(kind,itemId=null) {
+    const review=taskReview;if(!review || !source || !available())return false;
+    const view=captureView();let selection;
+    try{
+      if(kind==='response'){
+        selection=root.DeskHistoryTasks.response(source,review.capture);
+        if(!selection.available){review.message=selection.status==='turn_unavailable'?'The selected native task is not supplied in this original read.':'No readable assistant response was supplied for this task.';renderTaskContext(false,view);return false;}
+      }else{
+        const instruction=root.DeskHistoryTasks.instructions(source,review.capture,textFor);
+        selection=instruction.items.find(item=>item.item_id===itemId && item.available);
+        if(!selection)throw Error('The selected user instruction is not available in this task.');
+      }
+      const index=rows.findIndex(row=>row.item && row.turn.id===review.capture.turn_id && row.item.id===selection.item_id);
+      if(index<0)throw Error('The captured native item is not available in this original read.');
+      review.contextView=view;review.mode='item';review.message='';
+      review.itemLabel=kind==='response'?`Selected task response · ${str(selection.label)} · Phase: ${str(selection.phase)||'unreported'}\nTurn ${review.capture.turn_id} · Native status at selection: ${str(selection.turn_status)||'unreported'} · Source: native history read`:
+        'Supplied user instruction · Turn '+review.capture.turn_id;
+      requested={thread_id:source.id,turn_id:review.capture.turn_id,item_id:selection.item_id};targetIndex=index;page=Math.floor(index/PAGE_ENTRIES);
+      ++findVersion;finding=false;findSubmitted=false;findGroups=[];findTotal=0;findCursor=-1;
+      findControls();render();return true;
+    }catch(error){review.message=error.message;renderTaskContext(false,view);return false;}
+  }
+  function returnTaskContext() {
+    if(!taskReview || !source || !available())return false;
+    ++findVersion;finding=false;findSubmitted=false;findGroups=[];findTotal=0;findCursor=-1;
+    taskReview.mode='context';taskReview.itemLabel='';findControls();render(false,taskReview.contextView);return true;
+  }
+  async function returnTaskPassage() {
+    if(!taskReview || !source || !available())return false;
+    const snapshot=taskReview.passage,ticket=version,unchanged=source===snapshot.source;taskReview=null;taskControls();
+    requested={...snapshot.requested};++findVersion;finding=false;
+    targetIndex=rows.findIndex(row=>row.item && row.turn.id===requested.turn_id && row.item.id===requested.item_id);
+    const anchor=snapshot.view.anchor?.key || snapshot.view.first,index=anchor?rows.findIndex(row=>rowKey(row)===anchor):-1;
+    page=index>=0?Math.floor(index/PAGE_ENTRIES):Math.min(snapshot.page,Math.max(0,Math.ceil(rows.length/PAGE_ENTRIES)-1));
+    el('find-query').value=snapshot.find.query;findSubmitted=snapshot.find.submitted;findQuery=snapshot.find.queryAtSubmit;
+    findGroups=unchanged?snapshot.find.groups:[];findTotal=unchanged?snapshot.find.total:0;findCursor=unchanged?snapshot.find.cursor:-1;
+    if(unchanged && refreshVersion===snapshot.refreshVersion){for(const [id,value] of Object.entries(snapshot.chrome)){el(id).textContent=value.text;el(id).hidden=value.hidden;}}
+    else if(!unchanged){
+      el('status').textContent=index<0 && anchor?'The original passage item is no longer supplied. Its captured source identity is retained.':'Returned to the original passage in the refreshed native read.';
+      el('match').textContent=targetIndex<0 && requested.item_id?'The captured native turn/item is not present in this original read.':'';
+    }
+    findControls(unchanged?snapshot.find.message:undefined);render(false,snapshot.view);
+    if(!unchanged && findSubmitted && findQuery===snapshot.find.query.trim() && findQuery)await refreshFind(findQuery,snapshot.find.anchor,ticket);
+    return true;
+  }
   function configure(value) {
     api=value.api;evidenceReview=value.onEvidence || null;
     el('back').onclick=el('close').onclick=()=>close();
     el('retry').onclick=()=>{el('retry').disabled=true;source?refresh():read();};
     el('original').onclick=()=>{if(!unavailableThread || !available())return;const thread=unavailableThread;options={...options,taskResponse:false,preloadedThread:thread};return read();};
     if(el('refresh'))el('refresh').onclick=refresh;
+    if(el('task-return'))el('task-return').onclick=returnTaskContext;
+    if(el('task-passage'))el('task-passage').onclick=returnTaskPassage;
     el('previous').onclick=()=>movePage(-1);
     el('next').onclick=()=>movePage(1);
     el('find-form').onsubmit=event=>{event.preventDefault();submitFind();};
@@ -599,6 +744,7 @@
     el('').addEventListener('keydown',event=>{
       if(event.key!=='F3' || !el('').open || !source || loading || !el('').contains(event.target))return;
       event.preventDefault();
+      if(taskReview?.mode==='context')return;
       if(finding)return;
       if(findSubmitted && findQuery===el('find-query').value.trim() && findTotal)jumpFind(event.shiftKey?-1:1);
       else if(el('find-query').value.trim())submitFind(event.shiftKey?-1:1);
