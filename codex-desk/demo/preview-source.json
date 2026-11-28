@@ -1,6 +1,6 @@
 {
   "source": "blucca/codex-desk",
-  "runtime_version": "0.1.0a69",
+  "runtime_version": "0.1.0a70",
   "sample": true,
   "assets": [
     "activity.js",

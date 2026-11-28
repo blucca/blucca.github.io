@@ -108,6 +108,10 @@
     const addition=(note?'Next-step note:\n'+note+'\n\n':'')+block;
     const next=draft+(draft?'\n\n':'')+addition;
     if(count(next)>MAX_DRAFT)throw Error('Choose a smaller excerpt or note. The existing draft is kept.');
+    // A standalone canonical block can become inert inside an unfinished
+    // user fence/example. Confirm its exact final position before host save.
+    if(!parse(next).some(row=>row.start===next.length-block.length && row.end===next.length))
+      throw Error('Close the unfinished code fence or evidence block in the draft or next-step note before appending.');
     return next;
   }
   function itemFor(thread,threadId,turnId,itemId){
