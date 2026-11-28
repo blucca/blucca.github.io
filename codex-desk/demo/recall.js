@@ -6,13 +6,17 @@ const DeskRecall=(()=>{
   let scanVersion=0, scanTimer=null, scanBusy=false, scanReading=false, scanReady=false, scanIssue=false, scanJob=null;
   let scanRefresh=null, lastSearch=null, resultPage=null, requestOwner=null, returnOrigin=null;
   let nativeIndexedThreads=null, indexPromoted=false, emptySearch=false;
+  let sourceScope=null, sourceOrigin=null, resultPlace=null;
   const nativeProjects=new Set();
-  const query=()=>({q:el('recall-query').value.trim(),cwd:el('recall-project').value,archived:el('recall-archived').checked});
-  const sameQuery=(a,b)=>a.q===b.q && a.cwd===b.cwd && a.archived===b.archived;
+  const query=()=>({q:el('recall-query').value.trim(),cwd:el('recall-project').value,archived:el('recall-archived').checked,
+    view:sourceScope?'items':el('recall-grouped')?.checked?'conversations':'items',
+    source_session:sourceScope?.kind==='session'?sourceScope.id:null,source_thread:sourceScope?.kind==='native'?sourceScope.id:null});
+  const sameQuery=(a,b)=>a.q===b.q && a.cwd===b.cwd && a.archived===b.archived && a.view===b.view &&
+    a.source_session===b.source_session && a.source_thread===b.source_thread;
   const current=(version,scope)=>version===searchVersion && el('recall').open && sameQuery(scope,query());
   const make=(tag,text,cls)=>options.make(tag,text,cls);
   function clearTarget(){if(target){target.node.classList.remove('recall-target');if(target.addedTabindex)target.node.removeAttribute('tabindex');target=null;}}
-  function selectionChanged(){stopRequest();clearTarget();++navigationVersion;pendingNavigation=null;scanRefresh=null;}
+  function selectionChanged(){stopRequest();clearTarget();resultPlace=null;++navigationVersion;pendingNavigation=null;scanRefresh=null;}
   function projects(){
     if(!options)return;
     const values=[...new Set([...options.state().sessions.map(s=>s.cwd),...nativeProjects].filter(Boolean))].sort();
@@ -33,9 +37,13 @@ const DeskRecall=(()=>{
   }
   function stateChanged(){projects();if(target && (target.session!==options.selected() || target.generation!==options.generation()))clearTarget();}
   function buttons(){
+    const recovery=el('recall-empty-history');
+    if(recovery)recovery.hidden=!(emptySearch && !searching && lastSearch && current(lastSearch.version,lastSearch.scope) && !sourceScope);
     el('recall-search').disabled=searching;
     el('recall-results').setAttribute('aria-busy',String(searching || resultOpening));
-    for(const b of el('recall-results').querySelectorAll('.recall-open, .recall-read'))b.disabled=searching || resultOpening;
+    for(const b of el('recall-results').querySelectorAll('.recall-open, .recall-read, .recall-group'))b.disabled=searching || resultOpening;
+    if(el('recall-source-back'))el('recall-source-back').disabled=resultOpening;
+    if(el('recall-grouped'))el('recall-grouped').disabled=!!sourceScope;
     const scoped=resultPage && sameQuery(resultPage.scope,query());
     const previous=el('recall-previous'),next=el('recall-next');
     if(previous && next){
@@ -46,7 +54,7 @@ const DeskRecall=(()=>{
   }
   function invalidate(){
     stopRequest();++searchVersion;++openVersion;++navigationVersion;searching=false;resultOpening=false;pendingNavigation=null;
-    lastSearch=null;resultPage=null;emptySearch=false;if(scanRefresh)scanRefresh.search=null;
+    lastSearch=null;resultPage=null;resultPlace=null;emptySearch=false;if(scanRefresh)scanRefresh.search=null;
     el('recall-error').hidden=true;el('recall-results').replaceChildren();
     el('recall-summary').textContent='Query changed. Choose Search to update saved content.';buttons();
   }
@@ -172,6 +180,75 @@ const DeskRecall=(()=>{
     nativeCoverage(value?.native);
     el('recall-coverage').textContent=[typeof value==='string'?value:value?.text,counts.join(' · ')].filter(Boolean).join('\n');
   }
+  function sourceControls(){
+    if(!el('recall-source'))return;
+    el('recall-source').hidden=!sourceScope;
+    el('recall-source-label').textContent=sourceScope?'Matching items in '+sourceScope.name+' · '+
+      (sourceScope.kind==='native'?'Native original':'Saved task')+' · '+sourceScope.id:'';
+  }
+  function readResult(result,row,version,scope){
+    const selected=options.selected(),generation=options.generation(),scroll=el('recall').scrollTop,resultsScroll=el('recall-results').scrollTop;
+    const valid=()=>current(version,scope) && row.isConnected && selected===options.selected() && generation===options.generation();
+    return DeskHistoryReader.show(result,{valid,onReturn:()=>{if(!valid())return;
+      row.querySelector('.recall-read')?.focus({preventScroll:true});el('recall').scrollTop=scroll;el('recall-results').scrollTop=resultsScroll;}});
+  }
+  function groupRow(result,version,scope){
+    const row=make('article','','recall-result');rowData.set(row,result);row.dataset.group=result.group_id;row.dataset.groupKind=result.group_kind;
+    const name=result.session_name || result.title || result.name || 'Saved conversation';
+    row.append(make('h3',name),make('p',`${result.match_count} matching item${result.match_count===1?'':'s'} · `+
+      (result.group_kind==='native'?'Indexed native original':'Saved task')+(result.archived?' · Archived locally':''),'recall-kind'),
+      make('p',(result.cwd || '')+'\n'+result.group_id,'recall-binding'),snippet(result.snippet,result.match_text));
+    const action=make('button','Show matching items in this conversation','recall-group');action.type='button';
+    action.setAttribute('aria-label',action.textContent+' in '+name);action.onclick=()=>chooseGroup(result,row,version,scope);row.append(action);return row;
+  }
+  function renderRows(results,version,scope){
+    resultPlace=null;
+    el('recall-results').replaceChildren(...results.map(result=>result.group_id?groupRow(result,version,scope):resultRow(result,version,scope)));
+  }
+  function validResultPlace(place){
+    return place && place.page===resultPage && sameQuery(place.scope,query()) &&
+      place.selected===options.selected() && place.generation===options.generation() &&
+      place.node.isConnected && !place.node.disabled && el('recall-results').contains(place.node);
+  }
+  function rememberResultPlace(node){
+    if(searching || !resultPage || !sameQuery(resultPage.scope,query()) || !el('recall-results').contains(node))return;
+    resultPlace={node,page:resultPage,scope:resultPage.scope,selected:options.selected(),generation:options.generation(),
+      scroll:el('recall').scrollTop,resultsScroll:el('recall-results').scrollTop};
+  }
+  function saveResultPlace(){
+    if(!validResultPlace(resultPlace)){resultPlace=null;return;}
+    resultPlace.scroll=el('recall').scrollTop;resultPlace.resultsScroll=el('recall-results').scrollTop;
+  }
+  function restoreResultPlace(place){
+    if(!validResultPlace(place)){resultPlace=null;return false;}
+    place.node.focus({preventScroll:true});el('recall').scrollTop=place.scroll;el('recall-results').scrollTop=place.resultsScroll;
+    // Firefox completes modal layout after showModal returns; the initial
+    // scroll assignment can be clamped against the not-yet-expanded dialog.
+    const navigation=navigationVersion;
+    requestAnimationFrame(()=>{
+      if(navigation!==navigationVersion || !el('recall').open || !validResultPlace(place) || document.activeElement!==place.node)return;
+      el('recall').scrollTop=place.scroll;el('recall-results').scrollTop=place.resultsScroll;
+    });
+    return true;
+  }
+  async function chooseGroup(result,row,version,scope){
+    if(searching || resultOpening || !current(version,scope) || !row.isConnected)return;
+    sourceOrigin={scope,page:resultPage,rows:[...el('recall-results').children].map(node=>rowData.get(node)),
+      summary:el('recall-summary').textContent,scroll:el('recall').scrollTop,resultsScroll:el('recall-results').scrollTop,
+      group:result.group_id,kind:result.group_kind,selected:options.selected(),generation:options.generation()};
+    sourceScope={kind:result.group_kind,id:result.group_id,name:result.session_name || result.title || result.name || result.group_id};
+    sourceControls();invalidate();await search();
+  }
+  function returnGroups(){
+    if(!sourceScope || resultOpening)return;
+    const origin=sourceOrigin;sourceScope=sourceOrigin=null;sourceControls();invalidate();const scope=query();
+    if(origin && sameQuery(origin.scope,scope) && origin.selected===options.selected() && origin.generation===options.generation()){
+      resultPage=origin.page;lastSearch={version:searchVersion,scope,offset:resultPage.offset,navigation:navigationVersion,selected:options.selected(),generation:options.generation()};
+      renderRows(origin.rows,searchVersion,scope);el('recall-summary').textContent=origin.summary;emptySearch=false;buttons();
+      const row=[...el('recall-results').children].find(node=>node.dataset.group===origin.group && node.dataset.groupKind===origin.kind);
+      row?.querySelector('.recall-group')?.focus({preventScroll:true});el('recall').scrollTop=origin.scroll;el('recall-results').scrollTop=origin.resultsScroll;
+    }else search();
+  }
   function resultRow(result,version,scope){
     const row=make('article','','recall-result');rowData.set(row,result);if(result.session_id)row.dataset.session=result.session_id;if(result.thread_id)row.dataset.thread=result.thread_id;row.dataset.kind=result.kind;
     if(result.token)row.dataset.token=result.token;if(result.item_id)row.dataset.item=result.item_id;if(result.followup_id)row.dataset.followup=result.followup_id;
@@ -189,7 +266,7 @@ const DeskRecall=(()=>{
     if(['native-activity','activity'].includes(result.kind) && result.thread_id){
       const read=make('button','Read original conversation','recall-read');read.type='button';
       read.setAttribute('aria-label','Read original conversation in '+name);
-      read.onclick=()=>DeskHistoryReader.show(result,{valid:()=>current(version,scope) && row.isConnected});
+      read.onclick=()=>readResult(result,row,version,scope);
       row.append(read);
     }
     action.onclick=()=>activateResult(result,row,notice,version,scope);row.append(action,notice);return row;
@@ -197,9 +274,10 @@ const DeskRecall=(()=>{
   function bindRows(version,scope){
     for(const row of el('recall-results').children){const result=rowData.get(row);
       if(result){
+        if(result.group_id){row.querySelector('.recall-group').onclick=()=>chooseGroup(result,row,version,scope);continue;}
         row.querySelector('.recall-open').onclick=()=>activateResult(result,row,row.querySelector('.recall-result-status'),version,scope);
         const read=row.querySelector('.recall-read');
-        if(read)read.onclick=()=>DeskHistoryReader.show(result,{valid:()=>current(version,scope) && row.isConnected});
+        if(read)read.onclick=()=>readResult(result,row,version,scope);
       }
     }
   }
@@ -253,25 +331,29 @@ const DeskRecall=(()=>{
     el('recall-summary').textContent=keepPage?'Loading saved content results…':'Searching saved content…';buttons();
     const params=new URLSearchParams({q:scope.q,archived:String(scope.archived),limit:'30',offset:String(requestedOffset)});
     if(scope.cwd)params.set('cwd',scope.cwd);
+    if(scope.view==='conversations')params.set('view',scope.view);
+    if(scope.source_session)params.set('source_session',scope.source_session);
+    if(scope.source_thread)params.set('source_thread',scope.source_thread);
     try{
       const data=await options.api('/api/recall?'+params);
       if(!current(version,scope))return;
       const rows=Array.isArray(data.results)?data.results:[];
       for(const result of rows)if(result.kind==='native-activity' && result.cwd)nativeProjects.add(result.cwd);projects();
-      el('recall-results').replaceChildren(...rows.map(result=>resultRow(result,version,scope)));
+      renderRows(rows,version,scope);
       const total=Number.isFinite(data.total)?data.total:rows.length;
       const returnedOffset=Number.isInteger(data.offset)?data.offset:requestedOffset;
       const returnedLimit=Number.isInteger(data.limit) && data.limit>0?data.limit:30;
       resultPage={scope,offset:returnedOffset,limit:returnedLimit,total,count:rows.length};
       emptySearch=rows.length===0 && returnedOffset===0;
       el('recall-summary').textContent=rows.length
-        ? `Showing ${rows.length} of ${total} matching item${total===1?'':'s'}. Items ${returnedOffset+1}–${returnedOffset+rows.length}.`+
+        ? scope.view==='conversations'?`Showing ${rows.length} of ${total} matching conversations · ${data.item_total} matching items. Conversations ${returnedOffset+1}–${returnedOffset+rows.length}.`
+        : `Showing ${rows.length} of ${total} matching item${total===1?'':'s'}. Items ${returnedOffset+1}–${returnedOffset+rows.length}.`+
           (returnedOffset+rows.length<total?' Choose Next matches to see more.':'')
         : returnedOffset>0?'No matching items on this page. Choose Previous matches or Search to refresh.':'No saved content matches this query in the selected scope.';
       coverage(data.coverage);
       if(keepPage && revealPage && rows.length){
         const first=el('recall-results').firstElementChild;
-        first.querySelector('.recall-read, .recall-open')?.focus({preventScroll:true});
+        first.querySelector('.recall-read, .recall-open, .recall-group')?.focus({preventScroll:true});
         first.scrollIntoView({block:'start',behavior:'instant'});
       }
     }catch(error){if(current(version,scope)){
@@ -394,7 +476,10 @@ const DeskRecall=(()=>{
       lastSearch={...lastSearch,version,navigation:navigationVersion};
     }
     bindRows(version,scope);
-    el('recall').showModal();el('recall-query').focus();buttons();
+    // showModal can autofocus the retained result before its old scroll is
+    // restored. Keep the captured place independently of that focus event.
+    const place=resultPlace;
+    el('recall').showModal();buttons();if(!restoreResultPlace(place))el('recall-query').focus();
     scanReady=false;scanIssue=false;el('recall-index-error').hidden=true;scanButtons();readScan();
   }
   function configure(value){
@@ -408,7 +493,10 @@ const DeskRecall=(()=>{
     if(previous)previous.onclick=()=>{if(resultPage && !previous.disabled)search(Math.max(0,resultPage.offset-resultPage.limit),true);};
     if(next)next.onclick=()=>{if(resultPage && !next.disabled)search(resultPage.offset+resultPage.limit,true);};
     el('recall-query').oninput=invalidate;el('recall-project').onchange=invalidate;el('recall-archived').onchange=invalidate;
-    el('recall-close').onclick=()=>{el('recall').close();restoreOrigin();};
+    if(el('recall-grouped'))el('recall-grouped').onchange=()=>{sourceScope=sourceOrigin=null;sourceControls();invalidate();};
+    if(el('recall-source-back'))el('recall-source-back').onclick=returnGroups;
+    el('recall-results').addEventListener('focusin',event=>rememberResultPlace(event.target));
+    el('recall-close').onclick=()=>{saveResultPlace();el('recall').close();restoreOrigin();};
     el('recall').addEventListener('close',()=>{
       if(el('recall').open)return;
       stopRequest();stopScanPolling();++scanVersion;scanReading=false;scanReady=false;scanRefresh=null;
@@ -418,7 +506,7 @@ const DeskRecall=(()=>{
       // show() rebinds retained results to the next dialog generation.
       if(nav){returnOrigin=null;requestAnimationFrame(()=>focusMatch(nav));}else restoreOrigin();
     });
-    el('recall').addEventListener('cancel',()=>{pendingNavigation=null;++navigationVersion;});
+    el('recall').addEventListener('cancel',()=>{saveResultPlace();pendingNavigation=null;++navigationVersion;});
   }
   return {configure,stateChanged,selectionChanged};
 })();

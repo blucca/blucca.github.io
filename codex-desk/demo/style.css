@@ -70,7 +70,7 @@ aside{min-width:0}
 #recall{width:min(820px,95vw);max-height:90vh;overflow:auto}
 #recall h2{margin-top:0}#recall-form{border-bottom:1px solid #344356;padding-bottom:16px}
 #recall-form>label:first-child{margin-top:12px}#recall-project{max-width:100%;text-overflow:ellipsis}
-#recall-query-info{margin:8px 0}#recall-summary,#recall-coverage{overflow-wrap:anywhere;white-space:pre-wrap}
+#recall-query-info{margin:8px 0}#recall-summary,#recall-coverage,#recall-source-label{overflow-wrap:anywhere;white-space:pre-wrap}
 #recall-error{border:1px solid #ac6468;background:#3a2529;color:#ffccd0;padding:12px;border-radius:8px;overflow-wrap:anywhere}
 .recall-result{min-width:0;padding:16px 0;border-bottom:1px solid #344356}
 .recall-result h3{margin:0 0 6px;font-size:15px;overflow-wrap:anywhere}
@@ -79,7 +79,7 @@ aside{min-width:0}
 .recall-snippet{margin:0 0 10px;padding:12px;white-space:pre-wrap;overflow-wrap:anywhere;font:inherit;font-size:13px;line-height:1.7;background:#101923;border-radius:7px;max-width:100%}
 .recall-snippet mark{background:#ead08c;color:#1b222b;border-radius:2px;padding:1px 0}
 .recall-updated{display:block;color:#97aabd;font-size:11px;margin-bottom:9px}
-.recall-open{font-size:12px;max-width:100%;overflow-wrap:anywhere}
+.recall-open,.recall-group,#recall-source-back{font-size:12px;max-width:100%;overflow-wrap:anywhere}
 .recall-result-status{font-size:12px;color:#e5d2a8;line-height:1.6;overflow-wrap:anywhere}
 .recall-target{outline:3px solid #e6cb82!important;outline-offset:4px;scroll-margin-block:28px}
 #recall button:focus-visible,#recall input:focus-visible,#recall select:focus-visible,#search-saved-content:focus-visible{outline:2px solid #8cddc3;outline-offset:3px}

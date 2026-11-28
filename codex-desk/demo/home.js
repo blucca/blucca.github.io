@@ -59,11 +59,11 @@ const DeskHome=(()=>{
         row.dataset.thread=thread.id;
         $('home-list').append(row);
       }
-      $('home-status').textContent=rows.length?'Recently updated conversations. Read original evidence without opening a task, or Resume when ready to work.':(unavailable?'Recent history points to unavailable project folders. Browse all to read the original conversations. Restore a folder only to resume work.':'No saved conversations in this Codex home yet. Open a project to start your first task. Use --codex-home if your CLI history is stored elsewhere.');
+      $('home-status').textContent=rows.length?'Recently updated conversations. Read original evidence without opening a task, or Resume when ready to work.':(unavailable?'Recent history points to unavailable project folders. Browse all to read the original conversations. Restore a folder only to resume work.':'No current conversations were returned from this Codex home. Choose Browse all conversations, then Native history → Archived conversations to read archived work. Use --codex-home if your history is elsewhere. Open a project to start new work.');
       if(rows.length && unavailable)$('home-status').textContent+=` ${unavailable} recent project folder(s) unavailable; original reading does not require them.`;
     }catch(error){
       if(current(v,g,s)){
-        $('home-status').textContent='Recent conversations could not be loaded. Retry, or open a project.';
+        $('home-status').textContent='Recent conversations could not be loaded. Read the error below and choose Retry. For another native executable or history home, relaunch with --codex or --codex-home.';
         $('home-error').textContent=error.message;$('home-error').hidden=false;$('home-retry').hidden=false;
       }
     }finally{if(current(v,g,s))$('home-list').setAttribute('aria-busy','false');}

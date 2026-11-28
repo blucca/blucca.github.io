@@ -55,17 +55,44 @@
     return {sessions,lookup:{q,limit,offset,total:results.length,results:results.slice(offset,offset+limit),has_more:offset+limit<results.length}};
   }
   function search(params){
-    const q=(params.get('q') || '').trim(),needle=fold(q),cwd=params.get('cwd');const results=[];
-    if(state.indexed && needle.length>=2)for(const t of threads){
-      if(cwd && cwd!==t.cwd)continue;
-      for(const turn of t.turns)for(const item of turn.items){
-        const text=item.type==='agentMessage'?item.text:item.type==='commandExecution'?[item.command,item.aggregatedOutput].filter(x=>typeof x==='string').join('\n'):(item.content || []).map(c=>c.text || '').join('\n');
-        const at=fold(text).indexOf(needle);if(at<0)continue;
-        const binding=state.sessions.find(s=>s.thread_id===t.id);
-        results.push({kind:binding?'activity':'native-activity',session_id:binding?.id,thread_id:t.id,turn_id:turn.id,item_id:item.id,item_type:item.type,cwd:t.cwd,title:t.name,profile:'default',provider:'sample',updated:t.updatedAt,snippet:text,match_text:text.slice(at,at+q.length)});
+    for(const key of params.keys())if(!['q','cwd','archived','limit','offset','view','source_session','source_thread'].includes(key) || params.getAll(key).length!==1)throw Error('Use each recall query option once.');
+    const q=(params.get('q') || '').trim(),needle=preparationFold(q),cwd=params.get('cwd'),view=params.get('view') || 'items';
+    if(Array.from(q).length<2 || Array.from(q).length>200)throw Error('Enter a recall phrase of 2–200 characters.');
+    if(!['items','conversations'].includes(view))throw Error('Choose items or conversations.');
+    const session=params.get('source_session'),native=params.get('source_thread'),archived=params.get('archived') || 'false';
+    if(!['true','false','0','1'].includes(archived))throw Error('Choose whether to include archived sessions.');
+    if(session!==null && native!==null || view!=='items' && (session!==null || native!==null))throw Error('Choose one exact conversation source.');
+    for(const id of [session,native])if(id!==null && (!id.trim() || Array.from(id).length>200))throw Error('Choose an exact conversation source.');
+    const number=(key,fallback)=>{const value=params.get(key);if(value===null)return fallback;if(!/^(0|[1-9][0-9]*)$/.test(value) || !Number.isSafeInteger(Number(value)))throw Error('Choose a recall page number.');return Number(value);};
+    const limit=number('limit',30),offset=number('offset',0);if(limit<1 || limit>50)throw Error('Choose a recall page from 1 to 50.');
+    const matches=[];
+    function add(t,binding,kind,text,identity){
+      if(typeof text!=='string' || !text || (cwd && cwd!==(binding?.cwd || t.cwd)) || (binding?.archived && !['true','1'].includes(archived)))return;
+      if(session!==null && binding?.id!==session || native!==null && (binding || t.id!==native))return;
+      const parts=Array.from(new Intl.Segmenter(undefined,{granularity:'grapheme'}).segment(text),x=>({start:x.index,end:x.index+x.segment.length,folded:preparationFold(x.segment)}));
+      const at=parts.map(x=>x.folded).join('').indexOf(needle);if(at<0)return;
+      let n=0,left=null,right=null;for(const part of parts){const end=n+part.folded.length;if(left===null && at<end)left=part.start;if(at+needle.length<=end){right=part.end;break;}n=end;}
+      const start=Math.max(0,left-80),end=Math.min(text.length,Math.max(right,start+420));
+      matches.push({kind,session_id:binding?.id,session_name:binding?.name,thread_id:t.id,cwd:binding?.cwd || t.cwd,title:t.name,
+        profile:binding?.profile || 'default',provider:t.modelProvider || 'sample',archived:!!binding?.archived,updated:binding?.updated || t.updatedAt || 0,
+        snippet:(start?'…':'')+text.slice(start,end)+(end<text.length?'…':''),match_text:text.slice(left,right),...identity});
+    }
+    if(state.indexed)for(const t of threads){
+      const bindings=state.sessions.filter(s=>s.thread_id===t.id),owners=bindings.length?bindings:[null];
+      for(const binding of owners)for(const turn of t.turns)for(const item of turn.items || []){
+        if(!item || !['userMessage','agentMessage','plan','commandExecution','fileChange','mcpToolCall','dynamicToolCall','collabAgentToolCall','subAgentActivity'].includes(item.type))continue;
+        const text=window.DeskHistoryReader?.textForItem?window.DeskHistoryReader.textForItem(item):item.type==='agentMessage'?item.text:item.type==='commandExecution'?[item.command,item.aggregatedOutput].filter(x=>typeof x==='string').join('\n'):(item.content || []).map(c=>c.text || '').join('\n');
+        add(t,binding,binding?'activity':'native-activity',text,{turn_id:turn.id,item_id:item.id,item_type:item.type});
       }
     }
-    return {results,total:results.length,truncated:false,coverage:{sessions:state.sessions.length,activity_items:state.sessions.reduce((n,s)=>n+(threads.find(t=>t.id===s.thread_id)?.turns || []).reduce((m,t)=>m+(t.items?.length || 0),0),0),drafts:Object.keys(state.drafts).length,followups:Object.values(state.followups).reduce((n,x)=>n+x.entries.length,0),native:coverage()}};
+    for(const binding of state.sessions){const t=threads.find(t=>t.id===binding.thread_id) || {id:binding.thread_id,cwd:binding.cwd,name:binding.name};
+      add(t,binding,'draft',state.drafts[binding.id]?.text,{});for(const entry of state.followups[binding.id]?.entries || [])add(t,binding,'followup',entry.text,{followup_id:entry.id});}
+    const key=r=>JSON.stringify([r.session_id?'session':'native',r.session_id || r.thread_id]);
+    matches.sort((a,b)=>b.updated-a.updated || (a.session_id?0:1)-(b.session_id?0:1) || key(a).localeCompare(key(b)) || a.kind.localeCompare(b.kind) || String(a.turn_id).localeCompare(String(b.turn_id)) || String(a.item_id).localeCompare(String(b.item_id)));
+    let rows=matches;
+    if(view==='conversations'){const groups=new Map();for(const result of matches){const id=key(result),group=groups.get(id);if(group)++group.match_count;else groups.set(id,{...result,group_kind:result.session_id?'session':'native',group_id:result.session_id || result.thread_id,match_count:1});}rows=[...groups.values()];}
+    return {query:q,view,source_session:session,source_thread:native,limit,offset,results:rows.slice(offset,offset+limit),total:rows.length,item_total:matches.length,has_more:offset+limit<rows.length,truncated:rows.length>limit,
+      coverage:{sessions:state.sessions.length,activity_items:state.sessions.reduce((n,s)=>n+(threads.find(t=>t.id===s.thread_id)?.turns || []).reduce((m,t)=>m+(t.items?.length || 0),0),0),drafts:Object.keys(state.drafts).length,followups:Object.values(state.followups).reduce((n,x)=>n+x.entries.length,0),native:coverage()}};
   }
   const sampleHome='4a5fd9a01846eac1b6f7d6505ceebf6f0b9460aee12e6ea1241397e607581986';
   function nativeMaterialState(){
@@ -320,7 +347,15 @@
       notice('Sample task chain prepared on sample-child-thread. Read by ID → Task overview → task 42 → Read this task’s evidence.');return true;
     }
   };
-  window.DeskBrowserPreview={storageKey,sessionKey,readingKey,originalReadingKey,originalFrontierKey,reviewKey,requests,originalFixture,headerFixture,tasksFixture,...(readingFixture?{fixture:readingFixture.controls}:{}),snapshot:()=>copy(state),reset:()=>{resetting=true;localStorage.setItem(resetKey,'1');for(const key of [storageKey,sessionKey,readingKey,originalReadingKey,originalFrontierKey,reviewKey])localStorage.removeItem(key);location.reload();}};
+  const groupFixture={prepared:false,query:'Retry discovery Café 项目 😀',source:'sample-checkout-thread',other:'sample-child-thread',prepare(){
+    if(this.prepared)return false;
+    const a=thread(this.source),c=thread(this.other);c.cwd=a.cwd;
+    a.turns.push({id:'sample-discovery-dominant-turn',status:'completed',items:Array.from({length:65},(_,n)=>({id:'sample-discovery-'+n,type:'agentMessage',phase:'final_answer',text:this.query+' retained answer '+n}))});
+    c.turns.push({id:'sample-discovery-distinct-turn',status:'completed',items:[{id:'sample-discovery-distinct-command',type:'commandExecution',command:'printf sample-discovery',status:'completed',exitCode:0,
+      aggregatedOutput:'Distinct source result '+this.query+' — same item repeated '+this.query}]});
+    this.prepared=true;const button=document.getElementById('preview-group-prepare');if(button)button.disabled=true;notice('Sample conversation search prepared. Index explicitly, then search '+this.query+'.');return true;
+  }};
+  window.DeskBrowserPreview={storageKey,sessionKey,readingKey,originalReadingKey,originalFrontierKey,reviewKey,requests,originalFixture,headerFixture,tasksFixture,groupFixture,...(readingFixture?{fixture:readingFixture.controls}:{}),snapshot:()=>copy(state),reset:()=>{resetting=true;localStorage.setItem(resetKey,'1');for(const key of [storageKey,sessionKey,readingKey,originalReadingKey,originalFrontierKey,reviewKey])localStorage.removeItem(key);location.reload();}};
   document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('preview-start').onclick=()=>{
       const home=document.getElementById('welcome');
@@ -330,6 +365,7 @@
     document.getElementById('preview-supply-original').onclick=originalFixture.append;
     document.getElementById('preview-header-prepare').onclick=headerFixture.prepare;
     document.getElementById('preview-tasks-prepare').onclick=tasksFixture.prepare;
+    document.getElementById('preview-group-prepare').onclick=()=>groupFixture.prepare();
     for(const id of ['preview-header-toggle','preview-header-reader-toggle'])document.getElementById(id).onclick=headerFixture.toggle;
     headerFixture.buttons();
     document.getElementById('preview-reset').onclick=window.DeskBrowserPreview.reset;
