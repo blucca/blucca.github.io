@@ -15,12 +15,33 @@
   let findVersion=0,finding=false,findSubmitted=false,findQuery='',findGroups=[],findTotal=0,findCursor=-1;
   let taskReview=null;
 
+  let nativeIdCopy=null;
+  function nativeIdCopyControls() {
+    const button=el('copy-native-id');if(!button)return;
+    button.disabled=!!nativeIdCopy || !source || loading || source.id!==requested?.thread_id || !current(version);
+  }
+  function resetNativeIdCopy() {
+    nativeIdCopy=null;const status=el('native-id-status');if(status)status.textContent='';nativeIdCopyControls();
+  }
+  async function copyNativeId() {
+    if(nativeIdCopy || !source || loading || source.id!==requested?.thread_id || !available())return false;
+    const request={ticket:version,id:source.id};nativeIdCopy=request;nativeIdCopyControls();
+    const valid=()=>nativeIdCopy===request && current(request.ticket) && source?.id===request.id;
+    const notice=text=>{if(valid())preserveChrome(()=>{el('native-id-status').textContent=text;},request.ticket);};
+    notice('Copying native conversation ID…');
+    try{
+      if(!root.navigator?.clipboard?.writeText)throw Error('Clipboard unavailable');
+      await root.navigator.clipboard.writeText(request.id);
+      notice('Native conversation ID copied.');return valid();
+    }catch{notice('Could not copy the native ID. Try again.');return false;}
+    finally{if(valid()){nativeIdCopy=null;nativeIdCopyControls();}}
+  }
   function current(ticket) {
     return ticket===version && el('').open && (!options?.valid || options.valid());
   }
   function invalidate() {
     ++version;++refreshVersion;refreshing=false;const callback=options?.onReturn;
-    options=null;source=null;requested=null;rows=[];loading=false;targetIndex=-1;unavailableThread=null;taskReview=null;taskControls();
+    options=null;source=null;requested=null;rows=[];loading=false;targetIndex=-1;unavailableThread=null;taskReview=null;taskControls();resetNativeIdCopy();
     el('response').hidden=true;el('response').textContent='';el('original').hidden=true;el('saved-evidence').hidden=true;el('saved-evidence-quote').textContent='';
     resetFind();
     el('body').replaceChildren();if(callback)callback();
@@ -81,7 +102,7 @@
     return {start,end};
   }
   function findControls(message) {
-    const ready=!!source && !loading && el('').open && taskReview?.mode!=='context';
+    const ready=!!source && !loading && el('').open && (!taskReview || taskReview.mode==='item');
     el('find-form').hidden=!ready;el('find-query').disabled=!ready;
     el('find-submit').disabled=!ready || finding;
     el('find-previous').disabled=el('find-next').disabled=!ready || finding || findTotal===0;
@@ -311,6 +332,7 @@
   function render(scroll=true,view=null) {
     if(!source || !available())return;
     taskControls();
+    if(taskReview?.mode==='instructions')return renderInstructionSearch(scroll,view);
     if(taskReview?.mode==='context')return renderTaskContext(scroll,view);
     const ticket=version,first=page*PAGE_ENTRIES,last=Math.min(rows.length,first+PAGE_ENTRIES);
     const body=el('body');body.replaceChildren();body.scrollTop=0;
@@ -529,7 +551,7 @@
     const preloaded=options?.preloadedThread || null;
     if(loading || !requested || !available())return false;
     const ticket=++version;loading=true;source=null;rows=[];
-    resetFind();refreshControls();el('find-query').value=str(requested.match_text);
+    resetFind();refreshControls();resetNativeIdCopy();el('find-query').value=str(requested.match_text);
     el('body').replaceChildren();el('body').setAttribute('aria-busy','true');
     el('status').textContent='Reading original native conversation…';
     el('error').hidden=true;el('retry').hidden=true;el('match').textContent='';el('coverage').textContent='';
@@ -579,13 +601,13 @@
       el('error').textContent=error.message;el('error').hidden=false;el('retry').hidden=false;
       return false;
     } finally {
-      if(ticket===version){loading=false;el('body').setAttribute('aria-busy','false');el('retry').disabled=false;findControls();refreshControls();}
+      if(ticket===version){loading=false;el('body').setAttribute('aria-busy','false');el('retry').disabled=false;findControls();refreshControls();nativeIdCopyControls();}
     }
   }
   async function show(result,callbacks={}) {
     if(!api)throw new Error('Native history reader is not configured.');
     if(callbacks.valid && !callbacks.valid())return false;
-    ++version;++refreshVersion;refreshing=false;loading=false;source=null;rows=[];targetIndex=-1;taskReview=null;taskControls();refreshControls();
+    ++version;++refreshVersion;refreshing=false;loading=false;source=null;rows=[];targetIndex=-1;taskReview=null;taskControls();refreshControls();resetNativeIdCopy();
     resetFind();
     requested={...result};options=callbacks;unavailableThread=null;el('response').hidden=true;el('response').textContent='';el('original').hidden=true;el('saved-evidence').hidden=true;el('saved-evidence-quote').textContent='';
     if(callbacks.savedReference){
@@ -611,11 +633,12 @@
   }
   function taskControls() {
     const active=!!taskReview && !!source;
-    if(el('task-return'))el('task-return').hidden=!active || taskReview.mode==='context';
+    if(el('task-return'))el('task-return').hidden=!active || taskReview.mode!=='item';
+    if(el('task-instructions-return'))el('task-instructions-return').hidden=!active || taskReview.mode==='instructions' || taskReview.instructionSearch?.submitted==null;
     if(el('task-passage'))el('task-passage').hidden=!active;
     if(el('task-status')){
       el('task-status').hidden=!active;
-      el('task-status').textContent=active?(taskReview.itemLabel || 'Native task context · Turn '+str(taskReview.capture.turn_id)):'';
+      el('task-status').textContent=active?(taskReview.mode==='instructions'?'Supplied user instructions in this loaded original':taskReview.itemLabel || 'Native task context · Turn '+str(taskReview.capture.turn_id)):'';
     }
   }
   function taskSnapshot() {
@@ -628,7 +651,7 @@
         groups:findGroups,total:findTotal,cursor:findCursor,message:finding?'Find canceled by task navigation. Choose Find to search this original.':el('find-status').textContent,
         anchor:key?{key,start:occurrence.start,end:occurrence.end}:null}};
   }
-  function openTaskContext(capture) {
+  function openTaskContext(capture,{instructionMatch=null}={}) {
     if(!root.DeskHistoryTasks || !source || !available())return false;
     const task=capture.item_id?root.DeskHistoryTasks.containing(source,capture):
       root.DeskHistoryTasks.list(source,capture.thread_id).find(task=>task.turn_id===capture.turn_id && task.available);
@@ -636,19 +659,121 @@
     if(!taskReview)taskReview={passage:taskSnapshot(),capture:null,mode:'context',contextView:null};
     ++findVersion;finding=false;findSubmitted=false;findGroups=[];findTotal=0;findCursor=-1;
     taskReview.capture={thread_id:task.thread_id,turn_id:task.turn_id};taskReview.mode='context';
-    taskReview.contextView=null;taskReview.message='';taskReview.itemLabel='';
+    taskReview.contextView=null;taskReview.message='';taskReview.itemLabel='';taskReview.instructionTarget=instructionMatch;
     findControls();render();return true;
   }
   function taskButton(label,action,callback,disabled=false) {
     const button=node('button',label);button.type='button';button.dataset.taskAction=action;
     button.disabled=disabled;button.onclick=callback;return button;
   }
+  function instructionSearchState() {
+    if(!taskReview)return null;
+    return taskReview.instructionSearch ||= {query:'',submitted:null,offset:0,result:null,source:null,view:null,chosen:null,notice:''};
+  }
+  function suppliedInstructionText(item) {return textFor(item).slice('User\n'.length);}
+  function instructionMatchKey(item) {return JSON.stringify([item.thread_id,item.turn_id,item.item_id]);}
+  function instructionSearchResult(search) {
+    if(search.submitted===null)return null;
+    if(search.source!==source){
+      search.result=root.DeskHistoryTasks.search(source,source.id,search.submitted,suppliedInstructionText);search.source=source;
+      search.offset=Math.min(search.offset,Math.max(0,Math.floor((search.result.matches.length-1)/20)*20));
+      search.notice='The last submitted phrase was searched in the refreshed original. Entered text is unchanged.';
+    }
+    return search.result;
+  }
+  function instructionSearchForm(search,ticket) {
+    const review=taskReview,form=node('form',undefined,'history-reader-instruction-search');form.setAttribute('role','search');
+    const label=node('label','Jump to supplied user instruction');label.htmlFor='history-reader-instruction-query';
+    const field=node('input');field.id='history-reader-instruction-query';field.type='search';field.maxLength=200;field.value=search.query;
+    field.placeholder='A literal phrase from your supplied instruction';field.dataset.taskAction='instruction-query';
+    field.setAttribute('aria-describedby','history-reader-instruction-search-info');
+    const info=node('p','Search only supplied user-message text in this loaded original. Case and Unicode forms are normalized; punctuation is literal.','muted');
+    info.id='history-reader-instruction-search-info';
+    const submit=node('button','Find instructions');submit.type='submit';submit.dataset.taskAction='instruction-search';
+    const inputs=node('div',undefined,'history-reader-find-input');inputs.append(field,submit);form.append(label,inputs,info);
+    field.oninput=()=>{if(taskReview===review && current(ticket)){search.query=field.value;search.notice='Query changed. Choose Find instructions to search this original.';}};
+    form.onsubmit=event=>{event.preventDefault();if(taskReview===review && current(ticket))submitInstructionSearch();};
+    return form;
+  }
+  function submitInstructionSearch() {
+    if(!taskReview || !source || !available())return false;
+    const search=instructionSearchState(),query=search.query.trim(),view=captureView();
+    if(!query || query.length>200 || !root.DeskHistoryFind.normalize(query)){
+      search.notice='Enter 1–200 characters from a supplied user instruction.';
+      taskReview.message=search.notice;render(false,view);el('instruction-query')?.focus();return false;
+    }
+    try{
+      const result=root.DeskHistoryTasks.search(source,source.id,query,suppliedInstructionText);
+      Object.assign(search,{submitted:query,result,source,offset:0,view:null,chosen:null,notice:''});
+      taskReview.mode='instructions';taskReview.itemLabel='';taskReview.message='';
+      ++findVersion;finding=false;findSubmitted=false;findGroups=[];findTotal=0;findCursor=-1;
+      findControls();render();return true;
+    }catch(error){taskReview.message=error.message;render(false,view);return false;}
+  }
+  function renderInstructionSearch(focus=true,view=null) {
+    const review=taskReview,ticket=version,search=instructionSearchState(),body=el('body');
+    if(!search || !current(ticket))return;
+    body.replaceChildren();body.scrollTop=0;
+    const panel=node('section',undefined,'history-reader-instruction-matches');
+    panel.append(node('h3','Supplied user instruction matches'),instructionSearchForm(search,ticket));
+    let result;
+    try{result=instructionSearchResult(search);}catch(error){search.notice=error.message;}
+    const matches=result?.matches || [],limit=20;
+    const status=node('p',result?`${matches.length} supplied instruction${matches.length===1?'':'s'} · ${result.total} phrase occurrence${result.total===1?'':'s'} for “${search.submitted}”.`:'Enter a phrase, then choose Find instructions.','history-reader-instruction-match-status');
+    status.setAttribute('role','status');status.tabIndex=-1;status.dataset.taskAction='instruction-results-status';panel.append(status);
+    if(search.notice){const notice=node('p',search.notice,'muted');notice.setAttribute('role','status');panel.append(notice);}
+    if(result && !matches.length)panel.append(node('p','No supplied user instruction matches this literal phrase in the loaded original.','muted'));
+    for(const match of matches.slice(search.offset,search.offset+limit)){
+      const article=node('article',undefined,'history-reader-instruction-match');article.dataset.instructionMatch=instructionMatchKey(match);
+      article.append(node('p',`Task ${match.turn_index+1} · Turn ${match.turn_id}\nItem ${match.item_id}`,'history-reader-identity'));
+      const span=match.spans.at(0);let start=Math.max(0,span.start-60),end=Math.min(match.text.length,span.end+100);
+      if(start && /[\uDC00-\uDFFF]/.test(match.text[start]) && /[\uD800-\uDBFF]/.test(match.text[start-1]))--start;
+      if(end<match.text.length && /[\uD800-\uDBFF]/.test(match.text[end-1]) && /[\uDC00-\uDFFF]/.test(match.text[end]))--end;
+      const preview=node('pre',undefined,'history-reader-task-match-preview');
+      markText(preview,match.text.slice(start,end),span.start-start,span.end-start);article.append(preview);
+      const key=instructionMatchKey(match);
+      article.append(taskButton('Read task for this instruction','instruction-match:'+key,()=>{
+        if(taskReview===review && current(ticket))chooseInstructionMatch(match);
+      }));panel.append(article);
+    }
+    const navigation=node('div',undefined,'actions history-reader-task-navigation');
+    for(const [direction,label] of [[-1,'Previous instruction matches'],[1,'Next instruction matches']]){
+      const next=search.offset+direction*limit;
+      navigation.append(taskButton(label,direction<0?'instruction-matches-previous':'instruction-matches-next',()=>{
+        if(taskReview!==review || !current(ticket))return;
+        search.offset=next;search.view=null;renderInstructionSearch();
+      },next<0 || next>=matches.length));
+    }
+    panel.append(navigation);body.append(panel);
+    el('coverage').textContent=`Showing supplied instructions ${matches.length?search.offset+1:0}–${Math.min(matches.length,search.offset+limit)} of ${matches.length}. Up to ${limit} matching user-message items per page; this original only.`;
+    el('previous').hidden=el('next').hidden=true;taskControls();
+    if(view)restoreView(view,ticket);else if(focus){status.focus({preventScroll:true});el('').scrollTop=0;}
+  }
+  function chooseInstructionMatch(capture) {
+    const review=taskReview;if(!review || !source || !available())return false;
+    const search=instructionSearchState(),view=captureView();
+    try{
+      const result=instructionSearchResult(search),match=result?.matches.find(item=>instructionMatchKey(item)===instructionMatchKey(capture));
+      if(!match)throw Error('This exact supplied instruction no longer matches the submitted phrase in this original.');
+      const span=match.spans.at(0);
+      search.view=view;search.chosen=instructionMatchKey(match);
+      return openTaskContext(match,{instructionMatch:{item_id:match.item_id,start:span.start+'User\n'.length,end:span.end+'User\n'.length,text:match.text.slice(span.start,span.end)}});
+    }catch(error){search.notice=error.message;review.mode='instructions';render(false,view);return false;}
+  }
+  function returnInstructionMatches() {
+    if(!taskReview || !source || !available())return false;
+    const search=instructionSearchState();if(search.submitted===null)return false;
+    taskReview.mode='instructions';taskReview.itemLabel='';taskReview.message='';
+    ++findVersion;finding=false;findSubmitted=false;findGroups=[];findTotal=0;findCursor=-1;
+    findControls();render(false,search.view);return true;
+  }
   function renderTaskContext(focus=true,view=null) {
     const review=taskReview,ticket=version,body=el('body');if(!review || !current(ticket))return;
     body.replaceChildren();body.scrollTop=0;
     const panel=node('section',undefined,'history-reader-task-context');panel.tabIndex=-1;
     panel.append(node('h3','Native task context'),node('p','Thread '+str(review.capture.thread_id)+'\nTurn '+str(review.capture.turn_id),'history-reader-identity'));
-    let instruction;
+    panel.append(instructionSearchForm(instructionSearchState(),ticket));
+    let instruction,matchedInstruction=null;
     try{instruction=root.DeskHistoryTasks.instructions(source,review.capture,textFor);}
     catch(error){instruction={available:false,status:'task_unavailable',items:[]};review.message=error.message;}
     panel.append(node('p','Native turn status: '+(str(instruction.turn_status)||'unreported')+' · Source: native history read','history-reader-task-outcome'));
@@ -659,6 +784,7 @@
       instruction.user_message_count?'No readable, addressable user instruction was supplied for this task.':'No user instruction was supplied for this task.','muted'));
     for(const [index,item] of instruction.items.entries()) {
       const article=node('article',undefined,'history-reader-task-instruction');
+      if(item.available && item.item_id===review.instructionTarget?.item_id){article.className+=' history-reader-target';article.tabIndex=-1;article.dataset.taskAction='matched-instruction:'+item.item_id;matchedInstruction=article;}
       article.append(node('h4','Supplied user instruction '+(index+1)),node('p','Item '+(str(item.item_id)||'unreported'),'history-reader-identity'));
       if(item.text){const preview=Array.from(item.text.slice(0,640)).slice(0,320).join('');
         article.append(node('pre',preview+(preview.length<item.text.length?'…':''),'history-reader-task-preview'));}
@@ -679,7 +805,7 @@
     body.append(panel);el('coverage').textContent='Task context uses only this original read’s supplied turn and user-message items.';
     el('previous').hidden=el('next').hidden=true;taskControls();
     if(view)restoreView(view,ticket);
-    else if(focus){panel.focus({preventScroll:true});el('').scrollTop=0;}
+    else if(focus){el('').scrollTop=0;(matchedInstruction || panel).focus({preventScroll:true});matchedInstruction?.scrollIntoView?.({block:'center',behavior:'instant'});}
   }
   function readTaskItem(kind,itemId=null) {
     const review=taskReview;if(!review || !source || !available())return false;
@@ -698,7 +824,10 @@
       review.contextView=view;review.mode='item';review.message='';
       review.itemLabel=kind==='response'?`Selected task response · ${str(selection.label)} · Phase: ${str(selection.phase)||'unreported'}\nTurn ${review.capture.turn_id} · Native status at selection: ${str(selection.turn_status)||'unreported'} · Source: native history read`:
         'Supplied user instruction · Turn '+review.capture.turn_id;
-      requested={thread_id:source.id,turn_id:review.capture.turn_id,item_id:selection.item_id};targetIndex=index;page=Math.floor(index/PAGE_ENTRIES);
+      requested={thread_id:source.id,turn_id:review.capture.turn_id,item_id:selection.item_id};
+      const match=kind==='instruction'?review.instructionTarget:null;
+      if(match?.item_id===selection.item_id && textFor(rows[index].item).slice(match.start,match.end)===match.text){requested.match_text=match.text;requested.match_start=match.start;}
+      targetIndex=index;page=Math.floor(index/PAGE_ENTRIES);
       ++findVersion;finding=false;findSubmitted=false;findGroups=[];findTotal=0;findCursor=-1;
       findControls();render();return true;
     }catch(error){review.message=error.message;renderTaskContext(false,view);return false;}
@@ -728,12 +857,14 @@
   }
   function configure(value) {
     api=value.api;evidenceReview=value.onEvidence || null;
+    if(el('copy-native-id')){el('copy-native-id').onclick=()=>copyNativeId();el('copy-native-id').onmousedown=event=>{if(event.button===0 && selectedText())event.preventDefault();};}
     el('back').onclick=el('close').onclick=()=>close();
     el('retry').onclick=()=>{el('retry').disabled=true;source?refresh():read();};
     el('original').onclick=()=>{if(!unavailableThread || !available())return;const thread=unavailableThread;options={...options,taskResponse:false,preloadedThread:thread};return read();};
     if(el('refresh'))el('refresh').onclick=refresh;
     if(el('task-return'))el('task-return').onclick=returnTaskContext;
     if(el('task-passage'))el('task-passage').onclick=returnTaskPassage;
+    if(el('task-instructions-return'))el('task-instructions-return').onclick=returnInstructionMatches;
     el('previous').onclick=()=>movePage(-1);
     el('next').onclick=()=>movePage(1);
     el('find-form').onsubmit=event=>{event.preventDefault();submitFind();};
@@ -745,7 +876,7 @@
     el('').addEventListener('keydown',event=>{
       if(event.key!=='F3' || !el('').open || !source || loading || !el('').contains(event.target))return;
       event.preventDefault();
-      if(taskReview?.mode==='context')return;
+      if(taskReview && taskReview.mode!=='item')return;
       if(finding)return;
       if(findSubmitted && findQuery===el('find-query').value.trim() && findTotal)jumpFind(event.shiftKey?-1:1);
       else if(el('find-query').value.trim())submitFind(event.shiftKey?-1:1);

@@ -257,3 +257,15 @@ html:has(#history-reader[open]){overflow-anchor:none}
 .changed-work-open small { color: var(--muted, #8997ac); margin-top: .3rem; }
 
 .activity-linked-agents{border-top:1px solid #344356;padding-top:8px;margin-top:8px;min-width:0}.activity-linked-agent-links,.linked-agent-actions{display:flex;flex-wrap:wrap;gap:6px}.activity-linked-agents button{font-size:12px;padding:7px 9px;max-width:100%;white-space:normal;overflow-wrap:anywhere}.linked-agent-status{font-size:12px;line-height:1.5;overflow-wrap:anywhere;margin:6px 0}.linked-agent-actions button[hidden],.linked-agent-status[hidden]{display:none}
+
+/* Literal instruction jumps remain scoped to the loaded original. */
+.history-reader-instruction-search{padding:10px 0;border-block:1px solid #344356;margin:10px 0}
+.history-reader-instruction-search input{min-width:0;max-width:100%;box-sizing:border-box}
+.history-reader-instruction-search p,.history-reader-instruction-match-status{font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+.history-reader-instruction-match{padding:10px;margin:10px 0;border:1px solid #344356;border-radius:8px;min-width:0}
+.history-reader-task-match-preview{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;margin:8px 0}
+.history-reader-task-match-preview mark{background:#ead08c;color:#1b222b}
+.history-reader-instruction-match button{max-width:100%;white-space:normal;overflow-wrap:anywhere}
+@media(max-width:600px){.history-reader-instruction-search .history-reader-find-input{flex-wrap:wrap}.history-reader-instruction-search input{flex-basis:100%;width:100%}}
+
+.history-reader-native-id{margin:4px 0;min-width:0}.history-reader-native-id button{font-size:12px;padding:7px 11px;max-width:100%;white-space:normal;overflow-wrap:anywhere}#history-reader-native-id-status{min-height:1.6em;font-size:11px;line-height:1.6;margin:3px 0;overflow-wrap:anywhere}

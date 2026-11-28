@@ -1354,16 +1354,63 @@ function nativeRow(t, resume, handoff, label='Resume with current settings', rea
   if(resume && t.cwdExists!==false){const view=make('button',label);view.type='button';
   view.onclick=async()=>{
     if(view.disabled)return;
-    view.disabled=true;
+    resetNativeId();view.disabled=true;
     try {await resume();} finally {view.disabled=false;}
   };actions.append(view);}
-  if(handoff){const review=make('button','Review handoff');review.type='button';review.onclick=handoff;actions.append(review);}
-  if(read){const original=make('button','Read original conversation','native-read');original.type='button';original.onclick=read;actions.append(original);}
+  if(handoff){const review=make('button','Review handoff');review.type='button';review.onclick=()=>{resetNativeId();return handoff();};actions.append(review);}
+  if(read){const original=make('button','Read original conversation','native-read');original.type='button';original.onclick=()=>{resetNativeId();return read();};actions.append(original);}
   box.append(actions);
   if(t.cwdExists===false)box.append(make('p','Project folder unavailable. Original evidence is still readable; restore the folder to resume.','muted'));
   return box;
 }
+// A pasted native ID is an explicit read target, independent of title discovery.
+let nativeIdVersion=0;
+function resetNativeId() {
+  ++nativeIdVersion;$('history-id-read').disabled=false;
+  $('history-id-status').textContent='';
+}
+async function readNativeById() {
+  const threadId=$('history-id').value.trim();
+  if(!threadId || Array.from(threadId).length>200 || /\s/.test(threadId)){
+    $('history-id-status').textContent='Paste only the native conversation ID (1–200 characters).';
+    $('history-id').focus();return false;
+  }
+  if(!$('history').open)return false;
+  const ticket=++nativeIdVersion,owner=selected,openedGeneration=generation;
+  const origin=document.activeElement,scroll=$('history').scrollTop;
+  const selection={start:$('history-id').selectionStart,end:$('history-id').selectionEnd,direction:$('history-id').selectionDirection};
+  const valid=()=>ticket===nativeIdVersion && $('history').open &&
+    selected===owner && generation===openedGeneration && $('history-id').value.trim()===threadId;
+  $('history-id-read').disabled=true;$('history-id-status').textContent='Reading this native original…';
+  try{
+    const result=await api('/api/native/home');
+    if(!valid())return false;
+    const home=result?.home_namespace;
+    if(typeof home!=='string' || !/^[a-f0-9]{64}$/.test(home))throw Error('The current native home could not be identified.');
+    const loadOriginal=async()=>{
+      if(!valid())throw Error('The original read target changed.');
+      const source=await api('/api/native/evidence-source?home='+encodeURIComponent(home)+'&thread='+encodeURIComponent(threadId));
+      if(!valid())throw Error('The original read target changed.');
+      if(source?.home_namespace!==home)throw Error('The original belongs to a different native home.');
+      if(source.thread?.id!==threadId || !Array.isArray(source.thread.turns))throw Error('The native read did not supply this original conversation.');
+      return source.thread;
+    };
+    const read=await DeskHistoryReader.show({thread_id:threadId},{valid,loadOriginal,
+      backLabel:'Back to conversation ID',onReturn:()=>{
+        if(!valid())return;
+        resetNativeId();
+        $('history').scrollTop=scroll;
+        $('history-id').setSelectionRange(selection.start,selection.end,selection.direction);
+        if(origin?.isConnected && $('history').contains(origin))origin.focus({preventScroll:true});
+        else $('history-id').focus({preventScroll:true});
+      }});
+    if(valid())$('history-id-status').textContent=read?'Original read. Your selected task and title results stay in place.':'Original unavailable. Retry in the reader or return to this ID.';
+    return read;
+  }catch(error){if(valid())$('history-id-status').textContent=error.message;return false;}
+  finally{if(ticket===nativeIdVersion)$('history-id-read').disabled=false;}
+}
 function resetNative() {
+  resetNativeId();
   ++nativeVersion;nativeCursor=null;nativeQuery=null;nativeLoading=false;
   $('native-list').replaceChildren();$('more').hidden=true;$('more').disabled=false;
   $('history-search-submit').disabled=false;$('history-error').hidden=true;
@@ -1495,6 +1542,8 @@ async function showHandoff(thread,cwd,valid=()=>true) {
   }catch(e){if(current===generation && version===handoffVersion && valid())error(e);}
 }
 $('browse').onclick=()=>{preparedEvidenceOwner=null;$('history').showModal();nativeList();};
+$('history-id').oninput=resetNativeId;
+$('history-id-form').onsubmit=e=>{e.preventDefault();readNativeById();};
 $('history-search').oninput=resetNative;
 $('history-search-form').onsubmit=e=>{e.preventDefault();nativeList();};
 $('history').addEventListener('close',()=>{if(!$('history').open)resetNative();});
