@@ -1,10 +1,12 @@
 {
   "source": "blucca/codex-desk",
-  "runtime_version": "0.1.0a56",
+  "runtime_version": "0.1.0a57",
   "sample": true,
   "assets": [
     "activity.js",
     "app.js",
+    "changed-work-view.js",
+    "changed-work.js",
     "evidence-preparation.js",
     "evidence.js",
     "followups.js",
@@ -15,6 +17,8 @@
     "index.html",
     "native-state.js",
     "native-steps.js",
+    "new-activity-view.js",
+    "new-activity.js",
     "preparation-find.js",
     "preparation.js",
     "reading_checkpoint.js",

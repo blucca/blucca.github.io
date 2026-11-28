@@ -475,12 +475,22 @@ function latestLabel(){
   const reading=globalThis.DeskSessionReading?.notice?.();
   $('latest-output').textContent=reading?reading+' · Latest output ↓':latestUpdates?`${latestUpdates} new update${latestUpdates===1?'':'s'} · Latest output ↓`:'Latest output ↓';
 }
-function goLatest(){
-  globalThis.DeskSessionReading?.latest?.();
+function goLatest({readingIntent=true}={}){
+  if(readingIntent)globalThis.DeskSessionReading?.latest?.();
   latestUpdates=0;latestLabel();
   window.scrollTo({top:document.documentElement.scrollHeight,behavior:'instant'});
 }
-$('latest-output').onclick=goLatest;
+$('latest-output').onclick=()=>{const capture=globalThis.DeskNewActivityView?.snapshot?.();goLatest();globalThis.DeskNewActivityView?.reviewLatest?.(capture);};
+globalThis.DeskNewActivityView?.configure?.({$,storage:()=>localStorage,home:sessionReadingHome,
+  selection:()=>({...sessionReadingBinding(),session:selected,generation,ready:!opening && !$('task').hidden}),
+  planDeltaAccepted:event=>{const p=event.params || {},item=items.get(p.itemId);return item?.type==='plan' && item._deskPlan==='streaming' && p.turnId===currentTurn && itemTurns.get(p.itemId)===p.turnId;},
+  targetRendered:target=>{const node=nodes.get(target.item_id);return !!node?.isConnected && !node.hidden && itemTurns.get(target.item_id)===target.turn_id && items.get(target.item_id)?.type===target.item_type;},
+  reveal:target=>{globalThis.DeskSessionReading?.target?.();const node=nodes.get(target.item_id),group=collaborationGroups.get(target.turn_id);
+    if(group && group.node.contains(node))group.node.open=true;
+    const view=DeskActivity.capture(node);if(view)DeskActivity.restore(node,{...view,open:true});
+    node.tabIndex=-1;node.focus({preventScroll:true});node.scrollIntoView({block:'start',behavior:'instant'});},
+  readingIntent:()=>globalThis.DeskSessionReading?.intent?.(),frame:callback=>requestAnimationFrame(callback),
+  latestVisible:()=>nearLatest() && !document.querySelector('dialog[open]')});
 async function api(path, data) {
   const headers=deskAccessHeaders(data ? {'Content-Type':'application/json'} : {});
   const r = await fetch(path, data ? {method:'POST', headers, body:JSON.stringify(data)} : {headers});
@@ -501,6 +511,7 @@ function sidebarGroups(){
   return [...groups.values()].sort((a,b)=>Number(!!b.active.length)-Number(!!a.active.length));
 }
 function drawSidebar(){
+  globalThis.DeskChangedWorkView?.sync?.();
   $('session-tools').hidden=state.sessions.length===0;
   const list=$('sessions'), left=list.scrollLeft, top=list.scrollTop;
   const focused=document.activeElement, focusedRow=list.contains(focused)?focused.closest('.session-row'):null;
@@ -531,6 +542,7 @@ function drawSidebar(){
         const b=make('button','','session'+(s.id===selected?' selected':''));b.title=s.cwd;
         b.type='button';if(s.id===selected)b.setAttribute('aria-current','page');
         b.append(make('strong',s.name || group.name),make('small',`${profileLabel(s.profile)} · ${s.status}${s.archived?' · archived locally':''}`));
+        globalThis.DeskChangedWorkView?.badge?.(s.id,b);
         b.onclick=()=>open(s.id);
         const archive=make('button',s.archived?'Restore':'Archive','session-archive');archive.type='button';
         archive.setAttribute('aria-label',`${s.archived?'Restore':'Archive'} saved session ${s.name || group.name}`);
@@ -564,6 +576,8 @@ async function setArchived(id,archived){
 $('session-filter').oninput=()=>drawSidebar();
 $('show-archived').onchange=()=>drawSidebar();
 $('archive-session').onclick=()=>{const s=state.sessions.find(s=>s.id===selected);if(s)setArchived(s.id,!s.archived);};
+globalThis.DeskChangedWorkView?.configure?.({$,make,state:()=>state,groups:sidebarGroups,active:activeSession,opening:()=>opening,open,sidebar:drawSidebar,
+  reviews:()=>globalThis.DeskNewActivityView?.reviewMetadata?.(),subscribe:callback=>globalThis.DeskNewActivityView?.subscribe?.(callback)});
 let selectedOriginalReview=null;
 function selectedOriginalBinding(){
   const session=state.sessions.find(s=>s.id===selected),thread=session?.thread_id;
@@ -609,6 +623,7 @@ function draw() {
   drawSidebar();
   $('approvals').hidden=opening;
   DeskHome.sync();
+  globalThis.DeskNewActivityView?.sync?.();
   syncSelectedOriginal();
   syncDraftEvidence();DeskEvidencePreparation.sync();
   const running=state.sessions.filter(s=>['running','approval','starting'].includes(s.status)).length;
@@ -855,6 +870,7 @@ function consume(m) {
   if(p.threadId && nativeThreadId && p.threadId!==nativeThreadId && m.id===undefined && m.method!=='serverRequest/resolved')return;
   const readingThread=p.threadId || p.thread?.id || p.turn?.threadId;
   if(m.id===undefined && (!readingThread || readingThread===nativeThreadId))globalThis.DeskSessionReading?.eventTurn?.(p.turn?.id || p.turnId);
+  globalThis.DeskNewActivityView?.accept?.(m);
   DeskSteering.consume(m,{session:selected,thread:nativeThreadId,generation});
   DeskStopTask.consume(m,{session:selected,thread:nativeThreadId,generation});
   const progressChanged=DeskNativeSteps.consume(m,{session:selected,thread:nativeThreadId,generation});
@@ -906,6 +922,7 @@ async function refresh() {
 }
 async function open(id,{revealLatest=true,keepError=false,steerReceiptOnly=false,readingTarget=null}={}) {
   globalThis.DeskSessionReading?.leave?.();
+  globalThis.DeskNewActivityView?.leave?.();
   stopOrdinaryTurnSource();
   if(selected){rememberDraft(selected);persistDraft(selected);}
   const current=++generation;
@@ -945,6 +962,7 @@ async function open(id,{revealLatest=true,keepError=false,steerReceiptOnly=false
       opening=false;$('welcome').hidden=true;$('task').hidden=false;syncDraftEvidence();$('handoff').hidden=false;draw();DeskSteering.opened();DeskStopTask.opened();
       await globalThis.DeskSessionReading?.restore?.(current,{explicitTarget:readingTarget || !revealLatest});
       if(current!==generation)return;
+      await globalThis.DeskNewActivityView?.observe?.(rows,{replay:true});if(current!==generation)return;
       return true;
     }
     const stopRetained=await DeskStopTask.opened();if(current!==generation)return;
@@ -964,6 +982,7 @@ async function open(id,{revealLatest=true,keepError=false,steerReceiptOnly=false
       opening=false;$('welcome').hidden=true;$('task').hidden=false;syncDraftEvidence();$('handoff').hidden=false;draw();
       await globalThis.DeskSessionReading?.restore?.(current,{explicitTarget:readingTarget || !revealLatest});
       if(current!==generation)return;
+      await globalThis.DeskNewActivityView?.observe?.(rows,{replay:true});if(current!==generation)return;
       return true;
     }
     const opened=await api('/api/open',{session:id});
@@ -971,6 +990,7 @@ async function open(id,{revealLatest=true,keepError=false,steerReceiptOnly=false
     try{localStorage.setItem('codex-desk-browser-preview-session-v1',id);}catch{}
     nativeThreadId=opened.thread.id;
     globalThis.DeskSessionReading?.source?.(current,opened.thread);
+    globalThis.DeskNewActivityView?.source?.(opened.thread,{session:id,thread_id:nativeThreadId,generation:current});
     DeskNativeSteps.select({session:id,thread:nativeThreadId,generation:current});
     DeskTurnChanges.select({session:id,thread:nativeThreadId,generation:current});
       DeskSteering.select({session:id,thread:nativeThreadId,generation:current});
@@ -990,8 +1010,9 @@ async function open(id,{revealLatest=true,keepError=false,steerReceiptOnly=false
     opening=false;draw();$('task').hidden=false;syncDraftEvidence();$('handoff').hidden=false;DeskSteering.opened();DeskStopTask.opened();
     const readingRestored=await globalThis.DeskSessionReading?.restore?.(current,{explicitTarget:readingTarget || !revealLatest});
     if(current!==generation)return;
+    await globalThis.DeskNewActivityView?.observe?.(rows,{replay:true});if(current!==generation)return;
     const readingIntent=globalThis.DeskSessionReading?.intent?.();
-    if(revealLatest && !readingTarget && !readingRestored)requestAnimationFrame(()=>{if(current===generation && (globalThis.DeskSessionReading?.canLatest?.(readingIntent) ?? true) && ($('native-steps').hidden || !$('native-steps').open) && ($('turn-changes').hidden || !$('turn-changes').open) && ($('native-outcome').hidden || !$('native-outcome').open) && !DeskSteering.reading() && !DeskStopTask.reading() && !$('history-reader').open && !$('preparation').open && !$('preparation-request').open)goLatest();});
+    if(revealLatest && !readingTarget && !readingRestored)requestAnimationFrame(()=>{if(current===generation && (globalThis.DeskSessionReading?.canLatest?.(readingIntent) ?? true) && ($('native-steps').hidden || !$('native-steps').open) && ($('turn-changes').hidden || !$('turn-changes').open) && ($('native-outcome').hidden || !$('native-outcome').open) && !DeskSteering.reading() && !DeskStopTask.reading() && !$('history-reader').open && !$('preparation').open && !$('preparation-request').open)goLatest({readingIntent:false});});
     return true;
   } catch(e) {
     if(current===generation){opening=false;draw();error(e);}
@@ -1085,7 +1106,7 @@ $('project').addEventListener('close',()=>{if(!$('project').open)resetProject();
 $('create').onsubmit=async e=>{e.preventDefault();await findProject();};
 $('project-more').onclick=()=>findProject(projectCursor);
 $('project-new').onclick=()=>{if($('create').reportValidity())return openProjectChoice(()=>api('/api/sessions',{cwd:$('cwd').value,profile:$('profile').value,name:$('session-name').value.trim() || null}));};
-$('prompt').oninput=()=>{if(selected){rememberDraft(selected);scheduleDraft(selected);syncDraftEvidence();DeskEvidencePreparation.sync();}};
+$('prompt').oninput=()=>{if(selected){sessionReadingInput();rememberDraft(selected);scheduleDraft(selected);syncDraftEvidence();DeskEvidencePreparation.sync();}};
 $('turn-mode').onchange=()=>{if(selected){rememberDraft(selected);scheduleDraft(selected);DeskEvidencePreparation.sync();}};
 DeskStopTask.configure({$,api,make,selection:()=>({session:selected,thread:nativeThreadId,generation,opening,connected:Object.hasOwn(state.pending || {},selected),status:state.sessions.find(s=>s.id===selected)?.status})});
 DeskSteering.configure({$,api,selection:()=>({session:selected,thread:nativeThreadId,generation,opening,connected:Object.hasOwn(state.pending || {},selected),status:state.sessions.find(s=>s.id===selected)?.status})});
@@ -1250,6 +1271,7 @@ async function pollActivity(){
       after=r.seq;const progressChanged=consume(r.event);
       if(progressChanged || ['item/started','item/completed','item/agentMessage/delta','item/commandExecution/outputDelta','item/mcpToolCall/progress','error'].includes(r.event.method))++changed;
     }
+    await globalThis.DeskNewActivityView?.observe?.(rows);if(current!==generation)return;
     // Output inserted above a focused answer must not move its viewport.
     if(editorAnchor && editorAnchor.node.isConnected && document.activeElement===editorAnchor.node) {
       const delta=editorAnchor.node.getBoundingClientRect().top-editorAnchor.top;
@@ -1258,7 +1280,7 @@ async function pollActivity(){
     if(changed){
       if(follow)requestAnimationFrame(()=>{
         if(current!==generation)return;
-        if((globalThis.DeskSessionReading?.follow?.() ?? true) && !globalThis.DeskActivity?.reading?.() && !document.activeElement?.closest?.('.approval') && ($('native-steps').hidden || !$('native-steps').open) && ($('turn-changes').hidden || !$('turn-changes').open) && ($('native-outcome').hidden || !$('native-outcome').open) && !$('recent-work').open && !DeskSteering.reading() && !DeskStopTask.reading() && !$('history-reader').open && !$('preparation').open && !$('preparation-request').open)goLatest();
+        if((globalThis.DeskSessionReading?.follow?.() ?? true) && !globalThis.DeskActivity?.reading?.() && !document.activeElement?.closest?.('.approval') && ($('native-steps').hidden || !$('native-steps').open) && ($('turn-changes').hidden || !$('turn-changes').open) && ($('native-outcome').hidden || !$('native-outcome').open) && !$('recent-work').open && !DeskSteering.reading() && !DeskStopTask.reading() && !$('history-reader').open && !$('preparation').open && !$('preparation-request').open)goLatest({readingIntent:false});
         else{latestUpdates+=changed;latestLabel();}
       });
       else{latestUpdates+=changed;latestLabel();}

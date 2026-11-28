@@ -8,14 +8,14 @@
     if(document.documentElement.dataset.previewEmbedded==='true')openExternal(url,'_blank','noopener');
     else location.assign(url);
   };
-  const storageKey='codex-desk-browser-preview-v1',sessionKey='codex-desk-browser-preview-session-v1',readingKey='codex-desk-browser-preview-reading-checkpoints-v1',resetKey='codex-desk-browser-preview-reset-v1';
+  const storageKey='codex-desk-browser-preview-v1',sessionKey='codex-desk-browser-preview-session-v1',readingKey='codex-desk-browser-preview-reading-checkpoints-v1',reviewKey='codex-desk-browser-preview-activity-review-v1',resetKey='codex-desk-browser-preview-reset-v1';
   const readingFixture=window.DeskPreviewReadingFixture || null;
   const threads=window.DeskPreviewThreads, copy=v=>JSON.parse(JSON.stringify(v));
   const blank=()=>({sessions:[],indexed:false,drafts:{},followups:{},nextId:1});
   let state=blank(),resetting=false;
   // The ordinary app's pagehide save can run after Reset removes the old keys.
   // Consume the reset marker before this new document loads any preparation.
-  try{if(localStorage.getItem(resetKey)==='1')for(const key of [storageKey,sessionKey,readingKey,resetKey])localStorage.removeItem(key);}catch(_){}
+  try{if(localStorage.getItem(resetKey)==='1')for(const key of [storageKey,sessionKey,readingKey,reviewKey,resetKey])localStorage.removeItem(key);}catch(_){}
   try{const saved=JSON.parse(localStorage.getItem(storageKey));if(saved && Array.isArray(saved.sessions) && saved.drafts && saved.followups)state=saved;}catch(_){}
   const requests=[];
   const notice=text=>{const el=document.getElementById('preview-notice');if(el)el.textContent=text;};
@@ -68,6 +68,38 @@
     return {results,total:results.length,truncated:false,coverage:{sessions:state.sessions.length,activity_items:state.sessions.length*2,drafts:Object.keys(state.drafts).length,followups:Object.values(state.followups).reduce((n,x)=>n+x.entries.length,0),native:coverage()}};
   }
   const sampleHome='4a5fd9a01846eac1b6f7d6505ceebf6f0b9460aee12e6ea1241397e607581986';
+  function nativeMaterialState(){
+    const summaries=[];
+    for(const saved of state.sessions){
+      if(typeof saved.thread_id!=='string' || !saved.thread_id.trim())continue;
+      const owner={native_home:sampleHome,session:saved.id,thread_id:saved.thread_id};
+      const rows=readingFixture?.events?.[saved.id] || [];
+      try{
+        if(!window.DeskNewActivity || !Array.isArray(rows) || rows.length>5000)throw Error();
+        let currentTurn=null;const plans=new Map(),accepted=new WeakSet();
+        for(const row of rows){
+          const event=row.event,p=event?.params || {};
+          if(!event || (p.threadId && p.threadId!==saved.thread_id && event.id===undefined))continue;
+          if(event.method!=='item/plan/delta' || (p.turnId===currentTurn && plans.get(p.itemId)?.turn===p.turnId && plans.get(p.itemId)?.streaming))accepted.add(event);
+          if(event.method==='turn/started'){
+            const next=p.turn?.id || p.turnId || currentTurn;
+            if(currentTurn && next!==currentTurn)for(const plan of plans.values())if(plan.turn===currentTurn)plan.streaming=false;
+            currentTurn=next;
+          }else if(['item/started','item/completed'].includes(event.method) && p.item?.id){
+            if(p.item.type==='plan')plans.set(p.item.id,{turn:p.turnId,streaming:event.method==='item/started'});
+            else plans.delete(p.item.id);
+          }else if(event.method==='turn/completed'){
+            const turn=p.turn?.id || p.turnId;
+            for(const item of p.turn?.items || [])if(item?.type==='plan')plans.set(item.id,{turn,streaming:false});
+            for(const plan of plans.values())if(plan.turn===turn)plan.streaming=false;
+          }
+        }
+        const batch=window.DeskNewActivity.capture(owner,rows,row=>accepted.has(row.event));
+        summaries.push({owner,status:'available',received_seq:batch.received_seq,material_seq:batch.frontier});
+      }catch{summaries.push({owner,status:'unavailable'});}
+    }
+    return {native_home:sampleHome,summaries};
+  }
   function exactQuery(params,required,optional=[]){
     for(const key of params.keys())if(!required.includes(key) && !optional.includes(key) || params.getAll(key).length!==1)throw Error('Use the exact sample native query.');
     for(const key of required)if(!params.has(key))throw Error('Supply the captured native source IDs.');
@@ -110,7 +142,7 @@
     }
     if(['/api/native','/api/native/thread','/api/history/index','/api/recall','/api/import','/api/open'].includes(path) && !Array.isArray(threads))
       throw new Error('Sample histories did not load. Reload this page to try again.');
-    if(path==='/api/state')return {sessions:state.sessions,native_outcomes:Object.fromEntries(state.sessions.flatMap(s=>{const t=Array.isArray(threads)?threads.find(t=>t.id===s.thread_id):null,last=t?.turns?.at(-1);return last?[[s.id,{thread_id:t.id,turn_id:last.id,status:last.status,error:last.error ?? null,source:'native history read'}]]:[];})),profiles:[{id:'default',name:'Sample settings',provider:'sample',model:'preparation-only'}],pending:readingFixture?.pending || {},projects:[]};
+    if(path==='/api/state')return {sessions:state.sessions,native_material:nativeMaterialState(),native_outcomes:Object.fromEntries(state.sessions.flatMap(s=>{const t=Array.isArray(threads)?threads.find(t=>t.id===s.thread_id):null,last=t?.turns?.at(-1);return last?[[s.id,{thread_id:t.id,turn_id:last.id,status:last.status,error:last.error ?? null,source:'native history read'}]]:[];})),profiles:[{id:'default',name:'Sample settings',provider:'sample',model:'preparation-only'}],pending:readingFixture?.pending || {},projects:[]};
     if(path==='/api/native'){
       let rows=threads.map(({turns,...metadata})=>metadata);const term=params.get('search'),cwd=params.get('cwd');
       if(term)rows=rows.filter(t=>fold(t.name).includes(fold(term)));if(cwd)rows=rows.filter(t=>t.cwd===cwd);return {data:rows,nextCursor:null};
@@ -212,10 +244,12 @@
     const method=(options.method || 'GET').toUpperCase();let data={};
     try{data=options.body?JSON.parse(options.body):{};requests.push({path:address.pathname+address.search,method,data:copy(data)});
       if(readingFixture)await readingFixture.controls.before(address.pathname);
-      const result=copy(handle(address.pathname,method,data,address.searchParams));return new Response(JSON.stringify(result),{status:200,headers:{'Content-Type':'application/json'}});
+      const result=copy(handle(address.pathname,method,data,address.searchParams));
+      if(readingFixture)await readingFixture.controls.after?.(address.pathname);
+      return new Response(JSON.stringify(result),{status:200,headers:{'Content-Type':'application/json'}});
     }catch(error){return new Response(JSON.stringify({error:error.message,...(error.current?{current:error.current}:{})}),{status:error.status || 400,headers:{'Content-Type':'application/json'}});}
   };
-  window.DeskBrowserPreview={storageKey,sessionKey,readingKey,requests,...(readingFixture?{fixture:readingFixture.controls}:{}),snapshot:()=>copy(state),reset:()=>{resetting=true;localStorage.setItem(resetKey,'1');localStorage.removeItem(storageKey);localStorage.removeItem(sessionKey);localStorage.removeItem(readingKey);location.reload();}};
+  window.DeskBrowserPreview={storageKey,sessionKey,readingKey,reviewKey,requests,...(readingFixture?{fixture:readingFixture.controls}:{}),snapshot:()=>copy(state),reset:()=>{resetting=true;localStorage.setItem(resetKey,'1');for(const key of [storageKey,sessionKey,readingKey,reviewKey])localStorage.removeItem(key);location.reload();}};
   document.addEventListener('DOMContentLoaded',()=>{
     document.getElementById('preview-start').onclick=()=>{
       const home=document.getElementById('welcome');

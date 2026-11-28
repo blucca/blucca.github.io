@@ -15,6 +15,11 @@ aside{min-width:0}
 #history{max-height:90vh;overflow:auto}.history-search{padding-bottom:16px;border-bottom:1px solid #344356}#history-summary,#project-summary{overflow-wrap:anywhere}#history-error,#provider-error,#handoff-error{border:1px solid #ac6468;background:#3a2529;color:#ffccd0;padding:12px;border-radius:8px;white-space:pre-wrap;overflow-wrap:anywhere}
 
 #activity-controls{position:fixed;right:18px;bottom:18px;z-index:2}#activity-controls[hidden]{display:none}#latest-output{font-size:12px;padding:8px 12px;background:#203e39;box-shadow:0 3px 18px #0008}main{padding-bottom:76px}
+#activity-controls{display:flex;flex-direction:column;align-items:stretch;gap:6px;width:min(360px,calc(100vw - 36px));max-height:40vh;overflow:auto;padding:10px;background:#151e29;border:1px solid #405367;border-radius:10px;box-shadow:0 3px 18px #0008}
+#latest-output{align-self:flex-end;max-width:100%;white-space:normal}
+#native-activity-review{display:grid;grid-template-columns:1fr 1fr;gap:6px;min-width:0}#native-activity-review[hidden]{display:none}
+#native-activity-status{grid-column:1/-1;font-size:12px;line-height:1.5;overflow-wrap:anywhere}
+#native-activity-review button{font-size:12px;padding:8px;min-width:0;white-space:normal;overflow-wrap:anywhere}main{padding-bottom:220px}
 
 /* Activity reader: readable messages, compact evidence, local code copying. */
 .item.activity-reader{white-space:normal;min-width:0}
@@ -216,6 +221,9 @@ html:has(#stop-request-captured[open]:not([hidden])),html:has(#stop-request-prev
 
 #preparation h2,#preparation h3,#preparation h4{overflow-wrap:anywhere}
 
+/* Preserve the outside workbench while its original reader owns the view. */
+html:has(#history-reader[open]){overflow-anchor:none}
+
 /* Explicit reader refresh preserves its owned view, not browser scroll anchoring. */
 #history-reader{overflow-anchor:none}
 #history-reader> *{flex-shrink:0}
@@ -236,3 +244,14 @@ html:has(#stop-request-captured[open]:not([hidden])),html:has(#stop-request-prev
 
 /* Source-owned native task context in the existing original reader. */
 .history-reader-task-context{min-width:0;overflow-wrap:anywhere}.history-reader-task-context h3{font-size:16px;margin:8px 0}.history-reader-task-context h4{font-size:13px;margin:8px 0}.history-reader-task-instruction{padding:10px;margin:10px 0;border:1px solid #344356;border-radius:8px}.history-reader-task-preview{white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace}.history-reader-task-navigation{flex-wrap:wrap;margin:12px 0}.history-reader-task-context button,.history-reader-turn-task{font-size:12px;padding:7px 11px}.history-reader-task-context p,#history-reader-task-status{font-size:12px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}.history-reader-task-context:focus-visible{outline:2px solid #8cddc3;outline-offset:2px}
+
+.native-material-dot { float: right; color: #679edf; font-size: .7rem; margin-left: .45rem; }
+#changed-work { width: min(760px, calc(100vw - 32px)); }
+.changed-work-controls { display: flex; flex-wrap: wrap; gap: 1rem; }
+.changed-work-controls label { flex: 1; min-width: 160px; }
+#changed-work-list { max-height: 55vh; overflow: auto; }
+.changed-work-group p { overflow-wrap: anywhere; }
+.changed-work-row { margin: .4rem 0; }
+.changed-work-open { display: block; width: 100%; text-align: left; overflow-wrap: anywhere; }
+.changed-work-open strong, .changed-work-open small { display: block; }
+.changed-work-open small { color: var(--muted, #8997ac); margin-top: .3rem; }
