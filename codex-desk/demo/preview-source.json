@@ -1,6 +1,6 @@
 {
   "source": "blucca/codex-desk",
-  "runtime_version": "0.1.0a57",
+  "runtime_version": "0.1.0a58",
   "sample": true,
   "assets": [
     "activity.js",
@@ -15,6 +15,9 @@
     "history_tasks.js",
     "home.js",
     "index.html",
+    "linked-agent-read.js",
+    "linked-agent-view.js",
+    "linked-agent.js",
     "native-state.js",
     "native-steps.js",
     "new-activity-view.js",

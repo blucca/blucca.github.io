@@ -21,12 +21,12 @@
   const notice=text=>{const el=document.getElementById('preview-notice');if(el)el.textContent=text;};
   const save=()=>{try{localStorage.setItem(storageKey,JSON.stringify(state));}catch(_){throw new Error('Browser storage is unavailable. Enable site storage to keep sample preparation.');}};
   const lookup=id=>{const row=state.sessions.find(s=>s.id===id);if(!row)throw new Error('Choose a sample conversation first.');return row;};
-  const thread=id=>{const row=threads.find(t=>t.id===id);if(!row)throw new Error('This preview contains three sample conversations.');return row;};
+  const thread=id=>{const row=threads.find(t=>t.id===id);if(!row)throw new Error('Choose one of the sample histories listed in this preview.');return row;};
   const queue=id=>{lookup(id);return state.followups[id] || (state.followups[id]={entries:[],reservation:null});};
   const draftView=d=>({text:d.text,mode:d.mode,revision:d.revision});
   const conflict=current=>{const error=new Error('Sample draft changed elsewhere. Choose Keep mine or Load saved.');error.status=409;error.current=draftView(current);throw error;};
-  const coverage=()=>({indexed_threads:state.indexed?3:0,indexed_items:state.indexed?threads.reduce((n,t)=>n+t.turns.reduce((m,turn)=>m+(turn.items?.length || 0),0),0):0,truncated_threads:0,omitted_items:0,unsupported_items:0,invalid_items:0,max_thread_items:5000,max_thread_chars:2000000,max_item_chars:200000});
-  const job=()=>({id:'sample-index-1',status:state.indexed?'completed':'idle',mode:'recent',seen:state.indexed?3:0,indexed:state.indexed?3:0,skipped:0,failed:0,limit:200,has_more:false,older_available:false,resumable:false,retryable_failures:0});
+  const coverage=()=>({indexed_threads:state.indexed?threads.length:0,indexed_items:state.indexed?threads.reduce((n,t)=>n+t.turns.reduce((m,turn)=>m+(turn.items?.length || 0),0),0):0,truncated_threads:0,omitted_items:0,unsupported_items:0,invalid_items:0,max_thread_items:5000,max_thread_chars:2000000,max_item_chars:200000});
+  const job=()=>({id:'sample-index-1',status:state.indexed?'completed':'idle',mode:'recent',seen:state.indexed?threads.length:0,indexed:state.indexed?threads.length:0,skipped:0,failed:0,limit:200,has_more:false,older_available:false,resumable:false,retryable_failures:0});
   const fold=text=>String(text).normalize('NFKC').toLowerCase();
   const preparationFold=text=>Array.from(String(text).normalize('NFKC'), c=>window.DeskPreviewCasefold?.[c] ?? c.toLowerCase()).join('').normalize('NFKC');
   function preparationPage(sessions,params){
@@ -65,7 +65,7 @@
         results.push({kind:binding?'activity':'native-activity',session_id:binding?.id,thread_id:t.id,turn_id:turn.id,item_id:item.id,item_type:item.type,cwd:t.cwd,title:t.name,profile:'default',provider:'sample',updated:t.updatedAt,snippet:text,match_text:text.slice(at,at+q.length)});
       }
     }
-    return {results,total:results.length,truncated:false,coverage:{sessions:state.sessions.length,activity_items:state.sessions.length*2,drafts:Object.keys(state.drafts).length,followups:Object.values(state.followups).reduce((n,x)=>n+x.entries.length,0),native:coverage()}};
+    return {results,total:results.length,truncated:false,coverage:{sessions:state.sessions.length,activity_items:state.sessions.reduce((n,s)=>n+(threads.find(t=>t.id===s.thread_id)?.turns || []).reduce((m,t)=>m+(t.items?.length || 0),0),0),drafts:Object.keys(state.drafts).length,followups:Object.values(state.followups).reduce((n,x)=>n+x.entries.length,0),native:coverage()}};
   }
   const sampleHome='4a5fd9a01846eac1b6f7d6505ceebf6f0b9460aee12e6ea1241397e607581986';
   function nativeMaterialState(){
@@ -152,7 +152,7 @@
       if(post){
         const op=data.op===undefined?'recent':data.op;
         if(!['recent','older','retry'].includes(op))throw new Error('Choose recent refresh, older continuation or explicit retry.');
-        if(op==='older')throw new Error('All three sample histories fit the recent window. No older sample conversations remain.');
+        if(op==='older')throw new Error('All sample histories fit the recent window. No older sample conversations remain.');
         if(op==='retry')throw new Error('No sample indexing pass or failed history read remains to retry.');
         state.indexed=true;save();
       }

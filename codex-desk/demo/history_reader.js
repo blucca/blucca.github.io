@@ -478,10 +478,11 @@
     },ticket);
     try{
       const savedReference=options?.savedReference;
-      const result=savedReference?await api('/api/native/evidence-source?home='+encodeURIComponent(savedReference.native_home)+'&thread='+encodeURIComponent(requested.thread_id)):
+      const scoped=typeof options?.loadOriginal==='function';
+      const result=scoped?await options.loadOriginal():savedReference?await api('/api/native/evidence-source?home='+encodeURIComponent(savedReference.native_home)+'&thread='+encodeURIComponent(requested.thread_id)):
         await api('/api/native/thread?id='+encodeURIComponent(requested.thread_id));
-      if(savedReference && result.home_namespace!==savedReference.native_home)throw Error('The original native home does not match this saved evidence.');
-      const thread=savedReference?result.thread:result;
+      if(!scoped && savedReference && result.home_namespace!==savedReference.native_home)throw Error('The original native home does not match this saved evidence.');
+      const thread=!scoped && savedReference?result.thread:result;
       if(request!==refreshVersion)return false;
       if(!current(ticket)){if(ticket===version && el('').open)close();return false;}
       if(!thread || thread.id!==requested.thread_id || !Array.isArray(thread.turns))throw Error('The original native read did not return this conversation.');
@@ -553,7 +554,7 @@
         const turn=thread.turns.find(turn=>turn?.id===requested.turn_id),item=turn?.items?.find(item=>item?.id===response.item_id);
         if(item?.type!=='agentMessage' || typeof item.text!=='string' || !item.text.trim())throw Error('The selected response is not present in the captured native turn.');
         requested.item_id=response.item_id;
-      }else if(!thread)thread=await api('/api/native/thread?id='+encodeURIComponent(requested.thread_id));
+      }else if(!thread)thread=typeof options?.loadOriginal==='function'?await options.loadOriginal():await api('/api/native/thread?id='+encodeURIComponent(requested.thread_id));
       if(!current(ticket)){if(ticket===version && el('').open)close();return false;}
       if(!thread || thread.id!==requested.thread_id || !Array.isArray(thread.turns))throw new Error('The original native read did not return this conversation.');
       source=thread;rows=flatten(thread);

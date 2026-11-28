@@ -491,6 +491,20 @@ globalThis.DeskNewActivityView?.configure?.({$,storage:()=>localStorage,home:ses
     node.tabIndex=-1;node.focus({preventScroll:true});node.scrollIntoView({block:'start',behavior:'instant'});},
   readingIntent:()=>globalThis.DeskSessionReading?.intent?.(),frame:callback=>requestAnimationFrame(callback),
   latestVisible:()=>nearLatest() && !document.querySelector('dialog[open]')});
+globalThis.DeskLinkedAgentView?.configure?.({make,nodes:()=>nodes,item:id=>items.get(id),itemTurn:id=>itemTurns.get(id),
+  binding:sessionReadingBinding,nativeHome:()=>sessionReadingHomeValue,generation:()=>generation,ready:()=>!opening && !$('task').hidden,
+  readingIntent:()=>DeskSessionReading.intent(),beginRead:()=>DeskSessionReading.target(),api:(...args)=>api(...args),
+  reader:{show:(...args)=>DeskHistoryReader.show(...args),close:()=>DeskHistoryReader.close()},readerOpen:()=>$('history-reader').open,
+  captureParent:target=>{const view=captureSessionReading(),node=nodes.get(target?.owner.item_id);
+    if(!view || !node || itemTurns.get(target.owner.item_id)!==target.owner.turn_id)return null;
+    const top=node.getBoundingClientRect().top;return {view:{...view,latest:false,anchor:{turn_id:target.owner.turn_id,item_id:target.owner.item_id,offset:top,screen_top:top}},child:target.child_thread_id};},
+  restoreParent:(parent,context)=>{if(context.generation!==generation)return;
+    restoreSessionReading(generation,{savedView:parent.view});const current=generation;
+    requestAnimationFrame(()=>requestAnimationFrame(()=>{if(current!==generation)return;
+      const node=nodes.get(context.target.owner.item_id);if(node && itemTurns.get(context.target.owner.item_id)===context.target.owner.turn_id){
+        const button=Array.from(node.querySelectorAll('.linked-agent-original')).find(button=>button.dataset.childThread===parent.child);
+        (button || node).focus({preventScroll:true});}saveSessionReading();}));}
+});
 async function api(path, data) {
   const headers=deskAccessHeaders(data ? {'Content-Type':'application/json'} : {});
   const r = await fetch(path, data ? {method:'POST', headers, body:JSON.stringify(data)} : {headers});
@@ -602,6 +616,7 @@ function syncSelectedOriginal(){
 }
 async function readSelectedOriginal({find=false,taskResponse=false,returnFocus=$('read-original')}={}){
   const binding=selectedOriginalBinding();if(!binding || selectedOriginalReview?.pending || $('history-reader').open)return false;
+  globalThis.DeskLinkedAgentView?.cancel?.();
   const outcome=state.native_outcomes?.[binding.session];
   if(taskResponse && (!outcome || outcome.thread_id!==binding.thread_id || typeof outcome.turn_id!=='string' || !outcome.turn_id.trim() || outcome.turn_id.length>200))return false;
   globalThis.DeskSessionReading?.target?.();
@@ -624,6 +639,7 @@ function draw() {
   $('approvals').hidden=opening;
   DeskHome.sync();
   globalThis.DeskNewActivityView?.sync?.();
+  globalThis.DeskLinkedAgentView?.sync?.();
   syncSelectedOriginal();
   syncDraftEvidence();DeskEvidencePreparation.sync();
   const running=state.sessions.filter(s=>['running','approval','starting'].includes(s.status)).length;
@@ -723,6 +739,7 @@ function renderItem(i,turnId) {
     group.ids.add(i.id);updateCollaboration(group);
   } else if(!node.parentNode)$('activity').append(node);
   DeskActivity.render(node,i,text);
+  globalThis.DeskLinkedAgentView?.sync?.();
 }
 let approvalsSignature='';
 const interactionCards=new Map();
@@ -863,6 +880,7 @@ function syncInteractionCards(pending){
   }
 }
 function consume(m) {
+  const replay=arguments[1]?.replay===true;
   const p=m.params || {};
   let planChanged=false;
   // Old cached streams may contain owned child notifications. Keep native
@@ -871,6 +889,7 @@ function consume(m) {
   const readingThread=p.threadId || p.thread?.id || p.turn?.threadId;
   if(m.id===undefined && (!readingThread || readingThread===nativeThreadId))globalThis.DeskSessionReading?.eventTurn?.(p.turn?.id || p.turnId);
   globalThis.DeskNewActivityView?.accept?.(m);
+  globalThis.DeskLinkedAgentView?.event?.(m,{replay});
   DeskSteering.consume(m,{session:selected,thread:nativeThreadId,generation});
   DeskStopTask.consume(m,{session:selected,thread:nativeThreadId,generation});
   const progressChanged=DeskNativeSteps.consume(m,{session:selected,thread:nativeThreadId,generation});
@@ -923,6 +942,7 @@ async function refresh() {
 async function open(id,{revealLatest=true,keepError=false,steerReceiptOnly=false,readingTarget=null}={}) {
   globalThis.DeskSessionReading?.leave?.();
   globalThis.DeskNewActivityView?.leave?.();
+  globalThis.DeskLinkedAgentView?.leave?.();
   stopOrdinaryTurnSource();
   if(selected){rememberDraft(selected);persistDraft(selected);}
   const current=++generation;
@@ -956,13 +976,14 @@ async function open(id,{revealLatest=true,keepError=false,steerReceiptOnly=false
       DeskStopTask.select({session:id,thread:nativeThreadId,generation:current});
       const rows=await api('/api/events?session='+encodeURIComponent(id)+'&after=0');
       if(current!==generation)return;
-      for(const row of rows){after=row.seq;consume(row.event);}
+      for(const row of rows){after=row.seq;consume(row.event,{replay:true});}
       await refresh();if(current!==generation)return;
       try{localStorage.setItem('codex-desk-browser-preview-session-v1',id);}catch{}
       opening=false;$('welcome').hidden=true;$('task').hidden=false;syncDraftEvidence();$('handoff').hidden=false;draw();DeskSteering.opened();DeskStopTask.opened();
       await globalThis.DeskSessionReading?.restore?.(current,{explicitTarget:readingTarget || !revealLatest});
       if(current!==generation)return;
       await globalThis.DeskNewActivityView?.observe?.(rows,{replay:true});if(current!==generation)return;
+      globalThis.DeskLinkedAgentView?.sync?.();
       return true;
     }
     const stopRetained=await DeskStopTask.opened();if(current!==generation)return;
@@ -976,13 +997,14 @@ async function open(id,{revealLatest=true,keepError=false,steerReceiptOnly=false
       DeskStopTask.select({session:id,thread:nativeThreadId,generation:current});
       const rows=await api('/api/events?session='+encodeURIComponent(id)+'&after=0');
       if(current!==generation)return;
-      for(const row of rows){after=row.seq;consume(row.event);}
+      for(const row of rows){after=row.seq;consume(row.event,{replay:true});}
       await refresh();if(current!==generation)return;
       try{localStorage.setItem('codex-desk-browser-preview-session-v1',id);}catch{}
       opening=false;$('welcome').hidden=true;$('task').hidden=false;syncDraftEvidence();$('handoff').hidden=false;draw();
       await globalThis.DeskSessionReading?.restore?.(current,{explicitTarget:readingTarget || !revealLatest});
       if(current!==generation)return;
       await globalThis.DeskNewActivityView?.observe?.(rows,{replay:true});if(current!==generation)return;
+      globalThis.DeskLinkedAgentView?.sync?.();
       return true;
     }
     const opened=await api('/api/open',{session:id});
@@ -991,6 +1013,7 @@ async function open(id,{revealLatest=true,keepError=false,steerReceiptOnly=false
     nativeThreadId=opened.thread.id;
     globalThis.DeskSessionReading?.source?.(current,opened.thread);
     globalThis.DeskNewActivityView?.source?.(opened.thread,{session:id,thread_id:nativeThreadId,generation:current});
+    globalThis.DeskLinkedAgentView?.source?.(opened.thread,{session:id,thread_id:nativeThreadId,generation:current});
     DeskNativeSteps.select({session:id,thread:nativeThreadId,generation:current});
     DeskTurnChanges.select({session:id,thread:nativeThreadId,generation:current});
       DeskSteering.select({session:id,thread:nativeThreadId,generation:current});
@@ -998,7 +1021,7 @@ async function open(id,{revealLatest=true,keepError=false,steerReceiptOnly=false
     for(const [index,t] of (opened.thread.turns || []).entries())for(const i of t.items || [])renderItem(i,t.id || 'snapshot:'+index);
     const rows=await api('/api/events?session='+encodeURIComponent(id)+'&after=0');
     if(current!==generation)return;
-    for(const row of rows){after=row.seq;consume(row.event);}
+    for(const row of rows){after=row.seq;consume(row.event,{replay:true});}
     DeskNativeSteps.restoreThread(opened.thread,{session:id,thread:nativeThreadId,generation:current});
     DeskTurnChanges.restoreThread(opened.thread,{session:id,thread:nativeThreadId,generation:current});
     DeskSteering.restoreThread(opened.thread,{session:id,thread:nativeThreadId,generation:current});
@@ -1011,6 +1034,7 @@ async function open(id,{revealLatest=true,keepError=false,steerReceiptOnly=false
     const readingRestored=await globalThis.DeskSessionReading?.restore?.(current,{explicitTarget:readingTarget || !revealLatest});
     if(current!==generation)return;
     await globalThis.DeskNewActivityView?.observe?.(rows,{replay:true});if(current!==generation)return;
+      globalThis.DeskLinkedAgentView?.sync?.();
     const readingIntent=globalThis.DeskSessionReading?.intent?.();
     if(revealLatest && !readingTarget && !readingRestored)requestAnimationFrame(()=>{if(current===generation && (globalThis.DeskSessionReading?.canLatest?.(readingIntent) ?? true) && ($('native-steps').hidden || !$('native-steps').open) && ($('turn-changes').hidden || !$('turn-changes').open) && ($('native-outcome').hidden || !$('native-outcome').open) && !DeskSteering.reading() && !DeskStopTask.reading() && !$('history-reader').open && !$('preparation').open && !$('preparation-request').open)goLatest({readingIntent:false});});
     return true;
