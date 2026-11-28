@@ -66,22 +66,25 @@
     else return `[Unsupported content block: ${block.type || 'unknown'}]`;
     return text+annotations(block);
   }
-  function tool(item) {
+  function toolParts(item) {
     const mcp=item.type==='mcpToolCall';
     const title=mcp?`MCP · ${item.server || ''} / ${item.tool || ''}`:`Tool · ${item.namespace?item.namespace+' / ':''}${item.tool || ''}`;
-    const lines=[title,`Status: ${item.status || 'unknown'}${item.success===undefined?'':' · success: '+item.success}${item.durationMs==null?'':' · '+item.durationMs+' ms'}`];
-    if(item.arguments!==undefined)lines.push('Arguments\n'+json(item.arguments));
-    const r=item.result;
+    const before=[title,`Status: ${item.status || 'unknown'}${item.success===undefined?'':' · success: '+item.success}${item.durationMs==null?'':' · '+item.durationMs+' ms'}`];
+    if(item.arguments!==undefined)before.push('Arguments\n'+json(item.arguments));
+    const results=[],after=[],r=item.result;
     if(mcp && r) {
-      if(Array.isArray(r.content))lines.push(...r.content.map(content));
-      if(r.structuredContent!=null)lines.push('Structured result\n'+json(r.structuredContent));
-      if(r.isError)lines.push('Tool reported an error');
+      if(Array.isArray(r.content))results.push(...r.content.map(content));
+      if(r.structuredContent!=null)results.push('Structured result\n'+json(r.structuredContent));
+      if(r.isError)results.push('Tool reported an error');
     }
-    if(!mcp && Array.isArray(item.contentItems))lines.push(...item.contentItems.map(content));
-    if(item.error)lines.push('Error: '+(item.error.message || 'Tool failed'));
-    if(Array.isArray(item.progress) && item.progress.length)lines.push('Progress\n'+item.progress.join('\n'));
-    return lines.filter(Boolean).join('\n');
+    if(!mcp && Array.isArray(item.contentItems))results.push(...item.contentItems.map(content));
+    if(item.error)after.push('Error: '+(item.error.message || 'Tool failed'));
+    if(Array.isArray(item.progress) && item.progress.length)after.push('Progress\n'+item.progress.join('\n'));
+    const prefix=before.filter(Boolean).join('\n'),result=results.filter(Boolean).join('\n'),suffix=after.filter(Boolean).join('\n');
+    const text=[prefix,result,suffix].filter(Boolean).join('\n'),start=prefix.length+(result?1:0);
+    return {prefix,result,suffix,text,start,end:start+result.length};
   }
+  function tool(item) {return toolParts(item).text;}
   function reported(value, fallback='unknown') {return typeof value==='string' && value?value:fallback;}
   function collaborationOutput(value) {
     if(typeof value==='string')return value;
@@ -117,6 +120,6 @@
     }
     return lines.join('\n');
   }
-  root.DeskEvidence={tool,content,collaboration};
+  root.DeskEvidence={tool,toolParts,content,collaboration};
   if(typeof module!=='undefined')module.exports=root.DeskEvidence;
 })(typeof globalThis==='undefined'?this:globalThis);

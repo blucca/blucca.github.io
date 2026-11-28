@@ -1,7 +1,7 @@
 /* Reviewed loaded originals into existing unsent preparation, then back to source. */
 (function(root){
   'use strict';
-  const VERSION=1,MAX_QUOTE=8000,MAX_DRAFT=200000,PROJECTION='history-reader-text/v1';
+  const VERSION=1,MAX_QUOTE=8000,MAX_DRAFT=200000,PROJECTION='history-reader-text/v1',COMMAND_OUTPUT_PROJECTION='history-reader-command-output/v1',TOOL_RESULT_PROJECTION='history-reader-tool-result/v1';
   const OPEN='<!-- codex-desk-evidence:v1 ',CLOSE='<!-- /codex-desk-evidence:v1 -->';
   const FIELDS=['version','native_home','thread_id','turn_id','item_id','source_kind','phase','status',
     'turn_status','quote_start','quote_end','offset_unit','projection','quote','title','cwd'];
@@ -36,9 +36,11 @@
   function validate(reference){
     if(!reference || typeof reference!=='object' || Array.isArray(reference) ||
        Object.keys(reference).sort().join('|')!==FIELDS.slice().sort().join('|'))throw Error('Use a complete Codex Desk evidence reference.');
-    if(reference.version!==VERSION || reference.projection!==PROJECTION || reference.offset_unit!=='unicode_codepoints')throw Error('Use the supported original evidence projection.');
+    if(reference.version!==VERSION || ![PROJECTION,COMMAND_OUTPUT_PROJECTION,TOOL_RESULT_PROJECTION].includes(reference.projection) || reference.offset_unit!=='unicode_codepoints')throw Error('Use the supported original evidence projection.');
     home(reference.native_home);
     for(const key of ['thread_id','turn_id','item_id'])identifier(reference[key],key);
+    if(reference.projection===COMMAND_OUTPUT_PROJECTION && reference.source_kind!=='commandExecution')throw Error('Use the command output projection only for a native command.');
+    if(reference.projection===TOOL_RESULT_PROJECTION && !['mcpToolCall','dynamicToolCall'].includes(reference.source_kind))throw Error('Use the tool result projection only for supplied native tool results.');
     if(!KINDS.has(reference.source_kind))throw Error('Use a readable native source kind.');
     for(const key of ['phase','status','turn_status'])if(reference[key]!==null && reported(reference[key])!==reference[key])throw Error('Use the reported native phase/status.');
     for(const [key,limit] of [['title',240],['cwd',4096]]){
@@ -150,13 +152,32 @@
     const quote=text.slice(start,end);scalar(quote,MAX_QUOTE,'original quote');
     return {quote,quote_start:count(text.slice(0,start)),quote_end:count(text.slice(0,end))};
   }
+  function commandOutputPrefix(item,textFor,text){
+    if(item?.type!=='commandExecution' || typeof item.aggregatedOutput!=='string')return null;
+    const prefix=textFor({...item,aggregatedOutput:''});
+    return typeof prefix==='string' && prefix.startsWith('Command\n') && text===prefix+item.aggregatedOutput?prefix:null;
+  }
+  function toolResultParts(item,text){
+    if(!['mcpToolCall','dynamicToolCall'].includes(item?.type) || !root.DeskEvidence?.toolParts)return null;
+    const parts=root.DeskEvidence.toolParts(item);
+    return parts.text===text && typeof parts.result==='string' && !!parts.result?parts:null;
+  }
   function capture(thread,{native_home,thread_id,turn_id,item_id,start_utf16,end_utf16,expected_quote,textFor=textForItem}){
     const {turn,item}=itemFor(thread,thread_id,turn_id,item_id),text=textFor(item);
-    const span=selectionSpan(text,start_utf16,end_utf16);
+    let span=selectionSpan(text,start_utf16,end_utf16),projection=PROJECTION;
+    const prefix=commandOutputPrefix(item,textFor,text);
+    if(prefix!==null && start_utf16>=prefix.length){
+      span=selectionSpan(item.aggregatedOutput,start_utf16-prefix.length,end_utf16-prefix.length);projection=COMMAND_OUTPUT_PROJECTION;
+    }else{
+      const parts=toolResultParts(item,text);
+      if(parts && start_utf16>=parts.start && end_utf16<=parts.end){
+        span=selectionSpan(parts.result,start_utf16-parts.start,end_utf16-parts.start);projection=TOOL_RESULT_PROJECTION;
+      }
+    }
     if(expected_quote!==undefined && span.quote!==expected_quote)throw Error('The selection does not match this exact loaded original span.');
     return validate({version:VERSION,native_home:home(native_home),thread_id,turn_id,item_id,
       source_kind:item.type,phase:reported(item.phase),status:reported(item.status),turn_status:reported(turn.status),
-      ...span,offset_unit:'unicode_codepoints',projection:PROJECTION,
+      ...span,offset_unit:'unicode_codepoints',projection,
       title:label(thread.name || thread.title || thread.preview,240),cwd:label(thread.cwd,4096)});
   }
   function resolve(reference,namespace,thread,textFor=textForItem){
@@ -165,11 +186,22 @@
     if(namespace!==reference.native_home)return {...base,status:'home_mismatch'};
     let source;try{source=itemFor(thread,reference.thread_id,reference.turn_id,reference.item_id);}catch{return {...base,status:'source_unavailable'};}
     if(source.item.type!==reference.source_kind)return {...base,status:'source_kind_changed'};
-    let text,points;try{text=textFor(source.item);scalar(text,Number.MAX_SAFE_INTEGER,'original projection',true);points=Array.from(text);}catch{return {...base,status:'quote_unavailable'};}
+    let text,points,prefix='';try{
+      text=textFor(source.item);scalar(text,Number.MAX_SAFE_INTEGER,'original projection',true);
+      if(reference.projection===COMMAND_OUTPUT_PROJECTION){
+        prefix=commandOutputPrefix(source.item,textFor,text);
+        if(prefix===null)return {...base,status:'quote_unavailable'};
+        text=source.item.aggregatedOutput;scalar(text,Number.MAX_SAFE_INTEGER,'original output',true);
+      }else if(reference.projection===TOOL_RESULT_PROJECTION){
+        const parts=toolResultParts(source.item,text);if(!parts)return {...base,status:'quote_unavailable'};
+        prefix=text.slice(0,parts.start);text=parts.result;scalar(text,Number.MAX_SAFE_INTEGER,'original tool result',true);
+      }
+      points=Array.from(text);
+    }catch{return {...base,status:'quote_unavailable'};}
     if(reference.quote_end>points.length)return {...base,status:'quote_unavailable'};
     if(points.slice(reference.quote_start,reference.quote_end).join('')!==reference.quote)return {...base,status:'quote_changed'};
     const current={phase:reported(source.item.phase),status:reported(source.item.status),turn_status:reported(source.turn.status)};
-    const start=points.slice(0,reference.quote_start).join('').length,end=start+reference.quote.length;
+    const start=prefix.length+points.slice(0,reference.quote_start).join('').length,end=start+reference.quote.length;
     return {...base,available:true,status:'available',current,state_changed:Object.keys(current).some(key=>current[key]!==reference[key]),
       quote_start:reference.quote_start,quote_end:reference.quote_end,offset_unit:reference.offset_unit,projection:reference.projection,start_utf16:start,end_utf16:end};
   }
@@ -302,7 +334,7 @@
     mount();return controller;
   }
   let configured=null;
-  root.DeskEvidencePreparation={VERSION,MAX_QUOTE,MAX_DRAFT,PROJECTION,validate,format,parse,appendBlock,
+  root.DeskEvidencePreparation={VERSION,MAX_QUOTE,MAX_DRAFT,PROJECTION,COMMAND_OUTPUT_PROJECTION,TOOL_RESULT_PROJECTION,validate,format,parse,appendBlock,
     capture,resolve,selectionSpan,textForItem,sameDestination,createController,
     configure:options=>(configured=createController(options)),
     reviewLoaded:(...args)=>configured.reviewLoaded(...args),reviewReference:(...args)=>configured.reviewReference(...args),

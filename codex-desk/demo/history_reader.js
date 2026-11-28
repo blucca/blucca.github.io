@@ -140,6 +140,21 @@
     }));
     return {...view,items,...(view.selection?{selection}:{})};
   }
+  function savedResultProjection(reference){
+    return reference && [root.DeskEvidencePreparation?.COMMAND_OUTPUT_PROJECTION,root.DeskEvidencePreparation?.TOOL_RESULT_PROJECTION].includes(reference.projection);
+  }
+  function mapSavedToolResult(view,anchor,fresh,reference,previous){
+    if(reference?.projection!==root.DeskEvidencePreparation?.TOOL_RESULT_PROJECTION)return {view,anchor};
+    const key=JSON.stringify([reference.turn_id,reference.item_id]);
+    const before=previous.filter(row=>rowKey(row)===key),after=fresh.filter(row=>rowKey(row)===key);
+    if(before.length!==1 || after.length!==1 || before[0].item?.type!==reference.source_kind || after[0].item?.type!==reference.source_kind)return {view,anchor};
+    const old=root.DeskEvidence.toolParts(before[0].item),next=root.DeskEvidence.toolParts(after[0].item),saved=view.items.get(key);
+    if(!old.result || !next.result || !saved)return {view,anchor};
+    const items=new Map(view.items);items.set(key,{...saved,start:outputPosition(saved.start,old.start,next.start),
+      ...(saved.character?{character:{...saved.character,offset:outputPosition(saved.character.offset,old.start,next.start)}}:{})});
+    return {view:{...view,items,...(view.selection?.key===key?{selection:outputSpan(view.selection,old.start,next.start)}:{})},
+      anchor:anchor?.key===key?outputSpan(anchor,old.start,next.start):anchor};
+  }
   function saveOriginalReading() {
     if(!source || loading || readingUnavailable || (readingCharacterNotice?.intent===readingIntentEpoch) || !readingHome || explicitReadingTarget() || (options?.valid && !options.valid()))return;
     const view=taskReview?.passage?.view || (findMatches?.active?findMatches.passageView:null) || captureView();
@@ -406,18 +421,24 @@ Text characters ${hit.start+1}–${hit.end}`,'history-reader-identity'));
     const copySource=node('button','Copy source reference','history-reader-copy-source');
     const status=node('p','','history-reader-copy-status');status.setAttribute('role','status');
     copyText.type=copySource.type='button';
+    const artifact=root.DeskEvidencePreparation && str(row.turn.id) && str(row.item.id)?
+      node('button','Copy excerpt with source','history-reader-copy-excerpt'):null;
+    if(artifact)artifact.type='button';
+    const copyButtons=[copyText,copySource,...(artifact?[artifact]:[])];
+    let copyRequest=null;
     const title=(str(source.name)||str(source.title)||str(source.preview)||'Original Codex conversation').slice(0,240);
     const reference=`Conversation: ${title}\nThread: ${str(source.id)}\nTurn: ${str(row.turn.id)||'unreported'}\nItem: ${str(row.item.id)||'unreported'}\nProject folder: ${str(source.cwd)||'unreported'}`;
     async function copy(value,label) {
-      if(!available(ticket) || !detail.isConnected)return;
-      copyText.disabled=copySource.disabled=true;status.textContent='Copying…';
+      if(copyRequest || !available(ticket) || !detail.isConnected)return;
+      const request={};copyRequest=request;
+      copyButtons.forEach(button=>button.disabled=true);status.textContent='Copying…';
       try {
         if(!root.navigator?.clipboard?.writeText)throw new Error('Clipboard access is unavailable.');
         await root.navigator.clipboard.writeText(value);
         if(current(ticket) && detail.isConnected)status.textContent=label+' copied.';
       } catch {
         if(current(ticket) && detail.isConnected)status.textContent='Could not copy. Allow clipboard access and try again, or select the original text.';
-      } finally {if(current(ticket) && detail.isConnected)copyText.disabled=copySource.disabled=false;}
+      } finally {if(copyRequest===request){copyRequest=null;if(current(ticket) && detail.isConnected)copyButtons.forEach(button=>button.disabled=false);}}
     }
     copyText.onclick=()=>copy(text,'Full item text');copySource.onclick=()=>copy(reference,'Source reference');
     actions.append(copyText,copySource,status);
@@ -428,11 +449,13 @@ Text characters ${hit.start+1}–${hit.end}`,'history-reader-identity'));
         catch(error){if(current(ticket))status.textContent=error.message;}};
       actions.append(task);
     }
-    if(typeof evidenceReview==='function'){
-      const review=node('button','Review evidence for task','history-reader-review-evidence');review.type='button';
-      review.onmousedown=event=>{if(event.button===0 && selectedText()?.key===rowKey(row))event.preventDefault();};
+    if(artifact || typeof evidenceReview==='function'){
+      const review=typeof evidenceReview==='function'?node('button','Review evidence for task','history-reader-review-evidence'):null;
+      for(const button of [artifact,review].filter(Boolean)){button.type='button';
+        button.onmousedown=event=>{if(event.button===0 && selectedText()?.key===rowKey(row))event.preventDefault();};}
       let keyboardView=null,keyboardOwner=null,keyboardActivation=false;
       const clearKeyboard=()=>{keyboardView=keyboardOwner=null;keyboardActivation=false;};
+      const sameSelection=(a,b)=>a && b && ['key','start','end','text','backward'].every(key=>a[key]===b[key]);
       const keyboardCurrent=()=>keyboardView && keyboardOwner.source===source && keyboardOwner.find===findVersion &&
         keyboardOwner.refresh===refreshVersion && keyboardOwner.task===taskReview && keyboardOwner.mode===taskReview?.mode &&
         available(ticket) && detail.isConnected && keyboardView.selection?.key===rowKey(row) &&
@@ -441,20 +464,78 @@ Text characters ${hit.start+1}–${hit.end}`,'history-reader-identity'));
         if(event.key==='Tab'){
           const selection=selectedText();
           if(selection?.key===rowKey(row)){
-            keyboardView=captureView();keyboardOwner={source,find:findVersion,refresh:refreshVersion,task:taskReview,mode:taskReview?.mode};
+            if(!keyboardCurrent() || !sameSelection(selection,keyboardView.selection)){
+              keyboardView=captureView();keyboardOwner={source,find:findVersion,refresh:refreshVersion,task:taskReview,mode:taskReview?.mode};
+            }
           }else if(selection || !keyboardCurrent())clearKeyboard();
-        }else if(event.target===review && (event.key==='Enter' || event.key===' '))keyboardActivation=!!keyboardCurrent();
+        }else if((event.target===review || event.target===artifact) && (event.key==='Enter' || event.key===' '))keyboardActivation=!!keyboardCurrent();
         else clearKeyboard();
       });
       detail.addEventListener('pointerdown',clearKeyboard);
       detail.addEventListener('focusout',event=>{if(!detail.contains(event.relatedTarget))clearKeyboard();});
-      review.onclick=async()=>{
+      const selectedAction=()=>{
         if(!available(ticket) || !detail.isConnected){clearKeyboard();return;}
         const live=selectedText(),saved=keyboardActivation && keyboardCurrent()?keyboardView:null,key=rowKey(row);
         const selection=live || saved?.selection,view=captureView();
-        if(!live && saved){Object.assign(view,saved,{focus:view.focus});}
+        if(saved && (!live || sameSelection(live,saved.selection))){Object.assign(view,saved,{focus:view.focus});}
         clearKeyboard();
-        const range=selection?.key===key?{start:selection.start,end:selection.end}:null;
+        return {selection:selection?.key===key?selection:null,view};
+      };
+      if(artifact){
+        artifact.onclick=async()=>{
+          if(copyRequest || !available(ticket) || !detail.isConnected)return false;
+          const picked=selectedAction();
+          if(!picked?.selection){status.textContent='Select an excerpt in this original item, then choose Copy excerpt with source.';return false;}
+          const {selection,view}=picked;
+          const request={source,find:findVersion,refresh:refreshVersion,task:taskReview,mode:taskReview?.mode,
+            intent:typeof readingIntentEpoch==='number'?readingIntentEpoch:0};
+          copyRequest=request;
+          const owner=()=>copyRequest===request && current(ticket) && detail.isConnected;
+          const valid=()=>owner() && source===request.source && findVersion===request.find && refreshVersion===request.refresh &&
+            taskReview===request.task && taskReview?.mode===request.mode &&
+            (typeof readingIntentEpoch==='number'?readingIntentEpoch:0)===request.intent &&
+            textFor(row.item).slice(selection.start,selection.end)===selection.text;
+          const paint=(message,disabled)=>{status.textContent=message;copyButtons.forEach(button=>button.disabled=disabled);restoreView(view,ticket);};
+          paint('Copying excerpt with source…',true);
+          try{
+            const clipboard=root.navigator?.clipboard;
+            const deferred=clipboard?.write && typeof root.ClipboardItem==='function' && typeof root.Blob==='function';
+            if(!deferred && !clipboard?.writeText)throw Error('Clipboard access is unavailable.');
+            const prepare=async()=>{
+              const result=await api('/api/native/home');
+              if(!valid())throw Error('Copy cancelled.');
+              const reference=root.DeskEvidencePreparation.capture(request.source,{native_home:result?.home_namespace,
+                thread_id:request.source.id,turn_id:row.turn.id,item_id:row.item.id,
+                start_utf16:selection.start,end_utf16:selection.end,expected_quote:selection.text,textFor});
+              const block=root.DeskEvidencePreparation.format(reference);
+              if(!valid())throw Error('Copy cancelled.');
+              return block;
+            };
+            if(deferred){
+              // Reserve the native clipboard write inside this genuine gesture;
+              // its one plain-text Blob still waits for the same owned namespace read.
+              const data=prepare().then(block=>new root.Blob([block],{type:'text/plain'}));
+              data.catch(()=>{});
+              await clipboard.write([new root.ClipboardItem({'text/plain':data})]);
+            }else await clipboard.writeText(await prepare());
+            if(!valid())return false;
+            paint('Excerpt with source copied.',false);return true;
+          }catch(error){
+            if(valid())paint(error.message==='Clipboard access is unavailable.'?error.message:'Could not copy excerpt with source. '+error.message,false);
+            return false;
+          }finally{
+            if(owner()){
+              if(!valid() && status.textContent==='Copying excerpt with source…')status.textContent='Copy cancelled. Select the excerpt again.';
+              copyButtons.forEach(button=>button.disabled=false);copyRequest=null;
+            }
+          }
+        };
+        actions.append(artifact);
+      }
+      if(review)review.onclick=async()=>{
+        const picked=selectedAction();if(!picked)return;
+        const {selection,view}=picked;
+        const range=selection?{start:selection.start,end:selection.end}:null;
         review.disabled=true;
         try{
           await evidenceReview({thread:source,turn_id:row.turn.id,item_id:row.item.id,
@@ -463,7 +544,7 @@ Text characters ${hit.start+1}–${hit.end}`,'history-reader-identity'));
         }catch(error){if(current(ticket)&&detail.isConnected)status.textContent=error.message;}
         finally{if(current(ticket)&&detail.isConnected)review.disabled=false;}
       };
-      actions.append(review);
+      if(review)actions.append(review);
     }
     const references=root.DeskEvidencePreparation?.parse(text) || [];
     for(const {reference:saved} of references){
@@ -836,13 +917,20 @@ Text characters ${hit.start+1}–${hit.end}`,'history-reader-identity'));
       let anchor=anchorKey?{key:anchorKey,start:oldMatch.start,end:oldMatch.end}:null;
       const query=el('find-query').value.trim(),submitted=findSubmitted && findQuery===query;
       ++findVersion;finding=false;findGroups=[];findTotal=0;findCursor=-1;
+      let savedResolution=null;
       if(savedReference){
-        const resolved=root.DeskEvidencePreparation.resolve(savedReference,result.home_namespace,thread,textFor);
+        const resolved=savedResolution=root.DeskEvidencePreparation.resolve(savedReference,result.home_namespace,thread,textFor);
         el('response').textContent=resolved.available?'The saved reviewed excerpt is still at this exact native item and span.':
           `Saved reviewed excerpt retained. Fresh original: ${resolved.status}. No other item or occurrence is used as its replacement.`;
+        if(savedResultProjection(savedReference) &&
+           requested.saved_output_target && requested.turn_id===savedReference.turn_id && requested.item_id===savedReference.item_id){
+          requested.match_text=resolved.available?savedReference.quote:'';
+          if(resolved.available)requested.match_start=resolved.start_utf16;else delete requested.match_start;
+        }
       }
-      source=thread;rows=flatten(thread);captureOriginalFrontier(ticket);
-      if(!savedReference){
+      const previousRows=rows;source=thread;rows=flatten(thread);captureOriginalFrontier(ticket);
+      if(savedResolution?.available){const mapped=mapSavedToolResult(view,anchor,rows,savedReference,previousRows);view=mapped.view;anchor=mapped.anchor;}
+      if(!savedReference || (savedResultProjection(savedReference) && savedResolution?.available)){
         anchor=mapOutputAnchor(anchor,view,rows);
         view=mapOriginalOutput(view,rows);
       }
@@ -953,6 +1041,7 @@ Text characters ${hit.start+1}–${hit.end}`,'history-reader-identity'));
     requested={...result};options=callbacks;unavailableThread=null;el('response').hidden=true;el('response').textContent='';el('original').hidden=true;el('saved-evidence').hidden=true;el('saved-evidence-quote').textContent='';
     if(callbacks.savedReference){
       const saved=callbacks.savedReference,resolution=callbacks.resolution;
+      if(savedResultProjection(saved) && requested.turn_id===saved.turn_id && requested.item_id===saved.item_id)requested.saved_output_target=true;
       el('saved-evidence').hidden=false;el('saved-evidence').open=false;
       el('saved-evidence-quote').textContent=str(saved.quote);
       el('saved-evidence-identity').textContent=`Thread ${str(saved.thread_id)} · Turn ${str(saved.turn_id)} · Item ${str(saved.item_id)}\nCaptured ${str(saved.source_kind)} · Phase ${str(saved.phase)||'unreported'} · Native turn ${str(saved.turn_status)||'unreported'}`;
