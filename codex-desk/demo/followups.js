@@ -16,7 +16,8 @@ const DeskFollowups=(()=>{
     if(panel?.dataset.signature===key)return;
     if(!panel){panel=options.make('div','','followup-evidence-references');parent.referencePanel=panel;parent.append(panel);}
     panel.dataset.signature=key;panel.replaceChildren();
-    for(const {reference} of references){
+    for(let referenceIndex=0;referenceIndex<references.length;++referenceIndex){
+      const {reference}=references[referenceIndex];
       const read=button('Read referenced original · '+(reference.title || reference.item_id),async()=>{
         const id=session,navigation=options.navigationIdentity?.(),revision=versions.get(id) || 0;
         const same=saved=>!!saved && saved.text===text && saved.mode===identity.mode && saved.revision===identity.revision && saved.state===identity.state &&
@@ -41,7 +42,15 @@ const DeskFollowups=(()=>{
             }},
             onReturn:()=>{if(!owned())return;sourceRead=null;
               if(field?.isConnected && field.value===view.text){field.focus({preventScroll:true});field.setSelectionRange(view.start,view.end,view.direction);field.scrollTop=view.scroll;}
-              else if(read.isConnected)read.focus({preventScroll:true});
+              else{
+                // Another saved entry can redraw this unchanged row behind the
+                // reader. Reacquire only its identical panel and exact ordinal.
+                const parent=kind==='reservation'?el('followup-review'):
+                  [...el('followup-list').children].find(row=>row.dataset.followup===identity.id);
+                const panel=parent?.referencePanel;
+                const returned=panel?.dataset.signature===key?panel.children[referenceIndex]:null;
+                if(returned?.isConnected && !returned.disabled)returned.focus({preventScroll:true});
+              }
               el('followup-list').scrollTop=view.list;if(Number.isFinite(view.window))globalThis.scrollTo?.({top:view.window,behavior:'instant'});
             },onError:e=>{if(owned())showError(id,e);}});
           if(!opened && owned())sourceRead=null;return opened;
